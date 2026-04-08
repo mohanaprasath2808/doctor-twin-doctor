@@ -5,7 +5,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Platform,
   StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -32,6 +31,7 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
 // ─── Grid items ──────────────────────────────────────────────────────────────
 type GridItem = {
   id: number;
@@ -124,6 +124,11 @@ const Home = () => {
             onPress: () =>
               navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
           }
+      : item.id === 7
+        ? {
+            ...item,
+            onPress: () => navigation.navigate(navigationStrings.SCHEDULE),
+          }
       : item,
   );
 
@@ -160,31 +165,11 @@ const Home = () => {
       onPress={() => item.onPress?.()}
     >
       <View style={styles.cardOuter}>
-        <View
-          pointerEvents="none"
-          style={[
-            styles.cardShadowLayer,
-            styles.cardShadowDark,
-            { borderRadius: CARD_CORNER_RADIUS },
-          ]}
-        />
-        <View
-          pointerEvents="none"
-          style={[
-            styles.cardShadowLayer,
-            styles.cardShadowLight,
-            { borderRadius: CARD_CORNER_RADIUS },
-          ]}
-        />
-        <View
-          pointerEvents="none"
-          style={[
-            styles.cardShadowLayer,
-            styles.cardShadowSoft,
-            { borderRadius: CARD_CORNER_RADIUS },
-          ]}
-        />
-        <View style={[styles.card, { borderRadius: CARD_CORNER_RADIUS }]}>
+        <NeumorphicCard
+          borderRadius={CARD_CORNER_RADIUS}
+          outerStyle={styles.cardNeumorphOuter}
+          innerStyle={[styles.card, { borderRadius: CARD_CORNER_RADIUS }]}
+        >
           <View style={styles.cardIconContainer}>
             <InnerShadowIcon icon={item.icon()} size={40} />
           </View>
@@ -222,7 +207,7 @@ const Home = () => {
               </LinearGradient>
             )}
           </View>
-        </View>
+        </NeumorphicCard>
         {item.badgeType === "dot" && item.badge && (
           <View style={styles.dotBadge}>
             <Text style={styles.dotBadgeText}>{item.badge}</Text>
@@ -344,48 +329,11 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "visible",
   },
-  cardShadowLayer: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: COLORS.SURFACE,
-  },
-  // Bottom/right: soft depth (avoid a hard “stroke” look)
-  cardShadowDark: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#C8CBCC",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 0.4,
-        shadowRadius: 16,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  // Top/left: diffuse highlight (not a crisp border — softer blur + lower opacity)
-  cardShadowLight: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#FFFFFF",
-        shadowOffset: { width: -4, height: -4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 32,
-      },
-    }),
-  },
-  cardShadowSoft: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#728EAB",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-    }),
+  cardNeumorphOuter: {
+    width: "100%",
   },
   card: {
     width: "100%",
-    backgroundColor: COLORS.SURFACE,
     paddingVertical: 8,
     paddingHorizontal: 14,
     flexDirection: "row",

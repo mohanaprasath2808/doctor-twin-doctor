@@ -3,9 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
-  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -15,6 +13,8 @@ import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
 import DoctorAvatar from "../../../components/Common/DoctorAvatar";
 import DeltaBadge from "../../../components/Common/DeltaBadge";
+import AppButton from "../../../components/Common/AppButton";
+import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import BackIcon from "../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
@@ -110,19 +110,25 @@ const PracticeIntelligence = () => {
         </View>
 
         <View style={styles.actionsRow}>
-          <TouchableOpacity
+          <AppButton
             activeOpacity={0.8}
-            style={[styles.primaryBtn, styles.actionBtnShadow]}
+            style={styles.actionBtnBase}
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            text="View Reports"
+            textStyle={styles.primaryBtnText}
             onPress={() => navigation.navigate(navigationStrings.REPORT_HUB)}
-          >
-            <Text style={styles.primaryBtnText}>View Reports</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          />
+          <AppButton
             activeOpacity={0.8}
-            style={[styles.secondaryBtn, styles.actionBtnShadow]}
-          >
-            <Text style={styles.secondaryBtnText}>Exit Insights</Text>
-          </TouchableOpacity>
+            style={styles.actionBtnBase}
+            borderWidth={1}
+            borderColor={COLORS.ALERT}
+            bgColor={"#FDECEC"}
+            text="Exit Insights"
+            textStyle={styles.secondaryBtnText}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -142,55 +148,29 @@ const MetricCard = ({
   delta: string;
   positive?: boolean;
 }) => (
-  <View style={styles.metricCardOuter}>
-    <View
-      pointerEvents="none"
-      style={[
-        styles.metricCardShadowLayer,
-        styles.metricCardShadowDark,
-        { borderRadius: 14 },
-      ]}
-    />
-    <View
-      pointerEvents="none"
-      style={[
-        styles.metricCardShadowLayer,
-        styles.metricCardShadowLight,
-        { borderRadius: 14 },
-      ]}
-    />
-    <View
-      pointerEvents="none"
-      style={[
-        styles.metricCardShadowLayer,
-        styles.metricCardShadowSoft,
-        { borderRadius: 14 },
-      ]}
-    />
-    <View style={styles.metricCard}>
-      <View style={styles.metricHeader}>
-        <InnerShadowIcon icon={icon} size={40} />
-        <Text style={styles.metricTitle}>{title}</Text>
-      </View>
-      <Text style={styles.metricValue}>{value}</Text>
-      <View style={styles.metricFooter}>
-        <DeltaBadge
-          icon={
-            positive ? (
-              <IncreaseIcon width={12} height={12} />
-            ) : (
-              <DecreaseIcon width={12} height={12} />
-            )
-          }
-          value={delta}
-          bgColor={positive ? "#D3FFF1" : "#FDECEC"}
-          darkShadowColor={positive ? "#A9E9D5" : "#F2CACA"}
-          textColor={positive ? COLORS.GREEN : COLORS.ALERT}
-        />
-        <Text style={styles.lastWeek}>From last week</Text>
-      </View>
+  <NeumorphicCard outerStyle={styles.metricCardOuter} innerStyle={styles.metricCard} borderRadius={14}>
+    <View style={styles.metricHeader}>
+      <InnerShadowIcon icon={icon} size={40} />
+      <Text style={styles.metricTitle}>{title}</Text>
     </View>
-  </View>
+    <Text style={styles.metricValue}>{value}</Text>
+    <View style={styles.metricFooter}>
+      <DeltaBadge
+        icon={
+          positive ? (
+            <IncreaseIcon width={12} height={12} />
+          ) : (
+            <DecreaseIcon width={12} height={12} />
+          )
+        }
+        value={delta}
+        bgColor={positive ? "#D3FFF1" : "#FDECEC"}
+        darkShadowColor={positive ? "#A9E9D5" : "#F2CACA"}
+        textColor={positive ? COLORS.GREEN : COLORS.ALERT}
+      />
+      <Text style={styles.lastWeek}>From last week</Text>
+    </View>
+  </NeumorphicCard>
 );
 
 const styles = StyleSheet.create({
@@ -272,50 +252,10 @@ const styles = StyleSheet.create({
   },
   metricCardOuter: {
     width: "47.5%",
-    position: "relative",
-    overflow: "visible",
     borderRadius: 10,
-  },
-  metricCardShadowLayer: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: COLORS.SURFACE,
-  },
-  metricCardShadowDark: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#C8CBCC",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 0.4,
-        shadowRadius: 16,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  metricCardShadowLight: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#FFFFFF",
-        shadowOffset: { width: -4, height: -4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 24,
-      },
-    }),
-  },
-  metricCardShadowSoft: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#728EAB",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-    }),
   },
   metricCard: {
     width: "100%",
-    backgroundColor: COLORS.SURFACE,
     borderRadius: 10,
     padding: 12,
   },
@@ -335,32 +275,14 @@ const styles = StyleSheet.create({
   },
   lastWeek: { color: COLORS.TEXT_60, fontSize: 12, fontWeight: "400" },
   actionsRow: { marginTop: 20, flexDirection: "row", gap: 12 },
-  actionBtnShadow: {
-    boxShadow:
-      "4px 4px 20px 0px #C8CBCC, 2px 2px 4px 0px rgba(114, 142, 171, 0.1)",
-    elevation: 6,
-  },
-  primaryBtn: {
+  actionBtnBase: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: COLORS.PRIMARY,
     borderRadius: 26,
     height: 48,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.SURFACE,
   },
   primaryBtnText: { color: COLORS.PRIMARY, fontSize: 16, fontWeight: "500" },
-  secondaryBtn: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: COLORS.ALERT,
-    borderRadius: 26,
-    height: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FDECEC",
-  },
   secondaryBtnText: { color: COLORS.ALERT, fontSize: 16, fontWeight: "500" },
 });
 

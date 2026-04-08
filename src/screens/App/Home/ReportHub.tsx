@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../constants/theme";
@@ -14,6 +7,8 @@ import IconComponent from "../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import DoctorAvatar from "../../../components/Common/DoctorAvatar";
 import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
+import AppButton from "../../../components/Common/AppButton";
+import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import BackIcon from "../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
@@ -23,7 +18,8 @@ import UtilizationIcon from "../../../assets/icon/utilizationIcon.svg";
 import PatientIcon from "../../../assets/icon/patientIcon.svg";
 import InteligentIcon from "../../../assets/icon/intelliganceIcon.svg";
 import navigationStrings from "../../../constants/navigationStrings";
-
+import BrainIcon from "../../../assets/icon/brainIcon.svg";
+import RightArrow from "../../../assets/icon/rightArrow.svg";
 const ReportHub = () => {
   const navigation = useNavigation<any>();
 
@@ -99,28 +95,42 @@ const ReportHub = () => {
           />
         </View>
 
-        <TouchableOpacity activeOpacity={0.85} style={styles.aiCard}>
+        <NeumorphicCard
+          outerStyle={styles.aiCardOuter}
+          innerStyle={styles.aiCard}
+          borderRadius={14}
+          activeOpacity={0.85}
+        >
           <InnerShadowIcon
-            icon={<InteligentIcon width={24} height={24} />}
-            size={34}
+            icon={<BrainIcon width={24} height={24} />}
+            size={40}
           />
           <View style={styles.aiTextWrap}>
             <Text style={styles.aiTitle}>AI Learning & Automation</Text>
-            <Text style={styles.aiSub}>AI confidence • Automation success</Text>
+            <View style={styles.pointRow}>
+              <Text style={styles.pointText}>AI confidence</Text>
+              <View style={styles.pointDot} />
+              <Text style={styles.pointText}>Automation success</Text>
+            </View>
             <Text style={styles.aiSub}>Brain learning trends</Text>
           </View>
-          <Text style={styles.aiArrow}>›</Text>
-        </TouchableOpacity>
+          <RightArrow width={10} height={10} />
+        </NeumorphicCard>
 
-        <TouchableOpacity
-          activeOpacity={0.85}
-          style={styles.backBtn}
-          onPress={() =>
-            navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE)
-          }
-        >
-          <Text style={styles.backBtnText}>Back to inteligence</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <AppButton
+            activeOpacity={0.85}
+            style={styles.backBtn}
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            text="Back to inteligence"
+            textStyle={styles.backBtnText}
+            onPress={() =>
+              navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE)
+            }
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -135,33 +145,26 @@ const CategoryCard = ({
   title: string;
   points: string[];
 }) => (
-  <View style={styles.categoryCardOuter}>
-    <View
-      pointerEvents="none"
-      style={[styles.categoryCardShadowLayer, styles.categoryCardShadowDark]}
-    />
-    <View
-      pointerEvents="none"
-      style={[styles.categoryCardShadowLayer, styles.categoryCardShadowLight]}
-    />
-    <View
-      pointerEvents="none"
-      style={[styles.categoryCardShadowLayer, styles.categoryCardShadowSoft]}
-    />
-    <View style={styles.categoryCard}>
-      <View style={styles.categoryHeader}>
-        <InnerShadowIcon icon={icon} size={34} />
-        <Text style={styles.categoryTitle}>{title}</Text>
-      </View>
-      <View style={styles.pointsWrap}>
-        {points.map((point) => (
-          <Text key={point} style={styles.pointText}>
-            • {point}
-          </Text>
-        ))}
-      </View>
+  <NeumorphicCard
+    outerStyle={styles.categoryCardOuter}
+    innerStyle={styles.categoryCard}
+    borderRadius={14}
+  >
+    <View style={styles.categoryHeader}>
+      <InnerShadowIcon icon={icon} size={40} />
+      <Text style={styles.categoryTitle}>{title}</Text>
     </View>
-  </View>
+    <View style={styles.pointsWrap}>
+      {points.map((point) => (
+        <View key={point} style={styles.pointRow}>
+          <View style={styles.pointDot} />
+          <Text style={styles.pointText} numberOfLines={1}>
+            {point}
+          </Text>
+        </View>
+      ))}
+    </View>
+  </NeumorphicCard>
 );
 
 const styles = StyleSheet.create({
@@ -236,53 +239,10 @@ const styles = StyleSheet.create({
   },
   categoryCardOuter: {
     width: "48%",
-    position: "relative",
-    overflow: "visible",
-    borderRadius: 14,
-  },
-  categoryCardShadowLayer: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: 14,
-  },
-  categoryCardShadowDark: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#C8CBCC",
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 0.4,
-        shadowRadius: 16,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  categoryCardShadowLight: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#FFFFFF",
-        shadowOffset: { width: -4, height: -4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 24,
-      },
-    }),
-  },
-  categoryCardShadowSoft: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#728EAB",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-    }),
   },
   categoryCard: {
     width: "100%",
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: 14,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     paddingVertical: 10,
   },
   categoryHeader: { flexDirection: "row", alignItems: "center", gap: 8 },
@@ -294,41 +254,35 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   pointsWrap: { marginTop: 10, gap: 6 },
-  pointText: { color: COLORS.TEXT_70, fontSize: 14 },
+  pointRow: { flexDirection: "row", alignItems: "center", gap: 5 },
+  pointDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.TEXT_50,
+  },
+  pointText: { color: COLORS.TEXT_80, fontSize: 12, fontWeight: "400" },
+  aiCardOuter: {
+    marginTop: 20,
+  },
   aiCard: {
-    marginTop: 12,
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 10,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#A0B4C8",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 3,
   },
   aiTextWrap: { flex: 1, marginLeft: 10 },
-  aiTitle: { color: COLORS.TEXT_DARK, fontSize: 16, fontWeight: "500" },
+  aiTitle: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },
   aiSub: { color: COLORS.TEXT_60, fontSize: 14 },
-  aiArrow: { color: COLORS.TEXT_50, fontSize: 28, lineHeight: 28 },
   backBtn: {
     marginTop: 18,
-    borderWidth: 1,
-    borderColor: COLORS.PRIMARY,
     borderRadius: 26,
     height: 52,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.SURFACE,
-    shadowColor: "#A0B4C8",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 3,
   },
   backBtnText: { color: COLORS.PRIMARY, fontSize: 16, fontWeight: "600" },
+  buttonContainer: { marginTop: 18 },
 });
 
 export default ReportHub;
