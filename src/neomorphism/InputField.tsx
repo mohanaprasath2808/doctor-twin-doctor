@@ -40,6 +40,9 @@ const InputField: React.FC<Props & TextInputProps> = ({
   const [width, setWidth] = useState(0);
   const radius = borderRadius ?? RADIUS;
   const fieldMinHeight = minHeight ?? HEIGHT;
+  const valueText = String(props.value ?? props.defaultValue ?? "");
+  const hasText = valueText.trim().length > 0;
+  const showFocusedState = focused || hasText;
 
   const onLayout = (e: LayoutChangeEvent) => {
     setWidth(e.nativeEvent.layout.width);
@@ -61,7 +64,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
               styles.shadowLayer,
               styles.shadowDark,
               { borderRadius: radius },
-              focused && styles.shadowDarkFocused,
+              showFocusedState && styles.shadowDarkFocused,
             ]}
           />
           <View
@@ -70,7 +73,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
               styles.shadowLayer,
               styles.shadowLight,
               { borderRadius: radius },
-              focused && styles.shadowLightFocused,
+              showFocusedState && styles.shadowLightFocused,
             ]}
           />
           <View
@@ -83,7 +86,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
           />
 
           <View style={[styles.surface, { borderRadius: radius }]}>
-            {focused && width > 0 && (
+            {showFocusedState && width > 0 && (
               <View
                 style={[
                   styles.shadowWrapper,
@@ -105,7 +108,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
                 {
                   borderRadius: radius,
                   minHeight: fieldMinHeight,
-                  height: props.multiline ? undefined : HEIGHT,
+                  height: props.multiline ? undefined : fieldMinHeight,
                   alignItems: props.multiline ? "flex-start" : "center",
                   paddingTop: props.multiline ? 12 : 0,
                 },

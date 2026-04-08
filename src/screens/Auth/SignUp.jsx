@@ -87,6 +87,7 @@ const SignUp = () => {
           value={dob}
           onChange={(date) => setDob(date)}
           maximumDate={new Date()}
+          containerStyle={{ marginTop: 15 }}
         />
 
         <Text style={styles.label}>Set Password</Text>

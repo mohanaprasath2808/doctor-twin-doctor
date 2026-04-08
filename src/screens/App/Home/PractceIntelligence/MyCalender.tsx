@@ -1,5 +1,14 @@
-import React, { useMemo, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useMemo, useRef, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
@@ -12,10 +21,10 @@ import CalendarIcon from "../../../../assets/icon/calendarIcon.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import { Image } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
-
+import navigationStrings from "../../../../constants/navigationStrings";
+import PlusIcon from "../../../../assets/icon/plusIcon.svg";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const DAY_ITEM_WIDTH = 200;
+const DAY_ITEM_WIDTH = 150;
 const SIDE_PADDING = (SCREEN_WIDTH - DAY_ITEM_WIDTH) / 2;
 
 const weekday = [
@@ -45,10 +54,12 @@ const month = [
 const MyCalender = () => {
   const navigation = useNavigation<any>();
   const [activeIndex, setActiveIndex] = useState(0);
+  const dayListRef = useRef<FlatList<any>>(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   const days = useMemo(() => {
     const today = new Date();
-    return [0, 1, 2].map((offset) => {
+    return [0, 1, 2, 3, 4, 5].map((offset) => {
       const d = new Date(today);
       d.setDate(today.getDate() + offset);
       return {
@@ -81,6 +92,17 @@ const MyCalender = () => {
     },
   ];
 
+  const onDayScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const x = e.nativeEvent.contentOffset.x;
+    const index = Math.round(x / DAY_ITEM_WIDTH);
+    const bounded = Math.max(0, Math.min(index, days.length - 1));
+    setActiveIndex(bounded);
+    dayListRef.current?.scrollToOffset({
+      offset: bounded * DAY_ITEM_WIDTH,
+      animated: true,
+    });
+  };
+
   const renderDayItem = ({
     item,
     index,
@@ -89,8 +111,30 @@ const MyCalender = () => {
     index: number;
   }) => {
     const isActive = index === activeIndex;
+    const inputRange = [
+      (index - 1) * DAY_ITEM_WIDTH,
+      index * DAY_ITEM_WIDTH,
+      (index + 1) * DAY_ITEM_WIDTH,
+    ];
+    const scale = scrollX.interpolate({
+      inputRange,
+      outputRange: [0.86, 1, 0.86],
+      extrapolate: "clamp",
+    });
+    const opacity = scrollX.interpolate({
+      inputRange,
+      outputRange: [0.5, 1, 0.5],
+      extrapolate: "clamp",
+    });
+
     return (
-      <View style={[styles.dayItem, !isActive && styles.dayItemInactive]}>
+      <Animated.View
+        style={[
+          styles.dayItem,
+          !isActive && styles.dayItemInactive,
+          { transform: [{ scale }], opacity },
+        ]}
+      >
         <Image
           source={OverlayImage}
           style={styles.dayOverlay}
@@ -107,7 +151,7 @@ const MyCalender = () => {
             {item.weekDay}
           </Text>
         </View>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -116,6 +160,11 @@ const MyCalender = () => {
       outerStyle={styles.eventOuter}
       innerStyle={styles.eventInner}
       borderRadius={12}
+      onPress={() =>
+        navigation.navigate(navigationStrings.EVENT_DETAILS, {
+          showMap: item.subtitle !== "Zoom Call",
+        })
+      }
     >
       <View style={styles.leftAccent} />
       <View style={styles.eventLeft}>
@@ -161,21 +210,25 @@ const MyCalender = () => {
       </View>
 
       <View style={styles.topArea}>
-        <Carousel
+        <Animated.FlatList
+          ref={dayListRef}
+          horizontal
           data={days}
-          width={DAY_ITEM_WIDTH}
-          height={170}
+          keyExtractor={(item) => item.id}
           renderItem={renderDayItem}
-          loop={false}
-          defaultIndex={0}
-          mode="parallax"
-          modeConfig={{
-            parallaxScrollingScale: 1,
-            parallaxAdjacentItemScale: 1,
-            parallaxScrollingOffset: 56,
-          }}
-          style={styles.dayCarousel}
-          onSnapToItem={(index) => setActiveIndex(index % days.length)}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: SIDE_PADDING }}
+          snapToInterval={DAY_ITEM_WIDTH}
+          snapToAlignment="center"
+          decelerationRate="fast"
+          disableIntervalMomentum
+          onMomentumScrollEnd={onDayScrollEnd}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: true },
+          )}
+          scrollEventThrottle={16}
+          bounces={false}
         />
       </View>
 
@@ -190,13 +243,14 @@ const MyCalender = () => {
 
       <View style={styles.buttonContainer}>
         <AppButton
-          text="+  Add Event"
+          leftIcon={<PlusIcon width={16} height={16} />}
+          text="Add Event"
           borderWidth={1}
           borderColor={COLORS.PRIMARY}
           bgColor={COLORS.SURFACE}
           textStyle={styles.buttonText}
           style={styles.button}
-          onPress={() => {}}
+          onPress={() => navigation.navigate(navigationStrings.ADD_EVENT)}
         />
       </View>
     </SafeAreaView>
@@ -219,11 +273,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   headerSpacer: { width: 40, height: 40 },
-  topArea: { marginTop: 12, height: 170 },
-  dayCarousel: {
-    width: SCREEN_WIDTH,
-    paddingHorizontal: SIDE_PADDING,
-  },
+  topArea: { marginTop: 18, height: 182 },
   dayItem: {
     width: DAY_ITEM_WIDTH,
     alignItems: "center",
@@ -274,10 +324,10 @@ const styles = StyleSheet.create({
   },
   leftAccent: {
     position: "absolute",
-    left: 2,
-    top: 10,
-    bottom: 10,
-    width: 2,
+    left: 0,
+    top: 6,
+    bottom: 6,
+    width: 1,
     backgroundColor: COLORS.PRIMARY,
     borderRadius: 999,
   },

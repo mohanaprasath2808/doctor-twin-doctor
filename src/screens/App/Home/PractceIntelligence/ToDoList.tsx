@@ -1,6 +1,7 @@
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import SelectedIcon from "../../../../assets/icon/selectedIcon.svg";
+import UnselectedIcon from "../../../../assets/icon/unSelectedIcon.svg";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
@@ -14,7 +15,7 @@ import ScheduleIcon from "../../../../assets/icon/scheduleIcon.svg";
 import MessageIcon from "../../../../assets/icon/messageIcon.svg";
 import RefillsIcon from "../../../../assets/icon/refillsIcon.svg";
 import RevenueIcon from "../../../../assets/icon/revenueIcon.svg";
-
+import PlusIcon from "../../../../assets/icon/plusIcon.svg";
 const TODO_DATA = [
   {
     id: "review-lab-results",
@@ -54,12 +55,13 @@ const ToDoList = () => {
       >
         <View style={styles.itemLeft}>
           {item.checked ? (
-            <SelectedIcon width={30} height={30} />
+            <SelectedIcon width={22} height={22} />
           ) : (
             <InnerShadowIcon
-              size={20}
+              size={22}
               icon={<View style={styles.emptyCheckIcon} />}
             />
+            // <UnselectedIcon width={30} height={30} />
           )}
           <InnerShadowIcon icon={item.icon} size={40} />
           <Text style={styles.itemText}>{item.title}</Text>
@@ -101,7 +103,8 @@ const ToDoList = () => {
           borderWidth={1}
           borderColor={COLORS.PRIMARY}
           bgColor={COLORS.SURFACE}
-          text="+ Add New Task"
+          leftIcon={<PlusIcon width={16} height={16} />}
+          text="Add New Task"
           textStyle={styles.addTaskBtnText}
           onPress={() => navigation.navigate(navigationStrings.CREATE_TASK)}
         />

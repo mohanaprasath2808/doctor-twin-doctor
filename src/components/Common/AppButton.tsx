@@ -7,6 +7,7 @@ import {
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
+  View,
   ViewStyle,
 } from "react-native";
 
@@ -15,6 +16,7 @@ type AppButtonProps = {
   borderColor?: string;
   bgColor?: string;
   text: string;
+  leftIcon?: React.ReactNode;
   textStyle?: StyleProp<TextStyle>;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
@@ -28,6 +30,7 @@ const AppButton: React.FC<AppButtonProps> = ({
   borderColor = "transparent",
   bgColor = "transparent",
   text,
+  leftIcon,
   textStyle,
   onPress,
   style,
@@ -50,7 +53,10 @@ const AppButton: React.FC<AppButtonProps> = ({
         style,
       ]}
     >
-      <Text style={[styles.text, textStyle]}>{text}</Text>
+      <View style={styles.contentRow}>
+        {leftIcon ? <View style={styles.iconWrap}>{leftIcon}</View> : null}
+        <Text style={[styles.text, textStyle]}>{text}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -77,6 +83,16 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: "500",
+  },
+  contentRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconWrap: {
+    marginRight: 8,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

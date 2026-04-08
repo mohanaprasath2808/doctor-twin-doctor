@@ -8,6 +8,8 @@ import PracticeSchedule from "../../screens/App/Home/PractceIntelligence/Practic
 import MyCalender from "../../screens/App/Home/PractceIntelligence/MyCalender";
 import ToDoList from "../../screens/App/Home/PractceIntelligence/ToDoList";
 import CreateTask from "../../screens/App/Home/PractceIntelligence/CreateTask";
+import AddEvent from "../../screens/App/Home/PractceIntelligence/AddEvent";
+import EventDetails from "../../screens/App/Home/PractceIntelligence/EventDetails";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -67,6 +69,20 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.CREATE_TASK}
         component={CreateTask}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ADD_EVENT}
+        component={AddEvent}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.EVENT_DETAILS}
+        component={EventDetails}
         options={{
           headerShown: false,
         }}

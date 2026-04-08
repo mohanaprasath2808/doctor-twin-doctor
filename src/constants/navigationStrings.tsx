@@ -12,6 +12,8 @@ const navigationStrings = {
   MY_CALENDER: "MyCalender",
   TO_DO_LIST: "ToDoList",
   CREATE_TASK: "CreateTask",
+  ADD_EVENT: "AddEvent",
+  EVENT_DETAILS: "EventDetails",
   REPORT_HUB: "ReportHub",
   SCHEDULE: "Schedule",
   QUEUE: "Queue",

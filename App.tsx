@@ -2,6 +2,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { NavigationContainer } from '@react-navigation/native';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import Router from './src/router/Router';
 import AuthContextProvider from './src/context/AuthContext';
 import AppContextProvider from './src/context/AppContext';
@@ -30,13 +31,15 @@ const App = () => {
       }}
     >
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <NavigationContainer>
-          <AppContextProvider>
-            <AuthContextProvider>
-              <Router />
-            </AuthContextProvider>
-          </AppContextProvider>
-        </NavigationContainer>
+        <BottomSheetModalProvider>
+          <NavigationContainer>
+            <AppContextProvider>
+              <AuthContextProvider>
+                <Router />
+              </AuthContextProvider>
+            </AppContextProvider>
+          </NavigationContainer>
+        </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </ToastProvider>
   );
