@@ -12,6 +12,7 @@ import AddEvent from "../../screens/App/Home/PractceIntelligence/AddEvent";
 import EventDetails from "../../screens/App/Home/PractceIntelligence/EventDetails";
 import Patients from "../../screens/App/Patients";
 import PatientSnapshot from "../../screens/App/PatientSnapshot";
+import RefillEscalation from "../../screens/App/Home/Refill Escalation/RefillEscalation";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -99,6 +100,14 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.PATIENT_SNAPSHOT}
         component={PatientSnapshot}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name={navigationStrings.REFILL_ESCALATION}
+        component={RefillEscalation}
         options={{
           headerShown: false,
         }}

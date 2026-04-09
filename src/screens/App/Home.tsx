@@ -115,32 +115,41 @@ const Home = () => {
     throw new Error("useContext must be used within AppContextProvider");
   }
   const { notificationsData, messagesData } = appContext;
-  const gridItems = GRID_ITEMS.map((item) =>
-    item.id === 2
-      ? {
+  const gridItems = GRID_ITEMS.map((item) => {
+    switch (item.id) {
+
+      case 1:
+        return {
+          ...item,
+          onPress: () =>
+            navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
+        };
+      case 2:
+        return {
           ...item,
           badge:
             messagesData.length > 0 ? String(messagesData.length) : undefined,
           badgeType: messagesData.length > 0 ? ("dot" as const) : undefined,
-        }
-      : item.id === 1
-        ? {
-            ...item,
-            onPress: () =>
-              navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
-          }
-        : item.id === 7
-          ? {
-              ...item,
-              onPress: () => navigation.navigate(navigationStrings.SCHEDULE),
-            }
-          : item.id === 11
-            ? {
-                ...item,
-                onPress: () => navigation.navigate(navigationStrings.PATIENTS),
-              }
-            : item,
-  );
+        };
+      case 10:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.REFILL_ESCALATION),
+        };
+      case 7:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.SCHEDULE),
+        };
+      case 11:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.PATIENTS),
+        };
+      default:
+        return item;
+    }
+  });
 
   const renderListHeader = () => (
     <View style={styles.listHeader}>
@@ -162,7 +171,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
