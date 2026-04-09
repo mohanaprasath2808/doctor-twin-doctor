@@ -10,6 +10,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 
 type AppButtonProps = {
   borderWidth?: number;
@@ -17,13 +18,18 @@ type AppButtonProps = {
   bgColor?: string;
   text: string;
   leftIcon?: React.ReactNode;
+  iconSize?: number;
   textStyle?: StyleProp<TextStyle>;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   disabled?: boolean;
   activeOpacity?: number;
   shadowStyle?: StyleProp<ViewStyle>;
-} & Omit<TouchableOpacityProps, "style" | "onPress" | "disabled" | "activeOpacity">;
+  useGradientBorder?: boolean;
+} & Omit<
+  TouchableOpacityProps,
+  "style" | "onPress" | "disabled" | "activeOpacity"
+>;
 
 const AppButton: React.FC<AppButtonProps> = ({
   borderWidth = 0,
@@ -31,14 +37,28 @@ const AppButton: React.FC<AppButtonProps> = ({
   bgColor = "transparent",
   text,
   leftIcon,
+  iconSize = 16,
   textStyle,
   onPress,
   style,
   disabled = false,
   activeOpacity = 0.8,
   shadowStyle,
+  useGradientBorder = false,
   ...touchableProps
 }) => {
+  const resolvedBorderWidth = useGradientBorder
+    ? Math.max(1, borderWidth || 1)
+    : borderWidth;
+  const resolvedBorderColor = useGradientBorder ? "transparent" : borderColor;
+  const renderedIcon =
+    leftIcon && React.isValidElement(leftIcon)
+      ? React.cloneElement(leftIcon as React.ReactElement<any>, {
+          width: iconSize,
+          height: iconSize,
+        })
+      : leftIcon;
+
   return (
     <TouchableOpacity
       {...touchableProps}
@@ -49,12 +69,55 @@ const AppButton: React.FC<AppButtonProps> = ({
         styles.base,
         styles.shadow,
         shadowStyle,
-        { borderWidth, borderColor, backgroundColor: bgColor, opacity: disabled ? 0.65 : 1 },
+        {
+          borderWidth: resolvedBorderWidth,
+          borderColor: resolvedBorderColor,
+          backgroundColor: useGradientBorder ? "transparent" : bgColor,
+          opacity: disabled ? 0.65 : 1,
+        },
         style,
       ]}
     >
+      {useGradientBorder ? (
+        <>
+          <LinearGradient
+            colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
+            locations={[0.082, 0.8268]}
+            start={{ x: 1, y: 0.465 }}
+            end={{ x: 0, y: 0.535 }}
+            style={[StyleSheet.absoluteFillObject, styles.gradientBorder]}
+          />
+          <LinearGradient
+            colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
+            locations={[0, 1]}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+            style={[StyleSheet.absoluteFillObject, styles.gradientBorder]}
+          />
+          <LinearGradient
+            colors={["#303DA3", "#111747"]}
+            locations={[0.1494, 0.8506]}
+            start={{ x: 0, y: 0.488 }}
+            end={{ x: 1, y: 0.512 }}
+            style={[StyleSheet.absoluteFillObject, styles.gradientBorder]}
+          />
+          <View
+            pointerEvents="none"
+            style={[
+              styles.gradientInset,
+              {
+                top: resolvedBorderWidth,
+                left: resolvedBorderWidth,
+                right: resolvedBorderWidth,
+                bottom: resolvedBorderWidth,
+                backgroundColor: bgColor,
+              },
+            ]}
+          />
+        </>
+      ) : null}
       <View style={styles.contentRow}>
-        {leftIcon ? <View style={styles.iconWrap}>{leftIcon}</View> : null}
+        {renderedIcon ? <View style={styles.iconWrap}>{renderedIcon}</View> : null}
         <Text style={[styles.text, textStyle]}>{text}</Text>
       </View>
     </TouchableOpacity>
@@ -67,7 +130,10 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
+  gradientBorder: { borderRadius: 26 },
+  gradientInset: { position: "absolute", borderRadius: 999 },
   shadow: Platform.select({
     ios: {
       shadowColor: "#A0B4C8",
@@ -97,4 +163,3 @@ const styles = StyleSheet.create({
 });
 
 export default AppButton;
-

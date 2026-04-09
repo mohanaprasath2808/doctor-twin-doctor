@@ -8,8 +8,6 @@ import {
   StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
-import LinearGradient from "react-native-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
@@ -18,8 +16,8 @@ import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
 import { AppContext } from "../../context/AppContext";
 import NotificationIcon from "../../assets/icon/notificationIcon.svg";
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
-import InnerShadowView from "../../neomorphism/InnerShadowView";
 import DoctorAvatar from "../../components/Common/DoctorAvatar";
+import DeltaBadge from "../../components/Common/DeltaBadge";
 import InteligentIcon from "../../assets/icon/intelliganceIcon.svg";
 import CalendarIcon from "../../assets/icon/calendarBlueIcon.svg";
 import ScribeIcon from "../../assets/icon/scribeIcon.svg";
@@ -30,8 +28,10 @@ import RevenueIcon from "../../assets/icon/revenueIcon.svg";
 import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
+import PatientIcon from "../../assets/icon/patientIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import IconComponent from "../../neomorphism/IconComponent";
 // ─── Grid items ──────────────────────────────────────────────────────────────
 type GridItem = {
   id: number;
@@ -95,6 +95,11 @@ const GRID_ITEMS: GridItem[] = [
     label: "Refills",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
+  {
+    id: 11,
+    label: "Patient",
+    icon: () => <PatientIcon width={18} height={18} />,
+  },
 ];
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -124,28 +129,43 @@ const Home = () => {
             onPress: () =>
               navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
           }
-      : item.id === 7
-        ? {
-            ...item,
-            onPress: () => navigation.navigate(navigationStrings.SCHEDULE),
-          }
-      : item,
+        : item.id === 7
+          ? {
+              ...item,
+              onPress: () => navigation.navigate(navigationStrings.SCHEDULE),
+            }
+          : item.id === 11
+            ? {
+                ...item,
+                onPress: () => navigation.navigate(navigationStrings.PATIENTS),
+              }
+            : item,
   );
 
   const renderListHeader = () => (
     <View style={styles.listHeader}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <DoctorAvatar source={DoctorTempImage} imageSize={38} containerSize={44} />
+          <DoctorAvatar
+            source={DoctorTempImage}
+            imageSize={38}
+            containerSize={44}
+          />
           <View style={styles.greetingContainer}>
             <Text style={styles.greetingLight}>Good Morning</Text>
             <Text style={styles.greetingBold}>Dr. Soliman</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.bellBtn} activeOpacity={0.8}>
-          <NotificationIcon width={20} height={20} />
+        <View style={styles.bellWrap}>
+          <IconComponent
+            icon={<NotificationIcon width={20} height={20} />}
+            width={44}
+            height={44}
+            radius={22}
+            onPress={() => {}}
+          />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
-        </TouchableOpacity>
+        </View>
       </View>
 
       <ProfileAvatar
@@ -176,35 +196,17 @@ const Home = () => {
           <View style={styles.cardTextWrap}>
             <Text style={styles.cardLabel}>{item.label}</Text>
             {item.badgeType === "sub" && item.badge && (
-              <LinearGradient
-                colors={["#D6E3F3", "#FFFFFF"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.subBadgeBorder}
-              >
-                <View
-                  pointerEvents="none"
-                  style={styles.subBadgeBorderInnerShadow}
-                >
-                  <InnerShadowView
-                    width={64}
-                    height={22}
-                    borderRadius={10}
-                    color={COLORS.ACCENT}
-                    darkShadowDx={-4}
-                    darkShadowDy={-4}
-                    darkShadowBlur={10}
-                    darkShadowColor="#C8CBCC99"
-                    lightShadowDx={5}
-                    lightShadowDy={5}
-                    lightShadowBlur={5}
-                    lightShadowColor="#FFFFFF"
-                  />
-                </View>
-                <View style={styles.subBadge}>
-                  <Text style={styles.subBadgeText}>{item.badge}</Text>
-                </View>
-              </LinearGradient>
+              <DeltaBadge
+                icon={null}
+                value={item.badge}
+                width={56}
+                height={20}
+                bgColor={COLORS.ACCENT}
+                darkShadowColor="#C8CBCC"
+                lightShadowColor="#FFFFFF99"
+                textColor={COLORS.PRIMARY}
+                textStyle={styles.subBadgeText}
+              />
             )}
           </View>
         </NeumorphicCard>
@@ -279,18 +281,10 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_DARK,
     fontWeight: "500",
   },
-  bellBtn: {
+  bellWrap: {
     width: 44,
     height: 44,
-    borderRadius: 22,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#A0B4C8",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    elevation: 4,
+    position: "relative",
   },
   bellDot: {
     position: "absolute",
@@ -358,28 +352,8 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     lineHeight: 20,
   },
-  subBadgeBorder: {
-    alignSelf: "flex-start",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    height: 20,
-    padding: 1,
-    position: "relative",
-    overflow: "hidden",
-  },
-  subBadgeBorderInnerShadow: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  subBadge: {
-    flex: 1,
-    backgroundColor: "transparent",
-    borderRadius: 9,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   subBadgeText: {
     fontSize: 10,
-    color: COLORS.PRIMARY,
     fontWeight: "500",
   },
   dotBadge: {

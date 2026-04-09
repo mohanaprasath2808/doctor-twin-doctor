@@ -163,11 +163,12 @@ const styles = StyleSheet.create({
   },
   badgeOuter: {
     marginTop: -40,
-    paddingHorizontal: 20,
     zIndex: 2,
   },
   badgeInner: {
-    paddingVertical: 5,
+    minWidth: 108,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -179,6 +180,7 @@ const styles = StyleSheet.create({
   badgeLabel: {
     color: COLORS.TEXT_80,
     fontSize: 14,
+    lineHeight: 17,
     fontWeight: "400",
   },
   cardTitle: {

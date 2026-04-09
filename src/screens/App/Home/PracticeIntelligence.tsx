@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../constants/theme";
@@ -15,6 +10,7 @@ import DoctorAvatar from "../../../components/Common/DoctorAvatar";
 import DeltaBadge from "../../../components/Common/DeltaBadge";
 import AppButton from "../../../components/Common/AppButton";
 import NeumorphicCard from "../../../components/Common/NeumorphicCard";
+import InsightMessageCard from "../../../components/Common/InsightMessageCard";
 import BackIcon from "../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
@@ -70,14 +66,11 @@ const PracticeIntelligence = () => {
             imageSize={38}
             containerSize={44}
           />
-          <View style={styles.messageCard}>
-            <Text style={styles.messageHeading}>
-              Here is your daily practice performance analysis
-            </Text>
-            <Text style={styles.messageSub}>
-              Would you like to review the key metrics
-            </Text>
-          </View>
+          <InsightMessageCard
+            title="Here is your daily practice performance analysis"
+            subTitle="Would you like to review the key metrics"
+            bgColor="#CBF0FF"
+          />
         </View>
 
         <View style={styles.grid}>
@@ -148,7 +141,11 @@ const MetricCard = ({
   delta: string;
   positive?: boolean;
 }) => (
-  <NeumorphicCard outerStyle={styles.metricCardOuter} innerStyle={styles.metricCard} borderRadius={14}>
+  <NeumorphicCard
+    outerStyle={styles.metricCardOuter}
+    innerStyle={styles.metricCard}
+    borderRadius={14}
+  >
     <View style={styles.metricHeader}>
       <InnerShadowIcon icon={icon} size={40} />
       <Text style={styles.metricTitle}>{title}</Text>
@@ -164,8 +161,10 @@ const MetricCard = ({
           )
         }
         value={delta}
+        height={24}
         bgColor={positive ? "#D3FFF1" : "#FDECEC"}
         darkShadowColor={positive ? "#A9E9D5" : "#F2CACA"}
+        lightShadowColor="#FFFFFF99"
         textColor={positive ? COLORS.GREEN : COLORS.ALERT}
       />
       <Text style={styles.lastWeek}>From last week</Text>
@@ -217,30 +216,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 8,
-  },
-  messageCard: {
-    flex: 1,
-    backgroundColor: "#CBF0FF",
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderWidth: 2,
-    borderColor: COLORS.WHITE,
-  },
-  messageHeading: {
-    color: COLORS.PRIMARY,
-    fontSize: 14,
-    fontWeight: "500",
-    lineHeight: 18,
-  },
-  messageSub: {
-    color: COLORS.TEXT_70,
-    fontSize: 14,
-    marginTop: 6,
-    fontWeight: "400",
   },
   grid: {
     marginTop: 16,

@@ -10,6 +10,8 @@ import ToDoList from "../../screens/App/Home/PractceIntelligence/ToDoList";
 import CreateTask from "../../screens/App/Home/PractceIntelligence/CreateTask";
 import AddEvent from "../../screens/App/Home/PractceIntelligence/AddEvent";
 import EventDetails from "../../screens/App/Home/PractceIntelligence/EventDetails";
+import Patients from "../../screens/App/Patients";
+import PatientSnapshot from "../../screens/App/PatientSnapshot";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -83,6 +85,20 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.EVENT_DETAILS}
         component={EventDetails}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PATIENTS}
+        component={Patients}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PATIENT_SNAPSHOT}
+        component={PatientSnapshot}
         options={{
           headerShown: false,
         }}

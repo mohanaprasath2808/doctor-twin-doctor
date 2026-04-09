@@ -145,6 +145,7 @@ const CreateTask = () => {
               containerStyle={styles.addBtn}
               backgroundColor="#2E3A8C"
               textColor="#FFFFFF"
+              textStyle={styles.addBtnText}
             />
           </View>
         </View>
@@ -198,9 +199,10 @@ const styles = StyleSheet.create({
   },
   cancelWrap: { flex: 1 },
   addWrap: { flex: 1 },
-  cancelBtn: { height: 52, borderRadius: 26 },
+  cancelBtn: { height: 48, borderRadius: 24 },
   cancelText: { color: COLORS.ALERT, fontSize: 16, fontWeight: "500" },
-  addBtn: { height: 52, borderRadius: 26 },
+  addBtn: { height: 48, borderRadius: 24 },
+  addBtnText: { color: "#FFFFFF", fontSize: 16, fontWeight: "500" },
 });
 
 export default CreateTask;

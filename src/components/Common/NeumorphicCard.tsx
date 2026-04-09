@@ -7,6 +7,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import { COLORS } from "../../constants/theme";
 
 type NeumorphicCardProps = {
@@ -31,30 +32,61 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
   activeOpacity = 0.85,
 }) => {
   const Surface: React.ElementType = onPress ? TouchableOpacity : View;
-  const surfaceProps = onPress
-    ? { activeOpacity, onPress }
-    : undefined;
+  const surfaceProps = onPress ? { activeOpacity, onPress } : undefined;
+  const innerRadius = Math.max(0, borderRadius - 1);
 
   return (
     <View style={[styles.outer, { borderRadius }, outerStyle]}>
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowDark, { borderRadius, backgroundColor }]}
+        style={[
+          styles.shadowLayer,
+          styles.shadowDark,
+          { borderRadius, backgroundColor },
+        ]}
       />
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowLight, { borderRadius, backgroundColor }]}
+        style={[
+          styles.shadowLayer,
+          styles.shadowLight,
+          { borderRadius, backgroundColor },
+        ]}
       />
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowSoft, { borderRadius, backgroundColor }]}
+        style={[
+          styles.shadowLayer,
+          styles.shadowSoft,
+          { borderRadius, backgroundColor },
+        ]}
       />
-      <Surface
-        {...(surfaceProps as any)}
-        style={[styles.inner, { borderRadius, backgroundColor }, innerStyle]}
-      >
-        {children}
-      </Surface>
+      <View style={[styles.border, { borderRadius }]}>
+        <LinearGradient
+          colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
+          locations={[0.082, 0.8268]}
+          start={{ x: 1, y: 0.465 }}
+          end={{ x: 0, y: 0.535 }}
+          style={StyleSheet.absoluteFillObject}
+        />
+        <LinearGradient
+          colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
+          locations={[0, 1]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={StyleSheet.absoluteFillObject}
+        />
+        <Surface
+          {...(surfaceProps as any)}
+          style={[
+            styles.inner,
+            { borderRadius: innerRadius, backgroundColor },
+            innerStyle,
+          ]}
+        >
+          {children}
+        </Surface>
+      </View>
     </View>
   );
 };
@@ -66,6 +98,11 @@ const styles = StyleSheet.create({
   },
   shadowLayer: {
     ...StyleSheet.absoluteFillObject,
+  },
+  border: {
+    zIndex: 1,
+    padding: 1,
+    overflow: "hidden",
   },
   shadowDark: {
     ...Platform.select({
@@ -101,9 +138,8 @@ const styles = StyleSheet.create({
     }),
   },
   inner: {
-    zIndex: 1,
+    overflow: "hidden",
   },
 });
 
 export default NeumorphicCard;
-

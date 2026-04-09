@@ -18,6 +18,7 @@ const navigationStrings = {
   SCHEDULE: "Schedule",
   QUEUE: "Queue",
   PATIENTS: "Patients",
+  PATIENT_SNAPSHOT: "PatientSnapshot",
 };
 
 export default navigationStrings;

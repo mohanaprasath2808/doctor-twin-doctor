@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, ImageSourcePropType, StyleSheet, View } from "react-native";
+import LinearGradient from "react-native-linear-gradient";
 import { COLORS } from "../../constants/theme";
 
 interface DoctorAvatarProps {
@@ -31,7 +32,12 @@ const DoctorAvatar: React.FC<DoctorAvatarProps> = ({
         },
       ]}
     >
-      <View style={[styles.outerRingShell, { borderRadius: outerSize / 2 }]}>
+      <LinearGradient
+        colors={["#D6E3F3", "#FFFFFF"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[styles.outerRingShell, { borderRadius: outerSize / 2 }]}
+      >
         <View
           style={[
             styles.middleRing,
@@ -42,28 +48,28 @@ const DoctorAvatar: React.FC<DoctorAvatarProps> = ({
             },
           ]}
         >
-        <View
-          style={[
-            styles.avatarRing,
-            {
-              width: containerSize,
-              height: containerSize,
-              borderRadius: containerSize / 2,
-            },
-          ]}
-        >
-          <Image
-            source={source}
-            style={{
-              width: imageSize,
-              height: imageSize,
-              borderRadius: imageSize / 2,
-              resizeMode: "cover",
-            }}
-          />
+          <View
+            style={[
+              styles.avatarRing,
+              {
+                width: containerSize,
+                height: containerSize,
+                borderRadius: containerSize / 2,
+              },
+            ]}
+          >
+            <Image
+              source={source}
+              style={{
+                width: imageSize,
+                height: imageSize,
+                borderRadius: imageSize / 2,
+                resizeMode: "cover",
+              }}
+            />
+          </View>
         </View>
-        </View>
-      </View>
+      </LinearGradient>
     </View>
   );
 };
@@ -80,12 +86,13 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   outerRingShell: {
+    flex: 1,
     width: "100%",
     height: "100%",
-    padding: 1.5,
-    backgroundColor: "#EEF3F8",
+    padding: 1,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
   middleRing: {
     backgroundColor: "#F3F7FB",

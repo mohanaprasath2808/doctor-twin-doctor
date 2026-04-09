@@ -1,79 +1,110 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import InnerShadowView from "../../neomorphism/InnerShadowView";
+import { Canvas, RoundedRect, Shadow } from "@shopify/react-native-skia";
 
 interface DeltaBadgeProps {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   value: string;
   bgColor: string;
   darkShadowColor: string;
+  lightShadowColor?: string;
   textColor: string;
+  textStyle?: StyleProp<TextStyle>;
+  width?: number;
+  height?: number;
 }
 
 const WIDTH = 56;
 const HEIGHT = 20;
 const RADIUS = 114;
 const BORDER = 1;
-const INNER_WIDTH = WIDTH - BORDER * 2;
-const INNER_HEIGHT = HEIGHT - BORDER * 2;
-const INNER_RADIUS = RADIUS - BORDER;
 
 const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   icon,
   value,
   bgColor,
   darkShadowColor,
+  lightShadowColor = "#FFFFFF99",
   textColor,
+  textStyle,
+  width,
+  height = HEIGHT,
 }) => {
+  const autoWidth = Math.max(
+    WIDTH,
+    Math.ceil(String(value).length * 7 + (icon ? 18 : 0) + 18),
+  );
+  const badgeWidth = width ?? autoWidth;
+  const innerWidth = badgeWidth - BORDER * 2;
+  const innerHeight = height - BORDER * 2;
+  const radius = height / 2;
+  const innerRadius = Math.max(0, radius - BORDER);
+
   return (
-    <LinearGradient
-      colors={["#D6E3F3", "#FFFFFF"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.border}
+    <View
+      style={[
+        styles.border,
+        { width: badgeWidth, height, borderRadius: radius },
+      ]}
     >
-      <View style={[styles.surface, { backgroundColor: bgColor }]}>
+      <LinearGradient
+        colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
+        locations={[0.082, 0.8268]}
+        start={{ x: 1, y: 0.465 }}
+        end={{ x: 0, y: 0.535 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <LinearGradient
+        colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
+        locations={[0, 1]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <View
+        style={[
+          styles.surface,
+          { backgroundColor: bgColor, borderRadius: innerRadius },
+        ]}
+      >
         <View
           pointerEvents="none"
           style={styles.innerShadow}
           collapsable={false}
         >
-          <InnerShadowView
-            width={INNER_WIDTH}
-            height={INNER_HEIGHT}
-            borderRadius={INNER_RADIUS}
-            color={bgColor}
-            darkShadowDx={4}
-            darkShadowDy={4}
-            darkShadowBlur={14}
-            darkShadowColor={darkShadowColor}
-            lightShadowDx={-4}
-            lightShadowDy={-4}
-            lightShadowBlur={9}
-            lightShadowColor="#FFFFFF99"
-          />
+          <Canvas style={{ width: innerWidth, height: innerHeight }}>
+            <RoundedRect
+              x={0}
+              y={0}
+              width={innerWidth}
+              height={innerHeight}
+              r={innerRadius}
+              color={bgColor}
+            >
+              <Shadow dx={4} dy={2} blur={8} color={darkShadowColor} inner />
+              <Shadow dx={-4} dy={-2} blur={5} color={lightShadowColor} inner />
+            </RoundedRect>
+          </Canvas>
         </View>
         <View style={styles.content}>
-          {icon}
-          <Text style={[styles.text, { color: textColor }]}>{value}</Text>
+          {icon ? icon : null}
+          <Text style={[styles.text, { color: textColor }, textStyle]}>
+            {value}
+          </Text>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   border: {
-    width: WIDTH,
-    height: HEIGHT,
-    borderRadius: RADIUS,
     padding: BORDER,
     overflow: "hidden",
   },
   surface: {
     flex: 1,
-    borderRadius: INNER_RADIUS,
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
