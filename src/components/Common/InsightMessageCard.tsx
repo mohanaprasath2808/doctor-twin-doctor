@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   View,
   ViewStyle,
 } from "react-native";
@@ -15,6 +16,9 @@ type InsightMessageCardProps = {
   subTitle: string;
   bgColor?: string;
   style?: StyleProp<ViewStyle>;
+  titleStyle?: StyleProp<TextStyle>;
+  subTitleStyle?: StyleProp<TextStyle>;
+  titleSubTitleGap?: number;
 };
 
 const InsightMessageCard: React.FC<InsightMessageCardProps> = ({
@@ -22,6 +26,9 @@ const InsightMessageCard: React.FC<InsightMessageCardProps> = ({
   subTitle,
   bgColor = "#CBF0FF",
   style,
+  titleStyle,
+  subTitleStyle,
+  titleSubTitleGap = 6,
 }) => {
   return (
     <View style={[styles.outer, style]}>
@@ -41,8 +48,10 @@ const InsightMessageCard: React.FC<InsightMessageCardProps> = ({
           style={StyleSheet.absoluteFillObject}
         />
         <View style={[styles.inner, { backgroundColor: bgColor }]}>
-          <Text style={styles.heading}>{title}</Text>
-          <Text style={styles.sub}>{subTitle}</Text>
+          <Text style={[styles.heading, titleStyle]}>{title}</Text>
+          <Text style={[styles.sub, { marginTop: titleSubTitleGap }, subTitleStyle]}>
+            {subTitle}
+          </Text>
         </View>
       </View>
     </View>
@@ -95,7 +104,6 @@ const styles = StyleSheet.create({
   sub: {
     color: COLORS.TEXT_70,
     fontSize: 14,
-    marginTop: 6,
     fontWeight: "400",
   },
 });
