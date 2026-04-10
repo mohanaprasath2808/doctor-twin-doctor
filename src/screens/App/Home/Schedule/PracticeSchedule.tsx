@@ -20,6 +20,7 @@ import ScheduleIcon from "../../../../assets/icon/scheduleIcon.svg";
 import RefillsIcon from "../../../../assets/icon/refillsIcon.svg";
 import DelegationHubIcon from "../../../../assets/icon/delegationHubIcon.svg";
 import UtilizationIcon from "../../../../assets/icon/utilizationIcon.svg";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 const DATA = [
   {
@@ -53,7 +54,22 @@ const PracticeSchedule = () => {
   const navigation = useNavigation<any>();
 
   const renderItem = ({ item }: { item: (typeof DATA)[number] }) => (
-    <TouchableOpacity activeOpacity={0.85} onPress={() => {}}>
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={() =>
+        item.id === "physicals"
+          ? navigation.navigate(navigationStrings.PHYSICALS)
+          : item.id === "pre-ops"
+          ? navigation.navigate(navigationStrings.PRE_OPS)
+          : item.id === "med-spa"
+          ? navigation.navigate(navigationStrings.MED_SPA)
+          : item.id === "hospital-rounds"
+            ? navigation.navigate(navigationStrings.HOSPITAL_ROUNDS)
+            : item.id === "follow-ups"
+              ? navigation.navigate(navigationStrings.FOLLOW_UPS)
+            : undefined
+      }
+    >
       <NeumorphicCard
         outerStyle={styles.itemOuter}
         innerStyle={styles.itemInner}
