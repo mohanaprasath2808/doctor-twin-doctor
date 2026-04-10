@@ -1,56 +1,35 @@
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LineChart } from "react-native-gifted-charts";
+import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
 import IconComponent from "../../neomorphism/IconComponent";
-import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
-import ReusableButton from "../../neomorphism/ReusableButton";
+import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import DoctorAvatar from "../../components/Common/DoctorAvatar";
+import InsightMessageCard from "../../components/Common/InsightMessageCard";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
+import NeumorphicInnerShadowCard from "../../neomorphism/NeumorphicInnerShadowCard";
+import AppButton from "../../components/Common/AppButton";
+import StatusDot from "../../components/Common/StatusDot";
+import ReusableButton from "../../neomorphism/ReusableButton";
 import BackIcon from "../../assets/icon/backArrow.svg";
 import NotificationIcon from "../../assets/icon/notificationIcon.svg";
+import OverlayImage from "../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
-import PatientIcon from "../../assets/icon/patientIcon.svg";
-import HomeIcon from "../../assets/icon/unSelectedIcon.svg";
-import ScribeIcon from "../../assets/icon/scribeIcon.svg";
-import { useNavigation } from "@react-navigation/native";
-
-const chartData = [
-  { value: 5.6 },
-  { value: 5.8 },
-  { value: 5.7 },
-  { value: 6.0 },
-  { value: 5.9 },
-  { value: 6.2 },
-  { value: 6.4 },
-  { value: 6.1 },
-  { value: 6.6 },
-  { value: 6.5 },
-  { value: 6.9 },
-  { value: 7.2 },
-  { value: 7.0 },
-  { value: 7.3 },
-  { value: 7.5 },
-  { value: 7.1 },
-  { value: 7.6 },
-  { value: 7.9 },
-  { value: 8.2 },
-  { value: 9.2 },
-];
 
 const LabAlertDecision = () => {
   const navigation = useNavigation<any>();
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
       >
         <View style={styles.header}>
           <IconComponent
-            icon={<BackIcon width={16} height={16} />}
+            icon={<BackIcon width={18} height={18} />}
             width={40}
             height={40}
             radius={20}
@@ -58,103 +37,141 @@ const LabAlertDecision = () => {
           />
           <Text style={styles.headerTitle}>Dr.Twin Listening...</Text>
           <IconComponent
-            icon={<NotificationIcon width={18} height={18} />}
+            icon={<NotificationIcon width={20} height={20} />}
             width={40}
             height={40}
             radius={20}
+            onPress={() => {}}
           />
         </View>
 
-        <View style={styles.avatarWrap}>
-          <Image source={DoctorTempImage} style={styles.avatar} />
+        <ProfileAvatar
+          overlaySource={OverlayImage}
+          imageSource={DoctorTempImage}
+          wrapperStyle={styles.avatarWrapper}
+          imageStyle={styles.avatarImage}
+        />
+
+        <View style={styles.messageRow}>
+          <DoctorAvatar
+            source={DoctorTempImage}
+            imageSize={38}
+            containerSize={44}
+          />
+          <InsightMessageCard
+            title="Laboratory Alert"
+            subTitle="Abnormal lab needs your decision."
+            bgColor="#CBF0FF"
+            titleStyle={styles.alertTitle}
+            subTitleStyle={styles.alertSubTitle}
+            titleSubTitleGap={4}
+          />
         </View>
 
-        <NeumorphicCard outerStyle={styles.alertOuter} innerStyle={styles.alertInner} borderRadius={14}>
-          <View style={styles.alertBadge} />
-          <Text style={styles.alertTitle}>Laboratory Alert</Text>
-          <Text style={styles.alertSub}>Abnormal lab needs your decision.</Text>
-        </NeumorphicCard>
-
-        <NeumorphicCard outerStyle={styles.mainCardOuter} innerStyle={styles.mainCardInner} borderRadius={12}>
-          <View style={styles.patientTop}>
-            <View style={styles.patientMetaWrap}>
-              <InnerShadowIcon icon={<Text style={styles.initials}>SW</Text>} size={40} />
-              <View>
+        <NeumorphicCard
+          outerStyle={styles.patientCardOuter}
+          innerStyle={styles.patientCardInner}
+          borderRadius={12}
+        >
+          <View style={styles.patientTopRow}>
+            <View style={styles.patientLeft}>
+              <InnerShadowIcon
+                size={40}
+                icon={<Text style={styles.initials}>SW</Text>}
+              />
+              <View style={styles.nameWrap}>
                 <Text style={styles.patientName}>Sarah Williams</Text>
-                <Text style={styles.patientMeta}>Female • Age 45</Text>
+                <View style={styles.metaRow}>
+                  <Text style={styles.metaText}>Female</Text>
+                  <View style={styles.metaDot} />
+                  <Text style={styles.metaText}>Age 45</Text>
+                </View>
               </View>
             </View>
-            <View style={styles.criticalBadge}>
+
+            <NeumorphicCard
+              outerStyle={styles.criticalOuter}
+              innerStyle={styles.criticalInner}
+              borderRadius={14}
+              backgroundColor="#FDECEC"
+            >
               <Text style={styles.criticalText}>Critical</Text>
+            </NeumorphicCard>
+          </View>
+
+          <Text style={styles.readingText}>HbA1c 9.2%</Text>
+
+          <NeumorphicInnerShadowCard
+            borderRadius={10}
+            containerStyle={styles.innerAlertCard}
+            contentStyle={styles.innerAlertContent}
+            darkShadowDx={4}
+            darkShadowDy={4}
+            darkShadowBlur={14}
+            darkShadowColor="#C8CBCC"
+            lightShadowDx={-4}
+            lightShadowDy={-4}
+            lightShadowBlur={9}
+            lightShadowColor="#FFFFFF99"
+          >
+            <View style={styles.alertLineRow}>
+              <StatusDot color="#FF6B6B" style={styles.alertDot} />
+              <Text style={styles.alertLine}>
+                Renal Function labs are Overdue
+              </Text>
             </View>
-          </View>
-
-          <Text style={styles.chartTitle}>HbA1c 9.2%</Text>
-          <View style={styles.chartWrap}>
-            <LineChart
-              data={chartData}
-              areaChart
-              color="#F08FA2"
-              thickness={2}
-              startFillColor="#FDE6EC"
-              endFillColor="#FDE6EC"
-              startOpacity={0.45}
-              endOpacity={0.02}
-              hideDataPoints
-              hideAxesAndRules
-              disableScroll
-              adjustToWidth
-              isAnimated={false}
-              initialSpacing={0}
-              endSpacing={0}
-            />
-          </View>
-
-          <View style={styles.xAxisRow}>
-            <Text style={styles.axisText}>wed</Text>
-            <Text style={styles.axisText}>6.9</Text>
-            <Text style={styles.axisText}>6.6</Text>
-            <Text style={styles.axisText}>6 months ago</Text>
-            <Text style={styles.axisText}>2.4</Text>
-          </View>
-
-          <View style={styles.separator} />
-
-          <NeumorphicCard outerStyle={styles.notesOuter} innerStyle={styles.notesInner} borderRadius={10}>
-            <Text style={styles.noteItem}>• Renal Function labs are Overdue</Text>
-            <Text style={styles.noteItem}>• A1C level elevated</Text>
-          </NeumorphicCard>
+            <View style={[styles.alertLineRow, { marginTop: 10 }]}>
+              <StatusDot color="#EEB621" style={styles.alertDot} />
+              <Text style={styles.alertLine}>A1C level elevated</Text>
+            </View>
+          </NeumorphicInnerShadowCard>
         </NeumorphicCard>
 
         <View style={styles.actionsGrid}>
-          <ReusableButton title="Order Repeat Test" width="48%" height={48} borderRadius={24} textColor={COLORS.PRIMARY} />
-          <ReusableButton title="Delegate" width="48%" height={48} borderRadius={24} textColor={COLORS.PRIMARY} />
-          <ReusableButton title="Review Full chart" width="48%" height={48} borderRadius={24} textColor={COLORS.PRIMARY} />
-          <ReusableButton title="Escalate Urgent" width="48%" height={48} borderRadius={24} textColor={COLORS.PRIMARY} />
+          <AppButton
+            text="Order Repeat Test"
+            style={styles.actionButton}
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            textStyle={styles.actionText}
+          />
+          <AppButton
+            text="Delegate"
+            style={styles.actionButton}
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            textStyle={styles.actionText}
+          />
+          <AppButton
+            text="Review Full chart"
+            style={styles.actionButton}
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            textStyle={styles.actionText}
+          />
+          <AppButton
+            text="Escalate Urgent"
+            style={styles.actionButton}
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            textStyle={styles.actionText}
+          />
         </View>
 
-        <ReusableButton
-          title="Schedule Patient"
-          width="100%"
-          height={48}
-          borderRadius={24}
-          containerStyle={styles.scheduleBtn}
-        />
-
-        <NeumorphicCard outerStyle={styles.bottomOuter} innerStyle={styles.bottomInner} borderRadius={14}>
-          <View style={styles.bottomItem}>
-            <HomeIcon width={18} height={18} />
-            <Text style={styles.bottomText}>Home</Text>
-          </View>
-          <View style={styles.centerMicWrap}>
-            <InnerShadowIcon icon={<ScribeIcon width={20} height={20} />} size={72} />
-            <Text style={styles.bottomSelected}>Queue</Text>
-          </View>
-          <View style={styles.bottomItem}>
-            <PatientIcon width={18} height={18} />
-            <Text style={styles.bottomText}>Patients</Text>
-          </View>
-        </NeumorphicCard>
+        <View style={styles.spaceBetween}>
+          <ReusableButton
+            title="Schedule Patient"
+            width="100%"
+            height={44}
+            borderRadius={22}
+            textStyle={styles.scheduleBtnText}
+            containerStyle={styles.scheduleBtnWrap}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -163,41 +180,169 @@ const LabAlertDecision = () => {
 export default LabAlertDecision;
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.SURFACE },
-  scroll: { flex: 1 },
-  content: { paddingHorizontal: 16, paddingBottom: 22 },
-  header: { marginTop: 8, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  headerTitle: { color: COLORS.TEXT_DARK, fontSize: 30 / 1.5, fontWeight: "600" },
-  avatarWrap: { marginTop: 12, alignItems: "center" },
-  avatar: { width: 120, height: 120, borderRadius: 60 },
-  alertOuter: { marginTop: 12, marginLeft: 30 },
-  alertInner: { borderRadius: 14, backgroundColor: "#BDEEFF", paddingVertical: 12, paddingHorizontal: 14 },
-  alertBadge: { position: "absolute", left: -20, top: 10, width: 36, height: 36, borderRadius: 18, backgroundColor: "#FFFFFF" },
-  alertTitle: { color: COLORS.TEXT_DARK, fontSize: 16, fontWeight: "500" },
-  alertSub: { marginTop: 4, color: COLORS.TEXT_80, fontSize: 16 / 1.2, fontWeight: "400" },
-  mainCardOuter: { marginTop: 16 },
-  mainCardInner: { borderRadius: 12, padding: 12 },
-  patientTop: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  patientMetaWrap: { flexDirection: "row", alignItems: "center", gap: 10 },
-  initials: { color: COLORS.PRIMARY, fontSize: 14, fontWeight: "500" },
-  patientName: { color: COLORS.TEXT_DARK, fontSize: 16, fontWeight: "500" },
-  patientMeta: { marginTop: 2, color: COLORS.TEXT_70, fontSize: 14, fontWeight: "400" },
-  criticalBadge: { paddingHorizontal: 12, height: 28, borderRadius: 14, backgroundColor: "#FDECEC", alignItems: "center", justifyContent: "center" },
-  criticalText: { color: "#F08D9D", fontSize: 13, fontWeight: "500" },
-  chartTitle: { marginTop: 14, color: "#ED7E92", fontSize: 32 / 1.5, fontWeight: "600" },
-  chartWrap: { marginTop: 8, height: 110 },
-  xAxisRow: { marginTop: 8, flexDirection: "row", justifyContent: "space-between" },
-  axisText: { color: COLORS.TEXT_50, fontSize: 12, fontWeight: "400" },
-  separator: { marginTop: 10, height: 1, backgroundColor: COLORS.TEXT_10 },
-  notesOuter: { marginTop: 12 },
-  notesInner: { borderRadius: 10, paddingHorizontal: 12, paddingVertical: 12 },
-  noteItem: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500", marginVertical: 3 },
-  actionsGrid: { marginTop: 16, flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 10 },
-  scheduleBtn: { marginTop: 14 },
-  bottomOuter: { marginTop: 18 },
-  bottomInner: { borderRadius: 14, paddingHorizontal: 26, paddingVertical: 14, flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" },
-  bottomItem: { alignItems: "center", gap: 6 },
-  bottomText: { color: COLORS.TEXT_50, fontSize: 12, fontWeight: "400" },
-  centerMicWrap: { alignItems: "center", marginTop: -18 },
-  bottomSelected: { marginTop: 4, color: COLORS.TEXT_DARK, fontSize: 12, fontWeight: "500" },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.SURFACE,
+    paddingTop: 12,
+  },
+  content: {
+    paddingBottom: 24,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 18,
+    paddingHorizontal: 16,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: COLORS.PRIMARY,
+  },
+  avatarWrapper: {
+    width: 180,
+    height: 180,
+  },
+  avatarImage: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+  },
+  messageRow: {
+    marginTop: 12,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    paddingHorizontal: 16,
+  },
+  alertTitle: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: COLORS.PRIMARY,
+  },
+  alertSubTitle: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: COLORS.TEXT_80,
+  },
+  patientCardOuter: {
+    marginTop: 14,
+    marginHorizontal: 16,
+  },
+  patientCardInner: {
+    padding: 12,
+  },
+  patientTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  patientLeft: {
+    flexDirection: "row",
+    flex: 1,
+    marginRight: 10,
+  },
+  initials: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.PRIMARY_DARK,
+  },
+  nameWrap: {
+    marginLeft: 10,
+  },
+  patientName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.TEXT_DARK,
+  },
+  metaRow: {
+    marginTop: 2,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  metaText: {
+    fontSize: 13,
+    color: COLORS.TEXT_70,
+    fontWeight: "400",
+  },
+  metaDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.TEXT_50,
+    marginHorizontal: 6,
+  },
+  criticalOuter: {
+    minWidth: 72,
+  },
+  criticalInner: {
+    height: 28,
+    paddingHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  criticalText: {
+    color: COLORS.ALERT,
+    fontSize: 12,
+    fontWeight: "500",
+  },
+  readingText: {
+    marginTop: 10,
+    fontSize: 18,
+    color: COLORS.ALERT,
+    fontWeight: "500",
+    paddingBottom: 10,
+  },
+  innerAlertCard: {
+    marginBottom: 6,
+  },
+  innerAlertContent: {
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    justifyContent: "center",
+  },
+  alertLine: {
+    fontSize: 14,
+    color: COLORS.TEXT_DARK,
+    fontWeight: "500",
+  },
+  alertLineRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  alertDot: {
+    marginRight: 8,
+  },
+  actionsGrid: {
+    marginTop: 20,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    rowGap: 18,
+  },
+  actionButton: {
+    width: "48%",
+    height: 48,
+    borderRadius: 24,
+  },
+  actionText: {
+    fontSize: 16,
+    color: COLORS.PRIMARY_DARK,
+    fontWeight: "500",
+  },
+  scheduleBtnWrap: {
+    marginTop: 14,
+  },
+  scheduleBtnText: {
+    fontSize: 16,
+    fontFamily: "Manrope-SemiBold",
+    color: COLORS.WHITE,
+  },
+  spaceBetween: {
+    paddingHorizontal: 16,
+    marginTop: 10,
+  },
 });
