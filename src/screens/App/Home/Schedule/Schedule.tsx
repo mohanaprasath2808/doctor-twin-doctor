@@ -10,14 +10,14 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { COLORS } from "../../constants/theme";
-import IconComponent from "../../neomorphism/IconComponent";
-import NeumorphicCard from "../../components/Common/NeumorphicCard";
-import navigationStrings from "../../constants/navigationStrings";
-import BackIcon from "../../assets/icon/backArrow.svg";
-import PracticeSchedule from "../../assets/image/practiceSchedule.png";
-import MyCalender from "../../assets/image/myCalendar.png";
-import ToDoList from "../../assets/image/toDoList.png";
+import { COLORS } from "../../../../constants/theme";
+import IconComponent from "../../../../neomorphism/IconComponent";
+import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import navigationStrings from "../../../../constants/navigationStrings";
+import BackIcon from "../../../../assets/icon/backArrow.svg";
+import PracticeSchedule from "../../../../assets/image/practiceSchedule.png";
+import MyCalender from "../../../../assets/image/myCalendar.png";
+import ToDoList from "../../../../assets/image/toDoList.png";
 
 const Schedule = () => {
   const navigation = useNavigation<any>();

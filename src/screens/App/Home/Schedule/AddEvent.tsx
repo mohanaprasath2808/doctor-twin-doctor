@@ -10,20 +10,20 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
-import { COLORS } from "../../../../constants/theme";
-import IconComponent from "../../../../neomorphism/IconComponent";
-import InputField from "../../../../neomorphism/InputField";
-import DatePickerField from "../../../../neomorphism/DatePickerField";
-import ReusableButton from "../../../../neomorphism/ReusableButton";
-import AppButton from "../../../../components/Common/AppButton";
-import KeyboardAvoidingWrapper from "../../../../neomorphism/KeyboardAvoidingWrapper";
-import LocationBottomSheetModal from "../../../../components/BottomSheets/LocationBottomSheetModal";
-import TimePickerField from "../../../../components/Common/TimePickerField";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
-import CalendarIcon from "../../../../assets/icon/calendarIcon.svg";
+import CalendarIcon from "../../../../assets/icon/calendarBlueIcon.svg";
 import DownArrowIcon from "../../../../assets/icon/downArrow.svg";
 import TimerIcon from "../../../../assets/icon/timerIcon.svg";
+import IconComponent from "../../../../neomorphism/IconComponent";
+import KeyboardAvoidingWrapper from "../../../../neomorphism/KeyboardAvoidingWrapper";
+import InputField from "../../../../neomorphism/InputField";
+import DatePickerField from "../../../../neomorphism/DatePickerField";
+import TimePickerField from "../../../../components/Common/TimePickerField";
+import AppButton from "../../../../components/Common/AppButton";
+import { COLORS } from "../../../../constants/theme";
+import ReusableButton from "../../../../neomorphism/ReusableButton";
+import LocationBottomSheetModal from "../../../../components/BottomSheets/LocationBottomSheetModal";
 const formatDate = (date: Date) =>
   `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
 

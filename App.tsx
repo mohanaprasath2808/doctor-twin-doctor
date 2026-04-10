@@ -3,9 +3,11 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { NavigationContainer } from '@react-navigation/native';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { StatusBar } from 'expo-status-bar';
 import Router from './src/router/Router';
 import AuthContextProvider from './src/context/AuthContext';
 import AppContextProvider from './src/context/AppContext';
+import { COLORS } from './src/constants/theme';
 
 const App = () => {
   return (
@@ -30,6 +32,7 @@ const App = () => {
         ),
       }}
     >
+      <StatusBar style="light" backgroundColor={COLORS.PRIMARY} />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <NavigationContainer>
