@@ -12,7 +12,7 @@ import AddEvent from "../../screens/App/Home/PractceIntelligence/AddEvent";
 import EventDetails from "../../screens/App/Home/PractceIntelligence/EventDetails";
 import Patients from "../../screens/App/Patients";
 import PatientSnapshot from "../../screens/App/PatientSnapshot";
-import RefillEscalation from "../../screens/App/Home/Refill Escalation/RefillEscalation";
+import RefillEscalation from "../../screens/App/Home/RefillEscalation/RefillEscalation";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {

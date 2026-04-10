@@ -22,6 +22,7 @@ import InteligentIcon from "../../assets/icon/intelliganceIcon.svg";
 import CalendarIcon from "../../assets/icon/calendarBlueIcon.svg";
 import ScribeIcon from "../../assets/icon/scribeIcon.svg";
 import MessageIcon from "../../assets/icon/messageIcon.svg";
+import BrainIcon from "../../assets/icon/brainIcon.svg";
 import DelegationHubIcon from "../../assets/icon/delegationHubIcon.svg";
 import HandsFreeModeIcon from "../../assets/icon/handsFreeModeIcon.svg";
 import RevenueIcon from "../../assets/icon/revenueIcon.svg";
@@ -100,6 +101,12 @@ const GRID_ITEMS: GridItem[] = [
     label: "Patient",
     icon: () => <PatientIcon width={18} height={18} />,
   },
+  {
+    id: 12,
+    label: "Labs",
+    icon: () => <BrainIcon width={18} height={18} />,
+  },
+
 ];
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -145,6 +152,12 @@ const Home = () => {
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.PATIENTS),
+        };
+      case 12:
+        return {
+          ...item,
+          onPress: () =>
+            navigation.navigate(navigationStrings.LABS_DASHBOARD),
         };
       default:
         return item;
