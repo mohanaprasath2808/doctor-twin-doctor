@@ -19,6 +19,9 @@ const navigationStrings = {
   QUEUE: "Queue",
   PATIENTS: "Patients",
   PATIENT_SNAPSHOT: "PatientSnapshot",
+  REFILL_ESCALATION: "RefillEscalation",
+  LABS_DASHBOARD: "LabsDashboard",
+  LAB_ALERT_DECISION: "LabAlertDecision",
 };
 
 export default navigationStrings;
