@@ -17,7 +17,7 @@ import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.
 import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import navigationStrings from "../../../../constants/navigationStrings";
 
-type RefillFilter = "all" | "urgent" | "filters";
+type RefillFilter = "all" | "urgent";
 
 const REFILL_REQUESTS: RefillRequestItem[] = [
     {
@@ -87,7 +87,7 @@ const RefillEscalation = () => {
     const [selectedFilter, setSelectedFilter] = useState<RefillFilter>("all");
 
     const filteredRequests = useMemo(() => {
-        if (selectedFilter === "all" || selectedFilter === "filters") {
+        if (selectedFilter === "all" || selectedFilter === "urgent") {
             return REFILL_REQUESTS;
         }
         return REFILL_REQUESTS.filter((item) => item.status === selectedFilter);
@@ -133,7 +133,7 @@ const RefillEscalation = () => {
                         selected={selectedFilter === "urgent"}
                         onPress={() => setSelectedFilter("urgent")}
                     />
-                    <FilterDropdownChip />
+
                 </View>
 
                 <FlatList
@@ -187,19 +187,6 @@ const FilterChip = ({
             </NeumorphicCard>
         )}
     </Pressable>
-);
-
-const FilterDropdownChip = () => (
-    <NeumorphicCard
-        outerStyle={styles.filterOuter}
-        innerStyle={styles.filterInner}
-        borderRadius={18}
-    >
-        <View style={styles.dropdownContent}>
-            <Text style={styles.filterText}>Filters</Text>
-            <DownArrowIcon width={14} height={14} />
-        </View>
-    </NeumorphicCard>
 );
 
 const styles = StyleSheet.create({

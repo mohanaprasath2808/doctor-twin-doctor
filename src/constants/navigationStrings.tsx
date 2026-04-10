@@ -21,6 +21,8 @@ const navigationStrings = {
   PATIENT_SNAPSHOT: "PatientSnapshot",
   REFILL_ESCALATION: "RefillEscalation",
   REFILL_REQUEST_DETAILS: "RefillRequestDetails",
+  DELEGATE_REVIEW_TO_STAFF: "DelegateReviewToStaff",
+  PATIENT_MESSAGE_PREVIEW: "PatientMessagePreview",
   LABS_DASHBOARD: "LabsDashboard",
   LAB_ALERT_DECISION: "LabAlertDecision",
 };

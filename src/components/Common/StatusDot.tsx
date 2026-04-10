@@ -5,10 +5,16 @@ import LinearGradient from "react-native-linear-gradient";
 type StatusDotProps = {
   color: string;
   size?: number;
+  outerGradientColors?: [string, string];
   style?: StyleProp<ViewStyle>;
 };
 
-const StatusDot: React.FC<StatusDotProps> = ({ color, size = 8, style }) => {
+const StatusDot: React.FC<StatusDotProps> = ({
+  color,
+  size = 8,
+  outerGradientColors = ["#D6E3F3", "#FFFFFF"],
+  style,
+}) => {
   const outerSize = size + 2;
   const innerRadius = Math.max(0, size / 2);
   const outerRadius = Math.max(0, outerSize / 2);
@@ -51,7 +57,7 @@ const StatusDot: React.FC<StatusDotProps> = ({ color, size = 8, style }) => {
       />
 
       <LinearGradient
-        colors={["#D6E3F3", "#FFFFFF"]}
+        colors={outerGradientColors}
         start={{ x: 1, y: 0.465 }}
         end={{ x: 0, y: 0.535 }}
         style={[

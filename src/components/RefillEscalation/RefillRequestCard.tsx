@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   nameRow: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   cardOuter: {
     width: "100%",
@@ -131,9 +131,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "400",
   },
-  statusPill: { minWidth: 72 },
+  statusPill: { maxHeight: 28, minWidth: 72 },
   statusPillInner: {
-    height: 28,
+    height: "100%",
     paddingHorizontal: 16,
     borderRadius: 18,
     alignItems: "center",

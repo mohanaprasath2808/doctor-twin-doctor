@@ -16,6 +16,8 @@ import AddEvent from "../../screens/App/Home/Schedule/AddEvent";
 import EventDetails from "../../screens/App/Home/Schedule/EventDetails";
 import RefillEscalation from "../../screens/App/Home/RefillEscalation/RefillEscalation";
 import RefillRequestDetail from "../../screens/App/Home/RefillEscalation/RefillRequestDetail";
+import PatientMessagePreview from "../../screens/App/Home/RefillEscalation/PatientMessagePreview";
+import DelegateReviewToStaff from "../../screens/App/Home/RefillEscalation/DelegateReviewToStaff";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -131,6 +133,20 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.REFILL_REQUEST_DETAILS}
         component={RefillRequestDetail}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATE_REVIEW_TO_STAFF}
+        component={DelegateReviewToStaff}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PATIENT_MESSAGE_PREVIEW}
+        component={PatientMessagePreview}
         options={{
           headerShown: false,
         }}
