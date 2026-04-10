@@ -1,47 +1,46 @@
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
   Modal,
   Platform,
+  Pressable,
+  StyleProp,
   StyleSheet,
-  LayoutChangeEvent,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
 } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import LinearGradient from "react-native-linear-gradient";
-import NeumorphicView from "./NeumorphicView";
+import InputField from "./InputField";
 import { COLORS } from "../constants/theme";
 
 interface Props {
   leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   placeholder?: string;
   value?: Date | null;
   onChange?: (date: Date) => void;
   maximumDate?: Date;
   minimumDate?: Date;
+  containerStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
 }
-
-const HEIGHT = 47;
-const RADIUS = 64;
 
 const DatePickerField: React.FC<Props> = ({
   leftIcon,
+  rightIcon,
   placeholder = "Select date",
   value,
   onChange,
   maximumDate,
   minimumDate,
+  containerStyle,
+  style,
 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [tempDate, setTempDate] = useState<Date>(value ?? new Date());
-  const [width, setWidth] = useState(0);
-
-  const onLayout = (e: LayoutChangeEvent) => {
-    setWidth(e.nativeEvent.layout.width);
-  };
 
   const formatDate = (date: Date) => {
     const day = String(date.getDate()).padStart(2, "0");
@@ -72,44 +71,25 @@ const DatePickerField: React.FC<Props> = ({
   };
 
   return (
-    <View style={styles.container} onLayout={onLayout}>
-      <TouchableOpacity
-        activeOpacity={0.8}
+    <View>
+      <Pressable
         onPress={() => {
           setTempDate(value ?? new Date());
           setShowPicker(true);
         }}
       >
-        <LinearGradient
-          colors={["#D6E3F399", "#FFFFFFCC", "#FFFFFF80", "#FFFFFF00"]}
-          locations={[0, 0.4, 0.7, 1]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={[styles.gradientBorder, { borderRadius: RADIUS }]}
-        >
-          <View style={styles.innerWrapper}>
-            {width > 0 && (
-              <View style={styles.outerShadowWrapper}>
-                <NeumorphicView
-                  width={width}
-                  height={HEIGHT}
-                  borderRadius={RADIUS}
-                  color="#F7FBFF"
-                />
-              </View>
-            )}
-
-            <View style={styles.surface}>
-              <View style={styles.inputWrapper}>
-                {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
-                <Text style={[styles.text, !value && styles.placeholder]}>
-                  {value ? formatDate(value) : placeholder}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </LinearGradient>
-      </TouchableOpacity>
+        <View pointerEvents="none">
+          <InputField
+            value={value ? formatDate(value) : ""}
+            placeholder={placeholder}
+            editable={false}
+            leftIcon={leftIcon}
+            rightIcon={rightIcon}
+            containerStyle={[styles.inputContainer, containerStyle]}
+            style={[!value && styles.placeholder, style]}
+          />
+        </View>
+      </Pressable>
 
       {/* Android: native dialog */}
       {Platform.OS === "android" && showPicker && (
@@ -131,19 +111,18 @@ const DatePickerField: React.FC<Props> = ({
           animationType="slide"
           onRequestClose={handleIOSCancel}
         >
-          <TouchableOpacity
+          <Pressable
             style={styles.modalOverlay}
-            activeOpacity={1}
             onPress={handleIOSCancel}
           />
           <View style={styles.iosPickerContainer}>
             <View style={styles.iosToolbar}>
-              <TouchableOpacity onPress={handleIOSCancel}>
+              <Pressable onPress={handleIOSCancel}>
                 <Text style={styles.iosCancelBtn}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleIOSDone}>
+              </Pressable>
+              <Pressable onPress={handleIOSDone}>
                 <Text style={styles.iosDoneBtn}>Done</Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
             <DateTimePicker
               value={tempDate}
@@ -164,50 +143,7 @@ const DatePickerField: React.FC<Props> = ({
 export default DatePickerField;
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    marginTop: 15,
-  },
-  gradientBorder: {
-    borderRadius: RADIUS,
-    padding: 0.6,
-    overflow: "visible",
-  },
-  innerWrapper: {
-    borderRadius: RADIUS,
-    overflow: "visible",
-  },
-  outerShadowWrapper: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    height: HEIGHT + 24,
-  },
-  surface: {
-    borderRadius: RADIUS,
-    overflow: "hidden",
-    backgroundColor: "#F7FBFF",
-  },
-  inputWrapper: {
-    height: HEIGHT,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 15,
-    zIndex: 1,
-    borderRadius: RADIUS,
-  },
-  leftIcon: {
-    marginRight: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    flex: 1,
-    color: COLORS.TEXT_DARK,
-    fontSize: 14,
-    fontWeight: "400",
-  },
+  inputContainer: { marginTop: 0 },
   placeholder: {
     color: "#ABABAB",
   },

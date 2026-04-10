@@ -60,13 +60,21 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
         style={[styles.shadowLayer, styles.shadowSoft, { borderRadius }]}
       />
 
-      <LinearGradient
-        colors={["#D6E3F3", "#FFFFFF"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={[styles.border, { borderRadius }]}
-      >
-        {/* Same stacking as OtpTextInput: Skia inner shadow first, then a transparent layer on top so the inset rim stays visible (TouchableOpacity breaks Skia compositing on some devices). */}
+      <View style={[styles.border, { borderRadius }]}>
+        <LinearGradient
+          colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
+          locations={[0.082, 0.8268]}
+          start={{ x: 1, y: 0.465 }}
+          end={{ x: 0, y: 0.535 }}
+          style={StyleSheet.absoluteFillObject}
+        />
+        <LinearGradient
+          colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
+          locations={[0, 1]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={StyleSheet.absoluteFillObject}
+        />
         <View style={[styles.surface, { borderRadius: innerRadius }]}>
           <View
             pointerEvents="none"
@@ -103,7 +111,7 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
             </View>
           )}
         </View>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -175,7 +183,8 @@ const styles = StyleSheet.create({
   border: {
     width: "100%",
     height: "100%",
-    padding: 1,
+    padding: 0.8,
+    overflow: "hidden",
   },
   surface: {
     flex: 1,
