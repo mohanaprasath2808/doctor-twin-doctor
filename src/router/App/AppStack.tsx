@@ -14,6 +14,7 @@ import ToDoList from "../../screens/App/Home/Schedule/ToDoList";
 import CreateTask from "../../screens/App/Home/Schedule/CreateTask";
 import AddEvent from "../../screens/App/Home/Schedule/AddEvent";
 import EventDetails from "../../screens/App/Home/Schedule/EventDetails";
+import RefillEscalation from "../../screens/App/Home/RefillEscalation/RefillEscalation";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -115,6 +116,13 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.LAB_ALERT_DECISION}
         component={LabAlertDecision}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILL_ESCALATION}
+        component={RefillEscalation}
         options={{
           headerShown: false,
         }}
