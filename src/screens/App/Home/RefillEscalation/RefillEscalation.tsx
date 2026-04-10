@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
@@ -15,6 +15,7 @@ import BackIcon from "../../../../assets/icon/backArrow.svg";
 import DownArrowIcon from "../../../../assets/icon/downArrow.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 type RefillFilter = "all" | "urgent" | "filters";
 
@@ -24,7 +25,8 @@ const REFILL_REQUESTS: RefillRequestItem[] = [
         initials: "SW",
         name: "Sarah Williams",
         ageGender: "Female • Age 45",
-        medication: "Lipitor 20 mg  #90 tablet",
+        medication: "Lipitor 20 mg",
+        medicationMethod: "#90 tablet",
         requestedAgo: "29 mins",
         status: "urgent",
     },
@@ -33,7 +35,8 @@ const REFILL_REQUESTS: RefillRequestItem[] = [
         initials: "DJ",
         name: "David Johnson",
         ageGender: "Male • Age 41",
-        medication: "Lisinopril 10 mg  #90 tablet",
+        medication: "Lisinopril 10 mg",
+        medicationMethod: "#90 tablet",
         requestedAgo: "29 mins",
         status: "urgent",
     },
@@ -42,7 +45,8 @@ const REFILL_REQUESTS: RefillRequestItem[] = [
         initials: "SW",
         name: "Susan Anderson",
         ageGender: "Female • Age 49",
-        medication: "Metformin 500 mg  #90 tablet",
+        medication: "Metformin 500 mg",
+        medicationMethod: "#90 tablet",
         requestedAgo: "29 mins",
         status: "approve",
     },
@@ -51,7 +55,8 @@ const REFILL_REQUESTS: RefillRequestItem[] = [
         initials: "SW",
         name: "Sarah Williams",
         ageGender: "Female • Age 49",
-        medication: "Metformin 500 mg  #90 tablet",
+        medication: "Metformin 500 mg",
+        medicationMethod: "#90 tablet",
         requestedAgo: "29 mins",
         status: "approve",
     },
@@ -60,7 +65,8 @@ const REFILL_REQUESTS: RefillRequestItem[] = [
         initials: "SA",
         name: "Susan Anderson",
         ageGender: "Male • Age 41",
-        medication: "Lisinopril 10 mg  #90 tablet",
+        medication: "Lisinopril 10 mg",
+        medicationMethod: "#90 tablet",
         requestedAgo: "29 mins",
         status: "urgent",
     },
@@ -69,7 +75,8 @@ const REFILL_REQUESTS: RefillRequestItem[] = [
         initials: "DJ",
         name: "David Johnson",
         ageGender: "Female • Age 49",
-        medication: "Metformin 500 mg  #90 tablet",
+        medication: "Metformin 500 mg",
+        medicationMethod: "#90 tablet",
         requestedAgo: "29 mins",
         status: "approve",
     },
@@ -129,11 +136,21 @@ const RefillEscalation = () => {
                     <FilterDropdownChip />
                 </View>
 
-                <View style={styles.cardsList}>
-                    {filteredRequests.map((item) => (
-                        <RefillRequestCard key={item.id} item={item} />
-                    ))}
-                </View>
+                <FlatList
+                    data={filteredRequests}
+                    keyExtractor={(item) => item.id}
+                    scrollEnabled={false}
+                    style={styles.cardsList}
+                    renderItem={({ item }) => (
+                        <RefillRequestCard
+                            item={item}
+                            onPress={() =>
+                                navigation.navigate(navigationStrings.REFILL_REQUEST_DETAILS)
+                            }
+                        />
+                    )}
+                    ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
+                />
             </ScrollView>
         </SafeAreaView>
     );
@@ -254,7 +271,10 @@ const styles = StyleSheet.create({
     },
     cardsList: {
         marginTop: 14,
-        gap: 16,
+        padding: 5,
+    },
+    cardSeparator: {
+        height: 16,
     },
 });
 
