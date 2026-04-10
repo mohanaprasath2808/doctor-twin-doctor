@@ -10,23 +10,25 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { COLORS } from "../../constants/theme";
-import IconComponent from "../../neomorphism/IconComponent";
-import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
-import AppButton from "../../components/Common/AppButton";
-import NeumorphicCard from "../../components/Common/NeumorphicCard";
-import DeltaBadge from "../../components/Common/DeltaBadge";
-import BackIcon from "../../assets/icon/backArrow.svg";
-import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
-import ZoomCallIcon from "../../assets/icon/zoomCallIcon.svg";
-import MessageIcon from "../../assets/icon/messageIcon.svg";
-import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
-import PlusIcon from "../../assets/icon/plusIcon.svg";
-import ScribeIcon from "../../assets/icon/scribeIcon.svg";
-import WarningIcon from "../../assets/icon/warningIcon.svg";
-import BrainIcon from "../../assets/icon/brainIcon.svg";
-import XrayImage from "../../assets/image/tempImage/xrayImage.png";
-import CapsuleIcon from "../../assets/icon/capsuleIcon.svg";
+import { COLORS } from "../../../../constants/theme";
+import IconComponent from "../../../../neomorphism/IconComponent";
+import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
+import AppButton from "../../../../components/Common/AppButton";
+import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import DeltaBadge from "../../../../components/Common/DeltaBadge";
+import LabTrendCard from "../../../../components/Common/LabTrendCard";
+import BackIcon from "../../../../assets/icon/backArrow.svg";
+import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
+import ZoomCallIcon from "../../../../assets/icon/zoomCallIcon.svg";
+import MessageIcon from "../../../../assets/icon/messageIcon.svg";
+import ScheduleIcon from "../../../../assets/icon/scheduleIcon.svg";
+import PlusIcon from "../../../../assets/icon/plusIcon.svg";
+import ScribeIcon from "../../../../assets/icon/scribeIcon.svg";
+import WarningIcon from "../../../../assets/icon/warningIcon.svg";
+import BrainIcon from "../../../../assets/icon/brainIcon.svg";
+import XrayImage from "../../../../assets/image/tempImage/xrayImage.png";
+import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
+
 const TOP_ACTIONS = [
   { label: "Call", icon: <ZoomCallIcon /> },
   { label: "Message", icon: <MessageIcon /> },
@@ -51,6 +53,36 @@ const OPEN_TALK_METRICS = [
 const MEDS = [
   { name: "Lipitor 20 mg", dose: "EID" },
   { name: "Metformin 500mg", dose: "Daily" },
+];
+const LAB_METRICS = [
+  {
+    label: "A1C",
+    value: "9.2%",
+    lineColor: "#F7BDC8",
+    fillColor: "#FCE3E8",
+    points: [4, 5, 4.7, 5.2, 6.4, 6.1, 7.3, 7.1, 8.5, 8.2, 9.2],
+  },
+  {
+    label: "eGFR",
+    value: "52",
+    lineColor: "#7DBAD8",
+    fillColor: "#D9EEF8",
+    points: [43, 44, 45, 47, 46, 49, 48, 50, 49, 51, 52],
+  },
+  {
+    label: "K+",
+    value: "5.8",
+    lineColor: "#EEDFAE",
+    fillColor: "#FAF2D8",
+    points: [4.7, 4.8, 4.9, 4.8, 5.0, 5.2, 5.1, 5.4, 5.5, 5.7, 5.8],
+  },
+  {
+    label: "TSH",
+    value: "0.3",
+    lineColor: "#9ED9D8",
+    fillColor: "#DBF3F2",
+    points: [1.4, 1.1, 1.0, 0.9, 0.8, 0.85, 0.7, 0.6, 0.55, 0.4, 0.3],
+  },
 ];
 
 type MedTab = "active" | "safety";
@@ -272,6 +304,52 @@ const PatientSnapshot = () => {
           outerStyle={styles.cardOuter}
           innerStyle={styles.sectionInner}
         >
+          <Text style={styles.sectionTitle}>Labs Panel</Text>
+          <View style={styles.labsGrid}>
+            {LAB_METRICS.map((item) => (
+              <LabTrendCard
+                key={item.label}
+                label={item.label}
+                value={item.value}
+                lineColor={item.lineColor}
+                fillColor={item.fillColor}
+                points={item.points}
+                outerStyle={styles.labCardOuter}
+              />
+            ))}
+          </View>
+          <View style={styles.labsActionRow}>
+            <AppButton
+              text="Review all labs"
+              borderWidth={1}
+              useGradientBorder
+              bgColor={COLORS.SURFACE}
+              style={styles.labsActionBtn}
+              textStyle={[styles.smallBtnText, styles.primaryBtnText]}
+            />
+            <AppButton
+              text="Order repeat"
+              borderWidth={1}
+              useGradientBorder
+              bgColor={COLORS.SURFACE}
+              style={styles.labsActionBtn}
+              textStyle={[styles.smallBtnText, styles.primaryBtnText]}
+            />
+          </View>
+          <AppButton
+            text="Escalate critical"
+            borderWidth={1}
+            borderColor="#F2CACA"
+            bgColor="#FDECEC"
+            style={styles.labsDangerBtn}
+            textStyle={[styles.smallBtnText, styles.alertBtnText]}
+          />
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.sectionInner}
+        >
           <Text style={styles.sectionTitle}>Imaging Panel</Text>
           <View style={styles.imagingRow}>
             <Image source={XrayImage} style={styles.imagingThumb} />
@@ -470,6 +548,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: "row",
     gap: 10,
+    marginBottom: 12,
+  },
+  labsGrid: {
+    marginTop: 12,
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  labCardOuter: {
+    width: "48.5%",
+  },
+  labsActionRow: {
+    marginTop: 12,
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    gap: 8,
+  },
+  labsActionBtn: {
+    height: 40,
+    borderRadius: 20,
+    flex: 1,
+  },
+  labsDangerBtn: {
+    marginTop: 10,
+    marginHorizontal: 10,
+    height: 40,
+    borderRadius: 20,
     marginBottom: 12,
   },
   imagingRow: {

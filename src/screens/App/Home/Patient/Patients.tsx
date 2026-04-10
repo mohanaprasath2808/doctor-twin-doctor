@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { COLORS } from "../../constants/theme";
-import IconComponent from "../../neomorphism/IconComponent";
-import InputField from "../../neomorphism/InputField";
-import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
-import NeumorphicCard from "../../components/Common/NeumorphicCard";
-import DeltaBadge from "../../components/Common/DeltaBadge";
-import BackIcon from "../../assets/icon/backArrow.svg";
-import RightArrowIcon from "../../assets/icon/rightArrow.svg";
-import SearchIcon from "../../assets/icon/searchIcon.svg";
-import navigationStrings from "../../constants/navigationStrings";
+import { COLORS } from "../../../../constants/theme";
+import IconComponent from "../../../../neomorphism/IconComponent";
+import InputField from "../../../../neomorphism/InputField";
+import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
+import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import DeltaBadge from "../../../../components/Common/DeltaBadge";
+import BackIcon from "../../../../assets/icon/backArrow.svg";
+import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
+import SearchIcon from "../../../../assets/icon/searchIcon.svg";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 type SectionFilter = "all" | "today" | "followUp";
 type PatientItem = {
@@ -131,14 +131,18 @@ const Patients = () => {
           <PatientSection
             title="Seeing today"
             data={SEEING_TODAY}
-            onPressPatient={() => navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)}
+            onPressPatient={() =>
+              navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)
+            }
           />
         )}
         {showFollowUp && (
           <PatientSection
             title="Needs Follow-Up"
             data={FOLLOW_UP}
-            onPressPatient={() => navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)}
+            onPressPatient={() =>
+              navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)
+            }
           />
         )}
       </ScrollView>
@@ -205,9 +209,7 @@ const PatientSection = ({
         >
           <View style={styles.patientRow}>
             <InnerShadowIcon
-              icon={
-                <Text style={styles.initials}>{getInitials(item.name)}</Text>
-              }
+              icon={<Text style={styles.initials}>{getInitials(item.name)}</Text>}
               size={40}
             />
             <View style={styles.patientInfo}>
