@@ -20,6 +20,7 @@ import LastVisitIcon from "../../../../assets/icon/appointmentCalendarIcon.svg";
 import PharmacyIcon from "../../../../assets/icon/pharmacyIcon.svg";
 import LapReportIcon from "../../../../assets/icon/ecgPadIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 const REFILL_ROWS = [
   { id: "refills", title: "Refills", subTitle: "3 remaining" },
@@ -132,11 +133,16 @@ const PrescriptionRefills = () => {
             style={styles.requestBtn}
             borderWidth={1}
             borderColor={COLORS.ALERT}
-            bgColor={"#FF6B6B"}
+            bgColor={COLORS.ALERT_LIGHT}
             text="Request Review"
             textStyle={styles.requestText}
+            onPress={() => navigation.navigate(navigationStrings.REQUEST_REVIEW_SENT)}
           />
-          <ReusableButton title="Send Refill" containerStyle={styles.sendBtn} />
+          <ReusableButton
+            title="Send Refill"
+            containerStyle={styles.sendBtn}
+            onPress={() => navigation.navigate(navigationStrings.REFILL_SENT)}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -195,7 +201,7 @@ const styles = StyleSheet.create({
   alertTextBold: { color: COLORS.PRIMARY_DARK, fontSize: 14, fontWeight: "500" },
   actionRow: { marginTop: 16, flexDirection: "row", gap: 12 },
   requestBtn: { flex: 1, height: 48, borderRadius: 24 },
-  requestText: { color: "#FF7A7A", fontSize: 16, fontWeight: "500" },
+  requestText: { color: COLORS.ALERT, fontSize: 16, fontWeight: "500" },
   sendBtn: { flex: 1, height: 48, borderRadius: 24 },
 });
 

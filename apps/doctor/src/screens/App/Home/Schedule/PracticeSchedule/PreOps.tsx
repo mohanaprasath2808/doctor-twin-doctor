@@ -78,7 +78,7 @@ const PreOps = () => {
         </View>
         <DeltaBadge
           value="Cardiac History"
-          bgColor="#FDECEC"
+          bgColor={COLORS.ALERT_LIGHT}
           darkShadowColor="#F2CACA"
           lightShadowColor="#FFFFFF99"
           textColor={COLORS.ALERT}

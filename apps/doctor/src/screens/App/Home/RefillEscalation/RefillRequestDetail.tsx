@@ -216,7 +216,7 @@ const RefillRequestDetail = () => {
                         style={styles.actionBtnBase}
                         borderWidth={1}
                         borderColor={COLORS.ALERT}
-                        bgColor={"#FDECEC"}
+                        bgColor={COLORS.ALERT_LIGHT}
                         text="Deny"
                         textStyle={styles.denyBtnText}
                         onPress={() => denyReasonSheetRef.current?.present()}

@@ -96,7 +96,7 @@ const Physicals = () => {
       return (
         <DeltaBadge
           value="Waiting"
-          bgColor="#FDECEC"
+          bgColor={COLORS.ALERT_LIGHT}
           darkShadowColor="#F2CACA"
           lightShadowColor="#FFFFFF99"
           textColor={COLORS.ALERT}

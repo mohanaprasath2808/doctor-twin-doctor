@@ -42,7 +42,7 @@ const LabAlertDecision = () => {
             width={40}
             height={40}
             radius={20}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
         <ProfileAvatar
@@ -90,7 +90,7 @@ const LabAlertDecision = () => {
               outerStyle={styles.criticalOuter}
               innerStyle={styles.criticalInner}
               borderRadius={14}
-              backgroundColor="#FDECEC"
+              backgroundColor={COLORS.ALERT_LIGHT}
             >
               <Text style={styles.criticalText}>Critical</Text>
             </NeumorphicCard>

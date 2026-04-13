@@ -26,6 +26,8 @@ const navigationStrings = {
   ORDER_LABS: "OrderLabs",
   REFILL_SCHEDULE_VISIT: "RefillScheduleVisit",
   PRESCRIPTION_REFILLS: "PrescriptionRefills",
+  REFILL_SENT: "RefillSent",
+  REQUEST_REVIEW_SENT: "RequestReviewSent",
   PATIENT_MESSAGE_PREVIEW: "PatientMessagePreview",
   LABS_DASHBOARD: "LabsDashboard",
   LAB_ALERT_DECISION: "LabAlertDecision",

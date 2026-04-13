@@ -295,7 +295,7 @@ const PatientSnapshot = () => {
               text="Stop"
               borderWidth={1}
               borderColor="#FF6B6B"
-              bgColor="#FDECEC"
+              bgColor={COLORS.ALERT_LIGHT}
               style={styles.medActionBtn}
               textStyle={[styles.smallBtnText, styles.alertBtnText]}
             />
@@ -343,7 +343,7 @@ const PatientSnapshot = () => {
               text="Escalate critical"
               borderWidth={1}
               borderColor="#FF6B6B"
-              bgColor="#FDECEC"
+              bgColor={COLORS.ALERT_LIGHT}
               style={styles.labsDangerBtn}
               textStyle={[styles.smallBtnText, styles.alertBtnText]}
             />

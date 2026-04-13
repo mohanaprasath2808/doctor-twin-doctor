@@ -118,7 +118,7 @@ const PracticeIntelligence = () => {
             style={styles.actionBtnBase}
             borderWidth={1}
             borderColor={COLORS.ALERT}
-            bgColor={"#FDECEC"}
+            bgColor={COLORS.ALERT_LIGHT}
             text="Exit Insights"
             textStyle={styles.secondaryBtnText}
           />
@@ -162,7 +162,7 @@ const MetricCard = ({
         }
         value={delta}
         height={24}
-        bgColor={positive ? "#D3FFF1" : "#FDECEC"}
+        bgColor={positive ? "#D3FFF1" : COLORS.ALERT_LIGHT}
         darkShadowColor={positive ? "#A9E9D5" : "#F2CACA"}
         lightShadowColor="#FFFFFF99"
         textColor={positive ? COLORS.GREEN : COLORS.ALERT}

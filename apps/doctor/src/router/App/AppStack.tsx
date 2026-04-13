@@ -34,6 +34,8 @@ import LabsReview from "../../screens/App/Home/RefillEscalation/LabsReview";
 import OrderLabs from "../../screens/App/Home/RefillEscalation/OrderLabs";
 import RefillScheduleVisit from "../../screens/App/Home/RefillEscalation/ScheduleVisit";
 import PrescriptionRefills from "../../screens/App/Home/RefillEscalation/PrescriptionRefills";
+import RefillSent from "../../screens/App/Home/RefillEscalation/RefillSent";
+import RequestReviewSent from "../../screens/App/Home/RefillEscalation/RequestReviewSent";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -240,6 +242,20 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.PRESCRIPTION_REFILLS}
         component={PrescriptionRefills}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILL_SENT}
+        component={RefillSent}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REQUEST_REVIEW_SENT}
+        component={RequestReviewSent}
         options={{
           headerShown: false,
         }}
