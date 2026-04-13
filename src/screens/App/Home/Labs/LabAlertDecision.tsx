@@ -2,25 +2,26 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { COLORS } from "../../constants/theme";
-import IconComponent from "../../neomorphism/IconComponent";
-import ProfileAvatar from "../../components/Auth/ProfileAvatar";
-import DoctorAvatar from "../../components/Common/DoctorAvatar";
-import InsightMessageCard from "../../components/Common/InsightMessageCard";
-import NeumorphicCard from "../../components/Common/NeumorphicCard";
-import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
-import NeumorphicInnerShadowCard from "../../neomorphism/NeumorphicInnerShadowCard";
-import AppButton from "../../components/Common/AppButton";
-import StatusDot from "../../components/Common/StatusDot";
-import ReusableButton from "../../neomorphism/ReusableButton";
-import BackIcon from "../../assets/icon/backArrow.svg";
-import NotificationIcon from "../../assets/icon/notificationIcon.svg";
-import OverlayImage from "../../assets/image/imageBgShadow.png";
-import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
+import { COLORS } from "../../../../constants/theme";
+import IconComponent from "../../../../neomorphism/IconComponent";
+import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
+import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
+import InsightMessageCard from "../../../../components/Common/InsightMessageCard";
+import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
+import NeumorphicInnerShadowCard from "../../../../neomorphism/NeumorphicInnerShadowCard";
+import AppButton from "../../../../components/Common/AppButton";
+import StatusDot from "../../../../components/Common/StatusDot";
+import ReusableButton from "../../../../neomorphism/ReusableButton";
+import LabsTrendChart from "./LabsTrendChart";
+import BackIcon from "../../../../assets/icon/backArrow.svg";
+import NotificationIcon from "../../../../assets/icon/notificationIcon.svg";
+import OverlayImage from "../../../../assets/image/imageBgShadow.png";
+import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 const LabAlertDecision = () => {
   const navigation = useNavigation<any>();
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -44,14 +45,12 @@ const LabAlertDecision = () => {
             onPress={() => {}}
           />
         </View>
-
         <ProfileAvatar
           overlaySource={OverlayImage}
           imageSource={DoctorTempImage}
           wrapperStyle={styles.avatarWrapper}
           imageStyle={styles.avatarImage}
         />
-
         <View style={styles.messageRow}>
           <DoctorAvatar
             source={DoctorTempImage}
@@ -67,7 +66,6 @@ const LabAlertDecision = () => {
             titleSubTitleGap={4}
           />
         </View>
-
         <NeumorphicCard
           outerStyle={styles.patientCardOuter}
           innerStyle={styles.patientCardInner}
@@ -88,7 +86,6 @@ const LabAlertDecision = () => {
                 </View>
               </View>
             </View>
-
             <NeumorphicCard
               outerStyle={styles.criticalOuter}
               innerStyle={styles.criticalInner}
@@ -98,9 +95,9 @@ const LabAlertDecision = () => {
               <Text style={styles.criticalText}>Critical</Text>
             </NeumorphicCard>
           </View>
-
-          <Text style={styles.readingText}>HbA1c 9.2%</Text>
-
+          <View style={styles.inlineChartWrap}>
+            <LabsTrendChart title="HbA1c" value="9.2%" />
+          </View>
           <NeumorphicInnerShadowCard
             borderRadius={10}
             containerStyle={styles.innerAlertCard}
@@ -126,7 +123,6 @@ const LabAlertDecision = () => {
             </View>
           </NeumorphicInnerShadowCard>
         </NeumorphicCard>
-
         <View style={styles.actionsGrid}>
           <AppButton
             text="Order Repeat Test"
@@ -135,6 +131,7 @@ const LabAlertDecision = () => {
             borderColor={COLORS.PRIMARY}
             bgColor={COLORS.SURFACE}
             textStyle={styles.actionText}
+            onPress={() => navigation.navigate(navigationStrings.LABS_DETAIL)}
           />
           <AppButton
             text="Delegate"
@@ -151,6 +148,9 @@ const LabAlertDecision = () => {
             borderColor={COLORS.PRIMARY}
             bgColor={COLORS.SURFACE}
             textStyle={styles.actionText}
+            onPress={() =>
+              navigation.navigate(navigationStrings.FULL_PATIENT_CHART)
+            }
           />
           <AppButton
             text="Escalate Urgent"
@@ -161,7 +161,6 @@ const LabAlertDecision = () => {
             textStyle={styles.actionText}
           />
         </View>
-
         <View style={styles.spaceBetween}>
           <ReusableButton
             title="Schedule Patient"
@@ -170,6 +169,9 @@ const LabAlertDecision = () => {
             borderRadius={22}
             textStyle={styles.scheduleBtnText}
             containerStyle={styles.scheduleBtnWrap}
+            onPress={() =>
+              navigation.navigate(navigationStrings.SCHEDULE_VISIT)
+            }
           />
         </View>
       </ScrollView>
@@ -180,14 +182,8 @@ const LabAlertDecision = () => {
 export default LabAlertDecision;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.SURFACE,
-    paddingTop: 12,
-  },
-  content: {
-    paddingBottom: 24,
-  },
+  container: { flex: 1, backgroundColor: COLORS.SURFACE, paddingTop: 12 },
+  content: { paddingBottom: 24 },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -195,20 +191,9 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     paddingHorizontal: 16,
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: COLORS.PRIMARY,
-  },
-  avatarWrapper: {
-    width: 180,
-    height: 180,
-  },
-  avatarImage: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-  },
+  headerTitle: { fontSize: 18, fontWeight: "600", color: COLORS.PRIMARY },
+  avatarWrapper: { width: 180, height: 180 },
+  avatarImage: { width: 110, height: 110, borderRadius: 55 },
   messageRow: {
     marginTop: 12,
     flexDirection: "row",
@@ -216,56 +201,21 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 16,
   },
-  alertTitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: COLORS.PRIMARY,
-  },
-  alertSubTitle: {
-    fontSize: 14,
-    fontWeight: "400",
-    color: COLORS.TEXT_80,
-  },
-  patientCardOuter: {
-    marginTop: 14,
-    marginHorizontal: 16,
-  },
-  patientCardInner: {
-    padding: 12,
-  },
+  alertTitle: { fontSize: 14, fontWeight: "500", color: COLORS.PRIMARY },
+  alertSubTitle: { fontSize: 14, fontWeight: "400", color: COLORS.TEXT_80 },
+  patientCardOuter: { marginTop: 14, marginHorizontal: 16 },
+  patientCardInner: { padding: 12 },
   patientTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
   },
-  patientLeft: {
-    flexDirection: "row",
-    flex: 1,
-    marginRight: 10,
-  },
-  initials: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: COLORS.PRIMARY_DARK,
-  },
-  nameWrap: {
-    marginLeft: 10,
-  },
-  patientName: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: COLORS.TEXT_DARK,
-  },
-  metaRow: {
-    marginTop: 2,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  metaText: {
-    fontSize: 13,
-    color: COLORS.TEXT_70,
-    fontWeight: "400",
-  },
+  patientLeft: { flexDirection: "row", flex: 1, marginRight: 10 },
+  initials: { fontSize: 16, fontWeight: "600", color: COLORS.PRIMARY_DARK },
+  nameWrap: { marginLeft: 10 },
+  patientName: { fontSize: 16, fontWeight: "600", color: COLORS.TEXT_DARK },
+  metaRow: { marginTop: 2, flexDirection: "row", alignItems: "center" },
+  metaText: { fontSize: 13, color: COLORS.TEXT_70, fontWeight: "400" },
   metaDot: {
     width: 4,
     height: 4,
@@ -273,48 +223,24 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.TEXT_50,
     marginHorizontal: 6,
   },
-  criticalOuter: {
-    minWidth: 72,
-  },
+  criticalOuter: { minWidth: 72 },
   criticalInner: {
     height: 28,
     paddingHorizontal: 10,
     alignItems: "center",
     justifyContent: "center",
   },
-  criticalText: {
-    color: COLORS.ALERT,
-    fontSize: 12,
-    fontWeight: "500",
-  },
-  readingText: {
-    marginTop: 10,
-    fontSize: 18,
-    color: COLORS.ALERT,
-    fontWeight: "500",
-    paddingBottom: 10,
-  },
-  innerAlertCard: {
-    marginBottom: 6,
-  },
+  criticalText: { color: COLORS.ALERT, fontSize: 12, fontWeight: "500" },
+  inlineChartWrap: { marginBottom: 25 },
+  innerAlertCard: { marginBottom: 6 },
   innerAlertContent: {
     paddingHorizontal: 14,
     paddingVertical: 14,
     justifyContent: "center",
   },
-  alertLine: {
-    fontSize: 14,
-    color: COLORS.TEXT_DARK,
-    fontWeight: "500",
-  },
-  alertLineRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  alertDot: {
-    marginRight: 8,
-  },
+  alertLine: { fontSize: 14, color: COLORS.TEXT_DARK, fontWeight: "500" },
+  alertLineRow: { flexDirection: "row", alignItems: "center", gap: 4 },
+  alertDot: { marginRight: 8 },
   actionsGrid: {
     marginTop: 20,
     paddingHorizontal: 16,
@@ -323,26 +249,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     rowGap: 18,
   },
-  actionButton: {
-    width: "48%",
-    height: 48,
-    borderRadius: 24,
-  },
-  actionText: {
-    fontSize: 16,
-    color: COLORS.PRIMARY_DARK,
-    fontWeight: "500",
-  },
-  scheduleBtnWrap: {
-    marginTop: 14,
-  },
-  scheduleBtnText: {
-    fontSize: 16,
-    fontFamily: "Manrope-SemiBold",
-    color: COLORS.WHITE,
-  },
-  spaceBetween: {
-    paddingHorizontal: 16,
-    marginTop: 10,
-  },
+  actionButton: { width: "48%", height: 48, borderRadius: 24 },
+  actionText: { fontSize: 16, color: COLORS.PRIMARY_DARK, fontWeight: "500" },
+  scheduleBtnWrap: { marginTop: 14 },
+  scheduleBtnText: { fontSize: 16, fontWeight: "600", color: COLORS.WHITE },
+  spaceBetween: { paddingHorizontal: 16, marginTop: 10 },
 });

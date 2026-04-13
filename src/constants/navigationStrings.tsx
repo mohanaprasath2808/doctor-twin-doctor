@@ -25,6 +25,18 @@ const navigationStrings = {
   PATIENT_MESSAGE_PREVIEW: "PatientMessagePreview",
   LABS_DASHBOARD: "LabsDashboard",
   LAB_ALERT_DECISION: "LabAlertDecision",
+  LABS_DETAIL: "LabsDetail",
+  LAB_LOCATION: "LabLocation",
+  ORDER_SENT: "OrderSent",
+  MESSAGE_PATIENT: "MessagePatient",
+  SCHEDULE_VISIT: "ScheduleVisit",
+  FULL_PATIENT_CHART: "FullPatientChart",
+  VITALS: "Vitals",
+  MED_SPA: "MedSpa",
+  HOSPITAL_ROUNDS: "HospitalRounds",
+  FOLLOW_UPS: "FollowUps",
+  PRE_OPS: "PreOps",
+  PHYSICALS: "Physicals",
 };
 
 export default navigationStrings;

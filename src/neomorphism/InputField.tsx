@@ -36,10 +36,11 @@ const InputField: React.FC<Props & TextInputProps> = ({
   style,
   ...props
 }) => {
-  const [focused, setFocused] = useState(false);
-  const [width, setWidth] = useState(0);
   const radius = borderRadius ?? RADIUS;
   const fieldMinHeight = minHeight ?? HEIGHT;
+  const [focused, setFocused] = useState(false);
+  const [width, setWidth] = useState(0);
+  const [inputHeight, setInputHeight] = useState(fieldMinHeight);
   const valueText = String(props.value ?? props.defaultValue ?? "");
   const hasText = valueText.trim().length > 0;
   const showFocusedState = focused || hasText;
@@ -47,6 +48,8 @@ const InputField: React.FC<Props & TextInputProps> = ({
   const onLayout = (e: LayoutChangeEvent) => {
     setWidth(e.nativeEvent.layout.width);
   };
+
+  const resolvedShadowHeight = Math.max(fieldMinHeight, inputHeight);
 
   return (
     <View style={[styles.container, containerStyle]} onLayout={onLayout}>
@@ -90,12 +93,12 @@ const InputField: React.FC<Props & TextInputProps> = ({
               <View
                 style={[
                   styles.shadowWrapper,
-                  { height: fieldMinHeight, borderRadius: radius },
+                  { height: resolvedShadowHeight, borderRadius: radius },
                 ]}
               >
                 <InnerShadowView
                   width={width}
-                  height={fieldMinHeight}
+                  height={resolvedShadowHeight}
                   borderRadius={radius}
                   color="#F7FBFF"
                 />
@@ -113,6 +116,13 @@ const InputField: React.FC<Props & TextInputProps> = ({
                   paddingTop: props.multiline ? 12 : 0,
                 },
               ]}
+              onLayout={(event) => {
+                if (!props.multiline) return;
+                const nextHeight = event.nativeEvent.layout.height;
+                if (nextHeight > 0 && Math.abs(nextHeight - inputHeight) > 1) {
+                  setInputHeight(nextHeight);
+                }
+              }}
             >
               {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
 
