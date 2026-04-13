@@ -14,6 +14,12 @@ import SearchIcon from "../../../../assets/icon/searchIcon.svg";
 import navigationStrings from "../../../../constants/navigationStrings";
 
 type SectionFilter = "all" | "today" | "followUp";
+const FILTER_WIDTHS: Record<SectionFilter, number> = {
+  all: 64,
+  today: 126,
+  followUp: 156,
+};
+
 type PatientItem = {
   id: string;
   name: string;
@@ -112,16 +118,19 @@ const Patients = () => {
         <View style={styles.filtersRow}>
           <FilterChip
             title="All"
+            chipWidth={FILTER_WIDTHS.all}
             selected={selectedFilter === "all"}
             onPress={() => setSelectedFilter("all")}
           />
           <FilterChip
             title="Seeing Today"
+            chipWidth={FILTER_WIDTHS.today}
             selected={selectedFilter === "today"}
             onPress={() => setSelectedFilter("today")}
           />
           <FilterChip
             title="Needs Follow-up"
+            chipWidth={FILTER_WIDTHS.followUp}
             selected={selectedFilter === "followUp"}
             onPress={() => setSelectedFilter("followUp")}
           />
@@ -152,19 +161,21 @@ const Patients = () => {
 
 const FilterChip = ({
   title,
+  chipWidth,
   selected,
   onPress,
 }: {
   title: string;
+  chipWidth: number;
   selected: boolean;
   onPress: () => void;
 }) => (
-  <Pressable onPress={onPress} style={styles.filterPress}>
+  <Pressable onPress={onPress} style={[styles.filterPress, { width: chipWidth }]}>
     {selected ? (
       <DeltaBadge
         icon={null}
         value={title}
-        width={title.length > 4 ? 126 : 60}
+        width={chipWidth}
         height={40}
         bgColor="#CBF0FF"
         darkShadowColor="#C8CBCC"
@@ -174,11 +185,13 @@ const FilterChip = ({
       />
     ) : (
       <NeumorphicCard
-        outerStyle={styles.filterOuter}
+        outerStyle={[styles.filterOuter, { width: chipWidth }]}
         innerStyle={styles.filterInner}
         borderRadius={20}
       >
-        <Text style={styles.filterText}>{title}</Text>
+        <Text style={styles.filterText} numberOfLines={1}>
+          {title}
+        </Text>
       </NeumorphicCard>
     )}
   </Pressable>
@@ -269,7 +282,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
   },
-  filterPress: { flexShrink: 1 },
+  filterPress: { flexShrink: 0 },
   filterOuter: {},
   filterInner: {
     paddingHorizontal: 18,

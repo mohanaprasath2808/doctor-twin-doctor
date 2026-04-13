@@ -126,9 +126,7 @@ const ReportHub = () => {
             bgColor={COLORS.SURFACE}
             text="Back to inteligence"
             textStyle={styles.backBtnText}
-            onPress={() =>
-              navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE)
-            }
+            onPress={() => navigation.goBack()}
           />
         </View>
       </ScrollView>

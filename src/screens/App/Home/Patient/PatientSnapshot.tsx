@@ -246,11 +246,13 @@ const PatientSnapshot = () => {
           <View style={styles.medTabs}>
             <MedFilterChip
               title="Active Meds"
+              chipWidth={104}
               selected={selectedMedTab === "active"}
               onPress={() => setSelectedMedTab("active")}
             />
             <MedFilterChip
               title="Safety / Interactions"
+              chipWidth={164}
               selected={selectedMedTab === "safety"}
               onPress={() => setSelectedMedTab("safety")}
             />
@@ -336,14 +338,16 @@ const PatientSnapshot = () => {
               textStyle={[styles.smallBtnText, styles.primaryBtnText]}
             />
           </View>
-          <AppButton
-            text="Escalate critical"
-            borderWidth={1}
-            borderColor="#F2CACA"
-            bgColor="#FDECEC"
-            style={styles.labsDangerBtn}
-            textStyle={[styles.smallBtnText, styles.alertBtnText]}
-          />
+          <View style={{ marginTop: 3, marginBottom: 8 }}>
+            <AppButton
+              text="Escalate critical"
+              borderWidth={1}
+              borderColor="#FF6B6B"
+              bgColor="#FDECEC"
+              style={styles.labsDangerBtn}
+              textStyle={[styles.smallBtnText, styles.alertBtnText]}
+            />
+          </View>
         </NeumorphicCard>
 
         <NeumorphicCard
@@ -376,18 +380,24 @@ export default PatientSnapshot;
 
 const MedFilterChip = ({
   title,
+  chipWidth,
   selected,
   onPress,
 }: {
   title: string;
+  chipWidth: number;
   selected: boolean;
   onPress: () => void;
 }) => (
-  <Pressable onPress={onPress} style={styles.medFilterPress}>
+  <Pressable
+    onPress={onPress}
+    style={[styles.medFilterPress, { width: chipWidth }]}
+  >
     {selected ? (
       <DeltaBadge
         icon={null}
         value={title}
+        width={chipWidth}
         height={40}
         bgColor="#CBF0FF"
         darkShadowColor="#C8CBCC"
@@ -397,7 +407,7 @@ const MedFilterChip = ({
       />
     ) : (
       <NeumorphicCard
-        outerStyle={styles.medFilterOuter}
+        outerStyle={[styles.medFilterOuter, { width: chipWidth }]}
         innerStyle={styles.medFilterInner}
         borderRadius={17}
       >
@@ -511,7 +521,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
   },
-  medFilterPress: { flexShrink: 1 },
+  medFilterPress: { flexShrink: 0 },
   medFilterOuter: {},
   medFilterInner: {
     borderRadius: 17,
@@ -561,7 +571,7 @@ const styles = StyleSheet.create({
     width: "48.5%",
   },
   labsActionRow: {
-    marginTop: 12,
+    marginTop: 20,
     paddingHorizontal: 10,
     flexDirection: "row",
     gap: 8,
@@ -572,7 +582,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   labsDangerBtn: {
-    marginTop: 10,
+    marginTop: 14,
     marginHorizontal: 10,
     height: 40,
     borderRadius: 20,

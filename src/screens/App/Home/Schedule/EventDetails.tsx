@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
@@ -14,6 +14,7 @@ import ScheduleIcon from "../../../../assets/icon/scheduleIcon.svg";
 import MessageIcon from "../../../../assets/icon/messageIcon.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
 import ZoomCallIcon from "../../../../assets/icon/zoomCallIcon.svg";
+import { openGoogleMapsByCoords } from "../../../../constants/contant";
 const EventDetails = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
@@ -28,9 +29,7 @@ const EventDetails = () => {
 
   const onOpenGoogleMaps = async () => {
     if (!locationCoords) return;
-    const { latitude, longitude } = locationCoords;
-    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-    await Linking.openURL(mapsUrl);
+    await openGoogleMapsByCoords(locationCoords.latitude, locationCoords.longitude);
   };
 
   return (
