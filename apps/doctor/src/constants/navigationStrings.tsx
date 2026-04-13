@@ -24,6 +24,8 @@ const navigationStrings = {
   DELEGATE_REVIEW_TO_STAFF: "DelegateReviewToStaff",
   LABS_REVIEW: "LabsReview",
   ORDER_LABS: "OrderLabs",
+  REFILL_SCHEDULE_VISIT: "RefillScheduleVisit",
+  PRESCRIPTION_REFILLS: "PrescriptionRefills",
   PATIENT_MESSAGE_PREVIEW: "PatientMessagePreview",
   LABS_DASHBOARD: "LabsDashboard",
   LAB_ALERT_DECISION: "LabAlertDecision",

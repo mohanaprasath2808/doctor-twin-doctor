@@ -13,11 +13,11 @@ interface DeltaBadgeProps {
   textStyle?: StyleProp<TextStyle>;
   width?: number;
   height?: number;
+  radius?: number;
 }
 
 const WIDTH = 56;
 const HEIGHT = 20;
-const RADIUS = 114;
 const BORDER = 1;
 
 const DeltaBadge: React.FC<DeltaBadgeProps> = ({
@@ -30,6 +30,7 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   textStyle,
   width,
   height = HEIGHT,
+  radius,
 }) => {
   const autoWidth = Math.max(
     WIDTH,
@@ -38,14 +39,14 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   const badgeWidth = width ?? autoWidth;
   const innerWidth = badgeWidth - BORDER * 2;
   const innerHeight = height - BORDER * 2;
-  const radius = height / 2;
-  const innerRadius = Math.max(0, radius - BORDER);
+  const badgeRadius = radius ?? height / 2;
+  const innerRadius = Math.max(0, badgeRadius - BORDER);
 
   return (
     <View
       style={[
         styles.border,
-        { width: badgeWidth, height, borderRadius: radius },
+        { width: badgeWidth, height, borderRadius: badgeRadius },
       ]}
     >
       <LinearGradient

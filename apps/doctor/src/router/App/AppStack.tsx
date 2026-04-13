@@ -32,6 +32,8 @@ import PreOps from "../../screens/App/Home/Schedule/PracticeSchedule/PreOps";
 import Physicals from "../../screens/App/Home/Schedule/PracticeSchedule/Physicals";
 import LabsReview from "../../screens/App/Home/RefillEscalation/LabsReview";
 import OrderLabs from "../../screens/App/Home/RefillEscalation/OrderLabs";
+import RefillScheduleVisit from "../../screens/App/Home/RefillEscalation/ScheduleVisit";
+import PrescriptionRefills from "../../screens/App/Home/RefillEscalation/PrescriptionRefills";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -224,6 +226,20 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.ORDER_LABS}
         component={OrderLabs}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILL_SCHEDULE_VISIT}
+        component={RefillScheduleVisit}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PRESCRIPTION_REFILLS}
+        component={PrescriptionRefills}
         options={{
           headerShown: false,
         }}

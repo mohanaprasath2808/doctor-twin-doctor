@@ -41,13 +41,16 @@ const DelegateReviewToStaff = () => {
       navigation.navigate(navigationStrings.LABS_REVIEW);
       return;
     }
+    if (reasonId === "needs-appointment") {
+      navigation.navigate(navigationStrings.REFILL_SCHEDULE_VISIT);
+      return;
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
         style={styles.scroll}
-        // contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -117,7 +120,7 @@ const DelegateReviewToStaff = () => {
             </NeumorphicCard>
           )}
           ItemSeparatorComponent={() => <View style={styles.reasonSeparator} />}
-          contentContainerStyle={{ marginBottom: 16 }}
+          contentContainerStyle={{ marginBottom: 16, marginTop: 8 }}
         />
 
         <View style={{ marginHorizontal: 16 }}>
@@ -194,8 +197,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     paddingHorizontal: 16,
   },
-  reasonList: { marginTop: 8, },
-  reasonSeparator: { height: 10 },
+  reasonList: {},
+  reasonSeparator: { height: 20 },
   reasonOuter: { marginHorizontal: 16 },
   reasonInner: { borderRadius: 12, paddingHorizontal: 10, minHeight: 50, justifyContent: "center" },
   reasonLabel: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },

@@ -194,6 +194,9 @@ const RefillRequestDetail = () => {
                         bgColor={COLORS.SUCCESS}
                         text="Approve"
                         textStyle={styles.approveBtnText}
+                        onPress={() =>
+                            navigation.navigate(navigationStrings.PRESCRIPTION_REFILLS)
+                        }
                     />
 
                     <AppButton
