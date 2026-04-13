@@ -212,6 +212,45 @@ const AppStack = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name={navigationStrings.MED_SPA}
+        component={MedSpa}
+        options={{
+          headerShown: false,
+        }}
+      />
+            
+      <Stack.Screen
+        name={navigationStrings.HOSPITAL_ROUNDS}
+        component={HospitalRounds}
+        options={{
+          headerShown: false,
+        }}
+      />
+            
+      <Stack.Screen
+        name={navigationStrings.FOLLOW_UPS}
+        component={FollowUps}
+        options={{
+          headerShown: false,
+        }}
+      />
+            
+      <Stack.Screen
+        name={navigationStrings.PRE_OPS}
+        component={PreOps}
+        options={{
+          headerShown: false,
+        }}
+      />
+            
+      <Stack.Screen
+        name={navigationStrings.PHYSICALS}
+        component={Physicals}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
