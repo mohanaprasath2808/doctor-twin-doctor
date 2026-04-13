@@ -22,6 +22,8 @@ const navigationStrings = {
   REFILL_ESCALATION: "RefillEscalation",
   REFILL_REQUEST_DETAILS: "RefillRequestDetails",
   DELEGATE_REVIEW_TO_STAFF: "DelegateReviewToStaff",
+  LABS_REVIEW: "LabsReview",
+  ORDER_LABS: "OrderLabs",
   PATIENT_MESSAGE_PREVIEW: "PatientMessagePreview",
   LABS_DASHBOARD: "LabsDashboard",
   LAB_ALERT_DECISION: "LabAlertDecision",

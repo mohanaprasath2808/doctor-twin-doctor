@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
@@ -12,12 +12,13 @@ import BackIcon from "../../../../assets/icon/backArrow.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
-import NotificationIcon from "../../../../assets/icon/notificationIcon.svg";
 import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
-import CalendarIcon from "../../../../assets/icon/calendarIcon.svg";
-import DelegationHubIcon from "../../../../assets/icon/delegationHubIcon.svg";
-import WarningIcon from "../../../../assets/icon/warningIcon.svg";
-import ProfileIcon from "../../../../assets/icon/profile.svg";
+import LapReportIcon from "../../../../assets/icon/labReportIcon.svg";
+import CalendarIcon from "../../../../assets/icon/appointmentCalendarIcon.svg";
+import ShieldIcon from "../../../../assets/icon/shieldIcon.svg";
+import LotusIcon from "../../../../assets/icon/lotusIcon.svg";
+import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 const STAFF_LIST = [
   { id: "eva", name: "Eva", role: "Nurse" },
@@ -26,21 +27,27 @@ const STAFF_LIST = [
 ];
 
 const REASON_LIST = [
-  { id: "needs-labs", label: "Needs labs", icon: <CapsuleIcon width={16} height={16} /> },
+  { id: "needs-labs", label: "Needs labs", icon: <LapReportIcon width={16} height={16} /> },
   { id: "needs-appointment", label: "Needs appointment", icon: <CalendarIcon width={16} height={16} /> },
-  { id: "med-recon", label: "Need med reconciliation", icon: <DelegationHubIcon width={16} height={16} /> },
-  { id: "insurance", label: "Insurance / PA issue", icon: <WarningIcon width={16} height={16} /> },
-  { id: "control-substance", label: "Control Substance", icon: <ProfileIcon width={16} height={16} /> },
+  { id: "med-recon", label: "Need med reconciliation", icon: <CapsuleIcon width={16} height={16} /> },
+  { id: "insurance", label: "Insurance / PA issue", icon: <ShieldIcon width={16} height={16} /> },
+  { id: "control-substance", label: "Control Substance", icon: <LotusIcon width={16} height={16} /> },
 ];
 
 const DelegateReviewToStaff = () => {
   const navigation = useNavigation<any>();
+  const onReasonPress = (reasonId: string) => {
+    if (reasonId === "needs-labs") {
+      navigation.navigate(navigationStrings.LABS_REVIEW);
+      return;
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "bottom", "left", "right"]}>
+    <SafeAreaView style={styles.safeArea}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.content}
+        // contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -65,9 +72,12 @@ const DelegateReviewToStaff = () => {
 
         <Text style={styles.promptText}>Choose the patient's refill for review?</Text>
 
-        <NeumorphicCard outerStyle={styles.staffCardOuter} innerStyle={styles.staffCardInner} borderRadius={12}>
-          {STAFF_LIST.map((item, index) => (
-            <View key={item.id}>
+        <NeumorphicCard outerStyle={styles.staffCardOuter} innerStyle={styles.staffCardInner} borderRadius={10}>
+          <FlatList
+            data={STAFF_LIST}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            renderItem={({ item }) => (
               <View style={styles.row}>
                 <View style={styles.rowLeft}>
                   <DoctorAvatar source={DoctorTempImage} imageSize={40} containerSize={40} middleRingGap={0} outerRingExtra={0} />
@@ -78,33 +88,46 @@ const DelegateReviewToStaff = () => {
                 </View>
                 <RightArrowIcon width={10} height={10} />
               </View>
-              {index !== STAFF_LIST.length - 1 && <View style={styles.divider} />}
-            </View>
-          ))}
+            )}
+            ItemSeparatorComponent={() => <View style={styles.divider} />}
+          />
         </NeumorphicCard>
 
         <Text style={styles.sectionTitle}>Reason</Text>
 
-        <View style={styles.reasonList}>
-          {REASON_LIST.map((item) => (
-            <NeumorphicCard key={item.id} outerStyle={styles.reasonOuter} innerStyle={styles.reasonInner} borderRadius={12}>
+        <FlatList
+          style={styles.reasonList}
+          data={REASON_LIST}
+          keyExtractor={(item) => item.id}
+          scrollEnabled={false}
+          renderItem={({ item }) => (
+            <NeumorphicCard
+              outerStyle={styles.reasonOuter}
+              innerStyle={styles.reasonInner}
+              borderRadius={10}
+              onPress={() => onReasonPress(item.id)}
+            >
               <View style={styles.row}>
                 <View style={styles.rowLeft}>
-                  <View style={styles.reasonIconWrap}>{item.icon}</View>
+                  <InnerShadowIcon icon={item.icon} size={40} />
                   <Text style={styles.reasonLabel}>{item.label}</Text>
                 </View>
                 <RightArrowIcon width={10} height={10} />
               </View>
             </NeumorphicCard>
-          ))}
-        </View>
-
-        <ReusableButton
-          title="Order Labs"
-          containerStyle={styles.footerBtn}
+          )}
+          ItemSeparatorComponent={() => <View style={styles.reasonSeparator} />}
+          contentContainerStyle={{ marginBottom: 16 }}
         />
+
+        <View style={{ marginHorizontal: 16 }}>
+          <ReusableButton
+            title="Order Labs"
+            containerStyle={styles.footerBtn}
+          />
+        </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 
@@ -114,8 +137,8 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 16, paddingBottom: 28 },
   header: {
     marginTop: 6,
-    minHeight: 40,
     justifyContent: "center",
+    paddingHorizontal: 16,
   },
   headerTitle: {
     position: "absolute",
@@ -148,7 +171,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
   },
-  staffCardOuter: { marginTop: 20 },
+  staffCardOuter: { marginTop: 20, marginHorizontal: 16 },
   staffCardInner: { borderRadius: 12, paddingHorizontal: 10, paddingVertical: 8 },
   row: {
     minHeight: 48,
@@ -169,18 +192,12 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_DARK,
     fontSize: 14,
     fontWeight: "500",
+    paddingHorizontal: 16,
   },
-  reasonList: { marginTop: 8, gap: 10 },
-  reasonOuter: {},
+  reasonList: { marginTop: 8, },
+  reasonSeparator: { height: 10 },
+  reasonOuter: { marginHorizontal: 16 },
   reasonInner: { borderRadius: 12, paddingHorizontal: 10, minHeight: 50, justifyContent: "center" },
-  reasonIconWrap: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#ECF2F9",
-  },
   reasonLabel: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },
   footerBtn: {
     marginTop: 16,
