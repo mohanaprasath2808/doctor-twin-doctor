@@ -1,0 +1,8 @@
+{
+  "name": "@doctor-twin/staff",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "echo \"Staff app scaffold created. Add Expo app files here.\""
+  }
+}
