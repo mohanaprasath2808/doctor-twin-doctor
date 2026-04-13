@@ -22,6 +22,9 @@ import CreateTask from "../../screens/App/Home/Schedule/CreateTask";
 import AddEvent from "../../screens/App/Home/Schedule/AddEvent";
 import EventDetails from "../../screens/App/Home/Schedule/EventDetails";
 import RefillEscalation from "../../screens/App/Home/RefillEscalation/RefillEscalation";
+import RefillRequestDetail from "../../screens/App/Home/RefillEscalation/RefillRequestDetail";
+import PatientMessagePreview from "../../screens/App/Home/RefillEscalation/PatientMessagePreview";
+import DelegateReviewToStaff from "../../screens/App/Home/RefillEscalation/DelegateReviewToStaff";
 import MedSpa from "../../screens/App/Home/Schedule/PracticeSchedule/MedSpa";
 import HospitalRounds from "../../screens/App/Home/Schedule/PracticeSchedule/HospitalRounds";
 import FollowUps from "../../screens/App/Home/Schedule/PracticeSchedule/FollowUps";
@@ -189,36 +192,22 @@ const AppStack = () => {
         }}
       />
       <Stack.Screen
-        name={navigationStrings.MED_SPA}
-        component={MedSpa}
+        name={navigationStrings.REFILL_REQUEST_DETAILS}
+        component={RefillRequestDetail}
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name={navigationStrings.HOSPITAL_ROUNDS}
-        component={HospitalRounds}
+        name={navigationStrings.DELEGATE_REVIEW_TO_STAFF}
+        component={DelegateReviewToStaff}
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name={navigationStrings.FOLLOW_UPS}
-        component={FollowUps}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name={navigationStrings.PRE_OPS}
-        component={PreOps}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name={navigationStrings.PHYSICALS}
-        component={Physicals}
+        name={navigationStrings.PATIENT_MESSAGE_PREVIEW}
+        component={PatientMessagePreview}
         options={{
           headerShown: false,
         }}

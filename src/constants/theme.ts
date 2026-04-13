@@ -17,4 +17,6 @@ export const COLORS = {
   TEXT_70: "#6B6B6B",
   TEXT_80: "#565656",
   GREEN: "#10B981",
+  DARK_SHADOW: "#C8CBCC",
+  LIGHT_SHADOW: "#FFFFFF99",
 };

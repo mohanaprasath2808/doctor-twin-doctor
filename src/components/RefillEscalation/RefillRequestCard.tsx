@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { COLORS } from "../../constants/theme";
 import NeumorphicCard from "../Common/NeumorphicCard";
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
@@ -13,12 +13,14 @@ export type RefillRequestItem = {
   name: string;
   ageGender: string;
   medication: string;
+  medicationMethod: string;
   requestedAgo: string;
   status: RefillRequestStatus;
 };
 
 type RefillRequestCardProps = {
   item: RefillRequestItem;
+  onPress: () => void;
 };
 
 const STATUS_MAP: Record<
@@ -37,7 +39,7 @@ const STATUS_MAP: Record<
   },
 };
 
-const RefillRequestCard: React.FC<RefillRequestCardProps> = ({ item }) => {
+const RefillRequestCard: React.FC<RefillRequestCardProps> = ({ item, onPress }) => {
   const status = STATUS_MAP[item.status];
 
   return (
@@ -46,37 +48,52 @@ const RefillRequestCard: React.FC<RefillRequestCardProps> = ({ item }) => {
       innerStyle={styles.cardInner}
       borderRadius={12}
     >
-      <View style={styles.topRow}>
-        <View style={styles.leftCluster}>
-          <InnerShadowIcon
-            size={30}
-            icon={<Text style={styles.initials}>{item.initials}</Text>}
-          />
-          <View style={styles.nameWrap}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.meta}>{item.ageGender}</Text>
-          </View>
-        </View>
-        <NeumorphicCard
-          outerStyle={styles.statusPill}
-          innerStyle={styles.statusPillInner}
-          borderRadius={20}
-          backgroundColor={status.bgColor}
-        >
-          <Text style={[styles.statusText, { color: status.textColor }]}>{status.label}</Text>
-        </NeumorphicCard>
-      </View>
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.topRow}>
+          <View style={styles.leftCluster}>
+            <InnerShadowIcon
+              size={40}
+              icon={<Text style={styles.initials}>{item.initials}</Text>}
+            />
+            <View style={styles.nameRow}>
+              <View style={styles.nameWrap}>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.meta}>{item.ageGender}</Text>
+              </View>
+              <NeumorphicCard
+                outerStyle={styles.statusPill}
+                innerStyle={styles.statusPillInner}
+                borderRadius={20}
+                backgroundColor={status.bgColor}
+              >
+                <Text style={[styles.statusText, { color: status.textColor }]}>{status.label}</Text>
+              </NeumorphicCard>
+            </View>
 
-      <View style={styles.divider} />
-      <View style={styles.bottomRow}>
-        <Text style={styles.medication}>{item.medication}</Text>
-        <Text style={styles.requestedText}>Requested {item.requestedAgo} ago</Text>
-      </View>
+          </View>
+
+        </View>
+
+        <View style={styles.divider} />
+        <View style={styles.bottomRow}>
+          <View style={styles.medicationContainer}>
+            <Text style={styles.medication}>{item.medication}</Text>
+            <Text style={styles.medicationMethod}>{item.medicationMethod}</Text>
+          </View>
+          <Text style={styles.requestedText}>Requested {item.requestedAgo} ago</Text>
+        </View>
+      </TouchableOpacity>
+
     </NeumorphicCard>
   );
 };
 
 const styles = StyleSheet.create({
+  nameRow: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
   cardOuter: {
     width: "100%",
   },
@@ -88,18 +105,18 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
   },
   leftCluster: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 10,
   },
   initials: {
     color: COLORS.PRIMARY,
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
   },
   nameWrap: {
     gap: 2,
@@ -111,18 +128,21 @@ const styles = StyleSheet.create({
   },
   meta: {
     color: COLORS.TEXT_60,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "400",
   },
-  statusPill: {
-  },
+  statusPill: { maxHeight: 28, minWidth: 72 },
   statusPillInner: {
-    paddingHorizontal: 14,
-    paddingVertical: 4,
-    height: 28,
+    height: "100%",
+    paddingHorizontal: 16,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 64,
+  },
+  filterText: {
+    color: COLORS.TEXT_70,
+    fontSize: 13,
+    fontWeight: "500",
   },
   statusText: {
     fontSize: 10,
@@ -131,7 +151,8 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: COLORS.TEXT_10,
-    marginTop: 5,
+    marginTop: 16,
+    marginBottom: 10,
   },
   bottomRow: {
     flexDirection: "row",
@@ -139,10 +160,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 8,
   },
-  medication: {
+  medicationContainer: {
     flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  medication: {
+    color: COLORS.TEXT_DARK,
+    fontSize: 12,
+    fontWeight: "400",
+  },
+  medicationMethod: {
     color: COLORS.TEXT_60,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "400",
   },
   requestedText: {
