@@ -33,9 +33,13 @@ import Physicals from "../../screens/App/Home/Schedule/PracticeSchedule/Physical
 import LabsReview from "../../screens/App/Home/RefillEscalation/LabsReview";
 import OrderLabs from "../../screens/App/Home/RefillEscalation/OrderLabs";
 import RefillScheduleVisit from "../../screens/App/Home/RefillEscalation/ScheduleVisit";
-import PrescriptionRefills from "../../screens/App/Home/RefillEscalation/PrescriptionRefills";
+import SendRefill from "../../screens/App/Home/RefillEscalation/SendRefill";
 import RefillSent from "../../screens/App/Home/RefillEscalation/RefillSent";
 import RequestReviewSent from "../../screens/App/Home/RefillEscalation/RequestReviewSent";
+import TaskCreated from "../../screens/App/Home/RefillEscalation/TaskCreated";
+import SafetyWarning from "../../screens/App/Home/RefillEscalation/SafetyWarning";
+import ShortSupplyApproval from "../../screens/App/Home/RefillEscalation/ShortSupplyApproval";
+import EligibilityPayerRules from "../../screens/App/Home/PayerRules/EligibilityPayerRules";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -240,8 +244,8 @@ const AppStack = () => {
         }}
       />
       <Stack.Screen
-        name={navigationStrings.PRESCRIPTION_REFILLS}
-        component={PrescriptionRefills}
+        name={navigationStrings.SEND_REFILL}
+        component={SendRefill}
         options={{
           headerShown: false,
         }}
@@ -256,6 +260,34 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.REQUEST_REVIEW_SENT}
         component={RequestReviewSent}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.TASK_CREATED}
+        component={TaskCreated}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SAFETY_WARNING}
+        component={SafetyWarning}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SHORT_SUPPLY_APPROVAL}
+        component={ShortSupplyApproval}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ELIGIBILITY_PAYER_RULES}
+        component={EligibilityPayerRules}
         options={{
           headerShown: false,
         }}

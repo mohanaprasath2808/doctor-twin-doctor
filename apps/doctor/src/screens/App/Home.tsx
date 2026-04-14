@@ -106,6 +106,11 @@ const GRID_ITEMS: GridItem[] = [
     label: "Labs",
     icon: () => <BrainIcon width={18} height={18} />,
   },
+  {
+    id: 13,
+    label: "Payer Rules",
+    icon: () => <BrainIcon width={18} height={18} />,
+  },
 
 ];
 
@@ -158,6 +163,12 @@ const Home = () => {
           ...item,
           onPress: () =>
             navigation.navigate(navigationStrings.LABS_DASHBOARD),
+        };
+      case 13:
+        return {
+          ...item,
+          onPress: () =>
+            navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
         };
       default:
         return item;

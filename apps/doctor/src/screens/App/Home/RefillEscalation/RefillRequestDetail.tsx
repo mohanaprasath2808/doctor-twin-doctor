@@ -195,7 +195,7 @@ const RefillRequestDetail = () => {
                         text="Approve"
                         textStyle={styles.approveBtnText}
                         onPress={() =>
-                            navigation.navigate(navigationStrings.PRESCRIPTION_REFILLS)
+                            navigation.navigate(navigationStrings.SEND_REFILL)
                         }
                     />
 
