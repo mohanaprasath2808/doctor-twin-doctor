@@ -41,6 +41,8 @@ import SafetyWarning from "../../screens/App/Home/RefillEscalation/SafetyWarning
 import ShortSupplyApproval from "../../screens/App/Home/RefillEscalation/ShortSupplyApproval";
 import EligibilityPayerRules from "../../screens/App/Home/PayerRules/EligibilityPayerRules";
 import PatientVerification from "../../screens/App/Home/PatientVerification/PatientVerification";
+import DoctorReview from "../../screens/App/Home/Delegation/DoctorReview";
+import StaffConsole from "../../screens/App/Home/Delegation/StaffConsole";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -58,6 +60,20 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.PRACTICE_INTELLIGENCE}
         component={PracticeIntelligence}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_CONSOLE}
+        component={StaffConsole}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCTOR_REVIEW}
+        component={DoctorReview}
         options={{
           headerShown: false,
         }}

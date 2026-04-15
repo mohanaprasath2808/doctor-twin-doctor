@@ -153,6 +153,11 @@ const Home = () => {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.REFILL_ESCALATION),
         };
+      case 5:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.STAFF_CONSOLE),
+        };
       case 7:
         return {
           ...item,

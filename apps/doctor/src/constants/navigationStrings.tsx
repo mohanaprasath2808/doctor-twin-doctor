@@ -8,6 +8,8 @@ const navigationStrings = {
   //APP
   HOME: "Home",
   PRACTICE_INTELLIGENCE: "PracticeIntelligence",
+  STAFF_CONSOLE: "StaffConsole",
+  DOCTOR_REVIEW: "DoctorReview",
   PRACTICE_SCHEDULE: "PracticeSchedule",
   MY_CALENDER: "MyCalender",
   TO_DO_LIST: "ToDoList",

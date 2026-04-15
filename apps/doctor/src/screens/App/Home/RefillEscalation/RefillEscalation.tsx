@@ -4,10 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
+import FilterChip from "../../../../components/Common/FilterChip";
 import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
-import DeltaBadge from "../../../../components/Common/DeltaBadge";
-import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import RefillRequestCard, {
     RefillRequestItem,
 } from "../../../../components/RefillEscalation/RefillRequestCard";
@@ -156,39 +155,6 @@ const RefillEscalation = () => {
     );
 };
 
-const FilterChip = ({
-    title,
-    selected,
-    onPress,
-}: {
-    title: string;
-    selected: boolean;
-    onPress: () => void;
-}) => (
-    <Pressable onPress={onPress} style={styles.filterPress}>
-        {selected ? (
-            <DeltaBadge
-                icon={null}
-                value={title}
-                height={36}
-                bgColor="#CBF0FF"
-                darkShadowColor="#C8CBCC"
-                lightShadowColor="#FFFFFF99"
-                textColor={COLORS.PRIMARY}
-                textStyle={styles.selectedFilterText}
-            />
-        ) : (
-            <NeumorphicCard
-                outerStyle={styles.filterOuter}
-                innerStyle={styles.filterInner}
-                borderRadius={18}
-            >
-                <Text style={styles.filterText}>{title}</Text>
-            </NeumorphicCard>
-        )}
-    </Pressable>
-);
-
 const styles = StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: COLORS.SURFACE },
     scroll: { flex: 1 },
@@ -234,23 +200,6 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     filterPress: { flexShrink: 1 },
-    filterOuter: { minWidth: 72 },
-    filterInner: {
-        height: 36,
-        paddingHorizontal: 16,
-        borderRadius: 18,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    filterText: {
-        color: COLORS.TEXT_70,
-        fontSize: 13,
-        fontWeight: "500",
-    },
-    selectedFilterText: {
-        fontSize: 13,
-        fontWeight: "500",
-    },
     dropdownContent: {
         flexDirection: "row",
         alignItems: "center",
