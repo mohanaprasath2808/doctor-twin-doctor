@@ -12,14 +12,17 @@ import DeltaBadge from "../../../../components/Common/DeltaBadge";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
 import ShieldIcon from "../../../../assets/icon/shieldIcon.svg";
-import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
-import ReportIcon from "../../../../assets/icon/reportIcon.svg";
-import PatientIcon from "../../../../assets/icon/patientIcon.svg";
-import WarningIcon from "../../../../assets/icon/warningIcon.svg";
+import CardIcon from "../../../../assets/icon/cardIcon.svg";
+import ReportIcon from "../../../../assets/icon/listIcon.svg";
+import ProfileVerified from "../../../../assets/icon/profileWithTickIcon.svg";
+import WarningIcon from "../../../../assets/icon/redWarningIcon.svg";
+import DeductableIcon from "../../../../assets/icon/cutCurrencyIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 
 const EligibilityPayerRules = () => {
   const navigation = useNavigation<any>();
+  const payerType = "HMO" as string;
+  const isPPO = payerType === "PPO";
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -65,9 +68,9 @@ const EligibilityPayerRules = () => {
         </NeumorphicCard>
 
         <NeumorphicCard outerStyle={styles.listCardOuter} innerStyle={styles.listCardInner} borderRadius={10}>
-          <DetailRow icon={<CapsuleIcon width={18} height={18} />} title="Copay" value="$23 PCP" />
+          <DetailRow icon={<CardIcon width={18} height={18} />} title="Copay" value="$23 PCP" />
           <View style={styles.divider} />
-          <DetailRow icon={<WarningIcon width={18} height={18} />} title="Deductible" value="$1243 met /$3500" />
+          <DetailRow icon={<DeductableIcon width={18} height={18} />} title="Deductible" value="$1243 met /$3500" />
           <View style={styles.divider} />
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
@@ -87,7 +90,7 @@ const EligibilityPayerRules = () => {
             />
           </View>
           <View style={styles.divider} />
-          <DetailRow icon={<PatientIcon width={18} height={18} />} title="Assigned PCP" value="Dr.Soliman" />
+          <DetailRow icon={<ProfileVerified width={18} height={18} />} title="Assigned PCP" value="Dr.Soliman" />
         </NeumorphicCard>
 
         <NeumorphicCard outerStyle={styles.rulesCardOuter} innerStyle={styles.rulesCardInner} borderRadius={10}>
@@ -95,7 +98,7 @@ const EligibilityPayerRules = () => {
             <Text style={styles.rulesTitle}>Payer Rules</Text>
             <DeltaBadge
               icon={null}
-              value="HMO"
+              value={payerType}
               bgColor={COLORS.SURFACE}
               darkShadowColor="#C8CBCC"
               lightShadowColor="#FFFFFF99"
@@ -121,7 +124,7 @@ const EligibilityPayerRules = () => {
             <Text style={styles.rulesTitle}>Referral Requirements</Text>
             <DeltaBadge
               icon={null}
-              value="HMO"
+              value={payerType}
               bgColor={COLORS.SURFACE}
               darkShadowColor="#C8CBCC"
               lightShadowColor="#FFFFFF99"
@@ -141,8 +144,10 @@ const EligibilityPayerRules = () => {
         </NeumorphicCard>
 
         <View style={styles.actionRow}>
-          <AppButton activeOpacity={0.8} style={styles.actionBtn} borderWidth={1} borderColor={COLORS.PRIMARY} bgColor={COLORS.SURFACE} text="Add Referral" textStyle={styles.actionText} onPress={() => { }} />
-          <AppButton activeOpacity={0.8} style={styles.actionBtn} borderWidth={1} borderColor={COLORS.PRIMARY} bgColor={COLORS.SURFACE} text="Unlock Secure Form" textStyle={styles.actionText} onPress={() => { }} />
+          {!isPPO && (
+            <AppButton activeOpacity={0.8} style={styles.actionBtn} borderWidth={1} borderColor={COLORS.PRIMARY} bgColor={COLORS.SURFACE} text="Add Referral" textStyle={styles.actionText} onPress={() => { }} />
+          )}
+          <AppButton activeOpacity={0.8} style={[styles.actionBtn, isPPO && styles.fullWidthActionBtn]} borderWidth={1} borderColor={COLORS.PRIMARY} bgColor={COLORS.SURFACE} text="Unlock Secure Form" textStyle={styles.actionText} onPress={() => { }} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
   payerTitle: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },
   payerSub: { color: COLORS.TEXT_60, fontSize: 14, fontWeight: "400", marginTop: 2 },
   payerRight: { height: "100%" },
-  divider: { height: 1, backgroundColor: COLORS.TEXT_10, marginVertical: 12 },
+  divider: { height: 1, backgroundColor: COLORS.TEXT_10, marginVertical: 14 },
   listCardOuter: { marginTop: 20 },
   listCardInner: { borderRadius: 10, padding: 10 },
   detailRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
@@ -188,7 +193,7 @@ const styles = StyleSheet.create({
   detailTitle: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },
   detailRight: { flexDirection: "row", alignItems: "center", gap: 6 },
   detailValue: { color: COLORS.TEXT_DARK, fontSize: 12, fontWeight: "500" },
-  rulesCardOuter: { marginTop: 16 },
+  rulesCardOuter: { marginTop: 20 },
   rulesCardInner: { borderRadius: 10, padding: 10 },
   rulesHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   rulesTitle: { color: COLORS.TEXT_DARK, fontSize: 16, fontWeight: "500" },
@@ -198,14 +203,15 @@ const styles = StyleSheet.create({
   warningTextWrap: { flex: 1 },
   warningTitle: { color: COLORS.ALERT, fontSize: 14, fontWeight: "500" },
   warningText: { color: COLORS.TEXT_80, fontSize: 14, fontWeight: "400", marginTop: 2, lineHeight: 20 },
-  requirementsCardOuter: { marginTop: 16 },
+  requirementsCardOuter: { marginTop: 20 },
   requirementsCardInner: { borderRadius: 10, padding: 10 },
   bulletRow: { marginTop: 10, flexDirection: "row", alignItems: "flex-start", gap: 8 },
   bullet: { color: COLORS.TEXT_70, fontSize: 16, fontWeight: "500", lineHeight: 20 },
   bulletText: { color: COLORS.TEXT_80, fontSize: 14, fontWeight: "400", flex: 1, lineHeight: 20 },
   bulletTextBold: { color: COLORS.TEXT_DARK, fontWeight: "500" },
-  actionRow: { marginTop: 16, flexDirection: "row", gap: 12 },
+  actionRow: { marginTop: 20, flexDirection: "row", gap: 12 },
   actionBtn: { flex: 1, height: 48, borderRadius: 24 },
+  fullWidthActionBtn: { width: "100%" },
   actionText: { color: COLORS.PRIMARY, fontSize: 16, fontWeight: "500" },
 });
 

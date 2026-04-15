@@ -14,6 +14,7 @@ const NeumorphicSwitch: React.FC<NeumorphicSwitchProps> = ({
   value,
   onValueChange,
   disabled = false,
+
 }) => {
   return (
     <Pressable
@@ -41,7 +42,7 @@ const NeumorphicSwitch: React.FC<NeumorphicSwitchProps> = ({
             value ? styles.thumbRight : styles.thumbLeft,
           ]}
         >
-          <StatusDot color={value ? COLORS.PRIMARY : COLORS.WHITE} size={24} />
+          <StatusDot color={value ? COLORS.PRIMARY : COLORS.WHITE} size={24} outerGradientColors={value ? [COLORS.PRIMARY, COLORS.PRIMARY] : [COLORS.WHITE, COLORS.WHITE]} />
         </View>
       </NeumorphicInnerShadowCard>
     </Pressable>

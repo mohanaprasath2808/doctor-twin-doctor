@@ -32,6 +32,7 @@ const navigationStrings = {
   SAFETY_WARNING: "SafetyWarning",
   SHORT_SUPPLY_APPROVAL: "ShortSupplyApproval",
   ELIGIBILITY_PAYER_RULES: "EligibilityPayerRules",
+  PATIENT_VERIFICATION: "PatientVerification",
   PATIENT_MESSAGE_PREVIEW: "PatientMessagePreview",
   LABS_DASHBOARD: "LabsDashboard",
   LAB_ALERT_DECISION: "LabAlertDecision",

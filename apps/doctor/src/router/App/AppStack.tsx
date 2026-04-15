@@ -40,6 +40,7 @@ import TaskCreated from "../../screens/App/Home/RefillEscalation/TaskCreated";
 import SafetyWarning from "../../screens/App/Home/RefillEscalation/SafetyWarning";
 import ShortSupplyApproval from "../../screens/App/Home/RefillEscalation/ShortSupplyApproval";
 import EligibilityPayerRules from "../../screens/App/Home/PayerRules/EligibilityPayerRules";
+import PatientVerification from "../../screens/App/Home/PatientVerification/PatientVerification";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -288,6 +289,13 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.ELIGIBILITY_PAYER_RULES}
         component={EligibilityPayerRules}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PATIENT_VERIFICATION}
+        component={PatientVerification}
         options={{
           headerShown: false,
         }}
