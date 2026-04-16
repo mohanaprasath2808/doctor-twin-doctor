@@ -9,11 +9,16 @@ import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
+import ReusableButton from "../../../../neomorphism/ReusableButton";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 const DoctorReview = () => {
   const navigation = useNavigation<any>();
   const [notes, setNotes] = useState(
     "Add a follow-up note based on her blood pressure concerns",
+  );
+  const [refillMessage, setRefillMessage] = useState(
+    "Metformin refill prepared",
   );
 
   return (
@@ -49,9 +54,14 @@ const DoctorReview = () => {
               </View>
             </View>
 
-            <View style={styles.refillPill}>
-              <Text style={styles.refillPillText}>Metformin refill prepared</Text>
-            </View>
+            <InputField
+              value={refillMessage}
+              onChangeText={setRefillMessage}
+              placeholder="Refill message"
+              containerStyle={styles.refillInput}
+              minHeight={40}
+            />
+
           </NeumorphicCard>
 
           <NeumorphicCard
@@ -84,9 +94,9 @@ const DoctorReview = () => {
               onChangeText={setNotes}
               placeholder="Add notes"
               containerStyle={styles.notesInput}
-              minHeight={54}
-              borderRadius={14}
               multiline
+              minHeight={56}
+              borderRadius={10}
             />
           </NeumorphicCard>
         </ScrollView>
@@ -102,6 +112,7 @@ const DoctorReview = () => {
               bgColor={COLORS.SURFACE}
               borderRadius={22}
               textStyle={styles.secondaryActionText}
+              onPress={() => navigation.navigate(navigationStrings.REOPEN_TASK)}
             />
             <AppButton
               text="Reassign"
@@ -112,6 +123,7 @@ const DoctorReview = () => {
               bgColor={COLORS.SURFACE}
               borderRadius={22}
               textStyle={styles.secondaryActionText}
+              onPress={() => navigation.navigate(navigationStrings.REASSIGN_TASK)}
             />
           </View>
 
@@ -121,10 +133,11 @@ const DoctorReview = () => {
               activeOpacity={0.85}
               style={styles.actionButton}
               borderWidth={1}
-              borderColor="#FF8D8D"
-              bgColor="#FFF0F0"
+              borderColor={COLORS.ALERT}
+              bgColor={COLORS.ALERT_LIGHT}
               borderRadius={22}
               textStyle={styles.rejectActionText}
+              onPress={() => navigation.navigate(navigationStrings.REJECT_TASK)}
             />
             <AppButton
               text="Escalate"
@@ -135,16 +148,16 @@ const DoctorReview = () => {
               bgColor={COLORS.SURFACE}
               borderRadius={22}
               textStyle={styles.secondaryActionText}
+              onPress={() => navigation.navigate(navigationStrings.ESCALATION_TASK)}
             />
           </View>
-
-          <AppButton
-            text="Approve"
-            activeOpacity={0.85}
-            style={styles.approveButton}
-            borderRadius={24}
-            bgColor={COLORS.PRIMARY}
+          <ReusableButton
+            title="Approve"
+            containerStyle={styles.approveButton}
             textStyle={styles.approveButtonText}
+            backgroundColor="#2E3A8C"
+            textColor="#FFFFFF"
+            onPress={() => navigation.navigate(navigationStrings.COMPLETION_TASK)}
           />
         </View>
       </View>
@@ -184,7 +197,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   cardOuter: {
-    marginTop: 16,
+    marginTop: 30,
     width: "100%",
   },
   patientCardInner: {
@@ -204,14 +217,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 60,
+    height: 60,
+    borderRadius: 114,
     resizeMode: "cover",
   },
   smallAvatar: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     borderRadius: 18,
     resizeMode: "cover",
   },
@@ -222,7 +235,7 @@ const styles = StyleSheet.create({
   personName: {
     color: COLORS.TEXT_DARK,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   personMeta: {
     marginTop: 2,
@@ -230,49 +243,34 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
   },
-  refillPill: {
-    marginTop: 14,
-    borderRadius: 14,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    shadowColor: COLORS.DARK_SHADOW,
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.24,
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  refillPillText: {
-    color: COLORS.TEXT_70,
-    fontSize: 15,
-    fontWeight: "500",
-  },
   staffName: {
     color: COLORS.TEXT_DARK,
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
   },
   staffRole: {
     marginTop: 2,
     color: COLORS.TEXT_50,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "400",
   },
   messageText: {
     marginTop: 14,
     color: COLORS.TEXT_DARK,
-    fontSize: 15,
+    fontSize: 14,
     lineHeight: 22,
     fontWeight: "400",
   },
   notesTitle: {
     color: COLORS.TEXT_DARK,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
   },
   notesInput: {
-    marginTop: 12,
-    marginBottom: 0,
+    marginTop: 10
+  },
+  refillInput: {
+    marginTop: 20
   },
   footer: {
     paddingHorizontal: 10,
@@ -287,26 +285,35 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
-    height: 40,
+    borderRadius: 26,
+    height: 48,
+    alignItems: "center",
+    justifyContent: "center",
   },
   secondaryActionText: {
-    color: "#4D559F",
-    fontSize: 15,
-    fontWeight: "600",
+    color: COLORS.PRIMARY,
+    fontSize: 16,
+    fontWeight: "500",
   },
   rejectActionText: {
-    color: "#FF7E7E",
-    fontSize: 15,
-    fontWeight: "600",
+    color: COLORS.ALERT,
+    fontSize: 16,
+    fontWeight: "500",
   },
-  approveButton: {
-    height: 42,
-  },
-  approveButtonText: {
-    color: COLORS.WHITE,
-    fontSize: 18,
-    fontWeight: "600",
-  },
+  // approveButton: {
+  //   flex: 1,
+  //   borderRadius: 26,
+  //   height: 48,
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  // },
+  // approveButtonText: {
+  //   color: COLORS.WHITE,
+  //   fontSize: 16,
+  //   fontWeight: "500",
+  // },
+  approveButton: { height: 48, borderRadius: 24 },
+  approveButtonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "500" }
 });
 
 export default DoctorReview;

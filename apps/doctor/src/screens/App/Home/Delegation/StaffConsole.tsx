@@ -236,7 +236,7 @@ const StaffConsole = () => {
             iconSize={16}
             textStyle={styles.addTaskText}
             style={styles.addTaskButton}
-            onPress={() => navigation.navigate(navigationStrings.CREATE_TASK)}
+            onPress={() => navigation.navigate(navigationStrings.DELEGATION_CREATE_TASK)}
           />
 
         </View>

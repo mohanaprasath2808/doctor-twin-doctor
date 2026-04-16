@@ -141,7 +141,7 @@ const CreateTask = () => {
           <View style={styles.addWrap}>
             <ReusableButton
               title="Add Task"
-              onPress={() => {}}
+              onPress={() => { }}
               containerStyle={styles.addBtn}
               backgroundColor="#2E3A8C"
               textColor="#FFFFFF"
