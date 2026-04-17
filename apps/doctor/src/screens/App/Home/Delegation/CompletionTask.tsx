@@ -89,7 +89,8 @@ const CompletionTask = () => {
               lightShadowColor="#FFFFFFCC"
             >
               <View style={styles.tickIconWrapper}>
-                <BlackTickIcon width={16} height={16} /> <Text style={styles.shadowText}>Approved by Dr.Johnson</Text>
+                <BlackTickIcon width={16} height={16} />
+                <Text style={styles.shadowText}>Approved by Dr.Johnson</Text>
               </View>
             </NeumorphicInnerShadowCard>
           </NeumorphicCard>

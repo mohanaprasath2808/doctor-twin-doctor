@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from "react";
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal as BSModal, BottomSheetView } from "@gorhom/bottom-sheet";
@@ -50,28 +50,30 @@ const SelectBottomSheetModal = forwardRef<
       <BottomSheetView style={styles.sheetContent}>
         <Text style={styles.sheetTitle}>{title}</Text>
 
-        <View>
-          {options.map((opt, idx) => {
-            const isActive = opt === draftValue;
+        <FlatList
+          data={options}
+          keyExtractor={(item) => item}
+          scrollEnabled={false}
+          renderItem={({ item, index }) => {
+            const isActive = item === draftValue;
             return (
               <Pressable
-                key={opt}
                 style={[
                   styles.sheetOptionRow,
-                  idx !== options.length - 1 && styles.sheetOptionSeparator,
+                  index !== options.length - 1 && styles.sheetOptionSeparator,
                 ]}
-                onPress={() => setDraftValue(opt)}
+                onPress={() => setDraftValue(item)}
               >
                 {isActive ? (
                   <SelectedIcon width={30} height={30} />
                 ) : (
                   <InnerShadowIcon size={30} icon={<View style={styles.emptyDot} />} />
                 )}
-                <Text style={styles.sheetOptionText}>{opt}</Text>
+                <Text style={styles.sheetOptionText}>{item}</Text>
               </Pressable>
             );
-          })}
-        </View>
+          }}
+        />
 
         <View style={styles.sheetFooterRow}>
           <View style={styles.sheetFooterHalf}>

@@ -1,6 +1,9 @@
 const navigationStrings = {
   //AUTH
   LOGIN: "Login",
+  SSO_SIGN_IN: "SsoSignIn",
+  HIPAA_PRIVACY_GATE: "HipaaPrivacyGate",
+  ENABLE_VOICE_HANDS_FREE: "EnableVoiceHandsFree",
   SIGNUP: "SignUp",
   OTP_VERIFICATION: "OtpVerification",
   FORGOT_PASSWORD: "ForgotPassword",

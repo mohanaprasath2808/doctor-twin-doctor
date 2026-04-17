@@ -160,10 +160,14 @@ const StaffConsole = () => {
 
           <Text style={styles.sectionTitle}>Today</Text>
 
-          <View style={styles.cardsList}>
-            {filteredTasks.map((item) => (
+          <FlatList
+            data={filteredTasks}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            contentContainerStyle={styles.cardsList}
+            ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
+            renderItem={({ item }) => (
               <NeumorphicCard
-                key={item.id}
                 outerStyle={styles.cardOuter}
                 innerStyle={styles.cardInner}
                 borderRadius={14}
@@ -220,8 +224,8 @@ const StaffConsole = () => {
                   />
                 </View>
               </NeumorphicCard>
-            ))}
-          </View>
+            )}
+          />
         </ScrollView>
 
         <View style={styles.footer}>
@@ -320,7 +324,9 @@ const styles = StyleSheet.create({
   },
   cardsList: {
     marginTop: 14,
-    gap: 16,
+  },
+  cardSeparator: {
+    height: 16,
   },
   cardOuter: {
     width: "100%",

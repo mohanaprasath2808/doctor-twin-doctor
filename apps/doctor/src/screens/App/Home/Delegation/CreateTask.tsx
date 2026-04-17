@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
+  FlatList,
   Platform,
   Pressable,
   StyleSheet,
@@ -69,28 +70,31 @@ const SelectBottomSheetModal = forwardRef<
       <BottomSheetView style={styles.sheetContent}>
         <Text style={styles.sheetTitle}>{title}</Text>
 
-        <View style={styles.sheetOptions}>
-          {options.map((opt, idx) => {
-            const isActive = opt === draftValue;
+        <FlatList
+          data={options}
+          keyExtractor={(item) => item}
+          scrollEnabled={false}
+          style={styles.sheetOptions}
+          renderItem={({ item, index }) => {
+            const isActive = item === draftValue;
             return (
               <Pressable
-                key={opt}
                 style={[
                   styles.sheetOptionRow,
-                  idx !== options.length - 1 && styles.sheetOptionSeparator,
+                  index !== options.length - 1 && styles.sheetOptionSeparator,
                 ]}
-                onPress={() => setDraftValue(opt)}
+                onPress={() => setDraftValue(item)}
               >
                 {isActive ? (
                   <SelectedIcon width={30} height={30} />
                 ) : (
                   <InnerShadowIcon size={30} icon={<View style={styles.emptyDot} />} />
                 )}
-                <Text style={styles.sheetOptionText}>{opt}</Text>
+                <Text style={styles.sheetOptionText}>{item}</Text>
               </Pressable>
             );
-          })}
-        </View>
+          }}
+        />
 
         <View style={styles.sheetFooterRow}>
           <View style={styles.sheetFooterHalf}>
@@ -269,13 +273,18 @@ const CreateTask = () => {
 
           {attachments.length > 0 && (
             <NeumorphicCard outerStyle={styles.attachOuter} innerStyle={styles.attachInner} borderRadius={64}>
-              <View style={styles.attachList}>
-                {attachments.map((file) => (
-                  <View key={file.uri} style={styles.attachRow}>
+              <FlatList
+                data={attachments}
+                keyExtractor={(item) => item.uri}
+                scrollEnabled={false}
+                contentContainerStyle={styles.attachList}
+                ItemSeparatorComponent={() => <View style={styles.attachSeparator} />}
+                renderItem={({ item }) => (
+                  <View style={styles.attachRow}>
                     <View style={styles.attachLeft}>
                       <InnerShadowIcon size={34} icon={<Text style={styles.fileIconText}>📄</Text>} radius={10} />
                       <Text style={styles.attachName} numberOfLines={1}>
-                        {file.name}
+                        {item.name}
                       </Text>
                     </View>
                     <IconComponent
@@ -283,12 +292,11 @@ const CreateTask = () => {
                       width={28}
                       height={28}
                       radius={14}
-                      onPress={() => removeAttachment(file.uri)}
+                      onPress={() => removeAttachment(item.uri)}
                     />
                   </View>
-
-                ))}
-              </View>
+                )}
+              />
             </NeumorphicCard>
 
           )}
@@ -378,7 +386,8 @@ const styles = StyleSheet.create({
   attachInner: { borderRadius: 64, paddingVertical: 6, paddingHorizontal: 6 },
   attachButton: { width: "100%", height: 46, borderRadius: 23 },
   attachText: { color: COLORS.PRIMARY_DARK, fontSize: 14, fontWeight: "600" },
-  attachList: { marginTop: 10, gap: 10 },
+  attachList: { marginTop: 10 },
+  attachSeparator: { height: 10 },
   attachRow: {
     flexDirection: "row",
     alignItems: "center",
