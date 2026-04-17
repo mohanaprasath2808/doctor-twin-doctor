@@ -1,6 +1,5 @@
 import React from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../constants/theme';
@@ -11,7 +10,7 @@ import ReusableButton from '../../neomorphism/ReusableButton';
 import BackIcon from '../../assets/icon/backArrow.svg';
 import OverlayImage from '../../assets/image/imageBgShadow.png';
 import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
-import MicOutlineIcon from '../../assets/icon/micOutlineIcon.svg';
+import MicImage from '../../assets/image/micImage.png';
 
 const EnableVoiceHandsFree = () => {
   const navigation = useNavigation<any>();
@@ -44,28 +43,18 @@ const EnableVoiceHandsFree = () => {
         Allow Dr.Twin to access microphone for hands-free commands
       </Text>
 
-      <View style={styles.micBadgeWrap}>
-        <ProfileAvatar
-          overlaySource={OverlayImage}
-          imageSource={DoctorTempImage}
-          containerStyle={styles.micContainer}
-          wrapperStyle={styles.micWrapper}
-          overlayStyle={styles.micOverlay}
-          imageStyle={styles.hiddenImage}
-        />
-        <LinearGradient
-          colors={['#303DA3', '#111747']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.micCenter}
-        >
-          <MicOutlineIcon width={24} height={32} />
-        </LinearGradient>
-      </View>
+      <ProfileAvatar
+        overlaySource={OverlayImage}
+        imageSource={MicImage}
+        containerStyle={{ marginTop: 16 }}
+        wrapperStyle={styles.profileWrapper}
+        overlayStyle={styles.profileOverlay}
+        imageStyle={styles.micImage}
+      />
 
       <ReusableButton
         title="Enable Voice Mode"
-        onPress={() => navigation.navigate(navigationStrings.OTP_VERIFICATION)}
+        onPress={() => navigation.navigate(navigationStrings.ROLE_AND_LOCATION)}
         containerStyle={styles.voiceBtn}
         backgroundColor="#2E3A8C"
         textColor="#FFFFFF"
@@ -117,17 +106,21 @@ const styles = StyleSheet.create({
     height: 115,
     borderRadius: 58,
   },
+  micImage: {
+    width: 155,
+    height: 155,
+  },
   title: {
-    marginTop: 26,
+    marginTop: 20,
     textAlign: 'center',
     color: COLORS.TEXT_DARK,
     fontSize: 20,
     fontWeight: '500',
   },
   subtitle: {
-    marginTop: 18,
+    marginTop: 30,
     textAlign: 'center',
-    color: COLORS.TEXT_60,
+    color: COLORS.TEXT_70,
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '400',
@@ -140,36 +133,16 @@ const styles = StyleSheet.create({
   micContainer: {
     marginTop: 0,
   },
-  micWrapper: {
-    width: 190,
-    height: 190,
-  },
-  micOverlay: {
-    borderRadius: 95,
-  },
-  hiddenImage: {
-    width: 1,
-    height: 1,
-    opacity: 0,
-  },
-  micCenter: {
-    position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   voiceBtn: {
-    marginTop: 18,
+    marginTop: 30,
   },
   footerNote: {
-    marginTop: 22,
+    marginTop: 30,
     alignItems: 'center',
   },
   footerText: {
-    color: COLORS.TEXT_60,
-    fontSize: 16,
+    color: COLORS.TEXT_70,
+    fontSize: 14,
     fontWeight: '400',
   },
 });

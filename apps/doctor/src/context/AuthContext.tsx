@@ -9,8 +9,8 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 interface AuthContextProps {
     children: ReactNode;
 }
-const AuthContextProvider : React.FC<AuthContextProps> = ({children}: {children: React.ReactNode}) => {
-    const [isLogin,setIsLogin] = useState<boolean>(false);
+const AuthContextProvider: React.FC<AuthContextProps> = ({ children }: { children: React.ReactNode }) => {
+    const [isLogin, setIsLogin] = useState<boolean>(false);
     return (
         <AuthContext.Provider value={{
             isLogin,
