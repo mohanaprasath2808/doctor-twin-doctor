@@ -6,8 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
-import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
-import SelectedIcon from "../../../../assets/icon/selectedIcon.svg";
+import Timeline from "../../../../components/Common/Timeline";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 
 type AuditItem = {
@@ -45,25 +44,7 @@ const AuditTrail = () => {
         </View>
 
         <NeumorphicCard outerStyle={styles.timelineOuter} innerStyle={styles.timelineInner} borderRadius={14}>
-          {AUDIT_ITEMS.map((item, index) => {
-            const isLast = index === AUDIT_ITEMS.length - 1;
-            return (
-              <View key={item.id} style={styles.rowWrap}>
-                <View style={styles.timelineColumn}>
-                  {item.isCompleted ? (
-                    <SelectedIcon width={30} height={30} />
-                  ) : (
-                    <InnerShadowIcon size={30} icon={<View style={styles.emptyDot} />} />
-                  )}
-                  {!isLast && <View style={styles.connector} />}
-                </View>
-                <View style={styles.rowContent}>
-                  <Text style={styles.rowTitle}>{item.title}</Text>
-                  <Text style={styles.rowTime}>{item.time}</Text>
-                </View>
-              </View>
-            );
-          })}
+          <Timeline data={AUDIT_ITEMS} rowSpacing={42} />
         </NeumorphicCard>
       </View>
     </SafeAreaView>
@@ -86,20 +67,5 @@ const styles = StyleSheet.create({
 
   timelineOuter: { marginTop: 30, width: "100%" },
   timelineInner: { borderRadius: 14, paddingHorizontal: 12, paddingVertical: 14 },
-  rowWrap: { flexDirection: "row", alignItems: "flex-start" },
-  timelineColumn: { width: 30, alignItems: "center" },
-  connector: { width: 1.5, flex: 1, minHeight: 26, backgroundColor: "#D0D4DB", marginTop: 2, marginBottom: 2 },
-  rowContent: {
-    flex: 1,
-    marginLeft: 12,
-    paddingBottom: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 10,
-  },
-  rowTitle: { flex: 1, color: COLORS.TEXT_DARK, fontSize: 16, fontWeight: "500" },
-  rowTime: { color: COLORS.TEXT_60, fontSize: 12, fontWeight: "500", flexShrink: 0 },
-  emptyDot: { width: 1, height: 1 },
 });
 
