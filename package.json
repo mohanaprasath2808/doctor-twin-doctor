@@ -4,11 +4,24 @@
   "workspaces": [
     "apps/*"
   ],
+  "overrides": {
+    "react-native-gesture-handler": "~2.28.0"
+  },
   "scripts": {
     "doctor:start": "npm run start -w @doctor-twin/doctor",
     "doctor:android": "npm run android -w @doctor-twin/doctor",
     "doctor:ios": "npm run ios -w @doctor-twin/doctor",
-    "patient:start": "npm run start -w @doctor-twin/patient",
-    "staff:start": "npm run start -w @doctor-twin/staff"
+    "patient": "npm run start -w @doctor-twin/patient",
+    "patient:android": "npm run android -w @doctor-twin/patient",
+    "patient:ios": "npm run ios -w @doctor-twin/patient",
+    "staff:start": "npm run start -w @doctor-twin/staff",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "version": "1.0.0",
+  "dependencies": {
+    "expo": "~54.0.33",
+    "react": "19.1.0",
+    "react-native": "0.81.5"
   }
 }
