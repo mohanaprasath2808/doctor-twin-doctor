@@ -19,6 +19,7 @@ import PracticeSchedule from "../../screens/App/Home/Schedule/PracticeSchedule";
 import MyCalender from "../../screens/App/Home/Schedule/MyCalender";
 import ToDoList from "../../screens/App/Home/Schedule/ToDoList";
 import CreateTask from "../../screens/App/Home/Schedule/CreateTask";
+import DelegationCreateTask from "../../screens/App/Home/Delegation/CreateTask";
 import AddEvent from "../../screens/App/Home/Schedule/AddEvent";
 import EventDetails from "../../screens/App/Home/Schedule/EventDetails";
 import RefillEscalation from "../../screens/App/Home/RefillEscalation/RefillEscalation";
@@ -32,6 +33,24 @@ import PreOps from "../../screens/App/Home/Schedule/PracticeSchedule/PreOps";
 import Physicals from "../../screens/App/Home/Schedule/PracticeSchedule/Physicals";
 import LabsReview from "../../screens/App/Home/RefillEscalation/LabsReview";
 import OrderLabs from "../../screens/App/Home/RefillEscalation/OrderLabs";
+import RefillScheduleVisit from "../../screens/App/Home/RefillEscalation/ScheduleVisit";
+import SendRefill from "../../screens/App/Home/RefillEscalation/SendRefill";
+import RefillSent from "../../screens/App/Home/RefillEscalation/RefillSent";
+import RequestReviewSent from "../../screens/App/Home/RefillEscalation/RequestReviewSent";
+import TaskCreated from "../../screens/App/Home/RefillEscalation/TaskCreated";
+import SafetyWarning from "../../screens/App/Home/RefillEscalation/SafetyWarning";
+import ShortSupplyApproval from "../../screens/App/Home/RefillEscalation/ShortSupplyApproval";
+import EligibilityPayerRules from "../../screens/App/Home/PayerRules/EligibilityPayerRules";
+import PatientVerification from "../../screens/App/Home/PatientVerification/PatientVerification";
+import DoctorReview from "../../screens/App/Home/Delegation/DoctorReview";
+import StaffConsole from "../../screens/App/Home/Delegation/StaffConsole";
+import DelegationRoute from "../../screens/App/Home/Delegation/DelegationRoute";
+import ReopenTask from "../../screens/App/Home/Delegation/ReopenTask";
+import RejectTask from "../../screens/App/Home/Delegation/RejectTask";
+import EscalationTask from "../../screens/App/Home/Delegation/EscalationTask";
+import ReassignTask from "../../screens/App/Home/Delegation/ReassignTask";
+import CompletionTask from "../../screens/App/Home/Delegation/CompletionTask";
+import AuditTrail from "../../screens/App/Home/Delegation/AuditTrail";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -49,6 +68,69 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.PRACTICE_INTELLIGENCE}
         component={PracticeIntelligence}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_CONSOLE}
+        component={StaffConsole}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCTOR_REVIEW}
+        component={DoctorReview}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATION_ROUTE}
+        component={DelegationRoute}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REOPEN_TASK}
+        component={ReopenTask}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REJECT_TASK}
+        component={RejectTask}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ESCALATION_TASK}
+        component={EscalationTask}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REASSIGN_TASK}
+        component={ReassignTask}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.COMPLETION_TASK}
+        component={CompletionTask}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.AUDIT_TRAIL}
+        component={AuditTrail}
         options={{
           headerShown: false,
         }}
@@ -91,6 +173,13 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.CREATE_TASK}
         component={CreateTask}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATION_CREATE_TASK}
+        component={DelegationCreateTask}
         options={{
           headerShown: false,
         }}
@@ -224,6 +313,69 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.ORDER_LABS}
         component={OrderLabs}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILL_SCHEDULE_VISIT}
+        component={RefillScheduleVisit}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SEND_REFILL}
+        component={SendRefill}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILL_SENT}
+        component={RefillSent}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REQUEST_REVIEW_SENT}
+        component={RequestReviewSent}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.TASK_CREATED}
+        component={TaskCreated}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SAFETY_WARNING}
+        component={SafetyWarning}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SHORT_SUPPLY_APPROVAL}
+        component={ShortSupplyApproval}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ELIGIBILITY_PAYER_RULES}
+        component={EligibilityPayerRules}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PATIENT_VERIFICATION}
+        component={PatientVerification}
         options={{
           headerShown: false,
         }}

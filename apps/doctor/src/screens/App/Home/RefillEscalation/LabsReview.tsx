@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -30,6 +30,17 @@ const FOLLOW_UP_LIST = [
 
 const LabsReview = () => {
     const navigation = useNavigation<any>();
+    const [labReviewList, setLabReviewList] = useState(LAB_REVIEW_LIST);
+
+    const updateCount = (id: string, delta: number) => {
+        setLabReviewList((prev) =>
+            prev.map((item) =>
+                item.id === id
+                    ? { ...item, count: Math.max(0, item.count + delta) }
+                    : item,
+            ),
+        );
+    };
 
     const renderLabItem = ({ item }: { item: (typeof LAB_REVIEW_LIST)[number] }) => (
         <View style={styles.labRow}>
@@ -43,6 +54,7 @@ const LabsReview = () => {
                     outerStyle={styles.counterValueOuter}
                     innerStyle={styles.counterValueInner}
                     borderRadius={55}
+                    onPress={() => updateCount(item.id, -1)}
                 >
                     <MinusIcon width={10} height={10} />
                 </NeumorphicCard>
@@ -53,6 +65,7 @@ const LabsReview = () => {
                     outerStyle={styles.counterValueOuter}
                     innerStyle={styles.counterValueInner}
                     borderRadius={55}
+                    onPress={() => updateCount(item.id, 1)}
                 >
                     <PlusIcon width={10} height={10} />
                 </NeumorphicCard>
@@ -103,7 +116,7 @@ const LabsReview = () => {
                     </View>
 
                     <FlatList
-                        data={LAB_REVIEW_LIST}
+                        data={labReviewList}
                         keyExtractor={(item) => item.id}
                         renderItem={renderLabItem}
                         scrollEnabled={false}

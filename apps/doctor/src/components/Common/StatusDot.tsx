@@ -12,7 +12,7 @@ type StatusDotProps = {
 const StatusDot: React.FC<StatusDotProps> = ({
   color,
   size = 8,
-  outerGradientColors = ["#D6E3F3", "#FFFFFF"],
+  outerGradientColors = ["#D6E3F3", "#FF0000"],
   style,
 }) => {
   const outerSize = size + 2;

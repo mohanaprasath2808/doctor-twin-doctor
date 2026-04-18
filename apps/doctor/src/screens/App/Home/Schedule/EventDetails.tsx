@@ -100,7 +100,7 @@ const EventDetails = () => {
               width={30}
               height={30}
               radius={15}
-              onPress={() => {}}
+              onPress={() => { }}
             />
           </View>
         </NeumorphicCard>
@@ -142,10 +142,10 @@ const EventDetails = () => {
             text="Delete event"
             borderWidth={1}
             borderColor={COLORS.ALERT}
-            bgColor="#FDECEC"
+            bgColor={COLORS.ALERT_LIGHT}
             textStyle={styles.deleteText}
             style={styles.actionButton}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
         <View style={styles.buttonHalf}>
@@ -156,7 +156,7 @@ const EventDetails = () => {
             bgColor={COLORS.SURFACE}
             textStyle={styles.editText}
             style={styles.actionButton}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
       </View>

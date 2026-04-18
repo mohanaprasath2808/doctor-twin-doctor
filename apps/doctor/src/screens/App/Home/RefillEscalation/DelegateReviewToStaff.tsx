@@ -1,5 +1,5 @@
-import React from "react";
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
@@ -9,7 +9,7 @@ import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
 import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
+import SelectedIcon from "../../../../assets/icon/selectedIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
@@ -36,9 +36,24 @@ const REASON_LIST = [
 
 const DelegateReviewToStaff = () => {
   const navigation = useNavigation<any>();
+  const [selectedStaffId, setSelectedStaffId] = useState("annie");
+  const [selectedReasonId, setSelectedReasonId] = useState("med-recon");
+
+  const renderSelector = (selected: boolean) =>
+    selected ? (
+      <SelectedIcon width={30} height={30} />
+    ) : (
+      <InnerShadowIcon icon={<View style={styles.emptyDot} />} size={30} radius={46} />
+    );
+
   const onReasonPress = (reasonId: string) => {
+    setSelectedReasonId(reasonId);
     if (reasonId === "needs-labs") {
       navigation.navigate(navigationStrings.LABS_REVIEW);
+      return;
+    }
+    if (reasonId === "needs-appointment") {
+      navigation.navigate(navigationStrings.REFILL_SCHEDULE_VISIT);
       return;
     }
   };
@@ -47,7 +62,6 @@ const DelegateReviewToStaff = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView
         style={styles.scroll}
-        // contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -78,52 +92,49 @@ const DelegateReviewToStaff = () => {
             keyExtractor={(item) => item.id}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <View style={styles.row}>
+              <Pressable style={styles.row} onPress={() => setSelectedStaffId(item.id)}>
                 <View style={styles.rowLeft}>
-                  <DoctorAvatar source={DoctorTempImage} imageSize={40} containerSize={40} middleRingGap={0} outerRingExtra={0} />
+                  {renderSelector(selectedStaffId === item.id)}
+                  <View style={{ marginLeft: 6 }}>
+                    <DoctorAvatar source={DoctorTempImage} imageSize={40} containerSize={40} middleRingGap={0} outerRingExtra={0} />
+                  </View>
                   <View>
                     <Text style={styles.rowTitle}>{item.name}</Text>
                     <Text style={styles.rowSub}>{item.role}</Text>
                   </View>
                 </View>
-                <RightArrowIcon width={10} height={10} />
-              </View>
+              </Pressable>
             )}
             ItemSeparatorComponent={() => <View style={styles.divider} />}
           />
         </NeumorphicCard>
 
-        <Text style={styles.sectionTitle}>Reason</Text>
 
-        <FlatList
-          style={styles.reasonList}
-          data={REASON_LIST}
-          keyExtractor={(item) => item.id}
-          scrollEnabled={false}
-          renderItem={({ item }) => (
-            <NeumorphicCard
-              outerStyle={styles.reasonOuter}
-              innerStyle={styles.reasonInner}
-              borderRadius={10}
-              onPress={() => onReasonPress(item.id)}
-            >
-              <View style={styles.row}>
+        <NeumorphicCard outerStyle={styles.reasonOuter} innerStyle={styles.reasonInner} borderRadius={10}>
+          <Text style={styles.sectionTitle}>Reason</Text>
+          <FlatList
+            style={styles.reasonList}
+            data={REASON_LIST}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            renderItem={({ item }) => (
+              <Pressable style={styles.row} onPress={() => onReasonPress(item.id)}>
                 <View style={styles.rowLeft}>
-                  <InnerShadowIcon icon={item.icon} size={40} />
+                  {renderSelector(selectedReasonId === item.id)}
+                  <InnerShadowIcon icon={item.icon} size={40} style={{ marginLeft: 6 }} />
                   <Text style={styles.reasonLabel}>{item.label}</Text>
                 </View>
-                <RightArrowIcon width={10} height={10} />
-              </View>
-            </NeumorphicCard>
-          )}
-          ItemSeparatorComponent={() => <View style={styles.reasonSeparator} />}
-          contentContainerStyle={{ marginBottom: 16 }}
-        />
+              </Pressable>
+            )}
+            ItemSeparatorComponent={() => <View style={styles.divider} />}
+          />
+        </NeumorphicCard>
 
-        <View style={{ marginHorizontal: 16 }}>
+        <View style={{ marginHorizontal: 16, marginTop: 56 }}>
           <ReusableButton
-            title="Order Labs"
+            title="Create Task"
             containerStyle={styles.footerBtn}
+            onPress={() => navigation.navigate(navigationStrings.TASK_CREATED)}
           />
         </View>
       </ScrollView>
@@ -186,21 +197,18 @@ const styles = StyleSheet.create({
   },
   rowTitle: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },
   rowSub: { color: COLORS.TEXT_60, fontSize: 11, fontWeight: "400" },
-  divider: { height: 1, backgroundColor: COLORS.TEXT_10 },
+  divider: { height: 1, backgroundColor: COLORS.TEXT_10, marginVertical: 14 },
   sectionTitle: {
-    marginTop: 14,
     color: COLORS.TEXT_DARK,
     fontSize: 14,
     fontWeight: "500",
-    paddingHorizontal: 16,
   },
-  reasonList: { marginTop: 8, },
-  reasonSeparator: { height: 10 },
-  reasonOuter: { marginHorizontal: 16 },
-  reasonInner: { borderRadius: 12, paddingHorizontal: 10, minHeight: 50, justifyContent: "center" },
+  reasonList: { marginTop: 10 },
+  reasonOuter: { marginTop: 20, marginHorizontal: 16 },
+  reasonInner: { borderRadius: 12, paddingHorizontal: 10, paddingVertical: 8 },
   reasonLabel: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },
+  emptyDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "transparent" },
   footerBtn: {
-    marginTop: 16,
     height: 48,
     borderRadius: 24,
   },

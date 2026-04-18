@@ -29,7 +29,7 @@ const STATUS_MAP: Record<
 > = {
   urgent: {
     label: "Urgent",
-    bgColor: "#FDECEC",
+    bgColor: COLORS.ALERT_LIGHT,
     textColor: COLORS.ALERT,
   },
   approve: {

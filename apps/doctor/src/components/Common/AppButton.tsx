@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  DimensionValue,
   Platform,
   StyleProp,
   StyleSheet,
@@ -16,6 +17,9 @@ type AppButtonProps = {
   borderWidth?: number;
   borderColor?: string;
   bgColor?: string;
+  width?: DimensionValue;
+  height?: number;
+  borderRadius?: number;
   text: string;
   leftIcon?: React.ReactNode;
   iconSize?: number;
@@ -35,6 +39,9 @@ const AppButton: React.FC<AppButtonProps> = ({
   borderWidth = 0,
   borderColor = "transparent",
   bgColor = "transparent",
+  width = "100%",
+  height = 48,
+  borderRadius = 26,
   text,
   leftIcon,
   iconSize = 16,
@@ -70,6 +77,9 @@ const AppButton: React.FC<AppButtonProps> = ({
         styles.shadow,
         shadowStyle,
         {
+          width,
+          height,
+          borderRadius,
           borderWidth: resolvedBorderWidth,
           borderColor: resolvedBorderColor,
           backgroundColor: useGradientBorder ? "transparent" : bgColor,
@@ -85,26 +95,26 @@ const AppButton: React.FC<AppButtonProps> = ({
             locations={[0.082, 0.8268]}
             start={{ x: 1, y: 0.465 }}
             end={{ x: 0, y: 0.535 }}
-            style={[StyleSheet.absoluteFillObject, styles.gradientBorder]}
+            style={[StyleSheet.absoluteFillObject, { borderRadius }]}
           />
           <LinearGradient
             colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
             locations={[0, 1]}
             start={{ x: 0.5, y: 0 }}
             end={{ x: 0.5, y: 1 }}
-            style={[StyleSheet.absoluteFillObject, styles.gradientBorder]}
+            style={[StyleSheet.absoluteFillObject, { borderRadius }]}
           />
           <LinearGradient
             colors={["#303DA3", "#111747"]}
             locations={[0.1494, 0.8506]}
             start={{ x: 0, y: 0.488 }}
             end={{ x: 1, y: 0.512 }}
-            style={[StyleSheet.absoluteFillObject, styles.gradientBorder]}
+            style={[StyleSheet.absoluteFillObject, { borderRadius }]}
           />
           <View
             pointerEvents="none"
             style={[
-              styles.gradientInset,
+              { borderRadius: Math.max(0, borderRadius - resolvedBorderWidth) },
               {
                 top: resolvedBorderWidth,
                 left: resolvedBorderWidth,
@@ -126,14 +136,10 @@ const AppButton: React.FC<AppButtonProps> = ({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: 26,
-    height: 48,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
   },
-  gradientBorder: { borderRadius: 26 },
-  gradientInset: { position: "absolute", borderRadius: 999 },
   shadow: Platform.select({
     ios: {
       shadowColor: "#A0B4C8",

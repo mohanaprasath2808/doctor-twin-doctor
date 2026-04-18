@@ -5,7 +5,7 @@ import { useRoute } from "./useRoute";
 
 type RouteType = 'auth' | 'app';
 
-const stack: Record<RouteType, React.ReactElement> ={
+const stack: Record<RouteType, React.ReactElement> = {
     auth: <AuthStack />,
     app: <AppStack />,
 }

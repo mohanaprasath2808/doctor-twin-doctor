@@ -65,7 +65,7 @@ const LabsDetail = () => {
               outerStyle={styles.criticalOuter}
               innerStyle={styles.criticalInner}
               borderRadius={14}
-              backgroundColor="#FDECEC"
+              backgroundColor={COLORS.ALERT_LIGHT}
             >
               <Text style={styles.criticalText}>Critical</Text>
             </NeumorphicCard>

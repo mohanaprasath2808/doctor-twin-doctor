@@ -7,7 +7,6 @@ import { COLORS } from "../../constants/theme";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import IconComponent from "../../neomorphism/IconComponent";
 import { useNavigation } from "@react-navigation/native";
-import navigationStrings from "../../constants/navigationStrings";
 import { AuthContext } from "../../context/AuthContext";
 import BackIcon from "../../assets/icon/backArrow.svg";
 
@@ -43,7 +42,7 @@ const OtpVerification = () => {
         <OtpTextInput otp={otp} setOtp={setOtp} />
       </View>
 
-      <OtpTimer initialSeconds={30} onResend={() => {}} />
+      <OtpTimer initialSeconds={30} onResend={() => { }} />
 
       <ReusableButton
         title="Verify"

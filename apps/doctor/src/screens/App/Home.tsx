@@ -106,6 +106,16 @@ const GRID_ITEMS: GridItem[] = [
     label: "Labs",
     icon: () => <BrainIcon width={18} height={18} />,
   },
+  {
+    id: 13,
+    label: "Payer Rules",
+    icon: () => <BrainIcon width={18} height={18} />,
+  },
+  {
+    id: 14,
+    label: "Patient Verification",
+    icon: () => <PatientIcon width={18} height={18} />,
+  },
 
 ];
 
@@ -143,6 +153,11 @@ const Home = () => {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.REFILL_ESCALATION),
         };
+      case 5:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.STAFF_CONSOLE),
+        };
       case 7:
         return {
           ...item,
@@ -158,6 +173,18 @@ const Home = () => {
           ...item,
           onPress: () =>
             navigation.navigate(navigationStrings.LABS_DASHBOARD),
+        };
+      case 13:
+        return {
+          ...item,
+          onPress: () =>
+            navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
+        };
+      case 14:
+        return {
+          ...item,
+          onPress: () =>
+            navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
         };
       default:
         return item;
@@ -216,7 +243,7 @@ const Home = () => {
             <InnerShadowIcon icon={item.icon()} size={40} />
           </View>
           <View style={styles.cardTextWrap}>
-            <Text style={styles.cardLabel}>{item.label}</Text>
+            <Text style={styles.cardLabel} numberOfLines={2}>{item.label}</Text>
             {item.badgeType === "sub" && item.badge && (
               <DeltaBadge
                 icon={null}
