@@ -9,6 +9,7 @@ import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import LeftArrowIcon from "../../assets/icons/leftArrow.svg";
+import navigationStrings from "../../constants/navigationStrings";
 
 const VerifyIdentity = () => {
   const navigation = useNavigation<any>();
@@ -68,6 +69,7 @@ const VerifyIdentity = () => {
           borderRadius={30}
           height={48}
           containerStyle={styles.nextButton}
+          onPress={() => navigation.navigate(navigationStrings.ACCEPT_CONSENT)}
         />
       </View>
     </SafeAreaView>

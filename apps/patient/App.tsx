@@ -5,13 +5,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthContextProvider from "./src/context/AuthContext";
 import AppContextProvider from "./src/context/AppContext";
 import Router from "./src/router/Router";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <AuthContextProvider>
           <AppContextProvider>
-            <Router />
+            <BottomSheetModalProvider>
+              <Router />
+            </BottomSheetModalProvider>
           </AppContextProvider>
         </AuthContextProvider>
       </NavigationContainer>

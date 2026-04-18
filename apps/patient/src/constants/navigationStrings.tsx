@@ -9,6 +9,9 @@ const navigationStrings = {
   RESET_PASSWORD: "ResetPassword",
   SET_USER_PIN: "SetUserPin",
   VERIFY_IDENTITY: "VerifyIdentity",
+  ACCEPT_CONSENT: "AcceptConsent",
+  SET_PREFERENCES: "SetPreferences",
+  SYNC: "Sync",
 };
 
 export default navigationStrings;
