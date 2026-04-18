@@ -5,16 +5,14 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import NeumorphicCheckboxMark from "../../../../components/Common/NeumorphicCheckboxMark";
+import NeumorphicRadioMark from "../../../../components/Common/NeumorphicRadioMark";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import NeumorphicInnerShadowCard from "../../../../neomorphism/NeumorphicInnerShadowCard";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import LapReportIcon from "../../../../assets/icon/labReportIcon.svg";
 import PatientIcon from "../../../../assets/icon/patientIcon.svg";
-import SelectedCheckBox from "../../../../assets/icon/selectedCheckBoxIcon.svg";
-import SelectedIcon from "../../../../assets/icon/selectedIcon.svg";
-
-
 type Step = 1 | 2;
 type StepOneTest = "bmp" | "egfr" | "a1c" | "lipid-panel";
 type AssignTo = "nurse" | "medical-assistant";
@@ -34,20 +32,6 @@ const OrderLabs = () => {
     "send-instructions": false,
     "add-portal": true,
   });
-
-  const renderSelector = (selected: boolean) =>
-    selected ? (
-      <SelectedIcon width={30} height={30} />
-    ) : (
-      <InnerShadowIcon icon={<></>} size={30} radius={114} />
-    );
-
-  const renderBoxCheck = (selected: boolean) =>
-    selected ? (
-      <SelectedCheckBox width={20} height={20} />
-    ) : (
-      <InnerShadowIcon icon={<></>} size={20} radius={6} />
-    );
 
   const toggleStepOneTest = (key: StepOneTest) => {
     setSelectedTests((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -92,28 +76,28 @@ const OrderLabs = () => {
               <Text style={styles.sectionTitle}>Select Required Tests</Text>
               <Pressable style={styles.optionRow} onPress={() => toggleStepOneTest("bmp")}>
                 <View style={styles.optionLeft}>
-                  {renderBoxCheck(selectedTests.bmp)}
+                  <NeumorphicCheckboxMark selected={selectedTests.bmp} />
                   <Text style={styles.optionText}>BMP</Text>
                 </View>
               </Pressable>
               <View style={styles.divider} />
               <Pressable style={styles.optionRow} onPress={() => toggleStepOneTest("egfr")}>
                 <View style={styles.optionLeft}>
-                  {renderBoxCheck(selectedTests.egfr)}
+                  <NeumorphicCheckboxMark selected={selectedTests.egfr} />
                   <Text style={styles.optionText}>eGFR</Text>
                 </View>
               </Pressable>
               <View style={styles.divider} />
               <Pressable style={styles.optionRow} onPress={() => toggleStepOneTest("a1c")}>
                 <View style={styles.optionLeft}>
-                  {renderBoxCheck(selectedTests.a1c)}
+                  <NeumorphicCheckboxMark selected={selectedTests.a1c} />
                   <Text style={styles.optionText}>A1C</Text>
                 </View>
               </Pressable>
               <View style={styles.divider} />
               <Pressable style={styles.optionRow} onPress={() => toggleStepOneTest("lipid-panel")}>
                 <View style={styles.optionLeft}>
-                  {renderBoxCheck(selectedTests["lipid-panel"])}
+                  <NeumorphicCheckboxMark selected={selectedTests["lipid-panel"]} />
                   <Text style={styles.optionText}>Lipid Panel</Text>
                 </View>
               </Pressable>
@@ -124,7 +108,7 @@ const OrderLabs = () => {
                 <Text style={styles.sectionTitle}>Assign to</Text>
                 <Pressable style={styles.optionRow} onPress={() => setSelectedAssignTo("nurse")}>
                   <View style={styles.optionLeft}>
-                    {renderSelector(selectedAssignTo === "nurse")}
+                    <NeumorphicRadioMark selected={selectedAssignTo === "nurse"} />
                     <InnerShadowIcon icon={<LapReportIcon width={18} height={18} />} size={40} />
                     <Text style={styles.assignText}>Nurse</Text>
                   </View>
@@ -132,7 +116,7 @@ const OrderLabs = () => {
                 <View style={styles.divider} />
                 <Pressable style={styles.optionRow} onPress={() => setSelectedAssignTo("medical-assistant")}>
                   <View style={styles.optionLeft}>
-                    {renderSelector(selectedAssignTo === "medical-assistant")}
+                    <NeumorphicRadioMark selected={selectedAssignTo === "medical-assistant"} />
                     <InnerShadowIcon icon={<PatientIcon width={18} height={18} />} size={40} />
                     <Text style={styles.assignText}>Medical Assistant</Text>
                   </View>
@@ -143,14 +127,14 @@ const OrderLabs = () => {
                 <Text style={styles.sectionTitle}>Select Required Tests</Text>
                 <Pressable style={styles.optionRow} onPress={() => toggleStepTwoAction("send-instructions")}>
                   <View style={styles.optionLeft}>
-                    {renderBoxCheck(selectedActions["send-instructions"])}
+                    <NeumorphicCheckboxMark selected={selectedActions["send-instructions"]} />
                     <Text style={styles.optionText}>Send Instructions</Text>
                   </View>
                 </Pressable>
                 <View style={styles.divider} />
                 <Pressable style={styles.optionRow} onPress={() => toggleStepTwoAction("add-portal")}>
                   <View style={styles.optionLeft}>
-                    {renderBoxCheck(selectedActions["add-portal"])}
+                    <NeumorphicCheckboxMark selected={selectedActions["add-portal"]} />
                     <Text style={styles.optionText}>Add to portal</Text>
                   </View>
                 </Pressable>

@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import NeumorphicRadioMark from "../../../../components/Common/NeumorphicRadioMark";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import InputField from "../../../../neomorphism/InputField";
 import DeltaBadge from "../../../../components/Common/DeltaBadge";
@@ -12,7 +13,6 @@ import DatePickerField from "../../../../neomorphism/DatePickerField";
 import TimePickerField from "../../../../components/Common/TimePickerField";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import SelectedIcon from "../../../../assets/icon/selectedIcon.svg";
 import ZoomCallIcon from "../../../../assets/icon/zoomCallIcon.svg";
 import PatientIcon from "../../../../assets/icon/patientIcon.svg";
 import ProfileIcon from "../../../../assets/icon/profile.svg";
@@ -48,17 +48,17 @@ const ScheduleVisit = () => {
         <NeumorphicCard outerStyle={styles.visitCardOuter} innerStyle={styles.visitCardInner} borderRadius={12}>
           <Text style={styles.visitPrompt}>Do you want to schedule Sarah Williams for a follow-up?</Text>
           <Pressable style={[styles.optionRow, styles.optionSeparator]} onPress={() => setSelectedType("telemed")}>
-            {selectedType === "telemed" ? <SelectedIcon width={30} height={30} /> : <InnerShadowIcon size={30} icon={<View style={styles.emptyDot} />} />}
+            <NeumorphicRadioMark selected={selectedType === "telemed"} />
             <InnerShadowIcon size={40} icon={<ZoomCallIcon width={18} height={18} />} />
             <Text style={styles.optionText}>Telemed</Text>
           </Pressable>
           <Pressable style={[styles.optionRow, styles.optionSeparator]} onPress={() => setSelectedType("inPerson")}>
-            {selectedType === "inPerson" ? <SelectedIcon width={30} height={30} /> : <InnerShadowIcon size={30} icon={<View style={styles.emptyDot} />} />}
+            <NeumorphicRadioMark selected={selectedType === "inPerson"} />
             <InnerShadowIcon size={40} icon={<PatientIcon width={18} height={18} />} />
             <Text style={styles.optionText}>In-Person</Text>
           </Pressable>
           <Pressable style={styles.optionRow} onPress={() => setSelectedType("nurseVisit")}>
-            {selectedType === "nurseVisit" ? <SelectedIcon width={30} height={30} /> : <InnerShadowIcon size={30} icon={<View style={styles.emptyDot} />} />}
+            <NeumorphicRadioMark selected={selectedType === "nurseVisit"} />
             <InnerShadowIcon size={40} icon={<ProfileIcon width={18} height={18} />} />
             <Text style={styles.optionText}>Nurse visit</Text>
           </Pressable>
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
   optionRow: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 12 },
   optionSeparator: { borderBottomWidth: 1, borderBottomColor: COLORS.TEXT_10 },
   optionText: { fontSize: 16, color: COLORS.TEXT_DARK, fontWeight: "500" },
-  emptyDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "transparent" },
   fieldLabel: { fontSize: 14, color: COLORS.TEXT_60, fontWeight: "500" },
   reasonContainer: { marginHorizontal: 16 },
   reasonLabel: { marginTop: 14, marginBottom: 8, fontSize: 14, color: COLORS.TEXT_60, fontWeight: "500" },

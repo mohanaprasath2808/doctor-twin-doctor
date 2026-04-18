@@ -6,13 +6,13 @@ import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import NeumorphicCheckboxMark from "../../../../components/Common/NeumorphicCheckboxMark";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 import AppButton from "../../../../components/Common/AppButton";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import LastVisitIcon from "../../../../assets/icon/appointmentCalendarIcon.svg";
 import PharmacyIcon from "../../../../assets/icon/pharmacyIcon.svg";
-import SelectedCheckBox from "../../../../assets/icon/selectedCheckBoxIcon.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import GreenTickImage from "../../../../assets/image/greenTick.png";
 
@@ -50,7 +50,7 @@ const RefillSent = () => {
 
         <NeumorphicCard outerStyle={styles.notifyOuter} innerStyle={styles.notifyInner} borderRadius={10}>
           <Pressable style={styles.notifyRow} onPress={() => setIsNotifyChecked((prev) => !prev)}>
-            {isNotifyChecked ? <SelectedCheckBox width={20} height={20} /> : <InnerShadowIcon icon={<></>} size={20} radius={6} />}
+            <NeumorphicCheckboxMark selected={isNotifyChecked} />
             <View>
               <Text style={styles.notifyTitle}>Notify Sarah Williams</Text>
               <Text style={styles.notifySub}>Shared your refill was approved.</Text>

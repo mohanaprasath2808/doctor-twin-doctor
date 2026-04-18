@@ -7,10 +7,9 @@ import navigationStrings from '../../constants/navigationStrings';
 import IconComponent from '../../neomorphism/IconComponent';
 import ProfileAvatar from '../../components/Auth/ProfileAvatar';
 import NeumorphicCard from '../../components/Common/NeumorphicCard';
-import InnerShadowIcon from '../../neomorphism/InnerShadowIcon';
+import NeumorphicCheckboxMark from '../../components/Common/NeumorphicCheckboxMark';
 import ReusableButton from '../../neomorphism/ReusableButton';
 import BackIcon from '../../assets/icon/backArrow.svg';
-import SelectedCheckBox from "../../assets/icon/selectedCheckBoxIcon.svg";
 import OverlayImage from '../../assets/image/imageBgShadow.png';
 import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
 
@@ -18,13 +17,6 @@ const LegalConsent = () => {
   const navigation = useNavigation<any>();
   const [isPrivateEnvironment, setIsPrivateEnvironment] = useState(false);
   const [hasDelegationPermission, setHasDelegationPermission] = useState(false);
-
-  const renderBoxCheck = (selected: boolean) =>
-    selected ? (
-      <SelectedCheckBox width={20} height={20} />
-    ) : (
-      <InnerShadowIcon icon={<></>} size={20} radius={6} />
-    );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,7 +54,7 @@ const LegalConsent = () => {
           <Text style={styles.cardTitle}>By continuing, you agree:</Text>
 
           <View style={[styles.selectionRow, { marginTop: 21 }]}>
-            {renderBoxCheck(true)}
+            <NeumorphicCheckboxMark selected />
             <Text style={styles.selectionText}>AI usage consent</Text>
           </View>
 
@@ -72,7 +64,7 @@ const LegalConsent = () => {
             style={styles.selectionRow}
             onPress={() => setIsPrivateEnvironment(!isPrivateEnvironment)}
           >
-            {renderBoxCheck(isPrivateEnvironment)}
+            <NeumorphicCheckboxMark selected={isPrivateEnvironment} />
             <Text style={styles.selectionText}>
               Yes, I confirm I am in a private environment
             </Text>
@@ -84,7 +76,7 @@ const LegalConsent = () => {
             style={styles.selectionRow}
             onPress={() => setHasDelegationPermission(!hasDelegationPermission)}
           >
-            {renderBoxCheck(hasDelegationPermission)}
+            <NeumorphicCheckboxMark selected={hasDelegationPermission} />
             <Text style={styles.selectionText}>Delegation permissions</Text>
           </Pressable>
         </NeumorphicCard>

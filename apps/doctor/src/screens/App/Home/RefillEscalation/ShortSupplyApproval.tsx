@@ -5,11 +5,11 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
-import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
+import NeumorphicCheckboxMark from "../../../../components/Common/NeumorphicCheckboxMark";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
-import SelectedCheckBox from "../../../../assets/icon/selectedCheckBoxIcon.svg";
+import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import navigationStrings from "../../../../constants/navigationStrings";
 
 type FollowUpOption = "order-labs" | "schedule-visit";
@@ -17,10 +17,6 @@ type FollowUpOption = "order-labs" | "schedule-visit";
 const ShortSupplyApproval = () => {
   const navigation = useNavigation<any>();
   const [selectedOption, setSelectedOption] = useState<FollowUpOption>("schedule-visit");
-
-  const renderSelector = (selected: boolean) =>
-    selected ?
-      <SelectedCheckBox width={20} height={20} /> : <InnerShadowIcon icon={<></>} size={20} radius={6} />;
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom", "left", "right"]}>
@@ -45,14 +41,14 @@ const ShortSupplyApproval = () => {
           <NeumorphicCard outerStyle={styles.optionsOuter} innerStyle={styles.optionsInner} borderRadius={10}>
             <Pressable style={styles.optionRow} onPress={() => setSelectedOption("order-labs")}>
               <View style={styles.rowLeft}>
-                {renderSelector(selectedOption === "order-labs")}
+                <NeumorphicCheckboxMark selected={selectedOption === "order-labs"} />
                 <Text style={styles.optionText}>Order Labs</Text>
               </View>
             </Pressable>
             <View style={styles.divider} />
             <Pressable style={styles.optionRow} onPress={() => setSelectedOption("schedule-visit")}>
               <View style={styles.rowLeft}>
-                {renderSelector(selectedOption === "schedule-visit")}
+                <NeumorphicCheckboxMark selected={selectedOption === "schedule-visit"} />
                 <Text style={styles.optionText}>Schedule Visit</Text>
               </View>
             </Pressable>

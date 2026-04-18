@@ -7,13 +7,13 @@ import navigationStrings from '../../constants/navigationStrings';
 import IconComponent from '../../neomorphism/IconComponent';
 import ProfileAvatar from '../../components/Auth/ProfileAvatar';
 import NeumorphicCard from '../../components/Common/NeumorphicCard';
+import NeumorphicCheckboxMark from '../../components/Common/NeumorphicCheckboxMark';
 import InnerShadowIcon from '../../neomorphism/InnerShadowIcon';
 import ReusableButton from '../../neomorphism/ReusableButton';
 import AppButton from '../../components/Common/AppButton';
 import OtpTextInput from '../../components/Auth/OtpTextInput';
 import BackIcon from '../../assets/icon/backArrow.svg';
 import WarningIcon from '../../assets/icon/warningIcon.svg';
-import SelectedCheckBox from '../../assets/icon/selectedCheckBoxIcon.svg';
 import OverlayImage from '../../assets/image/imageBgShadow.png';
 import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
 
@@ -21,13 +21,6 @@ const DeviceTrustVerification = () => {
   const navigation = useNavigation<any>();
   const [otp, setOtp] = useState('');
   const [trustDevice, setTrustDevice] = useState(true);
-
-  const renderCheckbox = (selected: boolean) =>
-    selected ? (
-      <SelectedCheckBox width={20} height={20} />
-    ) : (
-      <InnerShadowIcon icon={<View style={styles.emptyDot} />} size={20} radius={6} />
-    );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -101,7 +94,7 @@ const DeviceTrustVerification = () => {
           style={styles.trustRow}
           onPress={() => setTrustDevice(!trustDevice)}
         >
-          {renderCheckbox(trustDevice)}
+          <NeumorphicCheckboxMark selected={trustDevice} />
           <Text style={styles.trustText}>Trust this device</Text>
         </Pressable>
       </NeumorphicCard>
@@ -210,10 +203,6 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_DARK,
     fontSize: 14,
     fontWeight: '500',
-  },
-  emptyDot: {
-    width: 2,
-    height: 2,
   },
   footerHint: {
     marginTop: 'auto',

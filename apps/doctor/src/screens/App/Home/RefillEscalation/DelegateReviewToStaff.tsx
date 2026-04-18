@@ -6,10 +6,10 @@ import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
+import NeumorphicRadioMark from "../../../../components/Common/NeumorphicRadioMark";
 import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
 import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import SelectedIcon from "../../../../assets/icon/selectedIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
@@ -38,13 +38,6 @@ const DelegateReviewToStaff = () => {
   const navigation = useNavigation<any>();
   const [selectedStaffId, setSelectedStaffId] = useState("annie");
   const [selectedReasonId, setSelectedReasonId] = useState("med-recon");
-
-  const renderSelector = (selected: boolean) =>
-    selected ? (
-      <SelectedIcon width={30} height={30} />
-    ) : (
-      <InnerShadowIcon icon={<View style={styles.emptyDot} />} size={30} radius={46} />
-    );
 
   const onReasonPress = (reasonId: string) => {
     setSelectedReasonId(reasonId);
@@ -94,7 +87,7 @@ const DelegateReviewToStaff = () => {
             renderItem={({ item }) => (
               <Pressable style={styles.row} onPress={() => setSelectedStaffId(item.id)}>
                 <View style={styles.rowLeft}>
-                  {renderSelector(selectedStaffId === item.id)}
+                  <NeumorphicRadioMark selected={selectedStaffId === item.id} />
                   <View style={{ marginLeft: 6 }}>
                     <DoctorAvatar source={DoctorTempImage} imageSize={40} containerSize={40} middleRingGap={0} outerRingExtra={0} />
                   </View>
@@ -120,7 +113,7 @@ const DelegateReviewToStaff = () => {
             renderItem={({ item }) => (
               <Pressable style={styles.row} onPress={() => onReasonPress(item.id)}>
                 <View style={styles.rowLeft}>
-                  {renderSelector(selectedReasonId === item.id)}
+                  <NeumorphicRadioMark selected={selectedReasonId === item.id} />
                   <InnerShadowIcon icon={item.icon} size={40} style={{ marginLeft: 6 }} />
                   <Text style={styles.reasonLabel}>{item.label}</Text>
                 </View>
@@ -207,7 +200,6 @@ const styles = StyleSheet.create({
   reasonOuter: { marginTop: 20, marginHorizontal: 16 },
   reasonInner: { borderRadius: 12, paddingHorizontal: 10, paddingVertical: 8 },
   reasonLabel: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500" },
-  emptyDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "transparent" },
   footerBtn: {
     height: 48,
     borderRadius: 24,

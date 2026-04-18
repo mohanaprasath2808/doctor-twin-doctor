@@ -14,11 +14,11 @@ import navigationStrings from '../../constants/navigationStrings';
 import IconComponent from '../../neomorphism/IconComponent';
 import ProfileAvatar from '../../components/Auth/ProfileAvatar';
 import NeumorphicCard from '../../components/Common/NeumorphicCard';
+import NeumorphicRadioMark from '../../components/Common/NeumorphicRadioMark';
 import InnerShadowIcon from '../../neomorphism/InnerShadowIcon';
 import ReusableButton from '../../neomorphism/ReusableButton';
 import BackIcon from '../../assets/icon/backArrow.svg';
 import WarningIcon from '../../assets/icon/warningIcon.svg';
-import SelectedIcon from '../../assets/icon/selectedIcon.svg';
 import OverlayImage from '../../assets/image/imageBgShadow.png';
 import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
 
@@ -27,17 +27,6 @@ const HipaaPrivacyGate = () => {
   const [isSecureCompliantAgreed, setIsSecureCompliantAgreed] = useState(true);
   const [isPrivateEnvironmentConfirmed, setIsPrivateEnvironmentConfirmed] =
     useState(false);
-
-  const renderSelector = (selected: boolean) =>
-    selected ? (
-      <SelectedIcon width={30} height={30} />
-    ) : (
-      <InnerShadowIcon
-        icon={<View style={styles.emptyDot} />}
-        size={30}
-        radius={46}
-      />
-    );
 
   const handleConfirm = () => {
     navigation.navigate(navigationStrings.ENABLE_VOICE_HANDS_FREE);
@@ -100,7 +89,7 @@ const HipaaPrivacyGate = () => {
             style={[styles.selectionRow, { marginTop: 25 }]}
             onPress={() => setIsSecureCompliantAgreed(!isSecureCompliantAgreed)}
           >
-            {renderSelector(isSecureCompliantAgreed)}
+            <NeumorphicRadioMark selected={isSecureCompliantAgreed} />
             <Text style={styles.selectionText}>
               You are in private, secure and compliant environment to access
               patient information
@@ -117,7 +106,7 @@ const HipaaPrivacyGate = () => {
               )
             }
           >
-            {renderSelector(isPrivateEnvironmentConfirmed)}
+            <NeumorphicRadioMark selected={isPrivateEnvironmentConfirmed} />
             <Text style={styles.selectionText}>
               Yes, I confirm I am in a private environment
             </Text>
@@ -247,12 +236,6 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: COLORS.TEXT_10,
     marginTop: 16,
-  },
-  emptyDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'transparent',
   },
   confirmBtn: {
     marginTop: 30,
