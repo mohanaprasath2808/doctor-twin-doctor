@@ -1,9 +1,10 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import navigationStrings from "../../constants/navigationStrings";
+import Home from "../../screens/App/Home";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const PlaceholderScreen = ({ title }: { title: string }) => (
   <View
@@ -14,30 +15,26 @@ const PlaceholderScreen = ({ title }: { title: string }) => (
       paddingHorizontal: 24,
     }}
   >
-    <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 12 }}>
-      {title}
-    </Text>
+    <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 12 }}>{title}</Text>
     <Text style={{ textAlign: "center", color: "#666" }}>
       Replace this placeholder with Patient app screens.
     </Text>
   </View>
 );
 
-const PatientHome = () => <PlaceholderScreen title="Patient Home" />;
+// const PatientHome = () => <PlaceholderScreen title="Patient Home" />;
 const PatientProfile = () => <PlaceholderScreen title="Patient Profile" />;
 
 const AppStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name={navigationStrings.HOME}
-        component={PatientHome}
-        options={{ headerShown: false }}
+        component={Home}
       />
       <Stack.Screen
         name={navigationStrings.PROFILE}
         component={PatientProfile}
-        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

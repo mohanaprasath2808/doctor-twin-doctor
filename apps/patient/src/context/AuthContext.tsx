@@ -10,11 +10,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
 
-  return (
-    <AuthContext.Provider value={{ isLogin, setIsLogin }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ isLogin, setIsLogin }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContextProvider;
