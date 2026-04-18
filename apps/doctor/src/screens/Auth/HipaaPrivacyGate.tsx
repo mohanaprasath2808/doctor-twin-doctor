@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../constants/theme';
 import navigationStrings from '../../constants/navigationStrings';
 import IconComponent from '../../neomorphism/IconComponent';
@@ -24,6 +24,7 @@ import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
 
 const HipaaPrivacyGate = () => {
   const navigation = useNavigation<any>();
+  const [isSecureCompliantAgreed, setIsSecureCompliantAgreed] = useState(true);
   const [isPrivateEnvironmentConfirmed, setIsPrivateEnvironmentConfirmed] =
     useState(false);
 
@@ -95,13 +96,16 @@ const HipaaPrivacyGate = () => {
         >
           <Text style={styles.cardTitle}>By continuing, you agree:</Text>
 
-          <View style={[styles.selectionRow, { marginTop: 25 }]}>
-            {renderSelector(true)}
+          <Pressable
+            style={[styles.selectionRow, { marginTop: 25 }]}
+            onPress={() => setIsSecureCompliantAgreed(!isSecureCompliantAgreed)}
+          >
+            {renderSelector(isSecureCompliantAgreed)}
             <Text style={styles.selectionText}>
               You are in private, secure and compliant environment to access
               patient information
             </Text>
-          </View>
+          </Pressable>
 
           <View style={styles.divider} />
 
@@ -131,7 +135,14 @@ const HipaaPrivacyGate = () => {
         <View style={styles.returnContainer}>
           <Text style={styles.returnText}>Return to </Text>
           <Pressable
-            onPress={() => navigation.navigate(navigationStrings.LOGIN)}
+            onPress={() =>
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: navigationStrings.SSO_SIGN_IN }],
+                })
+              )
+            }
           >
             <Text style={styles.loginText}>Login</Text>
           </Pressable>

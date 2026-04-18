@@ -56,7 +56,6 @@ const DeviceTrustVerification = () => {
         outerStyle={styles.noticeOuter}
         innerStyle={styles.noticeInner}
         borderRadius={12}
-        onPress={() => navigation.navigate(navigationStrings.EMERGENCY_ACCESS)}
       >
         <View style={styles.noticeRow}>
           <InnerShadowIcon icon={<WarningIcon width={16} height={16} />} size={40} radius={20} />
@@ -73,7 +72,9 @@ const DeviceTrustVerification = () => {
 
       <ReusableButton
         title="Confirm"
-        onPress={() => navigation.navigate(navigationStrings.OTP_VERIFICATION)}
+        onPress={() =>
+          navigation.navigate(navigationStrings.BACKUP_CODES_SESSION_TIMEOUT)
+        }
         containerStyle={styles.confirmBtn}
         backgroundColor="#2E3A8C"
         textColor="#FFFFFF"

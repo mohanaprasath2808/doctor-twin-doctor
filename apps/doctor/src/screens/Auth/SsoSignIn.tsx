@@ -3,8 +3,6 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../constants/theme';
-import IconComponent from '../../neomorphism/IconComponent';
-import BackIcon from '../../assets/icon/backArrow.svg';
 import MailIcon from '../../assets/icon/mailIcon.svg';
 import PasswordIcon from '../../assets/icon/passwordIcon.svg';
 import HideIcon from '../../assets/icon/hideIcon.svg';
@@ -101,7 +99,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 16,
   },
   keyboardWrapper: {
     flex: 1,
@@ -144,6 +141,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     marginTop: 30,
+    paddingHorizontal: 16,
   },
   label: {
     color: COLORS.TEXT_60,

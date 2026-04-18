@@ -14,7 +14,7 @@ const SetUserPin = () => {
   const [pin, setPin] = useState('');
 
   const onContinue = () => {
-    navigation.navigate(navigationStrings.OTP_VERIFICATION);
+    navigation.navigate(navigationStrings.DEVICE_TRUST_VERIFICATION);
   };
 
   return (

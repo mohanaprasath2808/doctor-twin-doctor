@@ -11,10 +11,16 @@ import SetUserPin from '../../screens/Auth/SetUserPin';
 import StartShiftCoverage from '../../screens/Auth/StartShiftCoverage';
 import SsoSignIn from '../../screens/Auth/SsoSignIn';
 import navigationStrings from '../../constants/navigationStrings';
-import OtpVerification from '../../screens/Auth/OtpVerification';
 
 const Stack = createNativeStackNavigator();
 
+/**
+ * Temporary demo flow (until API integration): each primary action advances in order,
+ * then EmergencyAccess calls AuthContext setIsLogin(true) so Router mounts AppStack (Home).
+ *
+ * Order: SSO → HIPAA → Voice hands-free → Role & location → Start shift → Legal consent
+ * → Secure login → Set PIN → Device trust → Backup codes → Emergency access → App (Home).
+ */
 const AuthStack = () => {
     return (
         <Stack.Navigator

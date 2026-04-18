@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../constants/theme';
-import navigationStrings from '../../constants/navigationStrings';
+import { AuthContext } from '../../context/AuthContext';
 import IconComponent from '../../neomorphism/IconComponent';
 import ProfileAvatar from '../../components/Auth/ProfileAvatar';
 import NeumorphicCard from '../../components/Common/NeumorphicCard';
 import InnerShadowIcon from '../../neomorphism/InnerShadowIcon';
 import BackIcon from '../../assets/icon/backArrow.svg';
 import WarningIcon from '../../assets/icon/warningIcon.svg';
-import LabReportIcon from '../../assets/icon/labReportIcon.svg';
+import AppointmentCalendarIcon from '../../assets/icon/appointmentCalendarIcon.svg';
 import RightArrowIcon from '../../assets/icon/rightArrow.svg';
 import OverlayImage from '../../assets/image/imageBgShadow.png';
 import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
@@ -35,6 +35,11 @@ const LAB_ALERTS = [
 
 const EmergencyAccess = () => {
   const navigation = useNavigation<any>();
+  const auth = useContext(AuthContext);
+  if (!auth) {
+    throw new Error('EmergencyAccess must be used within AuthContextProvider');
+  }
+  const { setIsLogin } = auth;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -81,7 +86,7 @@ const EmergencyAccess = () => {
             borderRadius={12}
           >
             <View style={styles.row}>
-              <InnerShadowIcon icon={<LabReportIcon width={16} height={16} />} size={40} radius={20} />
+              <InnerShadowIcon icon={<AppointmentCalendarIcon width={18} height={18} />} size={40} radius={20} />
               <View style={styles.alertTextWrap}>
                 <Text style={styles.alertTitle}>{alert.title}</Text>
                 <Text style={styles.alertSubTitle}>{alert.subTitle}</Text>
@@ -91,7 +96,7 @@ const EmergencyAccess = () => {
         ))}
       </View>
 
-      <Pressable onPress={() => navigation.navigate(navigationStrings.SSO_SIGN_IN)}>
+      <Pressable onPress={() => setIsLogin(true)}>
         <NeumorphicCard
           outerStyle={styles.continueOuter}
           innerStyle={styles.continueInner}
@@ -99,8 +104,8 @@ const EmergencyAccess = () => {
         >
           <View style={styles.continueRow}>
             <View style={styles.row}>
-              <InnerShadowIcon icon={<LabReportIcon width={16} height={16} />} size={40} radius={20} />
-              <Text style={styles.continueText}>Continue to full login</Text>
+              <InnerShadowIcon icon={<AppointmentCalendarIcon width={18} height={18} />} size={40} radius={20} />
+              <Text style={styles.continueText}>Continue to Home (demo)</Text>
             </View>
             <RightArrowIcon width={10} height={10} />
           </View>
@@ -152,14 +157,14 @@ const styles = StyleSheet.create({
     borderRadius: 55,
   },
   welcomeText: {
-    marginTop: 16,
+    marginTop: 10,
     textAlign: 'center',
     color: COLORS.PRIMARY_DARK,
     fontSize: 16,
     fontWeight: '600',
   },
   noticeOuter: {
-    marginTop: 20,
+    marginTop: 30,
   },
   noticeInner: {
     paddingHorizontal: 10,
@@ -193,13 +198,13 @@ const styles = StyleSheet.create({
   },
   alertTitle: {
     color: COLORS.TEXT_DARK,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
   },
   alertSubTitle: {
     marginTop: 2,
     color: COLORS.TEXT_60,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '400',
   },
   continueOuter: {
@@ -216,11 +221,11 @@ const styles = StyleSheet.create({
   },
   continueText: {
     color: COLORS.TEXT_DARK,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
   },
   footerHint: {
-    marginTop: 'auto',
+    marginTop: 74,
     marginBottom: 8,
     textAlign: 'center',
     color: COLORS.TEXT_60,

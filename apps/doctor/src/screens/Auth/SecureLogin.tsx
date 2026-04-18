@@ -36,14 +36,9 @@ const SECURE_OPTIONS = [
 const SecureLogin = () => {
   const navigation = useNavigation<any>();
 
-  const onOptionPress = (optionId: string) => {
-    if (optionId === 'face-id') {
-      navigation.navigate(navigationStrings.DEVICE_TRUST_VERIFICATION);
-    } else if (optionId === 'user-pin') {
-      navigation.navigate(navigationStrings.SET_USER_PIN);
-    } else if (optionId === 'sso-login') {
-      navigation.navigate(navigationStrings.SSO_SIGN_IN);
-    }
+  /** Demo: all options continue the same linear onboarding tour (see AuthStack). */
+  const onOptionPress = () => {
+    navigation.navigate(navigationStrings.SET_USER_PIN);
   };
 
   return (
@@ -76,7 +71,7 @@ const SecureLogin = () => {
           <Pressable
             key={option.id}
             style={styles.optionPress}
-            onPress={() => onOptionPress(option.id)}
+            onPress={onOptionPress}
           >
             <NeumorphicCard
               outerStyle={styles.optionOuter}
