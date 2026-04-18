@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "doctor-twin-staff",
+    "slug": "doctor-twin-staff",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.doctortwinstaff"
+    },
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.doctortwinstaff"
+    }
+  }
+}
