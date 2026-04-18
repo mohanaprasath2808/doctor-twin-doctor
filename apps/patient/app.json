@@ -1,8 +1,19 @@
 {
-  "android": {
-    "package": "com.anonymous.doctortwinpatient"
-  },
-  "ios": {
-    "bundleIdentifier": "com.anonymous.doctortwinpatient"
+  "expo": {
+    "name": "doctor-twin-patient",
+    "slug": "doctor-twin-patient",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.doctortwinpatient"
+    },
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.doctortwinpatient"
+    }
   }
 }

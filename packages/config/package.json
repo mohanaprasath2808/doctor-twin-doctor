@@ -1,0 +1,10 @@
+{
+  "name": "@doctor-twin/config",
+  "private": true,
+  "version": "1.0.0",
+  "exports": {
+    "./babel": "./babel.js",
+    "./metro": "./metro.js",
+    "./tsconfig.expo.json": "./tsconfig.expo.json"
+  }
+}
