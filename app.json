@@ -1,5 +1,7 @@
 {
   "android": {
     "package": "com.anonymous.doctortwinmonorepo"
+  "ios": {
+    "bundleIdentifier": "com.anonymous.doctor-twin-monorepo"
   }
 }

@@ -21,6 +21,7 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
   borderRadius?: number;
   minHeight?: number;
+  isFocused?: boolean;
 }
 
 const HEIGHT = 46;
@@ -33,6 +34,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
   containerStyle,
   borderRadius,
   minHeight,
+  isFocused,
   style,
   ...props
 }) => {
@@ -43,7 +45,8 @@ const InputField: React.FC<Props & TextInputProps> = ({
   const [inputHeight, setInputHeight] = useState(fieldMinHeight);
   const valueText = String(props.value ?? props.defaultValue ?? "");
   const hasText = valueText.trim().length > 0;
-  const showFocusedState = focused || hasText;
+  const isFocusControlled = typeof isFocused === "boolean";
+  const showFocusedState = isFocusControlled ? isFocused : focused || hasText;
 
   const onLayout = (e: LayoutChangeEvent) => {
     setWidth(e.nativeEvent.layout.width);
