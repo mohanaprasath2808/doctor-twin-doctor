@@ -10,6 +10,9 @@ import ForgotPassword from "../../screens/Auth/ForgotPassword";
 import ResetPassword from "../../screens/Auth/ResetPassword";
 import SetUserPin from "../../screens/Auth/SetUserPin";
 import VerifyIdentity from "../../screens/Auth/VerifyIdentity";
+import AcceptConsent from "../../screens/Auth/AcceptConsent";
+import SetPreferences from "../../screens/Auth/SetPreferences";
+import Sync from "../../screens/Auth/Sync";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +27,9 @@ const AuthStack = () => {
       <Stack.Screen name={navigationStrings.RESET_PASSWORD} component={ResetPassword} />
       <Stack.Screen name={navigationStrings.SET_USER_PIN} component={SetUserPin} />
       <Stack.Screen name={navigationStrings.VERIFY_IDENTITY} component={VerifyIdentity} />
+      <Stack.Screen name={navigationStrings.ACCEPT_CONSENT} component={AcceptConsent} />
+      <Stack.Screen name={navigationStrings.SET_PREFERENCES} component={SetPreferences} />
+      <Stack.Screen name={navigationStrings.SYNC} component={Sync} />
     </Stack.Navigator>
   );
 };
