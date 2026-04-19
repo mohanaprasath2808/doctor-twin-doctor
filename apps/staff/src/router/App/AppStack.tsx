@@ -1,6 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import navigationStrings from "../../constants/navigationStrings";
-import Home from "../../screens/App/Home";
+import ShiftStart from "../../screens/App/ShiftStart";
+
+import BottomNavigation from "./BottomNavigation";
 
 const Stack = createNativeStackNavigator();
 
@@ -8,8 +10,13 @@ const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
       <Stack.Screen
-        name={navigationStrings.HOME}
-        component={Home}
+        name={navigationStrings.SHIFT_START}
+        component={ShiftStart}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BOTTOM_NAVIGATION}
+        component={BottomNavigation}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
