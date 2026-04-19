@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import {
   DimensionValue,
   LayoutChangeEvent,
+  Platform,
   StyleProp,
   StyleSheet,
   Text,
@@ -10,7 +11,8 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { Canvas, LinearGradient, RoundedRect, Shadow, vec } from "@shopify/react-native-skia";
+import { LinearGradient } from "expo-linear-gradient";
+import { Canvas, LinearGradient as SkiaLinearGradient, RoundedRect, Shadow, vec } from "@shopify/react-native-skia";
 import { COLORS } from "../constants/theme";
 
 interface ReusableButtonProps {
@@ -53,41 +55,58 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
     setMeasuredWidth(event.nativeEvent.layout.width);
   };
 
+  const rectR = Math.max(0, Math.min(borderRadius, numericWidth / 2, height / 2));
+
+  const skiaBackground =
+    Platform.OS !== "android" && numericWidth > 0 && height > 0 ? (
+      <Canvas
+        pointerEvents="none"
+        style={[
+          styles.canvas,
+          {
+            width: numericWidth + SHADOW_PADDING * 2,
+            height: height + SHADOW_PADDING * 2,
+            left: -SHADOW_PADDING,
+            top: -SHADOW_PADDING,
+          },
+        ]}
+      >
+        <RoundedRect
+          x={SHADOW_PADDING}
+          y={SHADOW_PADDING}
+          width={numericWidth}
+          height={height}
+          r={rectR}
+          color={backgroundColor}
+        >
+          <SkiaLinearGradient
+            start={vec(SHADOW_PADDING + numericWidth / 2, SHADOW_PADDING)}
+            end={vec(SHADOW_PADDING + numericWidth / 2, SHADOW_PADDING + height)}
+            colors={gradientColors}
+          />
+          <Shadow dx={2} dy={2} blur={8} color="#6F8CB047" />
+          <Shadow dx={1} dy={1} blur={3} color="#728EAB14" />
+          <Shadow dx={3} dy={3} blur={10} color="#C1D5EEB3" inner />
+          <Shadow dx={-1} dy={-1} blur={6} color="#FFFFFF40" inner />
+        </RoundedRect>
+      </Canvas>
+    ) : null;
+
+  const androidBackground =
+    Platform.OS === "android" && numericWidth > 0 && height > 0 ? (
+      <LinearGradient
+        pointerEvents="none"
+        colors={gradientColors}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={[StyleSheet.absoluteFillObject, { borderRadius: rectR }]}
+      />
+    ) : null;
+
   return (
     <View style={[{ width, height }, containerStyle]} onLayout={handleLayout}>
-      {numericWidth > 0 && (
-        <Canvas
-          pointerEvents="none"
-          style={[
-            styles.canvas,
-            {
-              width: numericWidth + SHADOW_PADDING * 2,
-              height: height + SHADOW_PADDING * 2,
-              left: -SHADOW_PADDING,
-              top: -SHADOW_PADDING,
-            },
-          ]}
-        >
-          <RoundedRect
-            x={SHADOW_PADDING}
-            y={SHADOW_PADDING}
-            width={numericWidth}
-            height={height}
-            r={borderRadius}
-            color={backgroundColor}
-          >
-            <LinearGradient
-              start={vec(SHADOW_PADDING + numericWidth / 2, SHADOW_PADDING)}
-              end={vec(SHADOW_PADDING + numericWidth / 2, SHADOW_PADDING + height)}
-              colors={gradientColors}
-            />
-            <Shadow dx={2} dy={2} blur={8} color="#6F8CB047" />
-            <Shadow dx={1} dy={1} blur={3} color="#728EAB14" />
-            <Shadow dx={3} dy={3} blur={10} color="#C1D5EEB3" inner />
-            <Shadow dx={-1} dy={-1} blur={6} color="#FFFFFF40" inner />
-          </RoundedRect>
-        </Canvas>
-      )}
+      {skiaBackground}
+      {androidBackground}
 
       <TouchableOpacity
         activeOpacity={0.8}
@@ -96,7 +115,7 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
         style={[
           styles.surface,
           {
-            borderRadius,
+            borderRadius: rectR,
             opacity: disabled ? 0.65 : 1,
           },
         ]}

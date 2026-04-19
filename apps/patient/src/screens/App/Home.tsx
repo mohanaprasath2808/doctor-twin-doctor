@@ -5,8 +5,9 @@ import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
-import InnerShadowView from "../../neomorphism/InnerShadowView";
 import { COLORS } from "../../constants/theme";
+import InnerShadowView from "../../neomorphism/InnerShadowView";
+import NeumorphicQuickActionTile from "../../components/Common/NeumorphicQuickActionTile";
 import BottomNavbar from "../../components/App/BottomNavbar";
 import navigationStrings from "../../constants/navigationStrings";
 import MessageIcon from "../../assets/icons/message.svg";
@@ -42,28 +43,23 @@ const QUICK_ACTIONS = [
 const Home = () => {
   const navigation = useNavigation<any>();
   const renderQuickAction = ({ item }: { item: (typeof QUICK_ACTIONS)[number] }) => (
-    <TouchableOpacity
-      style={styles.tile}
-      activeOpacity={0.85}
+    <NeumorphicQuickActionTile
+      containerStyle={styles.tile}
       onPress={() => {
         if (item.id === "schedule") {
           navigation.navigate(navigationStrings.APPOINTMENTS);
         }
+        if (item.id === "message") {
+          navigation.navigate(navigationStrings.NOTIFICATIONS);
+        }
+        if (item.id === "lab") {
+          navigation.navigate(navigationStrings.LABS);
+        }
       }}
-    >
-      <View style={styles.tileOuter}>
-        <View style={styles.tileInnerShadow}>
-          <InnerShadowView width={72} height={72} borderRadius={36} color="#F7FBFF" />
-        </View>
-        {item.icon}
-        {!!item.badge && (
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>{item.badge}</Text>
-          </View>
-        )}
-      </View>
-      <Text style={styles.tileLabel}>{item.label}</Text>
-    </TouchableOpacity>
+      icon={item.icon}
+      label={item.label}
+      badge={item.badge}
+    />
   );
 
   return (
@@ -220,46 +216,6 @@ const styles = StyleSheet.create({
     width: "25%",
     alignItems: "center",
     marginBottom: 16,
-  },
-  tileOuter: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: COLORS.SURFACE,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#728EAB",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    marginBottom: 10,
-  },
-  tileInnerShadow: {
-    position: "absolute",
-  },
-  badge: {
-    position: "absolute",
-    right: 2,
-    top: 2,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: COLORS.CRITICAL,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badgeText: {
-    color: COLORS.WHITE,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "500",
-  },
-  tileLabel: {
-    fontSize: 12,
-    lineHeight: 14,
-    fontWeight: "500",
-    color: COLORS.TEXT_PRIMARY,
-    textAlign: "center",
   },
 });
 
