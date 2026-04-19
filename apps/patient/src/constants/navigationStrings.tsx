@@ -3,7 +3,6 @@ const navigationStrings = {
   SIGNUP: "SignUp",
   HELP_SIGNING_IN: "HelpSigningIn",
   OTP_VERIFICATION: "OtpVerification",
-  HOME: "Home",
   PROFILE: "Profile",
   FORGOT_PASSWORD: "ForgotPassword",
   RESET_PASSWORD: "ResetPassword",
@@ -12,6 +11,10 @@ const navigationStrings = {
   ACCEPT_CONSENT: "AcceptConsent",
   SET_PREFERENCES: "SetPreferences",
   SYNC: "Sync",
+  HOME: "Home",
+  APPOINTMENTS: "Appointments",
+  SCHEDULE_STEP_1: "ScheduleStep1",
+  SCHEDULE_STEP_2: "ScheduleStep2",
 };
 
 export default navigationStrings;

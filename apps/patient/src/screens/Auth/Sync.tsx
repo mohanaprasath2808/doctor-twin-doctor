@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,6 +14,7 @@ import MedicationRefillsIcon from "../../assets/icons/medicationRefills.svg";
 import LabResultsIcon from "../../assets/icons/labResults.svg";
 import InnerShadowView from "../../neomorphism/InnerShadowView";
 import ReusableButton from "../../neomorphism/ReusableButton";
+import { AuthContext } from "../../context/AuthContext";
 
 /** Soft recessed inset (same idea as SetPreferences communication checkboxes). */
 const SYNC_INNER_SHADOW = {
@@ -40,7 +41,19 @@ const SYNC_ROWS: {
 const Sync = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
-  const [checked, setChecked] = useState<boolean[]>(() => SYNC_ROWS.map((_, i) => i === 0));
+  const auth = useContext(AuthContext);
+  const [checked, setChecked] = useState<boolean[]>(() =>
+    Array.from({ length: SYNC_ROWS.length }, (_, i) => i === 0),
+  );
+
+  if (!auth) {
+    throw new Error("Sync must be used within AuthContextProvider");
+  }
+  const { setIsLogin } = auth;
+
+  const finishOnboarding = () => {
+    setIsLogin(true);
+  };
 
   const toggleRow = (index: number) => {
     setChecked((prev) => {
@@ -48,6 +61,66 @@ const Sync = () => {
       next[index] = !next[index];
       return next;
     });
+  };
+
+  const renderSyncRow = ({
+    item,
+    index,
+  }: {
+    item: (typeof SYNC_ROWS)[number];
+    index: number;
+  }) => {
+    const isChecked = checked[index];
+    const { Icon } = item;
+
+    return (
+      <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.syncRow}
+        onPress={() => toggleRow(index)}
+      >
+        <View style={styles.rowContent}>
+          {isChecked ? (
+            <View style={styles.checkboxCheckedOuter}>
+              <LinearGradient
+                colors={["#14B8D4", "#0E7490"]}
+                start={{ x: 0.5, y: 0 }}
+                end={{ x: 0.5, y: 1 }}
+                style={styles.checkboxCheckedGradient}
+              >
+                <TickIcon width={12} height={10} />
+              </LinearGradient>
+            </View>
+          ) : (
+            <View style={styles.checkboxUncheckedWrap}>
+              <InnerShadowView
+                width={20}
+                height={20}
+                borderRadius={6}
+                color={COLORS.SURFACE}
+                {...SYNC_INNER_SHADOW}
+              />
+            </View>
+          )}
+
+          <View style={styles.iconShell}>
+            <InnerShadowView
+              width={40}
+              height={40}
+              borderRadius={20}
+              color={COLORS.SURFACE}
+              {...SYNC_INNER_SHADOW}
+            />
+            <View style={styles.iconOverlay}>
+              <Icon width={20} height={20} />
+            </View>
+          </View>
+
+          <Text style={styles.rowLabel}>{item.label}</Text>
+        </View>
+        {index < SYNC_ROWS.length - 1 ? <View style={styles.rowDivider} /> : null}
+      </TouchableOpacity>
+    );
   };
 
   return (
@@ -81,59 +154,12 @@ const Sync = () => {
       </View>
 
       <View style={styles.card}>
-        {SYNC_ROWS.map((row, index) => {
-          const isChecked = checked[index];
-          const { Icon } = row;
-          return (
-            <TouchableOpacity
-              key={row.id}
-              activeOpacity={0.85}
-              style={styles.syncRow}
-              onPress={() => toggleRow(index)}
-            >
-              <View style={styles.rowContent}>
-                {isChecked ? (
-                  <View style={styles.checkboxCheckedOuter}>
-                    <LinearGradient
-                      colors={["#14B8D4", "#0E7490"]}
-                      start={{ x: 0.5, y: 0 }}
-                      end={{ x: 0.5, y: 1 }}
-                      style={styles.checkboxCheckedGradient}
-                    >
-                      <TickIcon width={12} height={10} />
-                    </LinearGradient>
-                  </View>
-                ) : (
-                  <View style={styles.checkboxUncheckedWrap}>
-                    <InnerShadowView
-                      width={20}
-                      height={20}
-                      borderRadius={6}
-                      color={COLORS.SURFACE}
-                      {...SYNC_INNER_SHADOW}
-                    />
-                  </View>
-                )}
-
-                <View style={styles.iconShell}>
-                  <InnerShadowView
-                    width={40}
-                    height={40}
-                    borderRadius={20}
-                    color={COLORS.SURFACE}
-                    {...SYNC_INNER_SHADOW}
-                  />
-                  <View style={styles.iconOverlay}>
-                    <Icon width={20} height={20} />
-                  </View>
-                </View>
-
-                <Text style={styles.rowLabel}>{row.label}</Text>
-              </View>
-              {index < SYNC_ROWS.length - 1 ? <View style={styles.rowDivider} /> : null}
-            </TouchableOpacity>
-          );
-        })}
+        <FlatList
+          data={SYNC_ROWS}
+          keyExtractor={(item) => item.id}
+          renderItem={renderSyncRow}
+          scrollEnabled={false}
+        />
       </View>
 
       <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 16) }]}>
@@ -145,8 +171,9 @@ const Sync = () => {
           borderRadius={60}
           height={48}
           containerStyle={styles.primaryButton}
+          onPress={finishOnboarding}
         />
-        <TouchableOpacity activeOpacity={0.85} style={styles.skipTouchable} onPress={() => navigation.goBack()}>
+        <TouchableOpacity activeOpacity={0.85} style={styles.skipTouchable} onPress={finishOnboarding}>
           <View style={styles.skipInner}>
             <Text style={styles.skipText}>Skip for Now</Text>
           </View>

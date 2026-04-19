@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
@@ -29,6 +29,27 @@ const SetUserPin = () => {
     }
   };
 
+  const renderPinDigit = ({ item, index }: { item: string; index: number }) => (
+    <View style={styles.pinItem}>
+      <View style={styles.pinInnerShadow}>
+        <InnerShadowView width={54} height={54} borderRadius={27} color="#F7FBFF" />
+      </View>
+      <TextInput
+        ref={(ref) => {
+          inputRefs.current[index] = ref;
+        }}
+        value={item}
+        onChangeText={(text) => handlePinChange(index, text)}
+        onKeyPress={({ nativeEvent }) => handleBackspace(index, nativeEvent.key)}
+        keyboardType="number-pad"
+        maxLength={1}
+        textAlign="center"
+        style={styles.pinInput}
+        selectionColor={COLORS.PRIMARY}
+      />
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
@@ -45,26 +66,14 @@ const SetUserPin = () => {
       </View>
 
       <View style={styles.pinRow}>
-        {pin.map((digit, index) => (
-          <View key={index} style={styles.pinItem}>
-            <View style={styles.pinInnerShadow}>
-              <InnerShadowView width={54} height={54} borderRadius={27} color="#F7FBFF" />
-            </View>
-            <TextInput
-              ref={(ref) => {
-                inputRefs.current[index] = ref;
-              }}
-              value={digit}
-              onChangeText={(text) => handlePinChange(index, text)}
-              onKeyPress={({ nativeEvent }) => handleBackspace(index, nativeEvent.key)}
-              keyboardType="number-pad"
-              maxLength={1}
-              textAlign="center"
-              style={styles.pinInput}
-              selectionColor={COLORS.PRIMARY}
-            />
-          </View>
-        ))}
+        <FlatList
+          data={pin}
+          keyExtractor={(_, index) => String(index)}
+          renderItem={renderPinDigit}
+          horizontal
+          scrollEnabled={false}
+          contentContainerStyle={styles.pinListContent}
+        />
       </View>
 
       <ReusableButton
@@ -116,9 +125,10 @@ const styles = StyleSheet.create({
   },
   pinRow: {
     marginTop: 28,
-    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  pinListContent: {
     gap: 16,
   },
   pinItem: {

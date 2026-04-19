@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import navigationStrings from "../../constants/navigationStrings";
@@ -47,6 +47,27 @@ const OtpVerification = () => {
     }
   };
 
+  const renderOtpDigit = ({ item, index }: { item: string; index: number }) => (
+    <View style={styles.otpItem}>
+      <View style={styles.otpInnerShadow}>
+        <InnerShadowView width={54} height={54} borderRadius={27} color="#F7FBFF" />
+      </View>
+      <TextInput
+        ref={(ref) => {
+          inputRefs.current[index] = ref;
+        }}
+        value={item}
+        onChangeText={(text) => handleOtpChange(index, text)}
+        onKeyPress={({ nativeEvent }) => handleBackspace(index, nativeEvent.key)}
+        keyboardType="number-pad"
+        maxLength={1}
+        textAlign="center"
+        style={styles.otpInput}
+        selectionColor={COLORS.PRIMARY}
+      />
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
@@ -64,26 +85,15 @@ const OtpVerification = () => {
 
       <View style={styles.inputBlock}>
         <View style={styles.otpRow}>
-          {otp.map((digit, index) => (
-            <View key={index} style={styles.otpItem}>
-              <View style={styles.otpInnerShadow}>
-                <InnerShadowView width={54} height={54} borderRadius={27} color="#F7FBFF" />
-              </View>
-              <TextInput
-                ref={(ref) => {
-                  inputRefs.current[index] = ref;
-                }}
-                value={digit}
-                onChangeText={(text) => handleOtpChange(index, text)}
-                onKeyPress={({ nativeEvent }) => handleBackspace(index, nativeEvent.key)}
-                keyboardType="number-pad"
-                maxLength={1}
-                textAlign="center"
-                style={styles.otpInput}
-                selectionColor={COLORS.PRIMARY}
-              />
-            </View>
-          ))}
+          <FlatList
+            data={otp}
+            keyExtractor={(_, index) => String(index)}
+            renderItem={renderOtpDigit}
+            horizontal
+            scrollEnabled={false}
+            style={styles.otpList}
+            contentContainerStyle={styles.otpListContent}
+          />
         </View>
 
         <View style={styles.resendRow}>
@@ -161,8 +171,14 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   otpRow: {
-    flexDirection: "row",
+    width: "100%",
     alignItems: "center",
+  },
+  otpList: {
+    flexGrow: 0,
+    height: 54,
+  },
+  otpListContent: {
     gap: 16,
   },
   otpItem: {

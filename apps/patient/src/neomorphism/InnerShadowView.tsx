@@ -31,7 +31,7 @@ const InnerShadowView: React.FC<Props> = ({
   lightShadowColor = '#FFFFFFCC',
 }) => {
   return (
-    <Canvas style={{ width, height }}>
+    <Canvas style={{ width, height }} pointerEvents="none">
       <RoundedRect
         x={0}
         y={0}

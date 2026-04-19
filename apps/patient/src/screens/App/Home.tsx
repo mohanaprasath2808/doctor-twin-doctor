@@ -1,12 +1,14 @@
 import React from "react";
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
 import InnerShadowView from "../../neomorphism/InnerShadowView";
 import { COLORS } from "../../constants/theme";
 import BottomNavbar from "../../components/App/BottomNavbar";
+import navigationStrings from "../../constants/navigationStrings";
 import MessageIcon from "../../assets/icons/message.svg";
 import ScheduleIcon from "../../assets/icons/schedule.svg";
 import TelemedicineIcon from "../../assets/icons/telemedicine.svg";
@@ -38,6 +40,32 @@ const QUICK_ACTIONS = [
 ];
 
 const Home = () => {
+  const navigation = useNavigation<any>();
+  const renderQuickAction = ({ item }: { item: (typeof QUICK_ACTIONS)[number] }) => (
+    <TouchableOpacity
+      style={styles.tile}
+      activeOpacity={0.85}
+      onPress={() => {
+        if (item.id === "schedule") {
+          navigation.navigate(navigationStrings.APPOINTMENTS);
+        }
+      }}
+    >
+      <View style={styles.tileOuter}>
+        <View style={styles.tileInnerShadow}>
+          <InnerShadowView width={72} height={72} borderRadius={36} color="#F7FBFF" />
+        </View>
+        {item.icon}
+        {!!item.badge && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{item.badge}</Text>
+          </View>
+        )}
+      </View>
+      <Text style={styles.tileLabel}>{item.label}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -69,22 +97,13 @@ const Home = () => {
         </View>
 
         <View style={styles.grid}>
-          {QUICK_ACTIONS.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.tile} activeOpacity={0.85}>
-              <View style={styles.tileOuter}>
-                <View style={styles.tileInnerShadow}>
-                  <InnerShadowView width={72} height={72} borderRadius={36} color="#F7FBFF" />
-                </View>
-                {item.icon}
-                {!!item.badge && (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{item.badge}</Text>
-                  </View>
-                )}
-              </View>
-              <Text style={styles.tileLabel}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+          <FlatList
+            data={QUICK_ACTIONS}
+            keyExtractor={(item) => item.id}
+            renderItem={renderQuickAction}
+            numColumns={4}
+            scrollEnabled={false}
+          />
         </View>
       </ScrollView>
 

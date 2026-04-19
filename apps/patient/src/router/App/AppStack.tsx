@@ -3,27 +3,11 @@ import { Text, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import navigationStrings from "../../constants/navigationStrings";
 import Home from "../../screens/App/Home";
+import Appointments from "../../screens/App/Appointments/Appointments";
+import ScheduleStep1 from "../../screens/App/Appointments/ScheduleStep1";
+import ScheduleStep2 from "../../screens/App/Appointments/ScheduleStep2";
 
 const Stack = createStackNavigator();
-
-const PlaceholderScreen = ({ title }: { title: string }) => (
-  <View
-    style={{
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      paddingHorizontal: 24,
-    }}
-  >
-    <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 12 }}>{title}</Text>
-    <Text style={{ textAlign: "center", color: "#666" }}>
-      Replace this placeholder with Patient app screens.
-    </Text>
-  </View>
-);
-
-// const PatientHome = () => <PlaceholderScreen title="Patient Home" />;
-const PatientProfile = () => <PlaceholderScreen title="Patient Profile" />;
 
 const AppStack = () => {
   return (
@@ -33,8 +17,16 @@ const AppStack = () => {
         component={Home}
       />
       <Stack.Screen
-        name={navigationStrings.PROFILE}
-        component={PatientProfile}
+        name={navigationStrings.APPOINTMENTS}
+        component={Appointments}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULE_STEP_1}
+        component={ScheduleStep1}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULE_STEP_2}
+        component={ScheduleStep2}
       />
     </Stack.Navigator>
   );
