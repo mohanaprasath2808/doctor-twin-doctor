@@ -11,17 +11,24 @@ import EarnIcon from "../../assets/icon/earnIcon.svg";
 import InsuranceIcon from "../../assets/icon/insuranceIcon.svg";
 import MessageIcon from "../../assets/icon/messageIcon.svg";
 import VoiceIcon from "../../assets/icon/voiceIcon.svg";
+import LabRedIcon from "../../assets/icon/conicalRedIcon.svg";
+import MessageRedIcon from "../../assets/icon/messageRedIcon.svg";
+import InsuranceRedIcon from "../../assets/icon/eligibiltyRedIcon.svg";
 import InnerShadowIcon from "../../components/neomorphism/InnerShadowIcon";
 import NeumorphicCard from "../../components/neomorphism/NeumorphicCard";
 import NeumorphicQuickActionTile from "../../components/neomorphism/NeumorphicQuickActionTile";
 import ProfileAvatar from "../../components/neomorphism/ProfileAvatar";
 import ReusableButton from "../../components/neomorphism/ReusableButton";
 import NeumorphicSwitch from "../../components/Common/NeumorphicSwitch";
-import { greetingLabel } from "../../constants/constant";
+import { greetingLabel, hasPositiveBadgeCount } from "../../constants/constant";
 import navigationStrings from "../../constants/navigationStrings";
 import { COLORS } from "../../constants/theme";
 
 const DISPLAY_NAME = "Lorena";
+
+const DEMO_OVERDUE_LABS_BADGE = "0";
+const DEMO_URGENT_MESSAGE_BADGE = "1";
+const DEMO_INSURANCE_BADGE = "3";
 
 const ShiftStart = () => {
   const navigation = useNavigation<NavigationProp<Record<string, undefined | object>>>();
@@ -76,25 +83,44 @@ const ShiftStart = () => {
           <View style={styles.tilesRow}>
             <NeumorphicQuickActionTile
               onPress={() => {}}
-              icon={<ConicalIcon width={28} height={28} />}
+              icon={
+                hasPositiveBadgeCount(DEMO_OVERDUE_LABS_BADGE) ? (
+                  <LabRedIcon width={28} height={28} />
+                ) : (
+                  <ConicalIcon width={28} height={28} />
+                )
+              }
               label="Sarah Johnson"
               subtitle="Overdue Labs"
+              badge={DEMO_OVERDUE_LABS_BADGE}
               containerStyle={styles.tileCol}
             />
             <NeumorphicQuickActionTile
               onPress={() => {}}
-              icon={<MessageIcon width={28} height={28} />}
+              icon={
+                hasPositiveBadgeCount(DEMO_URGENT_MESSAGE_BADGE) ? (
+                  <MessageRedIcon width={28} height={28} />
+                ) : (
+                  <MessageIcon width={28} height={28} />
+                )
+              }
               label="Brian Carter"
               subtitle="Urgent Message"
-              badge="1"
+              badge={DEMO_URGENT_MESSAGE_BADGE}
               containerStyle={styles.tileCol}
             />
             <NeumorphicQuickActionTile
               onPress={() => {}}
-              icon={<InsuranceIcon width={28} height={28} />}
+              icon={
+                hasPositiveBadgeCount(DEMO_INSURANCE_BADGE) ? (
+                  <InsuranceRedIcon width={28} height={28} />
+                ) : (
+                  <InsuranceIcon width={28} height={28} />
+                )
+              }
               label="Henry Patel"
               subtitle="Insurance Issue"
-              badge="3"
+              badge={DEMO_INSURANCE_BADGE}
               containerStyle={styles.tileCol}
             />
           </View>

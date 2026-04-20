@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, type ReactNode } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
@@ -6,26 +6,46 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
-import EarnIcon from "../../assets/icon/earnIcon.svg";
 import NeumorphicQuickActionTile from "../../components/neomorphism/NeumorphicQuickActionTile";
 import ProfileAvatar from "../../components/neomorphism/ProfileAvatar";
+import { hasPositiveBadgeCount } from "../../constants/constant";
 import navigationStrings from "../../constants/navigationStrings";
 import { COLORS } from "../../constants/theme";
+import RefillsGreenIcon from "../../assets/icon/refillsIcon.svg";
+import MessageGreenIcon from "../../assets/icon/messageIcon.svg";
+import LabGreenIcon from "../../assets/icon/conicalIcon.svg";
+import ScheduleGreenIcon from "../../assets/icon/schedulingIcon.svg";
+import ProfileGreenIcon from "../../assets/icon/profileGreenIcon.svg";
+import BillingGreenIcon from "../../assets/icon/billingIcon.svg";
+import EligibilityGreenIcon from "../../assets/icon/eligibilityIcon.svg";
+import DocumentGreenIcon from "../../assets/icon/documentIcon.svg";
+import TasksGreenIcon from "../../assets/icon/tasksIcon.svg";
+import DelegationGreenIcon from "../../assets/icon/delegationIcon.svg";
+import RefillRedIcon from "../../assets/icon/refillRedIcon.svg";
+import MessageRedIcon from "../../assets/icon/messageRedIcon.svg";
+import LabRedIcon from "../../assets/icon/conicalRedIcon.svg";
+import ScheduleRedIcon from "../../assets/icon/scheduleRedIcon.svg";
+import ProfileRedIcon from "../../assets/icon/profileRedIcon.svg";
+import BillingRedIcon from "../../assets/icon/billingRedIcon.svg";
+import EligibilityRedIcon from "../../assets/icon/eligibiltyRedIcon.svg";
+import DocumentRedIcon from "../../assets/icon/documentRedIcon.svg";
+import TasksRedIcon from "../../assets/icon/tasksRedIcon.svg";
+import DelegationRedIcon from "../../assets/icon/delegationRedIcon.svg";
 
 const DISPLAY_NAME = "Dr.Twin";
 
 type TileItem = {
   label: string;
-  subtitle?: string;
-  badge?: string;
+  iconGreen: ReactNode;
+  iconRed: ReactNode;
+  dataCount?: string;
   onPress?: () => void;
 };
 
 const GRID_COLUMNS = 4;
-const GRID_GAP = 8;
+/** Horizontal gap between tiles in a row and vertical gap between rows. */
+const GRID_GAP = 10;
 const H_PADDING = 16;
-/** Approx. tab bar height (matches BottomNavigation) so content clears the bar. */
-const TAB_BAR_HEIGHT = 68;
 
 type AppTabParamList = {
   Home: undefined;
@@ -47,37 +67,91 @@ const Home = () => {
     navigation.navigate(navigationStrings.CALENDAR);
   }, [navigation]);
 
-  const openProfile = useCallback(() => {
-    navigation.navigate(navigationStrings.PROFILE);
-  }, [navigation]);
-
   const noop = useCallback(() => {}, []);
 
   const rows: TileItem[][] = [
     [
-      { label: "Refills", subtitle: "Quick refill", onPress: noop },
-      { label: "Messages", subtitle: "Inbox", badge: "1", onPress: noop },
-      { label: "Labs", subtitle: "Results", badge: "3", onPress: noop },
-      { label: "Calendar", subtitle: "Schedule", onPress: openCalendar },
+      {
+        label: "Refills",
+        iconGreen: <RefillsGreenIcon width={32} height={32} />,
+        iconRed: <RefillRedIcon width={32} height={32} />,
+        dataCount: "1",
+        onPress: noop,
+      },
+      {
+        label: "Messages",
+        iconGreen: <MessageGreenIcon width={32} height={32} />,
+        iconRed: <MessageRedIcon width={32} height={32} />,
+        dataCount: "0",
+        onPress: noop,
+      },
+      {
+        label: "Labs",
+        iconGreen: <LabGreenIcon width={32} height={32} />,
+        iconRed: <LabRedIcon width={32} height={32} />,
+        dataCount: "3",
+        onPress: noop,
+      },
+      {
+        label: "Calendar",
+        iconGreen: <ScheduleGreenIcon width={32} height={32} />,
+        iconRed: <ScheduleRedIcon width={32} height={32} />,
+        dataCount: "0",
+        onPress: openCalendar,
+      },
     ],
     [
-      { label: "Delegation", subtitle: "Assign work", onPress: noop },
-      { label: "Eligibility", subtitle: "Coverage", onPress: noop },
-      { label: "Document", subtitle: "Files", onPress: noop },
-      { label: "Tasks", subtitle: "To-do", onPress: noop },
+      {
+        label: "Delegation",
+        iconGreen: <DelegationGreenIcon width={32} height={32} />,
+        iconRed: <DelegationRedIcon width={32} height={32} />,
+        dataCount: "0",
+        onPress: noop,
+      },
+      {
+        label: "Eligibility",
+        iconGreen: <EligibilityGreenIcon width={32} height={32} />,
+        iconRed: <EligibilityRedIcon width={32} height={32} />,
+        dataCount: "0",
+        onPress: noop,
+      },
+      {
+        label: "Document",
+        iconGreen: <DocumentGreenIcon width={32} height={32} />,
+        iconRed: <DocumentRedIcon width={32} height={32} />,
+        dataCount: "0",
+        onPress: noop,
+      },
+      {
+        label: "Tasks",
+        iconGreen: <TasksGreenIcon width={32} height={32} />,
+        iconRed: <TasksRedIcon width={32} height={32} />,
+        dataCount: "1",
+        onPress: noop,
+      },
     ],
     [
-      { label: "Billing", subtitle: "Claims", onPress: noop },
-      { label: "Profile", subtitle: "Account", onPress: openProfile },
+      {
+        label: "Billing",
+        iconGreen: <BillingGreenIcon width={32} height={32} />,
+        iconRed: <BillingRedIcon width={32} height={32} />,
+        dataCount: "1",
+        onPress: noop,
+      },
+      {
+        label: "Staff",
+        iconGreen: <ProfileGreenIcon width={32} height={32} />,
+        iconRed: <ProfileRedIcon width={32} height={32} />,
+        dataCount: "1",
+        onPress: noop,
+      },
     ],
   ];
 
-  const scrollBottomPad = TAB_BAR_HEIGHT + Math.max(insets.bottom, 10) + 16;
-
   return (
-    <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
+    <SafeAreaView style={styles.safe}>
       <ScrollView
-        contentContainerStyle={[styles.scroll, { paddingBottom: scrollBottomPad }]}
+        contentContainerStyle={[styles.scroll, { paddingBottom: Math.max(insets.bottom, 10) + 40 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         removeClippedSubviews={false}
@@ -101,11 +175,10 @@ const Home = () => {
                 <NeumorphicQuickActionTile
                   key={tile.label}
                   onPress={tile.onPress ?? noop}
-                  icon={<EarnIcon width={28} height={28} />}
+                  icon={hasPositiveBadgeCount(tile.dataCount) ? tile.iconRed : tile.iconGreen}
                   label={tile.label}
-                  subtitle={tile.subtitle}
-                  badge={tile.badge}
-                  containerStyle={{ width: tileWidth }}
+                  badge={tile.dataCount}
+                  containerStyle={[styles.tileContainer, { width: tileWidth }]}
                 />
               ))}
             </View>
@@ -156,16 +229,19 @@ const styles = StyleSheet.create({
     borderRadius: 110,
   },
   name: {
-    marginTop: 12,
-    marginBottom: 20,
+    marginBottom: 40,
     fontSize: 16,
-    fontWeight: "500",
-    color: COLORS.TEXT_70,
+    fontWeight: "600",
+    color: COLORS.TEXT_80,
     textAlign: "center",
   },
   grid: {
     width: "100%",
     rowGap: GRID_GAP,
+  },
+  /** Override tile default; spacing comes from `row.gap` + `grid.rowGap` (both `GRID_GAP`). */
+  tileContainer: {
+    marginBottom: 0,
   },
   row: {
     flexDirection: "row",
