@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo, type ReactNode } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import type { CompositeNavigationProp } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
@@ -51,12 +53,19 @@ type AppTabParamList = {
   Home: undefined;
   Calendar: undefined;
   Profile: undefined;
+  TaskInbox: undefined;
+  Scheduling: undefined;
 };
+
+type HomeScreenNavigationProp = CompositeNavigationProp<
+  NativeStackNavigationProp<AppTabParamList>,
+  BottomTabNavigationProp<AppTabParamList>
+>;
 
 const Home = () => {
   const { width: windowWidth } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<BottomTabNavigationProp<AppTabParamList>>();
+  const navigation = useNavigation<HomeScreenNavigationProp>();
 
   const tileWidth = useMemo(() => {
     const inner = windowWidth - H_PADDING * 2;
@@ -67,7 +76,15 @@ const Home = () => {
     navigation.navigate(navigationStrings.CALENDAR);
   }, [navigation]);
 
-  const noop = useCallback(() => {}, []);
+  const noop = useCallback(() => { }, []);
+
+  const openTaskInbox = useCallback(() => {
+    navigation.navigate(navigationStrings.TASK_INBOX);
+  }, [navigation]);
+
+  const openScheduling = useCallback(() => {
+    navigation.navigate(navigationStrings.SCHEDULING);
+  }, [navigation]);
 
   const rows: TileItem[][] = [
     [
@@ -97,7 +114,7 @@ const Home = () => {
         iconGreen: <ScheduleGreenIcon width={32} height={32} />,
         iconRed: <ScheduleRedIcon width={32} height={32} />,
         dataCount: "0",
-        onPress: openCalendar,
+        onPress: openScheduling,
       },
     ],
     [
@@ -127,7 +144,7 @@ const Home = () => {
         iconGreen: <TasksGreenIcon width={32} height={32} />,
         iconRed: <TasksRedIcon width={32} height={32} />,
         dataCount: "1",
-        onPress: noop,
+        onPress: openTaskInbox,
       },
     ],
     [

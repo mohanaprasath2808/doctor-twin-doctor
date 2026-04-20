@@ -30,12 +30,9 @@ const InnerShadowView: React.FC<Props> = ({
   lightShadowBlur = 3,
   lightShadowColor = "#FFFFFFCC",
 }) => {
-  // Match RN border curve: r cannot exceed half the smaller side or inner shadows break at corners.
-  const r = Math.min(borderRadius, width / 2, height / 2);
-
   return (
     <Canvas style={{ width, height }}>
-      <RoundedRect x={0} y={0} width={width} height={height} r={r} color={color}>
+      <RoundedRect x={0} y={0} width={width} height={height} r={borderRadius} color={color}>
         <Shadow
           dx={darkShadowDx}
           dy={darkShadowDy}
