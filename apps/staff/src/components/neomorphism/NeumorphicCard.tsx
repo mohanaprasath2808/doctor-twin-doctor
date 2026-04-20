@@ -7,6 +7,7 @@ import { COLORS } from "../../constants/theme";
 type NeumorphicCardProps = {
   children: React.ReactNode;
   outerStyle?: StyleProp<ViewStyle>;
+  borderContainerStyle?: StyleProp<ViewStyle>;
   innerStyle?: StyleProp<ViewStyle>;
   borderRadius?: number;
   backgroundColor?: string;
@@ -17,6 +18,7 @@ type NeumorphicCardProps = {
 const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
   children,
   outerStyle,
+  borderContainerStyle,
   innerStyle,
   borderRadius = 10,
   backgroundColor = COLORS.INNER_SURFACE,
@@ -57,21 +59,30 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
           { borderRadius, backgroundColor: COLORS.SURFACE },
         ]}
       />
-      <View style={[styles.border, { borderRadius }]}>
-        <LinearGradient
-          colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
-          locations={[0.082, 0.8268]}
-          start={{ x: 1, y: 0.465 }}
-          end={{ x: 0, y: 0.535 }}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <LinearGradient
-          colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
-          locations={[0, 1]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={StyleSheet.absoluteFillObject}
-        />
+      <View style={[styles.border, { borderRadius }, borderContainerStyle]}>
+        <View
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFillObject,
+            styles.gradientClip,
+            { borderRadius: innerRadius },
+          ]}
+        >
+          <LinearGradient
+            colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
+            locations={[0.082, 0.8268]}
+            start={{ x: 1, y: 0.465 }}
+            end={{ x: 0, y: 0.535 }}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <LinearGradient
+            colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
+            locations={[0, 1]}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+            style={StyleSheet.absoluteFillObject}
+          />
+        </View>
         {onPress ? (
           <TouchableOpacity
             activeOpacity={activeOpacity}
@@ -99,6 +110,10 @@ const styles = StyleSheet.create({
   border: {
     zIndex: 1,
     padding: 1,
+    overflow: "hidden",
+  },
+  /** Keeps border gradients rounded when parent border uses overflow: 'visible'. */
+  gradientClip: {
     overflow: "hidden",
   },
   shadowDark: {
