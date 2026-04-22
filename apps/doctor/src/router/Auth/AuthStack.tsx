@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AuthBootstrap from '../../screens/Auth/AuthBootstrap';
 import BackupCodesSessionTimeout from '../../screens/Auth/BackupCodesSessionTimeout';
 import EmergencyAccess from '../../screens/Auth/EmergencyAccess';
 import EnableVoiceHandsFree from '../../screens/Auth/EnableVoiceHandsFree';
@@ -18,19 +19,20 @@ const Stack = createNativeStackNavigator();
  * Temporary demo flow (until API integration): each primary action advances in order,
  * then EmergencyAccess calls AuthContext setIsLogin(true) so Router mounts AppStack (Home).
  *
- * Order: SSO → HIPAA → Voice hands-free → Role & location → Start shift → Legal consent
- * → Secure login → Set PIN → Device trust → Backup codes → Emergency access → App (Home).
+ * Order: Bootstrap → SSO → … → Secure login → … → Emergency access → App (Home).
+ * Returning users: Bootstrap → Secure login (Face ID) → App.
  */
 const AuthStack = () => {
     return (
         <Stack.Navigator
-            initialRouteName={navigationStrings.SSO_SIGN_IN}
+            initialRouteName={navigationStrings.AUTH_BOOTSTRAP}
             screenOptions={{
                 headerShown: false,
                 headerShadowVisible: false,
                 headerBackButtonDisplayMode: 'minimal',
             }}
         >
+            <Stack.Screen name={navigationStrings.AUTH_BOOTSTRAP} component={AuthBootstrap} />
             <Stack.Screen name={navigationStrings.SSO_SIGN_IN} component={SsoSignIn} />
             <Stack.Screen
                 name={navigationStrings.HIPAA_PRIVACY_GATE}
