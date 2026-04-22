@@ -33,6 +33,11 @@ interface DeltaBadgeProps {
 const WIDTH = 56;
 const HEIGHT = 20;
 const BORDER = 1;
+const HORIZONTAL_PADDING = 8;
+const ICON_WIDTH_ESTIMATE = 16;
+const INTER_ITEM_GAP = 3;
+const CHAR_WIDTH_ESTIMATE = 7;
+const INNER_CONTENT_EXTRA = 2;
 
 const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   icon,
@@ -48,9 +53,13 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   borderGradientColors = DEFAULT_BORDER_GRADIENT_COLORS,
   highlightGradientColors = DEFAULT_HIGHLIGHT_GRADIENT_COLORS,
 }) => {
+  const label = String(value ?? "");
+  const textWidth = Math.ceil(label.length * CHAR_WIDTH_ESTIMATE);
+  const iconWidth = icon ? ICON_WIDTH_ESTIMATE : 0;
+  const contentWidth = textWidth + iconWidth + (icon ? INTER_ITEM_GAP : 0);
   const autoWidth = Math.max(
     WIDTH,
-    Math.ceil(String(value).length * 7 + (icon ? 18 : 0) + 18),
+    Math.ceil(contentWidth + HORIZONTAL_PADDING * 2 + INNER_CONTENT_EXTRA + BORDER * 2),
   );
   const badgeWidth = width ?? autoWidth;
   const innerWidth = badgeWidth - BORDER * 2;
@@ -60,7 +69,7 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
 
   return (
     <View
-      style={[styles.border, { minWidth: width ?? "auto", height, borderRadius: badgeRadius }]}
+      style={[styles.border, { width: badgeWidth, height, borderRadius: badgeRadius }]}
     >
       <LinearGradient
         colors={borderGradientColors}
@@ -77,7 +86,14 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
         style={StyleSheet.absoluteFillObject}
       />
       <View
-        style={[styles.surface, { backgroundColor: bgColor, borderRadius: innerRadius, paddingHorizontal: 8 }]}
+        style={[
+          styles.surface,
+          {
+            backgroundColor: bgColor,
+            borderRadius: innerRadius,
+            paddingHorizontal: HORIZONTAL_PADDING,
+          },
+        ]}
       >
         <View pointerEvents="none" style={styles.innerShadow} collapsable={false}>
           <Canvas style={{ width: innerWidth, height: innerHeight }}>
@@ -96,7 +112,9 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
         </View>
         <View style={styles.content}>
           {icon ? icon : null}
-          <Text style={[styles.text, { color: textColor }, textStyle]}>{value}</Text>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, { color: textColor }, textStyle]}>
+            {value}
+          </Text>
         </View>
       </View>
     </View>
@@ -120,11 +138,15 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     gap: 3,
+    width: "100%",
+    minWidth: 0,
   },
   text: {
     fontSize: 12,
     fontWeight: "500",
+    flexShrink: 1,
   },
 });
 

@@ -17,6 +17,16 @@ const navigationStrings = {
   CALENDAR: "Calendar",
   PROFILE: "Profile",
   SCHEDULING: "Scheduling",
+  STAFF: "Staff",
+  STAFF_FORM: "StaffForm",
+  SCHEDULING_CANCELLATION: "SchedulingCancellation",
+  SCHEDULING_NO_SHOW: "SchedulingNoShow",
+  SCHEDULING_URGENT_OPENING: "SchedulingUrgentOpening",
+  SCHEDULING_PENDING_APPROVALS: "SchedulingPendingApprovals",
+  SCHEDULING_NOTIFY_PATIENT: "SchedulingNotifyPatient",
+  SCHEDULING_FILL_SLOT: "SchedulingFillSlot",
+  SCHEDULING_ASSIGN_TASK: "SchedulingAssignTask",
+  SCHEDULING_RESCHEDULE: "SchedulingReschedule",
 } as const;
 
 export default navigationStrings;

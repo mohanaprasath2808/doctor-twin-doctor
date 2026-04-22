@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Platform, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -12,12 +13,16 @@ import AppButton from "../../../components/Common/AppButton";
 import DoctorAvatar from "../../../components/Common/DoctorAvatar";
 import InsightMessageCard from "../../../components/Common/InsightMessageCard";
 import IconComponent from "../../../components/neomorphism/IconComponent";
+import InnerShadowIcon from "../../../components/neomorphism/InnerShadowIcon";
 import InnerShadowPill from "../../../components/neomorphism/InnerShadowPill";
 import NeumorphicCard from "../../../components/neomorphism/NeumorphicCard";
 import NeumorphicQuickActionTile from "../../../components/neomorphism/NeumorphicQuickActionTile";
 import ProfileAvatar from "../../../components/neomorphism/ProfileAvatar";
 import ReusableButton from "../../../components/neomorphism/ReusableButton";
+import { getInitials } from "../../../constants/constant";
+import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
+import type { AppStackParamList } from "../../../router/App/AppStack";
 
 /* ─────────────────────────────────────────────
    Figma source dimensions (px)
@@ -29,7 +34,7 @@ const FW = 414;
 const FOH = 410;
 const HEADER_H = 52;
 
-const BG = COLORS.SURFACE;
+const BG = COLORS.INNER_SURFACE;
 
 type QuickIconKey = "cancellation" | "noShows" | "urgent" | "pending";
 
@@ -50,7 +55,7 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     label: "Cancellation",
     badge: "2",
     iconKey: "cancellation",
-    figmaLeft: 12,
+    figmaLeft: 16,
     figmaTop: 50,
     figmaWrapW: 107,
   },
@@ -59,7 +64,7 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     label: "No Shows",
     badge: "1",
     iconKey: "noShows",
-    figmaLeft: 309,
+    figmaLeft: 304,
     figmaTop: 50,
     figmaWrapW: 85,
   },
@@ -68,8 +73,8 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     label: "Urgent Openings",
     badge: "1",
     iconKey: "urgent",
-    figmaLeft: 18,
-    figmaTop: 214,
+    figmaLeft: 45,
+    figmaTop: 240,
     figmaWrapW: 107,
   },
   {
@@ -77,11 +82,13 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     label: "Pending Approvals",
     badge: "1",
     iconKey: "pending",
-    figmaLeft: 295,
-    figmaTop: 214,
+    figmaLeft: 260,
+    figmaTop: 240,
     figmaWrapW: 90,
   },
 ];
+
+const SCHEDULE_PATIENT_NAME = "Brian Carter";
 
 const RING_DIAMS = [298, 276, 254, 232, 210, 187, 165];
 
@@ -107,17 +114,17 @@ function OrbitSection({
 }: {
   orbitH: number;
   sw: number;
-  onNodePress: () => void;
+  onNodePress: (slot: QuickActionSlot) => void;
 }) {
   const sx = sw / FW;
   const sy = orbitH / FOH;
 
   const ringCx = sw / 2;
-  const ringCy = Math.round(139 * sy);
+  const ringCy = Math.round(170 * sy);
 
   const docSize = Math.round(170 * sx);
   const docLeft = Math.round(122 * sx);
-  const docTop = Math.round(54 * sy);
+  const docTop = Math.round(68 * sy);
   const btnSize = Math.round(80 * sx);
 
   return (
@@ -152,7 +159,7 @@ function OrbitSection({
           sx={sx}
           sy={sy}
           btnSize={btnSize}
-          onPress={onNodePress}
+          onPress={() => onNodePress(slot)}
         />
       ))}
     </View>
@@ -247,7 +254,19 @@ function SchedulingQuickActionNode({
   );
 }
 
-function PatientDetailCard({ onClose }: { onClose: () => void }) {
+function PatientDetailCard({
+  onClose,
+  onFillSlot,
+  onNotifyPatient,
+  onAssign,
+  onReschedule,
+}: {
+  onClose: () => void;
+  onFillSlot: () => void;
+  onNotifyPatient: () => void;
+  onAssign: () => void;
+  onReschedule: () => void;
+}) {
   return (
     <View style={cardSt.wrap}>
       <NeumorphicCard
@@ -257,12 +276,13 @@ function PatientDetailCard({ onClose }: { onClose: () => void }) {
         innerStyle={cardSt.cardInner}
       >
         <View style={cardSt.row}>
-          <View style={cardSt.avatarCircle}>
-            <Text style={cardSt.avatarText}>BC</Text>
-          </View>
+          <InnerShadowIcon
+            size={40}
+            icon={<Text style={cardSt.initials}>{getInitials(SCHEDULE_PATIENT_NAME)}</Text>}
+          />
           <View style={{ flex: 1, minWidth: 0 }}>
             <Text style={cardSt.patName} numberOfLines={1}>
-              Brian Carter
+              {SCHEDULE_PATIENT_NAME}
             </Text>
             <Text style={cardSt.timeSub}>11:30 PM</Text>
           </View>
@@ -281,9 +301,12 @@ function PatientDetailCard({ onClose }: { onClose: () => void }) {
 
         <View style={cardSt.divider} />
 
-        <View style={cardSt.fewSlotRow}>
-          <WarningTriangleIcon width={14} height={14} />
-          <Text style={cardSt.fewSlotText}>Few slot</Text>
+        <View style={cardSt.tagRow}>
+          <InnerShadowPill
+            label="Few slot"
+            icon={<WarningTriangleIcon width={14} height={14} />}
+            textStyle={cardSt.fewSlotLabel}
+          />
         </View>
 
         <View style={cardSt.divider} />
@@ -315,7 +338,7 @@ function PatientDetailCard({ onClose }: { onClose: () => void }) {
               width="100%"
               gradientColors={["#A7F3D0", "#166534"]}
               backgroundColor={COLORS.PRIMARY}
-              onPress={() => {}}
+              onPress={onReschedule}
             />
           </View>
           <View style={cardSt.gridHalf}>
@@ -329,7 +352,7 @@ function PatientDetailCard({ onClose }: { onClose: () => void }) {
               bgColor={COLORS.INNER_SURFACE}
               text="Fill slot"
               textStyle={cardSt.outlineBtnText}
-              onPress={() => {}}
+              onPress={onFillSlot}
             />
           </View>
           <View style={cardSt.gridHalf}>
@@ -343,7 +366,7 @@ function PatientDetailCard({ onClose }: { onClose: () => void }) {
               bgColor={COLORS.INNER_SURFACE}
               text="Notify patient"
               textStyle={cardSt.outlineBtnText}
-              onPress={() => {}}
+              onPress={onNotifyPatient}
             />
           </View>
           <View style={cardSt.gridHalf}>
@@ -357,7 +380,7 @@ function PatientDetailCard({ onClose }: { onClose: () => void }) {
               bgColor={COLORS.INNER_SURFACE}
               text="Assign"
               textStyle={cardSt.outlineBtnText}
-              onPress={() => {}}
+              onPress={onAssign}
             />
           </View>
         </View>
@@ -381,32 +404,16 @@ const cardSt = StyleSheet.create({
     marginBottom: 10,
     gap: 10,
   },
-  avatarCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#D5E8D4",
-    alignItems: "center",
-    justifyContent: "center",
+  initials: {
+    color: COLORS.PRIMARY,
+    fontSize: 16,
+    fontWeight: "500",
   },
-  avatarText: { fontSize: 14, fontWeight: "600", color: "#3E7B4F" },
   patName: { fontSize: 16, fontWeight: "600", color: COLORS.TEXT_DARK },
   timeSub: { marginTop: 2, fontSize: 12, fontWeight: "400", color: COLORS.TEXT_60 },
   tagRow: { marginBottom: 8 },
   divider: { height: StyleSheet.hairlineWidth, backgroundColor: COLORS.TEXT_10, marginVertical: 8 },
-  fewSlotRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    alignSelf: "flex-start",
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "rgba(224, 91, 110, 0.45)",
-    backgroundColor: COLORS.INNER_SURFACE,
-  },
-  fewSlotText: { fontSize: 12, fontWeight: "600", color: "#C53030" },
+  fewSlotLabel: { fontWeight: "600", color: "#C53030" },
   suggestedRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -446,7 +453,7 @@ const cardSt = StyleSheet.create({
 });
 
 export function Scheduling() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [showDetail, setShowDetail] = useState(true);
 
   const { width: sw, height: sh } = useWindowDimensions();
@@ -472,15 +479,45 @@ export function Scheduling() {
             width={40}
             height={40}
             radius={20}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           <View style={scrSt.bellDot} />
         </View>
       </View>
 
-      <OrbitSection orbitH={orbitH} sw={sw} onNodePress={() => setShowDetail(true)} />
+      <OrbitSection
+        orbitH={orbitH}
+        sw={sw}
+        onNodePress={(slot) => {
+          if (slot.iconKey === "cancellation") {
+            navigation.navigate(navigationStrings.SCHEDULING_CANCELLATION);
+            return;
+          }
+          if (slot.iconKey === "noShows") {
+            navigation.navigate(navigationStrings.SCHEDULING_NO_SHOW);
+            return;
+          }
+          if (slot.iconKey === "urgent") {
+            navigation.navigate(navigationStrings.SCHEDULING_URGENT_OPENING);
+            return;
+          }
+          if (slot.iconKey === "pending") {
+            navigation.navigate(navigationStrings.SCHEDULING_PENDING_APPROVALS);
+            return;
+          }
+          setShowDetail(true);
+        }}
+      />
 
-      {showDetail ? <PatientDetailCard onClose={() => setShowDetail(false)} /> : null}
+      {showDetail ? (
+        <PatientDetailCard
+          onClose={() => setShowDetail(false)}
+          onFillSlot={() => navigation.navigate(navigationStrings.SCHEDULING_FILL_SLOT)}
+          onNotifyPatient={() => navigation.navigate(navigationStrings.SCHEDULING_NOTIFY_PATIENT)}
+          onAssign={() => navigation.navigate(navigationStrings.SCHEDULING_ASSIGN_TASK)}
+          onReschedule={() => navigation.navigate(navigationStrings.SCHEDULING_RESCHEDULE)}
+        />
+      ) : null}
     </SafeAreaView>
   );
 }
