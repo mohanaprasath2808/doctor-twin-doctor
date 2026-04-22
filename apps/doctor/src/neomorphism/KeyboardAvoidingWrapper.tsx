@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -6,7 +6,7 @@ import {
   StyleProp,
   StyleSheet,
   ViewStyle,
-} from 'react-native';
+} from "react-native";
 
 interface KeyboardAvoidingWrapperProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ const KeyboardAvoidingWrapper: React.FC<KeyboardAvoidingWrapperProps> = ({
   return (
     <KeyboardAvoidingView
       style={[styles.container, style]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={keyboardVerticalOffset}
     >
       <ScrollView

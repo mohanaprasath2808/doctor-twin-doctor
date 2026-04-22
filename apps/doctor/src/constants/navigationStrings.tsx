@@ -1,5 +1,6 @@
 const navigationStrings = {
   //AUTH
+  AUTH_BOOTSTRAP: "AuthBootstrap",
   LOGIN: "Login",
   SSO_SIGN_IN: "SsoSignIn",
   HIPAA_PRIVACY_GATE: "HipaaPrivacyGate",

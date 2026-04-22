@@ -20,6 +20,8 @@ interface Props {
   onRightIconPress?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
   borderRadius?: number;
+  /** Fixed row height for single-line fields. Takes precedence over `minHeight`. */
+  height?: number;
   minHeight?: number;
   isFocused?: boolean;
 }
@@ -37,22 +39,23 @@ const InputField: React.FC<Props & TextInputProps> = ({
   onRightIconPress,
   containerStyle,
   borderRadius,
+  height: heightProp,
   minHeight,
   isFocused,
   style,
   ...props
 }) => {
   const radius = borderRadius ?? RADIUS;
-  const fieldMinHeight = minHeight ?? HEIGHT;
+  const fieldHeight = heightProp ?? minHeight ?? HEIGHT;
   const [focused, setFocused] = useState(false);
   const [surfaceWidth, setSurfaceWidth] = useState(0);
-  const [inputHeight, setInputHeight] = useState(fieldMinHeight);
+  const [inputHeight, setInputHeight] = useState(fieldHeight);
   const valueText = String(props.value ?? props.defaultValue ?? "");
   const hasText = valueText.trim().length > 0;
   const isFocusControlled = typeof isFocused === "boolean";
   const showFocusedState = isFocusControlled ? isFocused : focused || hasText;
 
-  const resolvedShadowHeight = Math.max(fieldMinHeight, inputHeight);
+  const resolvedShadowHeight = Math.max(fieldHeight, inputHeight);
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -116,8 +119,8 @@ const InputField: React.FC<Props & TextInputProps> = ({
                 styles.inputWrapper,
                 {
                   borderRadius: radius,
-                  minHeight: fieldMinHeight,
-                  height: props.multiline ? undefined : fieldMinHeight,
+                  minHeight: fieldHeight,
+                  height: props.multiline ? undefined : fieldHeight,
                   alignItems: props.multiline ? "flex-start" : "center",
                   paddingTop: props.multiline ? 12 : 0,
                 },
@@ -136,8 +139,9 @@ const InputField: React.FC<Props & TextInputProps> = ({
                 {...props}
                 style={[
                   styles.input,
+                  hasText ? styles.inputTyped : styles.inputPlaceholder,
                   props.multiline && {
-                    minHeight: Math.max(40, fieldMinHeight - 24),
+                    minHeight: Math.max(40, fieldHeight - 24),
                     textAlignVertical: "top",
                   },
                   style,
@@ -265,10 +269,15 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     color: COLORS.TEXT_DARK,
-    fontSize: 15,
-    fontWeight: "400",
+    fontSize: 14,
     lineHeight: 20,
     includeFontPadding: false,
+  },
+  inputPlaceholder: {
+    fontWeight: "400",
+  },
+  inputTyped: {
+    fontWeight: "500",
   },
   leftIcon: {
     marginRight: 10,

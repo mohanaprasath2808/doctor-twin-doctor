@@ -9,3 +9,4 @@ export { default as InnerShadowIcon } from "./InnerShadowIcon";
 export { default as InnerView } from "./InnerView";
 export { default as ReusableButton } from "./ReusableButton";
 export { default as KeyboardAvoidingWrapper } from "./KeyboardAvoidingWrapper";
+export { default as Loader } from "./Loader";
