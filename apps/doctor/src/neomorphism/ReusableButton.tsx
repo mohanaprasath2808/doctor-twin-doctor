@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from "react";
 import {
   DimensionValue,
   LayoutChangeEvent,
@@ -9,15 +9,9 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
-} from 'react-native';
-import {
-  Canvas,
-  LinearGradient,
-  RoundedRect,
-  Shadow,
-  vec,
-} from '@shopify/react-native-skia';
-import { COLORS } from '../constants/theme';
+} from "react-native";
+import { Canvas, LinearGradient, RoundedRect, Shadow, vec } from "@shopify/react-native-skia";
+import { COLORS } from "../constants/theme";
 
 interface ReusableButtonProps {
   title: string;
@@ -41,21 +35,21 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
   disabled = false,
   height = 48,
   borderRadius = 30,
-  width = '100%',
+  width = "100%",
   backgroundColor = COLORS.PRIMARY,
   textColor = COLORS.WHITE,
-  gradientColors = ['#303DA3', '#111747'],
+  gradientColors = ["#303DA3", "#111747"],
   containerStyle,
   textStyle,
 }) => {
   const [measuredWidth, setMeasuredWidth] = useState(0);
   const numericWidth = useMemo(
-    () => (typeof width === 'number' ? width : measuredWidth),
+    () => (typeof width === "number" ? width : measuredWidth),
     [width, measuredWidth],
   );
 
   const handleLayout = (event: LayoutChangeEvent) => {
-    if (typeof width === 'number') return;
+    if (typeof width === "number") return;
     setMeasuredWidth(event.nativeEvent.layout.width);
   };
 
@@ -107,26 +101,24 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
           },
         ]}
       >
-        <Text style={[styles.text, { color: textColor }, textStyle]}>
-          {title}
-        </Text>
+        <Text style={[styles.text, { color: textColor }, textStyle]}>{title}</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  canvas: { position: 'absolute' },
+  canvas: { position: "absolute" },
   surface: {
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "transparent",
   },
   text: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: COLORS.WHITE,
   },
 });

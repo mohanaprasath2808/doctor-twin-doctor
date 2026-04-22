@@ -3,6 +3,7 @@ import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../constants/theme';
+import { ensureLocalSessionId } from '../../auth/localSession';
 import { AuthContext } from '../../context/AuthContext';
 import IconComponent from '../../neomorphism/IconComponent';
 import ProfileAvatar from '../../components/Auth/ProfileAvatar';
@@ -96,7 +97,12 @@ const EmergencyAccess = () => {
         ))}
       </View>
 
-      <Pressable onPress={() => setIsLogin(true)}>
+      <Pressable
+        onPress={async () => {
+          await ensureLocalSessionId();
+          setIsLogin(true);
+        }}
+      >
         <NeumorphicCard
           outerStyle={styles.continueOuter}
           innerStyle={styles.continueInner}

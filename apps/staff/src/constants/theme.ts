@@ -18,4 +18,7 @@ export const COLORS = {
   DARK_SHADOW: "#C8CBCC",
   LIGHT_SHADOW: "#FFFFFF99",
   ALERT: "#FF6B6B",
+  /** Selected filter / DeltaGradientBadge */
+  BADGE_SELECTED_BG: "#CFEFDC",
+  BADGE_INNER_SHADOW_MINT: "#B8E3CC",
 };

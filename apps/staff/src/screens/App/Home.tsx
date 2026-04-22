@@ -46,7 +46,7 @@ type TileItem = {
 
 const GRID_COLUMNS = 4;
 /** Horizontal gap between tiles in a row and vertical gap between rows. */
-const GRID_GAP = 10;
+const GRID_GAP = 16;
 const H_PADDING = 16;
 
 type AppTabParamList = {
@@ -86,6 +86,11 @@ const Home = () => {
     navigation.navigate(navigationStrings.SCHEDULING);
   }, [navigation]);
 
+  const openStaff = useCallback(() => {
+    const parent = navigation.getParent();
+    parent?.navigate(navigationStrings.STAFF as never);
+  }, [navigation]);
+
   const rows: TileItem[][] = [
     [
       {
@@ -110,7 +115,7 @@ const Home = () => {
         onPress: noop,
       },
       {
-        label: "Calendar",
+        label: "Scheduling",
         iconGreen: <ScheduleGreenIcon width={32} height={32} />,
         iconRed: <ScheduleRedIcon width={32} height={32} />,
         dataCount: "0",
@@ -160,7 +165,7 @@ const Home = () => {
         iconGreen: <ProfileGreenIcon width={32} height={32} />,
         iconRed: <ProfileRedIcon width={32} height={32} />,
         dataCount: "1",
-        onPress: noop,
+        onPress: openStaff,
       },
     ],
   ];
@@ -187,15 +192,22 @@ const Home = () => {
 
         <View style={styles.grid}>
           {rows.map((row, rowIndex) => (
-            <View key={`row-${rowIndex}`} style={styles.row}>
-              {row.map((tile) => (
+            <View
+              key={`row-${rowIndex}`}
+              style={[styles.row, rowIndex < rows.length - 1 && styles.rowSpacing]}
+            >
+              {row.map((tile, colIndex) => (
                 <NeumorphicQuickActionTile
                   key={tile.label}
                   onPress={tile.onPress ?? noop}
                   icon={hasPositiveBadgeCount(tile.dataCount) ? tile.iconRed : tile.iconGreen}
                   label={tile.label}
                   badge={tile.dataCount}
-                  containerStyle={[styles.tileContainer, { width: tileWidth }]}
+                  containerStyle={[
+                    styles.tileContainer,
+                    { width: tileWidth },
+                    colIndex < row.length - 1 && styles.tileSpacingRight,
+                  ]}
                 />
               ))}
             </View>
@@ -254,16 +266,20 @@ const styles = StyleSheet.create({
   },
   grid: {
     width: "100%",
-    rowGap: GRID_GAP,
   },
-  /** Override tile default; spacing comes from `row.gap` + `grid.rowGap` (both `GRID_GAP`). */
   tileContainer: {
     marginBottom: 0,
+  },
+  /** `gap` / `rowGap` are unreliable on some Android RN builds; use margins instead. */
+  tileSpacingRight: {
+    marginRight: GRID_GAP,
+  },
+  rowSpacing: {
+    marginBottom: GRID_GAP,
   },
   row: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: GRID_GAP,
     justifyContent: "flex-start",
   },
 });

@@ -11,10 +11,7 @@ export const getInitials = (name: string) =>
     .join("");
 
 //to open the google maps by coords
-export const openGoogleMapsByCoords = async (
-  latitude: number,
-  longitude: number,
-) => {
+export const openGoogleMapsByCoords = async (latitude: number, longitude: number) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
   await Linking.openURL(mapsUrl);
 };
@@ -36,3 +33,8 @@ export const getCurrentDate = () =>
     day: "numeric",
     year: "numeric",
   });
+
+//LOCAL STORAGE
+export const LOCAL_STORAGE_KEYS = {
+  FACE_ID_ENABLED: "faceIdEnabled",
+};
