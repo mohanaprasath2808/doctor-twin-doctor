@@ -158,7 +158,13 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
           },
         ]}
       >
-        <Text style={[styles.text, { color: textColor }, textStyle]}>{title}</Text>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[styles.text, { color: textColor }, textStyle]}
+        >
+          {title}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -174,8 +180,11 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   text: {
+    width: "100%",
+    textAlign: "center",
     fontSize: 16,
     fontWeight: "600",
+    paddingHorizontal: 12,
     color: COLORS.WHITE,
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
@@ -22,7 +22,7 @@ const CONSENT_LABELS = [
 const AcceptConsent = () => {
   const navigation = useNavigation<any>();
   const [consentChecked, setConsentChecked] = useState<boolean[]>(() =>
-    CONSENT_LABELS.map((_, i) => i === 0),
+    Array.from({ length: CONSENT_LABELS.length }, (_, i) => i === 0),
   );
 
   const toggleConsent = (index: number) => {
@@ -32,6 +32,39 @@ const AcceptConsent = () => {
       return next;
     });
   };
+
+  const renderConsentItem = ({ item, index }: { item: string; index: number }) => (
+    <TouchableOpacity
+      activeOpacity={0.85}
+      style={styles.consentItem}
+      onPress={() => toggleConsent(index)}
+    >
+      {consentChecked[index] ? (
+        <View style={[styles.checkbox, styles.checkboxChecked]}>
+          <TickIcon width={15} height={12} />
+        </View>
+      ) : (
+        <View style={styles.checkboxInnerWrap}>
+          <InnerShadowView
+            width={30}
+            height={30}
+            borderRadius={6}
+            color={COLORS.SURFACE}
+            darkShadowDx={4}
+            darkShadowDy={4}
+            darkShadowBlur={7}
+            darkShadowColor="#C8CBCC"
+            lightShadowDx={-4}
+            lightShadowDy={-4}
+            lightShadowBlur={5}
+            lightShadowColor="#FFFFFF99"
+          />
+        </View>
+      )}
+      <Text style={styles.consentText}>{item}</Text>
+      {index < CONSENT_LABELS.length - 1 ? <View style={styles.divider} /> : null}
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,39 +96,12 @@ const AcceptConsent = () => {
       </Text>
 
       <View style={styles.consentCard}>
-        {CONSENT_LABELS.map((label, index) => (
-          <TouchableOpacity
-            key={label}
-            activeOpacity={0.85}
-            style={styles.consentItem}
-            onPress={() => toggleConsent(index)}
-          >
-            {consentChecked[index] ? (
-              <View style={[styles.checkbox, styles.checkboxChecked]}>
-                <TickIcon width={15} height={12} />
-              </View>
-            ) : (
-              <View style={styles.checkboxInnerWrap}>
-                <InnerShadowView
-                  width={30}
-                  height={30}
-                  borderRadius={6}
-                  color={COLORS.SURFACE}
-                  darkShadowDx={4}
-                  darkShadowDy={4}
-                  darkShadowBlur={7}
-                  darkShadowColor="#C8CBCC"
-                  lightShadowDx={-4}
-                  lightShadowDy={-4}
-                  lightShadowBlur={5}
-                  lightShadowColor="#FFFFFF99"
-                />
-              </View>
-            )}
-            <Text style={styles.consentText}>{label}</Text>
-            {index < CONSENT_LABELS.length - 1 ? <View style={styles.divider} /> : null}
-          </TouchableOpacity>
-        ))}
+        <FlatList
+          data={CONSENT_LABELS}
+          keyExtractor={(item) => item}
+          renderItem={renderConsentItem}
+          scrollEnabled={false}
+        />
       </View>
 
       <View style={styles.footer}>

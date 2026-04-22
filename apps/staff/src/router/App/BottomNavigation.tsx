@@ -11,9 +11,9 @@ import {
 } from "../../components/navigation/QueueMicTabButton";
 import navigationStrings from "../../constants/navigationStrings";
 import Calendar from "../../screens/App/Calendar";
-import Home from "../../screens/App/Home";
 import Profile from "../../screens/App/Profile";
 import { COLORS } from "../../constants/theme";
+import Home from "../../screens/App/Home";
 
 const Tab = createBottomTabNavigator();
 

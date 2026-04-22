@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+
 import { COLORS } from "../../constants/theme";
 import InnerShadowView from "./InnerShadowView";
 
@@ -33,14 +34,27 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
   const innerRadius = Math.max(0, borderRadius - 1);
 
   return (
-    <View style={[styles.cell, { width: size, height: size, borderRadius }, style]} collapsable={false}>
+    <View
+      style={[styles.cell, { width: size, height: size, borderRadius }, style]}
+      collapsable={false}
+    >
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowDark, styles.shadowDarkFocused, { borderRadius }]}
+        style={[
+          styles.shadowLayer,
+          styles.shadowDark,
+          styles.shadowDarkFocused,
+          { borderRadius },
+        ]}
       />
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowLight, styles.shadowLightFocused, { borderRadius }]}
+        style={[
+          styles.shadowLayer,
+          styles.shadowLight,
+          styles.shadowLightFocused,
+          { borderRadius },
+        ]}
       />
       <View pointerEvents="none" style={[styles.shadowLayer, styles.shadowSoft, { borderRadius }]} />
 
@@ -68,7 +82,7 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
               width={size}
               height={size}
               borderRadius={borderRadius}
-              color={COLORS.INNER_SURFACE}
+              color={COLORS.SURFACE}
             />
           </View>
           {onPress ? (

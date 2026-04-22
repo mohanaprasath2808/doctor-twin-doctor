@@ -7,6 +7,12 @@ export const COLORS = {
   BACKGROUND: "#FFFFFF",
   SURFACE: "#F8FAFC",
 
+  /** Neumorphic inner-shadow fields (aligned with doctor app tokens) */
+  DARK_SHADOW: "#C8CBCC",
+  LIGHT_SHADOW: "#FFFFFF99",
+  TEXT_40: "#A8ABAB",
+  TEXT_80: "#565656",
+
   SUCCESS: "#10B981",
   SUCCESS_BG: "#D3FFF1",
 

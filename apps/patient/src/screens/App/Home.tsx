@@ -1,12 +1,15 @@
 import React from "react";
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
-import InnerShadowView from "../../neomorphism/InnerShadowView";
 import { COLORS } from "../../constants/theme";
+import InnerShadowView from "../../neomorphism/InnerShadowView";
+import NeumorphicQuickActionTile from "../../components/Common/NeumorphicQuickActionTile";
 import BottomNavbar from "../../components/App/BottomNavbar";
+import navigationStrings from "../../constants/navigationStrings";
 import MessageIcon from "../../assets/icons/message.svg";
 import ScheduleIcon from "../../assets/icons/schedule.svg";
 import TelemedicineIcon from "../../assets/icons/telemedicine.svg";
@@ -38,6 +41,27 @@ const QUICK_ACTIONS = [
 ];
 
 const Home = () => {
+  const navigation = useNavigation<any>();
+  const renderQuickAction = ({ item }: { item: (typeof QUICK_ACTIONS)[number] }) => (
+    <NeumorphicQuickActionTile
+      containerStyle={styles.tile}
+      onPress={() => {
+        if (item.id === "schedule") {
+          navigation.navigate(navigationStrings.APPOINTMENTS);
+        }
+        if (item.id === "message") {
+          navigation.navigate(navigationStrings.NOTIFICATIONS);
+        }
+        if (item.id === "lab") {
+          navigation.navigate(navigationStrings.LABS);
+        }
+      }}
+      icon={item.icon}
+      label={item.label}
+      badge={item.badge}
+    />
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -69,22 +93,13 @@ const Home = () => {
         </View>
 
         <View style={styles.grid}>
-          {QUICK_ACTIONS.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.tile} activeOpacity={0.85}>
-              <View style={styles.tileOuter}>
-                <View style={styles.tileInnerShadow}>
-                  <InnerShadowView width={72} height={72} borderRadius={36} color="#F7FBFF" />
-                </View>
-                {item.icon}
-                {!!item.badge && (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{item.badge}</Text>
-                  </View>
-                )}
-              </View>
-              <Text style={styles.tileLabel}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+          <FlatList
+            data={QUICK_ACTIONS}
+            keyExtractor={(item) => item.id}
+            renderItem={renderQuickAction}
+            numColumns={4}
+            scrollEnabled={false}
+          />
         </View>
       </ScrollView>
 
@@ -201,46 +216,6 @@ const styles = StyleSheet.create({
     width: "25%",
     alignItems: "center",
     marginBottom: 16,
-  },
-  tileOuter: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: COLORS.SURFACE,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#728EAB",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    marginBottom: 10,
-  },
-  tileInnerShadow: {
-    position: "absolute",
-  },
-  badge: {
-    position: "absolute",
-    right: 2,
-    top: 2,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: COLORS.CRITICAL,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badgeText: {
-    color: COLORS.WHITE,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "500",
-  },
-  tileLabel: {
-    fontSize: 12,
-    lineHeight: 14,
-    fontWeight: "500",
-    color: COLORS.TEXT_PRIMARY,
-    textAlign: "center",
   },
 });
 

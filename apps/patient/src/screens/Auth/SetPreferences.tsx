@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
@@ -33,7 +33,7 @@ const SetPreferences = () => {
   const navigation = useNavigation<any>();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [communicationChecked, setCommunicationChecked] = useState<boolean[]>(() =>
-    COMMUNICATION_LABELS.map((_, index) => index === 0),
+    Array.from({ length: COMMUNICATION_LABELS.length }, (_, index) => index === 0),
   );
   const [pharmacySheetVisible, setPharmacySheetVisible] = useState(false);
   const [pharmacyLabel, setPharmacyLabel] = useState<string | null>(null);
@@ -45,6 +45,32 @@ const SetPreferences = () => {
       return next;
     });
   };
+
+  const renderCommunicationItem = ({ item, index }: { item: string; index: number }) => (
+    <TouchableOpacity
+      activeOpacity={0.85}
+      style={styles.communicationRow}
+      onPress={() => toggleCommunication(index)}
+    >
+      {communicationChecked[index] ? (
+        <View style={[styles.communicationCheckbox, styles.communicationCheckboxChecked]}>
+          <TickIcon width={12} height={10} />
+        </View>
+      ) : (
+        <View style={styles.communicationCheckboxInnerWrap}>
+          <InnerShadowView
+            width={20}
+            height={20}
+            borderRadius={6}
+            color={COLORS.SURFACE}
+            {...LIGHT_INNER_SHADOW}
+          />
+        </View>
+      )}
+      <Text style={styles.communicationText}>{item}</Text>
+      {index < COMMUNICATION_LABELS.length - 1 ? <View style={styles.divider} /> : null}
+    </TouchableOpacity>
+  );
 
   return (
     <>
@@ -136,32 +162,12 @@ const SetPreferences = () => {
       <Text style={styles.sectionLabel}>Communication</Text>
 
       <View style={styles.communicationCard}>
-        {COMMUNICATION_LABELS.map((label, index) => (
-          <TouchableOpacity
-            key={label}
-            activeOpacity={0.85}
-            style={styles.communicationRow}
-            onPress={() => toggleCommunication(index)}
-          >
-            {communicationChecked[index] ? (
-              <View style={[styles.communicationCheckbox, styles.communicationCheckboxChecked]}>
-                <TickIcon width={12} height={10} />
-              </View>
-            ) : (
-              <View style={styles.communicationCheckboxInnerWrap}>
-                <InnerShadowView
-                  width={20}
-                  height={20}
-                  borderRadius={6}
-                  color={COLORS.SURFACE}
-                  {...LIGHT_INNER_SHADOW}
-                />
-              </View>
-            )}
-            <Text style={styles.communicationText}>{label}</Text>
-            {index < COMMUNICATION_LABELS.length - 1 ? <View style={styles.divider} /> : null}
-          </TouchableOpacity>
-        ))}
+        <FlatList
+          data={COMMUNICATION_LABELS}
+          keyExtractor={(item) => item}
+          renderItem={renderCommunicationItem}
+          scrollEnabled={false}
+        />
       </View>
 
       <View style={styles.footer}>

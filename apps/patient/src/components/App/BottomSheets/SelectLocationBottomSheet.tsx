@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BottomSheetModal as GorhomBottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import BottomSheetModal from "./BottomSheetModal";
-import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { COLORS } from "../../../constants/theme";
@@ -74,6 +74,42 @@ const SelectLocationBottomSheet = ({
     bottomSheetRef.current?.dismiss();
   };
 
+  const renderLocationItem = ({ item }: { item: (typeof LOCATIONS)[number] }) => {
+    const isSelected = selectedId === item.id;
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.listRow}
+          activeOpacity={0.85}
+          onPress={() => setSelectedId(item.id)}
+        >
+          {isSelected ? (
+            <LinearGradient
+              colors={["#14B8D4", "#0E7490"]}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
+              style={styles.radioSelected}
+            >
+              <TickIcon width={14} height={11} />
+            </LinearGradient>
+          ) : (
+            <View style={styles.radioUnselectedWrap}>
+              <InnerShadowView
+                width={30}
+                height={30}
+                borderRadius={15}
+                color={COLORS.SURFACE}
+                {...RADIO_INNER}
+              />
+            </View>
+          )}
+          <Text style={styles.locationName}>{item.name}</Text>
+        </TouchableOpacity>
+        <View style={styles.separator} />
+      </View>
+    );
+  };
+
   return (
     <BottomSheetModal
       ref={bottomSheetRef}
@@ -102,41 +138,12 @@ const SelectLocationBottomSheet = ({
           {filtered.length === 0 ? (
             <Text style={styles.emptyText}>No locations found</Text>
           ) : (
-            filtered.map((item) => {
-              const isSelected = selectedId === item.id;
-              return (
-                <View key={item.id}>
-                  <TouchableOpacity
-                    style={styles.listRow}
-                    activeOpacity={0.85}
-                    onPress={() => setSelectedId(item.id)}
-                  >
-                    {isSelected ? (
-                      <LinearGradient
-                        colors={["#14B8D4", "#0E7490"]}
-                        start={{ x: 0.5, y: 0 }}
-                        end={{ x: 0.5, y: 1 }}
-                        style={styles.radioSelected}
-                      >
-                        <TickIcon width={14} height={11} />
-                      </LinearGradient>
-                    ) : (
-                      <View style={styles.radioUnselectedWrap}>
-                        <InnerShadowView
-                          width={30}
-                          height={30}
-                          borderRadius={15}
-                          color={COLORS.SURFACE}
-                          {...RADIO_INNER}
-                        />
-                      </View>
-                    )}
-                    <Text style={styles.locationName}>{item.name}</Text>
-                  </TouchableOpacity>
-                  <View style={styles.separator} />
-                </View>
-              );
-            })
+            <FlatList
+              data={filtered}
+              keyExtractor={(item) => item.id}
+              renderItem={renderLocationItem}
+              scrollEnabled={false}
+            />
           )}
         </View>
 
