@@ -119,10 +119,6 @@ const AssignTask = () => {
     [selectedId],
   );
 
-  const goBack = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
-
 
   const renderStaff = useCallback(
     ({ item }: { item: StaffMember }) => {

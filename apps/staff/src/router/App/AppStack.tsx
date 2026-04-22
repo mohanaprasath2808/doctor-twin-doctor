@@ -7,7 +7,17 @@ import TaskCompleted from "../../screens/App/TaskInbox/TaskCompleted";
 import ShiftStart from "../../screens/App/ShiftStart";
 import TaskInbox from "../../screens/App/TaskInbox/TaskInbox";
 import BottomNavigation from "./BottomNavigation";
-import { Scheduling } from "../../screens/App/Scheduling/scheduling";
+import Cancellation from "../../screens/App/Scheduling/Cancellation";
+import FillSlot from "../../screens/App/Scheduling/FillSlot";
+import NoShowHandling from "../../screens/App/Scheduling/NoShowHandling";
+import PendingApprovals from "../../screens/App/Scheduling/PendingApprovals";
+import SchedulingAssignTask from "../../screens/App/Scheduling/SchedulingAssignTask";
+import UrgentOpening from "../../screens/App/Scheduling/UrgentOpening";
+import NotifyPatient from "../../screens/App/Scheduling/NotifyPatient";
+import Reschedule from "../../screens/App/Scheduling/Reschedule";
+import { Scheduling } from "../../screens/App/Scheduling/Scheduling";
+import Staff from "../../screens/App/Staff/Staff";
+import CreateEditStaff from "../../screens/App/Staff/CreateEditStaff";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -36,6 +46,14 @@ export type AppStackParamList = {
   EscalateTask: undefined;
   TaskCompleted: undefined;
   Scheduling: undefined;
+  SchedulingCancellation: undefined;
+  SchedulingNoShow: undefined;
+  SchedulingUrgentOpening: undefined;
+  SchedulingPendingApprovals: undefined;
+  SchedulingNotifyPatient: undefined;
+  SchedulingFillSlot: undefined;
+  SchedulingAssignTask: undefined;
+  SchedulingReschedule: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -81,6 +99,56 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.SCHEDULING}
         component={Scheduling}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_CANCELLATION}
+        component={Cancellation}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_NO_SHOW}
+        component={NoShowHandling}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_URGENT_OPENING}
+        component={UrgentOpening}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_PENDING_APPROVALS}
+        component={PendingApprovals}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_NOTIFY_PATIENT}
+        component={NotifyPatient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_FILL_SLOT}
+        component={FillSlot}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_ASSIGN_TASK}
+        component={SchedulingAssignTask}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.SCHEDULING_RESCHEDULE}
+        component={Reschedule}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF}
+        component={Staff}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_FORM}
+        component={CreateEditStaff}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
