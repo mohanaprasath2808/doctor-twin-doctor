@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, type ReactNode } from "react";
-import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { FlatList, StyleSheet, Text, useWindowDimensions } from "react-native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { CompositeNavigationProp } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
@@ -86,13 +86,17 @@ const Home = () => {
     navigation.navigate(navigationStrings.SCHEDULING);
   }, [navigation]);
 
+  const openLabs = useCallback(() => {
+    navigation.navigate(navigationStrings.LABS as never);
+  }, [navigation]);
+
   const openStaff = useCallback(() => {
     const parent = navigation.getParent();
     parent?.navigate(navigationStrings.STAFF as never);
   }, [navigation]);
 
-  const rows: TileItem[][] = [
-    [
+  const tiles = useMemo<TileItem[]>(
+    () => [
       {
         label: "Refills",
         iconGreen: <RefillsGreenIcon width={32} height={32} />,
@@ -112,7 +116,7 @@ const Home = () => {
         iconGreen: <LabGreenIcon width={32} height={32} />,
         iconRed: <LabRedIcon width={32} height={32} />,
         dataCount: "3",
-        onPress: noop,
+        onPress: openLabs,
       },
       {
         label: "Scheduling",
@@ -121,8 +125,6 @@ const Home = () => {
         dataCount: "0",
         onPress: openScheduling,
       },
-    ],
-    [
       {
         label: "Delegation",
         iconGreen: <DelegationGreenIcon width={32} height={32} />,
@@ -151,8 +153,6 @@ const Home = () => {
         dataCount: "1",
         onPress: openTaskInbox,
       },
-    ],
-    [
       {
         label: "Billing",
         iconGreen: <BillingGreenIcon width={32} height={32} />,
@@ -168,16 +168,14 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-  ];
+    [noop, openLabs, openScheduling, openTaskInbox, openStaff],
+  );
 
-  return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView
-        contentContainerStyle={[styles.scroll, { paddingBottom: Math.max(insets.bottom, 10) + 40 }]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        removeClippedSubviews={false}
-      >
+  const totalRows = Math.ceil(tiles.length / GRID_COLUMNS);
+
+  const listHeader = useMemo(
+    () => (
+      <>
         <Text style={styles.screenTitle}>Staff Command Center</Text>
 
         <ProfileAvatar
@@ -189,31 +187,46 @@ const Home = () => {
           imageStyle={styles.avatarImage}
         />
         <Text style={styles.name}>{DISPLAY_NAME}</Text>
+      </>
+    ),
+    [],
+  );
 
-        <View style={styles.grid}>
-          {rows.map((row, rowIndex) => (
-            <View
-              key={`row-${rowIndex}`}
-              style={[styles.row, rowIndex < rows.length - 1 && styles.rowSpacing]}
-            >
-              {row.map((tile, colIndex) => (
-                <NeumorphicQuickActionTile
-                  key={tile.label}
-                  onPress={tile.onPress ?? noop}
-                  icon={hasPositiveBadgeCount(tile.dataCount) ? tile.iconRed : tile.iconGreen}
-                  label={tile.label}
-                  badge={tile.dataCount}
-                  containerStyle={[
-                    styles.tileContainer,
-                    { width: tileWidth },
-                    colIndex < row.length - 1 && styles.tileSpacingRight,
-                  ]}
-                />
-              ))}
-            </View>
-          ))}
-        </View>
-      </ScrollView>
+  const renderTile = useCallback(
+    ({ item, index }: { item: TileItem; index: number }) => {
+      const rowIndex = Math.floor(index / GRID_COLUMNS);
+      return (
+        <NeumorphicQuickActionTile
+          onPress={item.onPress ?? noop}
+          icon={hasPositiveBadgeCount(item.dataCount) ? item.iconRed : item.iconGreen}
+          label={item.label}
+          badge={item.dataCount}
+          containerStyle={[
+            styles.tileContainer,
+            { width: tileWidth },
+            index % GRID_COLUMNS !== GRID_COLUMNS - 1 && styles.tileSpacingRight,
+            rowIndex < totalRows - 1 && styles.rowSpacing,
+          ]}
+        />
+      );
+    },
+    [noop, tileWidth, totalRows],
+  );
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      <FlatList
+        data={tiles}
+        numColumns={GRID_COLUMNS}
+        keyExtractor={(item) => item.label}
+        renderItem={renderTile}
+        ListHeaderComponent={listHeader}
+        contentContainerStyle={[styles.scroll, { paddingBottom: Math.max(insets.bottom, 10) + 40 }]}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        removeClippedSubviews={false}
+        columnWrapperStyle={styles.row}
+      />
     </SafeAreaView>
   );
 };
@@ -263,9 +276,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.TEXT_80,
     textAlign: "center",
-  },
-  grid: {
-    width: "100%",
   },
   tileContainer: {
     marginBottom: 0,

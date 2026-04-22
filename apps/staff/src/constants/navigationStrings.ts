@@ -27,6 +27,12 @@ const navigationStrings = {
   SCHEDULING_FILL_SLOT: "SchedulingFillSlot",
   SCHEDULING_ASSIGN_TASK: "SchedulingAssignTask",
   SCHEDULING_RESCHEDULE: "SchedulingReschedule",
+  LABS: "Labs",
+  LABS_ASSIGN_NURSE: "LabsAssignNurse",
+  LABS_ESCALATE_MESSAGE: "LabsEscalateMessage",
+  LABS_NOTIFY_PATIENT: "LabsNotifyPatient",
+  LABS_SCHEDULE_VISIT: "LabsScheduleVisit",
+  LABS_ACTION_COMPLETED: "LabsActionCompleted",
 } as const;
 
 export default navigationStrings;

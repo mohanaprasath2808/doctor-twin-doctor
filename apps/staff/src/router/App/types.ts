@@ -1,6 +1,23 @@
 import type { StaffMember } from "../../screens/App/Staff/staffTypes";
 import navigationStrings from "../../constants/navigationStrings";
 
+export type PatientTaskAvatarKey = "ganesh" | "default";
+
+export type PatientTaskDetailParams = {
+  patientName: string;
+  age: number;
+  taskStatus: string;
+  taskDetailLine: string;
+  dueBadgeText: string;
+  avatar: PatientTaskAvatarKey;
+  insightMessage1?: string;
+  insightMessage2?: string;
+};
+
+export type AssignTaskParams = {
+  patientName?: string;
+};
+
 export type StaffFormParams = {
   isEdit?: boolean;
   initial?: StaffMember;

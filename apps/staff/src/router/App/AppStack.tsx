@@ -18,6 +18,12 @@ import Reschedule from "../../screens/App/Scheduling/Reschedule";
 import { Scheduling } from "../../screens/App/Scheduling/Scheduling";
 import Staff from "../../screens/App/Staff/Staff";
 import CreateEditStaff from "../../screens/App/Staff/CreateEditStaff";
+import Labs from "../../screens/App/Labs/Labs";
+import AssignNurse from "../../screens/App/Labs/AssignNurse";
+import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
+import LabsNotifyPatient from "../../screens/App/Labs/NotifyPatient";
+import ScheduleVisit from "../../screens/App/Labs/ScheduleVisit";
+import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -34,6 +40,12 @@ export type PatientTaskDetailParams = {
 
 export type AssignTaskParams = {
   patientName?: string;
+};
+
+export type LabsActionCompletedParams = {
+  title?: string;
+  description?: string;
+  buttonText?: string;
 };
 
 /** Must match `navigationStrings` + screen `name` props below. */
@@ -54,6 +66,14 @@ export type AppStackParamList = {
   SchedulingFillSlot: undefined;
   SchedulingAssignTask: undefined;
   SchedulingReschedule: undefined;
+  Labs: undefined;
+  LabsAssignNurse: undefined;
+  LabsEscalateMessage: undefined;
+  LabsNotifyPatient: undefined;
+  LabsScheduleVisit: undefined;
+  LabsActionCompleted: LabsActionCompletedParams | undefined;
+  Staff: undefined;
+  StaffForm: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -139,6 +159,36 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.SCHEDULING_RESCHEDULE}
         component={Reschedule}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS}
+        component={Labs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_ASSIGN_NURSE}
+        component={AssignNurse}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_ESCALATE_MESSAGE}
+        component={EscalateMessage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_NOTIFY_PATIENT}
+        component={LabsNotifyPatient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_SCHEDULE_VISIT}
+        component={ScheduleVisit}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_ACTION_COMPLETED}
+        component={ActionCompleted}
         options={{ headerShown: false }}
       />
       <Stack.Screen

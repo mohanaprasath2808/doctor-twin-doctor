@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
@@ -17,12 +17,12 @@ import InnerShadowIcon from "../../../components/neomorphism/InnerShadowIcon";
 import InnerShadowPill from "../../../components/neomorphism/InnerShadowPill";
 import NeumorphicCard from "../../../components/neomorphism/NeumorphicCard";
 import NeumorphicQuickActionTile from "../../../components/neomorphism/NeumorphicQuickActionTile";
-import ProfileAvatar from "../../../components/neomorphism/ProfileAvatar";
 import ReusableButton from "../../../components/neomorphism/ReusableButton";
 import { getInitials } from "../../../constants/constant";
 import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
+import OrbitCluster, { OrbitClusterNode } from "../Labs/components/OrbitCluster";
 
 /* ─────────────────────────────────────────────
    Figma source dimensions (px)
@@ -30,8 +30,6 @@ import type { AppStackParamList } from "../../../router/App/AppStack";
    Orbit top    : y = 90  (after header)
    Orbit height : 410     (y=90 → y=500)
    ───────────────────────────────────────────── */
-const FW = 414;
-const FOH = 410;
 const HEADER_H = 52;
 
 const BG = COLORS.INNER_SURFACE;
@@ -44,10 +42,7 @@ type QuickActionSlot = {
   label: string;
   badge?: string;
   iconKey: QuickIconKey;
-  figmaLeft: number;
-  figmaTop: number;
-  figmaWrapW: number;
-};
+} & OrbitClusterNode;
 
 const QUICK_ACTIONS: QuickActionSlot[] = [
   {
@@ -90,8 +85,6 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
 
 const SCHEDULE_PATIENT_NAME = "Brian Carter";
 
-const RING_DIAMS = [298, 276, 254, 232, 210, 187, 165];
-
 function quickActionIcon(key: QuickIconKey, size: number) {
   switch (key) {
     case "cancellation":
@@ -107,150 +100,36 @@ function quickActionIcon(key: QuickIconKey, size: number) {
   }
 }
 
-function OrbitSection({
-  orbitH,
-  sw,
-  onNodePress,
-}: {
-  orbitH: number;
-  sw: number;
-  onNodePress: (slot: QuickActionSlot) => void;
-}) {
-  const sx = sw / FW;
-  const sy = orbitH / FOH;
-
-  const ringCx = sw / 2;
-  const ringCy = Math.round(170 * sy);
-
-  const docSize = Math.round(170 * sx);
-  const docLeft = Math.round(122 * sx);
-  const docTop = Math.round(68 * sy);
-  const btnSize = Math.round(80 * sx);
-
-  return (
-    <View style={{ height: orbitH, position: "relative", overflow: "hidden" }}>
-      {RING_DIAMS.map((d, i) => {
-        const sd = Math.round(d * sx);
-        return (
-          <View
-            key={i}
-            pointerEvents="none"
-            style={{
-              position: "absolute",
-              width: sd,
-              height: sd,
-              borderRadius: sd / 2,
-              borderWidth: 1,
-              borderColor: "#C8DCF0",
-              opacity: 0.25 + i * 0.08,
-              left: ringCx - sd / 2,
-              top: ringCy - sd / 2,
-            }}
-          />
-        );
-      })}
-
-      <DrTwinCard docSize={docSize} docLeft={docLeft} docTop={docTop} sx={sx} />
-
-      {QUICK_ACTIONS.map((slot) => (
-        <SchedulingQuickActionNode
-          key={slot.id}
-          slot={slot}
-          sx={sx}
-          sy={sy}
-          btnSize={btnSize}
-          onPress={() => onNodePress(slot)}
-        />
-      ))}
-    </View>
-  );
-}
-
-function DrTwinCard({
-  docSize,
-  docLeft,
-  docTop,
-  sx,
-}: {
-  docSize: number;
-  docLeft: number;
-  docTop: number;
-  sx: number;
-}) {
-  const imgSize = Math.round(docSize * 0.62);
-  const overlayRadius = Math.round(docSize / 2);
-
-  return (
-    <View
-      style={{
-        position: "absolute",
-        left: docLeft,
-        top: docTop,
-        width: docSize,
-        alignItems: "center",
-      }}
-    >
-      <ProfileAvatar
-        overlaySource={OverlayImage}
-        imageSource={DoctorTempImage}
-        containerStyle={{ alignItems: "center" }}
-        wrapperStyle={{ width: docSize, height: docSize }}
-        overlayStyle={{
-          width: "100%",
-          height: "100%",
-          resizeMode: "contain",
-          position: "absolute",
-          borderRadius: overlayRadius,
-        }}
-        imageStyle={{
-          width: imgSize,
-          height: imgSize,
-          borderRadius: imgSize / 2,
-          resizeMode: "cover",
-        }}
-      />
-      <Text style={[styles.drTwinLabel, { fontSize: Math.max(11, Math.round(12 * sx)) }]}>Dr.Twin</Text>
-    </View>
-  );
-}
-
 function SchedulingQuickActionNode({
   slot,
   sx,
-  sy,
   btnSize,
   onPress,
 }: {
   slot: QuickActionSlot;
   sx: number;
-  sy: number;
   btnSize: number;
   onPress: () => void;
 }) {
-  const wrapW = Math.round(slot.figmaWrapW * sx);
-  const left = Math.round(slot.figmaLeft * sx);
-  const top = Math.round(slot.figmaTop * sy);
   const iconSize = Math.round(28 * sx);
   const innerD = Math.round(btnSize * 0.82);
 
   return (
-    <View style={{ position: "absolute", left, top, width: wrapW, alignItems: "center" }}>
-      <NeumorphicQuickActionTile
-        onPress={onPress}
-        icon={quickActionIcon(slot.iconKey, iconSize)}
-        label={slot.label}
-        badge={slot.badge}
-        outerDiameter={btnSize}
-        innerShadowDiameter={innerD}
-        innerShadowBorderRadius={Math.round(innerD / 2)}
-        containerStyle={styles.quickTileContainer}
-        badgeTextStyle={{
-          fontSize: Math.round(9 * sx),
-          fontWeight: "700",
-          lineHeight: Math.round(11 * sx),
-        }}
-      />
-    </View>
+    <NeumorphicQuickActionTile
+      onPress={onPress}
+      icon={quickActionIcon(slot.iconKey, iconSize)}
+      label={slot.label}
+      badge={slot.badge}
+      outerDiameter={btnSize}
+      innerShadowDiameter={innerD}
+      innerShadowBorderRadius={Math.round(innerD / 2)}
+      containerStyle={styles.quickTileContainer}
+      badgeTextStyle={{
+        fontSize: Math.round(9 * sx),
+        fontWeight: "700",
+        lineHeight: Math.round(11 * sx),
+      }}
+    />
   );
 }
 
@@ -460,64 +339,84 @@ export function Scheduling() {
   const insets = useSafeAreaInsets();
 
   const availH = sh - insets.top - insets.bottom - HEADER_H;
-  const orbitH = Math.round(availH * 0.44);
+  const orbitH = Math.round(availH * 0.54);
+  const bottomPad = Math.max(insets.bottom, 12) + 8;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: BG }} edges={["top", "left", "right", "bottom"]}>
-      <View style={[scrSt.header, { minHeight: HEADER_H }]}>
-        <IconComponent
-          icon={<BackArrowIcon width={18} height={18} />}
-          width={40}
-          height={40}
-          radius={20}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={scrSt.headerTitle}>Scheduling</Text>
-        <View style={scrSt.headerBellWrap}>
+      <ScrollView
+        style={scrSt.scroll}
+        contentContainerStyle={[scrSt.content, { paddingBottom: bottomPad }]}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={[scrSt.header, { minHeight: HEADER_H }]}>
           <IconComponent
-            icon={<MaterialCommunityIcons name="bell-outline" size={20} color={COLORS.TEXT_DARK} />}
+            icon={<BackArrowIcon width={18} height={18} />}
             width={40}
             height={40}
             radius={20}
-            onPress={() => { }}
+            onPress={() => navigation.goBack()}
           />
-          <View style={scrSt.bellDot} />
+          <Text style={scrSt.headerTitle}>Scheduling</Text>
+          <View style={scrSt.headerBellWrap}>
+            <IconComponent
+              icon={<MaterialCommunityIcons name="bell-outline" size={20} color={COLORS.TEXT_DARK} />}
+              width={40}
+              height={40}
+              radius={20}
+              onPress={() => { }}
+            />
+            <View style={scrSt.bellDot} />
+          </View>
         </View>
-      </View>
 
-      <OrbitSection
-        orbitH={orbitH}
-        sw={sw}
-        onNodePress={(slot) => {
-          if (slot.iconKey === "cancellation") {
-            navigation.navigate(navigationStrings.SCHEDULING_CANCELLATION);
-            return;
-          }
-          if (slot.iconKey === "noShows") {
-            navigation.navigate(navigationStrings.SCHEDULING_NO_SHOW);
-            return;
-          }
-          if (slot.iconKey === "urgent") {
-            navigation.navigate(navigationStrings.SCHEDULING_URGENT_OPENING);
-            return;
-          }
-          if (slot.iconKey === "pending") {
-            navigation.navigate(navigationStrings.SCHEDULING_PENDING_APPROVALS);
-            return;
-          }
-          setShowDetail(true);
-        }}
-      />
-
-      {showDetail ? (
-        <PatientDetailCard
-          onClose={() => setShowDetail(false)}
-          onFillSlot={() => navigation.navigate(navigationStrings.SCHEDULING_FILL_SLOT)}
-          onNotifyPatient={() => navigation.navigate(navigationStrings.SCHEDULING_NOTIFY_PATIENT)}
-          onAssign={() => navigation.navigate(navigationStrings.SCHEDULING_ASSIGN_TASK)}
-          onReschedule={() => navigation.navigate(navigationStrings.SCHEDULING_RESCHEDULE)}
+        <OrbitCluster
+          orbitH={orbitH}
+          sw={sw}
+          nodes={QUICK_ACTIONS}
+          centerLabel="Dr.Twin"
+          centerImageSource={DoctorTempImage}
+          centerOverlaySource={OverlayImage}
+          centerLabelStyle={styles.drTwinLabel}
+          renderNode={({ node, sx, btnSize }) => (
+            <SchedulingQuickActionNode
+              slot={node}
+              sx={sx}
+              btnSize={btnSize}
+              onPress={() => {
+                if (node.iconKey === "cancellation") {
+                  navigation.navigate(navigationStrings.SCHEDULING_CANCELLATION);
+                  return;
+                }
+                if (node.iconKey === "noShows") {
+                  navigation.navigate(navigationStrings.SCHEDULING_NO_SHOW);
+                  return;
+                }
+                if (node.iconKey === "urgent") {
+                  navigation.navigate(navigationStrings.SCHEDULING_URGENT_OPENING);
+                  return;
+                }
+                if (node.iconKey === "pending") {
+                  navigation.navigate(navigationStrings.SCHEDULING_PENDING_APPROVALS);
+                  return;
+                }
+                setShowDetail(true);
+              }}
+            />
+          )}
         />
-      ) : null}
+
+        {showDetail ? (
+          <PatientDetailCard
+            onClose={() => setShowDetail(false)}
+            onFillSlot={() => navigation.navigate(navigationStrings.SCHEDULING_FILL_SLOT)}
+            onNotifyPatient={() => navigation.navigate(navigationStrings.SCHEDULING_NOTIFY_PATIENT)}
+            onAssign={() => navigation.navigate(navigationStrings.SCHEDULING_ASSIGN_TASK)}
+            onReschedule={() => navigation.navigate(navigationStrings.SCHEDULING_RESCHEDULE)}
+          />
+        ) : null}
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -536,6 +435,8 @@ const styles = StyleSheet.create({
 });
 
 const scrSt = StyleSheet.create({
+  scroll: { flex: 1 },
+  content: { paddingBottom: 8 },
   header: {
     flexDirection: "row",
     alignItems: "center",

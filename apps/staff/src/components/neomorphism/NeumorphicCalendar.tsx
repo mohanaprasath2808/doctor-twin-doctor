@@ -70,11 +70,16 @@ type NeumorphicCalendarProps = {
     onDateChange?: (date: Date) => void;
 };
 
+const getRegionToday = () => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+};
+
 export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCalendarProps) {
-    const today = initialDate ?? new Date();
-    const [visibleYear, setVisibleYear] = useState(today.getFullYear());
-    const [visibleMonth, setVisibleMonth] = useState(today.getMonth());
-    const [selectedDate, setSelectedDate] = useState(today);
+    const resolvedInitialDate = initialDate ?? getRegionToday();
+    const [visibleYear, setVisibleYear] = useState(() => resolvedInitialDate.getFullYear());
+    const [visibleMonth, setVisibleMonth] = useState(() => resolvedInitialDate.getMonth());
+    const [selectedDate, setSelectedDate] = useState(() => resolvedInitialDate);
     const [showDatePicker, setShowDatePicker] = useState(false);
 
     const grid = useMemo(() => buildGrid(visibleYear, visibleMonth), [visibleYear, visibleMonth]);
@@ -171,7 +176,7 @@ export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCale
                             <View key={`${cell.day}-${idx}`} style={styles.gridCellWrap}>
                                 <Pressable onPress={() => selectDay(cell)} style={styles.cellPress}>
                                     <NeumorphicCard
-                                        borderRadius={11}
+                                        borderRadius={10}
                                         backgroundColor={
                                             isSelected
                                                 ? COLORS.PRIMARY
@@ -179,20 +184,20 @@ export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCale
                                                     ? COLORS.INNER_SURFACE
                                                     : "#E6E8EC"
                                         }
-                                        outerStyle={isSelected ? styles.selectedDayOuter : styles.dayOuter}
+                                        outerStyle={styles.selectedDayOuter}
                                         innerStyle={styles.dayInner}
                                     >
                                         <Text
                                             style={[
-                                                // styles.dayText,
-                                                // isSelected
-                                                //     ? styles.dayTextSelected
-                                                //     : cell.isCurrentMonth
-                                                //         ? styles.dayTextCurrent
-                                                //         : styles.dayTextDimmed,
+                                                styles.dayText,
+                                                isSelected
+                                                    ? styles.dayTextSelected
+                                                    : cell.isCurrentMonth
+                                                        ? styles.dayTextCurrent
+                                                        : styles.dayTextDimmed,
                                             ]}
                                         >
-                                            {cell.day}llll
+                                            {cell.day}
                                         </Text>
                                     </NeumorphicCard>
                                 </Pressable>
@@ -274,8 +279,8 @@ const styles = StyleSheet.create({
     },
     gridCellWrap: {
         width: `${100 / 7}%`,
-        height: 52,
-        padding: 2,
+        height: 46,
+        marginTop: -2,
     },
     cellPress: {
         flex: 1,
@@ -287,14 +292,10 @@ const styles = StyleSheet.create({
     selectedDayOuter: {
         width: "100%",
         height: "100%",
-        shadowColor: "#5FE1A6",
-        shadowOpacity: 0.62,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: 8,
     },
     dayInner: {
-        flex: 1,
+        width: "100%",
+        height: "100%",
         alignItems: "center",
         justifyContent: "center",
     },
