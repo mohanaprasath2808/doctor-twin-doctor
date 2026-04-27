@@ -11,6 +11,8 @@ const navigationStrings = {
   ACCEPT_CONSENT: "AcceptConsent",
   SET_PREFERENCES: "SetPreferences",
   SYNC: "Sync",
+  /** Root tab host (Home · Message · Med Refills · More) */
+  BOTTOM_NAVIGATION: "BottomNavigation",
   HOME: "Home",
   APPOINTMENTS: "Appointments",
   SCHEDULE_STEP_1: "ScheduleStep1",
@@ -20,6 +22,10 @@ const navigationStrings = {
   LAB_REQUEST: "LabRequest",
   LAB_RESULTS: "LabResults",
   LAB_RESULT_DETAIL: "LabResultDetail",
+  /** More tab — profile, support, and app settings */
+  SETTINGS: "Settings",
+  MY_PROFILE: "MyProfile",
+  MED_REFILLS: "MedRefills",
 };
 
 export default navigationStrings;

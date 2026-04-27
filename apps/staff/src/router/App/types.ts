@@ -1,10 +1,11 @@
-import type { StaffMember } from "../../screens/App/Staff/staffTypes";
 import navigationStrings from "../../constants/navigationStrings";
+import type {
+  AssignTaskParams,
+  PatientTaskDetailParams,
+  StaffFormParams,
+} from "./AppStack";
 
-export type StaffFormParams = {
-  isEdit?: boolean;
-  initial?: StaffMember;
-};
+export type { StaffFormParams };
 
 export type AppStackParamList = {
   [navigationStrings.SHIFT_START]: undefined;

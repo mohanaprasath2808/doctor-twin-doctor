@@ -12,7 +12,9 @@ import { COLORS } from "../../constants/theme";
 
 type NeumorphicCardProps = {
   children: React.ReactNode;
+  /** Outer wrapper style (width, margin, etc.) */
   outerStyle?: StyleProp<ViewStyle>;
+  /** Inner surface style (padding, flexDirection, etc.) */
   innerStyle?: StyleProp<ViewStyle>;
   borderRadius?: number;
   backgroundColor?: string;
@@ -25,7 +27,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
   outerStyle,
   innerStyle,
   borderRadius = 14,
-  backgroundColor = COLORS.SURFACE,
+  backgroundColor = COLORS.INNER_SURFACE,
   onPress,
   activeOpacity = 0.85,
 }) => {
@@ -75,7 +77,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
           style={StyleSheet.absoluteFillObject}
         />
         <Surface
-          {...(surfaceProps as object)}
+          {...(surfaceProps as any)}
           style={[
             styles.inner,
             { borderRadius: innerRadius, backgroundColor },

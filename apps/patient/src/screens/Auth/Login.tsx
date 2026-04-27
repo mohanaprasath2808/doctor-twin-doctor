@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,10 +25,17 @@ import ReusableButton from "../../neomorphism/ReusableButton";
 import InnerShadowView from "../../neomorphism/InnerShadowView";
 import navigationStrings from "../../constants/navigationStrings";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
   const navigation = useNavigation<any>();
   const [secure, setSecure] = useState(true);
+
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("Login must be used within AuthContextProvider");
+  }
+  const { setIsLogin } = authContext;
 
   //Forgot Password Handler
   // const handleForgotPassword = () => {
@@ -36,9 +43,10 @@ const Login = () => {
   // };
 
   //Login Button Handler
-  // const handleLogin = () => {
-  //   navigation.navigate(navigationStrings.OTP_VERIFICATION);
-  // };
+  const handleLogin = () => {
+    // navigation.navigate(navigationStrings.OTP_VERIFICATION);
+    setIsLogin(true);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -78,7 +86,11 @@ const Login = () => {
                 secureTextEntry={secure}
                 leftIcon={<PasswordIcon width={18} height={18} />}
                 rightIcon={
-                  secure ? <UnhideIcon width={18} height={18} /> : <HideIcon width={18} height={18} />
+                  secure ? (
+                    <UnhideIcon width={18} height={18} />
+                  ) : (
+                    <HideIcon width={18} height={18} />
+                  )
                 }
                 onRightIconPress={() => setSecure(!secure)}
               />
@@ -95,7 +107,7 @@ const Login = () => {
               <View style={styles.loginBtnContainer}>
                 <ReusableButton
                   title="Login"
-                  // onPress={handleLogin}
+                  onPress={handleLogin}
                   containerStyle={styles.loginBtn}
                   backgroundColor={COLORS.PRIMARY}
                   textColor="#FFFFFF"
@@ -118,7 +130,11 @@ const Login = () => {
                   <Text style={styles.chevron}>›</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.SET_USER_PIN)} style={styles.authOption} activeOpacity={0.85}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(navigationStrings.SET_USER_PIN)}
+                  style={styles.authOption}
+                  activeOpacity={0.85}
+                >
                   <View style={styles.optionLeft}>
                     <View style={styles.iconShell}>
                       <View style={styles.iconInnerShadow}>

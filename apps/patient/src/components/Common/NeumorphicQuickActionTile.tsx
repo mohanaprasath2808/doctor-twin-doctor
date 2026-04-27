@@ -21,7 +21,10 @@ export type NeumorphicQuickActionTileProps = {
   label: string;
   /** Second line (e.g. “Overdue Labs”) — smaller, muted. */
   subtitle?: string;
-  /** Numeric or short badge (e.g. unread count) */
+  /**
+   * Count / badge text. Rendered only when the value parses as an integer **> 0**
+   * (e.g. `"3"`, `"99+"` → shown; `"0"`, empty, non-numeric → hidden).
+   */
   badge?: string;
   /** Custom overlay at top-right of the circle (e.g. premium crown) */
   topRightAccessory?: ReactNode;
@@ -36,9 +39,61 @@ export type NeumorphicQuickActionTileProps = {
   /** Outer container width (e.g. `"25%"` for grid columns) */
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
+  /** `borderWidth` sets the gradient ring thickness on the badge and on the inner `InnerShadowView` when alert. */
   badgeStyle?: StyleProp<ViewStyle>;
   badgeTextStyle?: StyleProp<TextStyle>;
 };
+
+/** Same border math as `StatusDot`: inner diameter + 2×borderWidth = outer; `padding` on `LinearGradient` = ring thickness. */
+const BADGE_BORDER_WIDTH = 1;
+const BADGE_INNER_DIAMETER = 20;
+const BADGE_INNER_RADIUS = BADGE_INNER_DIAMETER / 2;
+
+/** Badge UI only when `badge` parses to an integer count greater than zero. */
+function resolveBadgeLabel(badge: string | undefined): string | undefined {
+  if (badge == null || badge.trim() === "") return undefined;
+  const n = parseInt(badge, 10);
+  if (Number.isNaN(n) || n <= 0) return undefined;
+  return badge;
+}
+
+function parseBadgeCount(badge: string | undefined): number | undefined {
+  if (badge == null || badge.trim() === "") return undefined;
+  const n = parseInt(badge, 10);
+  return Number.isNaN(n) ? undefined : n;
+}
+
+/** Ring stroke for badge gradient + inner `InnerShadowView` gradient (padding); default matches badge. */
+function resolveRingBorderWidth(badgeStyle: StyleProp<ViewStyle> | undefined): number {
+  const flat = StyleSheet.flatten(badgeStyle) as ViewStyle | undefined;
+  if (flat != null && typeof flat.borderWidth === "number" && flat.borderWidth >= 0) {
+    return flat.borderWidth;
+  }
+  return BADGE_BORDER_WIDTH;
+}
+
+function omitBorderWidth(style: StyleProp<ViewStyle> | undefined): ViewStyle | undefined {
+  const flat = StyleSheet.flatten(style) as ViewStyle | undefined;
+  if (flat == null) return undefined;
+  const { borderWidth: _b, ...rest } = flat;
+  return rest;
+}
+
+/** Inner recessed face when `dataCount` / `badge` parses to a count > 0 (Figma). */
+const ALERT_INNER_FACE = "#FDECEC";
+const ALERT_INNER_SHADOW_DARK = "#F2CACA";
+const ALERT_INNER_SHADOW_LIGHT = "#FFFFFF99";
+
+/** Raised rim + inner well: gradient exists only in the stroke (`padding` ring); center is solid. */
+const TILE_BORDER_WIDTH = 1;
+const TILE_FACE_GRADIENT = ["#D6E3F3", "#FFFFFF"] as const;
+
+/** `#D6E3F3` at `start`, `#FFFFFF` at `end` — white sits top-right (diagonal from bottom-left). */
+const TILE_OUTER_GRADIENT_START = { x: 0, y: 1 };
+const TILE_OUTER_GRADIENT_END = { x: 1, y: 0 };
+/** Inner ring + badge: same diagonal. */
+const INNER_RING_GRADIENT_START = { x: 0, y: 1 };
+const INNER_RING_GRADIENT_END = { x: 1, y: 0 };
 
 const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
   onPress,
@@ -48,7 +103,7 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
   badge,
   topRightAccessory,
   activeOpacity = 0.85,
-  innerShadowColor = COLORS.SURFACE,
+  innerShadowColor = COLORS.INNER_SURFACE,
   outerDiameter = 88,
   innerShadowDiameter = 72,
   innerShadowBorderRadius,
@@ -59,7 +114,30 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
 }) => {
   const outerRadius = outerDiameter / 2;
   const innerRadius = innerShadowBorderRadius ?? Math.max(0, innerShadowDiameter / 2);
-  const innerFaceRadius = Math.max(0, outerRadius - 1);
+  const innerFaceRadius = Math.max(0, outerRadius - TILE_BORDER_WIDTH);
+  const badgeLabel = resolveBadgeLabel(badge);
+  const badgeCount = parseBadgeCount(badge);
+  const isHighAlert = badgeCount != null && badgeCount > 0;
+
+  const ringBorderWidth = resolveRingBorderWidth(badgeStyle);
+  const badgeOuterSize = BADGE_INNER_DIAMETER + 2 * ringBorderWidth;
+  const badgeOuterRadius = badgeOuterSize / 2;
+
+  const innerShadowRingOuterSize = innerShadowDiameter + 2 * ringBorderWidth;
+  const innerShadowRingOuterRadius = innerShadowRingOuterSize / 2;
+
+  const alertInnerShadowExtra = isHighAlert
+    ? {
+        darkShadowDx: 4,
+        darkShadowDy: 4,
+        darkShadowBlur: 14,
+        darkShadowColor: ALERT_INNER_SHADOW_DARK,
+        lightShadowDx: -4,
+        lightShadowDy: -4,
+        lightShadowBlur: 9,
+        lightShadowColor: ALERT_INNER_SHADOW_LIGHT,
+      }
+    : {};
 
   return (
     <TouchableOpacity
@@ -92,10 +170,13 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
 
         <View style={[styles.faceStack, { borderRadius: outerRadius }]}>
           <LinearGradient
-            colors={["#D6E3F3", "#FFFFFF"]}
-            start={{ x: 1, y: 1 }}
-            end={{ x: 0, y: 0 }}
-            style={[styles.border, { borderRadius: outerRadius }]}
+            colors={[...TILE_FACE_GRADIENT]}
+            start={TILE_OUTER_GRADIENT_START}
+            end={TILE_OUTER_GRADIENT_END}
+            style={[
+              styles.tileOuterBorderRing,
+              { borderRadius: outerRadius, padding: TILE_BORDER_WIDTH },
+            ]}
           >
             <View
               style={[
@@ -106,12 +187,48 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
               ]}
             >
               <View style={styles.innerShadowSlot} pointerEvents="none">
-                <InnerShadowView
-                  width={innerShadowDiameter}
-                  height={innerShadowDiameter}
-                  borderRadius={innerRadius}
-                  color={innerShadowColor}
-                />
+                {isHighAlert ? (
+                  <LinearGradient
+                    colors={[...TILE_FACE_GRADIENT]}
+                    start={INNER_RING_GRADIENT_START}
+                    end={INNER_RING_GRADIENT_END}
+                    style={[
+                      styles.innerShadowBorderRing,
+                      {
+                        width: innerShadowRingOuterSize,
+                        height: innerShadowRingOuterSize,
+                        borderRadius: innerShadowRingOuterRadius,
+                        padding: ringBorderWidth,
+                      },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.innerShadowClip,
+                        {
+                          width: innerShadowDiameter,
+                          height: innerShadowDiameter,
+                          borderRadius: innerRadius,
+                        },
+                      ]}
+                    >
+                      <InnerShadowView
+                        width={innerShadowDiameter}
+                        height={innerShadowDiameter}
+                        borderRadius={innerRadius}
+                        color={ALERT_INNER_FACE}
+                        {...alertInnerShadowExtra}
+                      />
+                    </View>
+                  </LinearGradient>
+                ) : (
+                  <InnerShadowView
+                    width={innerShadowDiameter}
+                    height={innerShadowDiameter}
+                    borderRadius={innerRadius}
+                    color={innerShadowColor}
+                  />
+                )}
               </View>
               <View style={styles.iconLayer} pointerEvents="none">
                 {icon}
@@ -121,9 +238,68 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
         </View>
 
         {topRightAccessory ? <View style={styles.accessorySlot}>{topRightAccessory}</View> : null}
-        {badge ? (
-          <View style={[styles.badge, badgeStyle]}>
-            <Text style={[styles.badgeText, badgeTextStyle]}>{badge}</Text>
+        {badgeLabel != null ? (
+          <View
+            style={[
+              styles.badgeOuter,
+              {
+                width: badgeOuterSize,
+                height: badgeOuterSize,
+                borderRadius: badgeOuterRadius,
+              },
+              omitBorderWidth(badgeStyle),
+            ]}
+          >
+            <View
+              pointerEvents="none"
+              style={[
+                styles.badgeShadowLayer,
+                styles.badgeShadowDark,
+                { borderRadius: badgeOuterRadius },
+              ]}
+            />
+            <View
+              pointerEvents="none"
+              style={[
+                styles.badgeShadowLayer,
+                styles.badgeShadowLight,
+                { borderRadius: badgeOuterRadius },
+              ]}
+            />
+            <View
+              pointerEvents="none"
+              style={[
+                styles.badgeShadowLayer,
+                styles.badgeShadowSoft,
+                { borderRadius: badgeOuterRadius },
+              ]}
+            />
+            <LinearGradient
+              colors={[...TILE_FACE_GRADIENT]}
+              start={INNER_RING_GRADIENT_START}
+              end={INNER_RING_GRADIENT_END}
+              style={[
+                styles.badgeGradientBorder,
+                {
+                  borderRadius: badgeOuterRadius,
+                  padding: ringBorderWidth,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.badgeInner,
+                  {
+                    width: BADGE_INNER_DIAMETER,
+                    height: BADGE_INNER_DIAMETER,
+                    borderRadius: BADGE_INNER_RADIUS,
+                    backgroundColor: COLORS.ALERT,
+                  },
+                ]}
+              >
+                <Text style={[styles.badgeText, badgeTextStyle]}>{badgeLabel}</Text>
+              </View>
+            </LinearGradient>
           </View>
         ) : null}
       </View>
@@ -210,15 +386,23 @@ const styles = StyleSheet.create({
     height: "100%",
     zIndex: 1,
   },
-  border: {
+  /** Gradient paints only the ring; `padding` = stroke thickness. */
+  tileOuterBorderRing: {
     flex: 1,
     width: "100%",
     height: "100%",
-    padding: 1,
+  },
+  /** Inner well: same idea — only the 1px ring is gradient; `InnerShadowView` is the solid fill. */
+  innerShadowBorderRing: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  innerShadowClip: {
+    overflow: "hidden",
   },
   surface: {
     flex: 1,
-    backgroundColor: COLORS.SURFACE,
+    backgroundColor: COLORS.INNER_SURFACE,
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
@@ -239,24 +423,65 @@ const styles = StyleSheet.create({
     top: -2,
     zIndex: 4,
   },
-  badge: {
+  /** Matches `StatusDot` outer shell (shadows + gradient ring + inner face). */
+  badgeOuter: {
     position: "absolute",
     right: 2,
-    top: 1,
-    width: 26,
-    height: 26,
-    paddingHorizontal: 4,
-    borderRadius: 13,
-    backgroundColor: COLORS.CRITICAL,
-    alignItems: "center",
+    top: 0,
     justifyContent: "center",
+    alignItems: "center",
+    overflow: "visible",
+    backgroundColor: "transparent",
     zIndex: 3,
+  },
+  badgeShadowLayer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: COLORS.INNER_SURFACE,
+  },
+  badgeShadowDark: {
+    ...Platform.select({
+      ios: {
+        shadowColor: "#C8CBCC",
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+      },
+      android: { elevation: 4 },
+    }),
+  },
+  badgeShadowLight: {
+    ...Platform.select({
+      ios: {
+        shadowColor: "#FFFFFF",
+        shadowOffset: { width: -2, height: -2 },
+        shadowOpacity: 1,
+        shadowRadius: 8,
+      },
+    }),
+  },
+  badgeShadowSoft: {
+    ...Platform.select({
+      ios: {
+        shadowColor: "#728EAB",
+        shadowOffset: { width: 0.5, height: 0.5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+    }),
+  },
+  badgeGradientBorder: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  badgeInner: {
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
   badgeText: {
     color: COLORS.WHITE,
-    fontSize: 14,
-    lineHeight: 16,
-    fontWeight: "500",
+    fontSize: 13,
+    fontWeight: "400",
   },
   tileLabel: {
     fontSize: 12,
@@ -281,7 +506,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 13,
     fontWeight: "500",
-    color: COLORS.TEXT_PRIMARY_70,
+    color: COLORS.TEXT_70,
     textAlign: "center",
   },
 });

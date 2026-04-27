@@ -12,20 +12,43 @@ import { LinearGradient } from "expo-linear-gradient";
 import { COLORS } from "../constants/theme";
 import InnerShadowView from "./InnerShadowView";
 
-export interface InnerShadowIconProps {
+type InnerShadowViewPartialProps = Partial<{
+  width: number;
+  height: number;
+  borderRadius: number;
+  color: string;
+  darkShadowDx: number;
+  darkShadowDy: number;
+  darkShadowBlur: number;
+  darkShadowColor: string;
+  lightShadowDx: number;
+  lightShadowDy: number;
+  lightShadowBlur: number;
+  lightShadowColor: string;
+}>;
+
+export type BorderRingGradient = {
+  colors: [string, string];
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+};
+
+/** Bottom tab active chip: Figma gradient ring + Skia inner shadows. */
+export interface BottomInnerShadowIconProps {
   icon: ReactNode;
   onPress?: (event: GestureResponderEvent) => void;
   size?: number;
   radius?: number;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
-  /** Inner recessed surface color */
   surfaceColor?: string;
+  borderWidth?: number;
+  borderRingGradient: BorderRingGradient;
+  borderRingHighlight?: BorderRingGradient;
+  innerShadowProps?: InnerShadowViewPartialProps;
 }
 
-const DEFAULT_BORDER = 0.8;
-
-const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
+const BottomInnerShadowIcon: React.FC<BottomInnerShadowIconProps> = ({
   icon,
   onPress,
   size = 54,
@@ -33,10 +56,17 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
   disabled = false,
   style,
   surfaceColor = COLORS.SURFACE,
+  borderWidth: borderWidthProp = 1,
+  borderRingGradient,
+  borderRingHighlight,
+  innerShadowProps,
 }) => {
   const maxR = size / 2;
   const borderRadius = Math.max(0, Math.min(radius ?? maxR, maxR));
-  const innerRadius = Math.max(0, Math.min(borderRadius - 1, maxR));
+  const borderPad = borderWidthProp;
+  const innerW = Math.max(0, size - 2 * borderPad);
+  const innerH = Math.max(0, size - 2 * borderPad);
+  const innerR = Math.max(0, Math.min(borderRadius - borderPad, innerW / 2, innerH / 2));
 
   return (
     <View
@@ -61,31 +91,39 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
         style={[styles.shadowLayer, styles.shadowSoft, { borderRadius }]}
       />
 
-      <View style={[styles.border, { borderRadius, padding: DEFAULT_BORDER }]}>
+      <View style={[styles.border, { borderRadius, padding: borderPad }]}>
         <LinearGradient
-          colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
-          locations={[0.082, 0.8268]}
-          start={{ x: 1, y: 0.465 }}
-          end={{ x: 0, y: 0.535 }}
+          colors={borderRingGradient.colors}
+          start={borderRingGradient.start}
+          end={borderRingGradient.end}
           style={StyleSheet.absoluteFillObject}
         />
-        <LinearGradient
-          colors={["#FFFFFF", "rgba(255, 255, 255, 0)"]}
-          locations={[0, 1]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <View style={[styles.surface, { borderRadius: innerRadius }]}>
+        {borderRingHighlight != null ? (
+          <LinearGradient
+            colors={borderRingHighlight.colors}
+            start={borderRingHighlight.start}
+            end={borderRingHighlight.end}
+            style={StyleSheet.absoluteFillObject}
+          />
+        ) : null}
+        <View style={[styles.surface, { borderRadius: innerR }]}>
           <View
             pointerEvents="none"
-            style={[styles.innerShadowWrapper, { width: size, height: size, borderRadius }]}
+            style={[styles.innerShadowCenter, { borderRadius: innerR }]}
           >
             <InnerShadowView
-              width={size}
-              height={size}
-              borderRadius={borderRadius}
-              color={surfaceColor}
+              width={innerShadowProps?.width ?? innerW}
+              height={innerShadowProps?.height ?? innerH}
+              borderRadius={innerShadowProps?.borderRadius ?? innerR}
+              color={innerShadowProps?.color ?? surfaceColor}
+              darkShadowDx={innerShadowProps?.darkShadowDx ?? 4}
+              darkShadowDy={innerShadowProps?.darkShadowDy ?? -4}
+              darkShadowBlur={innerShadowProps?.darkShadowBlur ?? 14}
+              darkShadowColor={innerShadowProps?.darkShadowColor ?? "#34718D"}
+              lightShadowDx={innerShadowProps?.lightShadowDx ?? -4}
+              lightShadowDy={innerShadowProps?.lightShadowDy ?? 4}
+              lightShadowBlur={innerShadowProps?.lightShadowBlur ?? 9}
+              lightShadowColor={innerShadowProps?.lightShadowColor ?? "rgba(255, 255, 255, 0.6)"}
             />
           </View>
           {onPress ? (
@@ -185,12 +223,12 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "visible",
+    overflow: "hidden",
   },
-  innerShadowWrapper: {
-    position: "absolute",
-    left: 0,
-    top: 0,
+  innerShadowCenter: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
   },
   hitTarget: {
     ...StyleSheet.absoluteFillObject,
@@ -207,4 +245,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InnerShadowIcon;
+export default BottomInnerShadowIcon;
