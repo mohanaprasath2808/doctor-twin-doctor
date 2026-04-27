@@ -24,6 +24,10 @@ import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
 import LabsNotifyPatient from "../../screens/App/Labs/NotifyPatient";
 import ScheduleVisit from "../../screens/App/Labs/ScheduleVisit";
 import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
+import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
+import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
+import HelpTraining from "../../screens/App/Profile/HelpTraining";
+import type { StaffMember } from "../../screens/App/Staff/staffTypes";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -46,6 +50,11 @@ export type LabsActionCompletedParams = {
   title?: string;
   description?: string;
   buttonText?: string;
+};
+
+export type StaffFormParams = {
+  isEdit?: boolean;
+  initial?: StaffMember;
 };
 
 /** Must match `navigationStrings` + screen `name` props below. */
@@ -73,7 +82,10 @@ export type AppStackParamList = {
   LabsScheduleVisit: undefined;
   LabsActionCompleted: LabsActionCompletedParams | undefined;
   Staff: undefined;
-  StaffForm: undefined;
+  StaffForm: StaffFormParams | undefined;
+  EndShiftSummary: undefined;
+  GeneralSettings: undefined;
+  HelpTraining: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -199,6 +211,21 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.STAFF_FORM}
         component={CreateEditStaff}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.END_SHIFT_SUMMARY}
+        component={EndShiftSummary}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.GENERAL_SETTINGS}
+        component={GeneralSettings}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.HELP_TRAINING}
+        component={HelpTraining}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -36,7 +36,7 @@ const BORDER = 1;
 const HORIZONTAL_PADDING = 8;
 const ICON_WIDTH_ESTIMATE = 16;
 const INTER_ITEM_GAP = 3;
-const CHAR_WIDTH_ESTIMATE = 7;
+const CHAR_WIDTH_ESTIMATE = 10;
 const INNER_CONTENT_EXTRA = 2;
 
 const DeltaBadge: React.FC<DeltaBadgeProps> = ({

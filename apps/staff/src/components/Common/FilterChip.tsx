@@ -46,7 +46,7 @@ const FilterChip = ({
       />
     ) : (
       <NeumorphicCard
-        outerStyle={[styles.filterOuter, width ? { width } : null]}
+        outerStyle={[styles.filterOuter, width ? { width } : { width: "auto" }]}
         innerStyle={[
           styles.filterInner,
           {
