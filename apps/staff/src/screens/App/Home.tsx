@@ -86,6 +86,10 @@ const Home = () => {
     navigation.navigate(navigationStrings.SCHEDULING);
   }, [navigation]);
 
+  const openLabs = useCallback(() => {
+    navigation.navigate(navigationStrings.LABS as never);
+  }, [navigation]);
+
   const openStaff = useCallback(() => {
     const parent = navigation.getParent();
     parent?.navigate(navigationStrings.STAFF as never);
@@ -112,7 +116,7 @@ const Home = () => {
         iconGreen: <LabGreenIcon width={32} height={32} />,
         iconRed: <LabRedIcon width={32} height={32} />,
         dataCount: "3",
-        onPress: noop,
+        onPress: openLabs,
       },
       {
         label: "Scheduling",

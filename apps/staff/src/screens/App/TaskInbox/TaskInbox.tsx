@@ -250,7 +250,7 @@ const TaskInbox = () => {
                 selected={activeFilter === item.key}
                 onPress={() => setActiveFilter(item.key)}
                 height={40}
-                width={60}
+                // width={60}
                 borderRadius={114}
                 style={styles.filterPressable}
                 selectedTextStyle={styles.filterSelectedText}

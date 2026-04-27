@@ -32,7 +32,7 @@ const SLOT_OPTIONS = [
 export default function Reschedule() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
     const providerSheetRef = useRef<BSModal>(null);
-    const [selectedDate, setSelectedDate] = useState(new Date(2025, 4, 18));
+    const [selectedDate, setSelectedDate] = useState(() => new Date());
     const [selectedSlot, setSelectedSlot] = useState("10:15 AM");
     const [selectedProvider, setSelectedProvider] = useState(PROVIDER_OPTIONS[0]);
 

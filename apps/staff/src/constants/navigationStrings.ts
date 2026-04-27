@@ -16,6 +16,9 @@ const navigationStrings = {
   BOTTOM_NAVIGATION: "BottomNavigation",
   CALENDAR: "Calendar",
   PROFILE: "Profile",
+  END_SHIFT_SUMMARY: "EndShiftSummary",
+  GENERAL_SETTINGS: "GeneralSettings",
+  HELP_TRAINING: "HelpTraining",
   SCHEDULING: "Scheduling",
   STAFF: "Staff",
   STAFF_FORM: "StaffForm",
@@ -27,6 +30,12 @@ const navigationStrings = {
   SCHEDULING_FILL_SLOT: "SchedulingFillSlot",
   SCHEDULING_ASSIGN_TASK: "SchedulingAssignTask",
   SCHEDULING_RESCHEDULE: "SchedulingReschedule",
+  LABS: "Labs",
+  LABS_ASSIGN_NURSE: "LabsAssignNurse",
+  LABS_ESCALATE_MESSAGE: "LabsEscalateMessage",
+  LABS_NOTIFY_PATIENT: "LabsNotifyPatient",
+  LABS_SCHEDULE_VISIT: "LabsScheduleVisit",
+  LABS_ACTION_COMPLETED: "LabsActionCompleted",
 } as const;
 
 export default navigationStrings;

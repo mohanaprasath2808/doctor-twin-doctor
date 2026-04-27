@@ -18,6 +18,16 @@ import Reschedule from "../../screens/App/Scheduling/Reschedule";
 import { Scheduling } from "../../screens/App/Scheduling/Scheduling";
 import Staff from "../../screens/App/Staff/Staff";
 import CreateEditStaff from "../../screens/App/Staff/CreateEditStaff";
+import Labs from "../../screens/App/Labs/Labs";
+import AssignNurse from "../../screens/App/Labs/AssignNurse";
+import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
+import LabsNotifyPatient from "../../screens/App/Labs/NotifyPatient";
+import ScheduleVisit from "../../screens/App/Labs/ScheduleVisit";
+import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
+import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
+import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
+import HelpTraining from "../../screens/App/Profile/HelpTraining";
+import type { StaffMember } from "../../screens/App/Staff/staffTypes";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -34,6 +44,17 @@ export type PatientTaskDetailParams = {
 
 export type AssignTaskParams = {
   patientName?: string;
+};
+
+export type LabsActionCompletedParams = {
+  title?: string;
+  description?: string;
+  buttonText?: string;
+};
+
+export type StaffFormParams = {
+  isEdit?: boolean;
+  initial?: StaffMember;
 };
 
 /** Must match `navigationStrings` + screen `name` props below. */
@@ -54,6 +75,17 @@ export type AppStackParamList = {
   SchedulingFillSlot: undefined;
   SchedulingAssignTask: undefined;
   SchedulingReschedule: undefined;
+  Labs: undefined;
+  LabsAssignNurse: undefined;
+  LabsEscalateMessage: undefined;
+  LabsNotifyPatient: undefined;
+  LabsScheduleVisit: undefined;
+  LabsActionCompleted: LabsActionCompletedParams | undefined;
+  Staff: undefined;
+  StaffForm: StaffFormParams | undefined;
+  EndShiftSummary: undefined;
+  GeneralSettings: undefined;
+  HelpTraining: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -142,6 +174,36 @@ const AppStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={navigationStrings.LABS}
+        component={Labs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_ASSIGN_NURSE}
+        component={AssignNurse}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_ESCALATE_MESSAGE}
+        component={EscalateMessage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_NOTIFY_PATIENT}
+        component={LabsNotifyPatient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_SCHEDULE_VISIT}
+        component={ScheduleVisit}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.LABS_ACTION_COMPLETED}
+        component={ActionCompleted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={navigationStrings.STAFF}
         component={Staff}
         options={{ headerShown: false }}
@@ -149,6 +211,21 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.STAFF_FORM}
         component={CreateEditStaff}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.END_SHIFT_SUMMARY}
+        component={EndShiftSummary}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.GENERAL_SETTINGS}
+        component={GeneralSettings}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.HELP_TRAINING}
+        component={HelpTraining}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

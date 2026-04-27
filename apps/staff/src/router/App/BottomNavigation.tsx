@@ -11,7 +11,7 @@ import {
 } from "../../components/navigation/QueueMicTabButton";
 import navigationStrings from "../../constants/navigationStrings";
 import Calendar from "../../screens/App/Calendar";
-import Profile from "../../screens/App/Profile";
+import Profile from "../../screens/App/Profile/Profile";
 import { COLORS } from "../../constants/theme";
 import Home from "../../screens/App/Home";
 
