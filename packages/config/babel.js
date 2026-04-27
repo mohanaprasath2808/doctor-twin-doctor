@@ -3,8 +3,7 @@ module.exports = function createExpoBabelConfig(api) {
 
   return {
     presets: ["babel-preset-expo"],
-    plugins: [
-      "react-native-reanimated/plugin",
-    ],
+    // Reanimated’s plugin re-exports `react-native-worklets/plugin`; adding both is a duplicate.
+    plugins: ["react-native-reanimated/plugin"],
   };
 };

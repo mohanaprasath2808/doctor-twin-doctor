@@ -5,7 +5,6 @@ import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../constants/theme";
 import navigationStrings from "../../../constants/navigationStrings";
 import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
-import BottomNavbar from "../../../components/App/BottomNavbar";
 import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import NeumorphicQuickActionTile from "../../../components/Common/NeumorphicQuickActionTile";
 import AppButton from "../../../components/Common/AppButton";
@@ -148,7 +147,6 @@ const Labs = () => {
           />
         </NeumorphicCard>
       </ScrollView>
-      <BottomNavbar />
     </SafeAreaView>
   );
 };

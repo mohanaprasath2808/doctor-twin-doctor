@@ -18,6 +18,8 @@ interface Props {
   lightShadowColor?: string;
 }
 
+/** Skia inner shadows: same defaults as doctor app — (2,2) dark ≈ bottom-right, (-2,-2) light ≈ top-left. */
+
 const clampR = (width: number, height: number, borderRadius: number) =>
   Math.max(0, Math.min(borderRadius, width / 2, height / 2));
 

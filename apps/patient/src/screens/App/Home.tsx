@@ -8,7 +8,6 @@ import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
 import { COLORS } from "../../constants/theme";
 import InnerShadowView from "../../neomorphism/InnerShadowView";
 import NeumorphicQuickActionTile from "../../components/Common/NeumorphicQuickActionTile";
-import BottomNavbar from "../../components/App/BottomNavbar";
 import navigationStrings from "../../constants/navigationStrings";
 import MessageIcon from "../../assets/icons/message.svg";
 import ScheduleIcon from "../../assets/icons/schedule.svg";
@@ -102,8 +101,6 @@ const Home = () => {
           />
         </View>
       </ScrollView>
-
-      <BottomNavbar />
     </SafeAreaView>
   );
 };

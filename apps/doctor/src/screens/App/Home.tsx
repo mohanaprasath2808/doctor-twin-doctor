@@ -1,12 +1,5 @@
 import React, { useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
@@ -116,7 +109,6 @@ const GRID_ITEMS: GridItem[] = [
     label: "Patient Verification",
     icon: () => <PatientIcon width={18} height={18} />,
   },
-
 ];
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -134,18 +126,15 @@ const Home = () => {
   const { notificationsData, messagesData } = appContext;
   const gridItems = GRID_ITEMS.map((item) => {
     switch (item.id) {
-
       case 1:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
+          onPress: () => navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
         };
       case 2:
         return {
           ...item,
-          badge:
-            messagesData.length > 0 ? String(messagesData.length) : undefined,
+          badge: messagesData.length > 0 ? String(messagesData.length) : undefined,
           badgeType: messagesData.length > 0 ? ("dot" as const) : undefined,
         };
       case 10:
@@ -171,20 +160,17 @@ const Home = () => {
       case 12:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.LABS_DASHBOARD),
+          onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
         };
       case 13:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
+          onPress: () => navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
         };
       case 14:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
+          onPress: () => navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
         };
       default:
         return item;
@@ -195,11 +181,7 @@ const Home = () => {
     <View style={styles.listHeader}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <DoctorAvatar
-            source={DoctorTempImage}
-            imageSize={38}
-            containerSize={44}
-          />
+          <DoctorAvatar source={DoctorTempImage} imageSize={38} containerSize={44} />
           <View style={styles.greetingContainer}>
             <Text style={styles.greetingLight}>Good Morning</Text>
             <Text style={styles.greetingBold}>Dr. Soliman</Text>
@@ -211,7 +193,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -228,11 +210,7 @@ const Home = () => {
     </View>
   );
   const renderItem = ({ item }: { item: GridItem }) => (
-    <TouchableOpacity
-      style={styles.gridCell}
-      activeOpacity={0.8}
-      onPress={() => item.onPress?.()}
-    >
+    <TouchableOpacity style={styles.gridCell} activeOpacity={0.8} onPress={() => item.onPress?.()}>
       <View style={styles.cardOuter}>
         <NeumorphicCard
           borderRadius={CARD_CORNER_RADIUS}
@@ -243,7 +221,9 @@ const Home = () => {
             <InnerShadowIcon icon={item.icon()} size={40} />
           </View>
           <View style={styles.cardTextWrap}>
-            <Text style={styles.cardLabel} numberOfLines={2}>{item.label}</Text>
+            <Text style={styles.cardLabel} numberOfLines={2}>
+              {item.label}
+            </Text>
             {item.badgeType === "sub" && item.badge && (
               <DeltaBadge
                 icon={null}

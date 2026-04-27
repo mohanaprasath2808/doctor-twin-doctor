@@ -1,25 +1,22 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import navigationStrings from "../../constants/navigationStrings";
-import Home from "../../screens/App/Home";
 import Appointments from "../../screens/App/Appointments/Appointments";
 import ScheduleStep1 from "../../screens/App/Appointments/ScheduleStep1";
 import ScheduleStep2 from "../../screens/App/Appointments/ScheduleStep2";
-import Notifications from "../../screens/App/Notifications/Notifications";
 import Labs from "../../screens/App/Labs/Labs";
 import LabRequest from "../../screens/App/Labs/LabRequest";
 import LabResults from "../../screens/App/Labs/LabResults";
 import LabResultDetail from "../../screens/App/Labs/LabResultDetail";
+import MyProfile from "../../screens/App/MyProfile";
+import BottomNavigation from "./BottomNavigation";
 
 const Stack = createStackNavigator();
 
 const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen
-        name={navigationStrings.HOME}
-        component={Home}
-      />
+      <Stack.Screen name={navigationStrings.BOTTOM_NAVIGATION} component={BottomNavigation} />
       <Stack.Screen
         name={navigationStrings.APPOINTMENTS}
         component={Appointments}
@@ -32,10 +29,6 @@ const AppStack = () => {
         name={navigationStrings.SCHEDULE_STEP_2}
         component={ScheduleStep2}
       />
-      <Stack.Screen
-        name={navigationStrings.NOTIFICATIONS}
-        component={Notifications}
-      />
       <Stack.Screen name={navigationStrings.LABS} component={Labs} />
       <Stack.Screen name={navigationStrings.LAB_REQUEST} component={LabRequest} />
       <Stack.Screen name={navigationStrings.LAB_RESULTS} component={LabResults} />
@@ -43,6 +36,7 @@ const AppStack = () => {
         name={navigationStrings.LAB_RESULT_DETAIL}
         component={LabResultDetail}
       />
+      <Stack.Screen name={navigationStrings.MY_PROFILE} component={MyProfile} />
     </Stack.Navigator>
   );
 };

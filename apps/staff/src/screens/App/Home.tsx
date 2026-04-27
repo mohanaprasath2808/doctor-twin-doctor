@@ -76,7 +76,7 @@ const Home = () => {
     navigation.navigate(navigationStrings.CALENDAR);
   }, [navigation]);
 
-  const noop = useCallback(() => { }, []);
+  const noop = useCallback(() => {}, []);
 
   const openTaskInbox = useCallback(() => {
     navigation.navigate(navigationStrings.TASK_INBOX);
@@ -168,7 +168,7 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-    [noop, openLabs, openScheduling, openTaskInbox, openStaff],
+    [noop, openScheduling, openTaskInbox, openStaff],
   );
 
   const totalRows = Math.ceil(tiles.length / GRID_COLUMNS);
