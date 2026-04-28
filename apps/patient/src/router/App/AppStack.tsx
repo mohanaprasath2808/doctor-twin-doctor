@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import navigationStrings from "../../constants/navigationStrings";
 import Appointments from "../../screens/App/Appointments/Appointments";
+import AppointmentDetail from "../../screens/App/Appointments/AppointmentDetail";
 import ScheduleStep1 from "../../screens/App/Appointments/ScheduleStep1";
 import ScheduleStep2 from "../../screens/App/Appointments/ScheduleStep2";
 import Labs from "../../screens/App/Labs/Labs";
@@ -20,6 +21,10 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.APPOINTMENTS}
         component={Appointments}
+      />
+      <Stack.Screen
+        name={navigationStrings.APPOINTMENT_DETAIL}
+        component={AppointmentDetail}
       />
       <Stack.Screen
         name={navigationStrings.SCHEDULE_STEP_1}

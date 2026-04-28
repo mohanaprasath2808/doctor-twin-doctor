@@ -1,14 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthContextProvider from "./src/context/AuthContext";
 import AppContextProvider from "./src/context/AppContext";
 import Router from "./src/router/Router";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { COLORS } from "./src/constants/theme";
 const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar backgroundColor={COLORS.PRIMARY} barStyle="dark-content" />
       <NavigationContainer>
         <AuthContextProvider>
           <AppContextProvider>

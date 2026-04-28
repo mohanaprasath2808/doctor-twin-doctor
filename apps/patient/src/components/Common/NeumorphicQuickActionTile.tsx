@@ -42,6 +42,8 @@ export type NeumorphicQuickActionTileProps = {
   /** `borderWidth` sets the gradient ring thickness on the badge and on the inner `InnerShadowView` when alert. */
   badgeStyle?: StyleProp<ViewStyle>;
   badgeTextStyle?: StyleProp<TextStyle>;
+  /** Max lines for the label when there is no `subtitle` (default 2). */
+  labelNumberOfLines?: number;
 };
 
 /** Same border math as `StatusDot`: inner diameter + 2×borderWidth = outer; `padding` on `LinearGradient` = ring thickness. */
@@ -79,7 +81,7 @@ function omitBorderWidth(style: StyleProp<ViewStyle> | undefined): ViewStyle | u
   return rest;
 }
 
-/** Inner recessed face when `dataCount` / `badge` parses to a count > 0 (Figma). */
+/** Inner recessed “alert” face — only when badge parses to exactly `1` (count `> 1` keeps default tile bg). */
 const ALERT_INNER_FACE = "#FDECEC";
 const ALERT_INNER_SHADOW_DARK = "#F2CACA";
 const ALERT_INNER_SHADOW_LIGHT = "#FFFFFF99";
@@ -111,13 +113,15 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
   labelStyle,
   badgeStyle,
   badgeTextStyle,
+  labelNumberOfLines = 2,
 }) => {
   const outerRadius = outerDiameter / 2;
   const innerRadius = innerShadowBorderRadius ?? Math.max(0, innerShadowDiameter / 2);
   const innerFaceRadius = Math.max(0, outerRadius - TILE_BORDER_WIDTH);
   const badgeLabel = resolveBadgeLabel(badge);
   const badgeCount = parseBadgeCount(badge);
-  const isHighAlert = badgeCount != null && badgeCount > 0;
+  /** Only single-count badges use the alert inner face; 2+ leaves `innerShadowColor` / default surface. */
+  const isHighAlert = badgeCount != null && badgeCount > 0 && badgeCount <= 1;
 
   const ringBorderWidth = resolveRingBorderWidth(badgeStyle);
   const badgeOuterSize = BADGE_INNER_DIAMETER + 2 * ringBorderWidth;
@@ -313,9 +317,11 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
           </Text>
         </View>
       ) : (
-        <Text style={[styles.tileLabel, labelStyle]} numberOfLines={2}>
-          {label}
-        </Text>
+        <View style={styles.tileLabelWrap}>
+          <Text style={[styles.tileLabel, labelStyle]} numberOfLines={labelNumberOfLines}>
+            {label}
+          </Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -483,12 +489,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "400",
   },
+  /** Full column width so long labels wrap instead of clipping at narrow column width. */
+  tileLabelWrap: {
+    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: 2,
+  },
   tileLabel: {
     fontSize: 12,
     lineHeight: 14,
     fontWeight: "500",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
+    width: "100%",
   },
   labelBlock: {
     alignItems: "center",
