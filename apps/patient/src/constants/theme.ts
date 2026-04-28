@@ -6,6 +6,9 @@ export const COLORS = {
   TEXT_PRIMARY: "#2C2C2C",
   /** Neumorphic raised controls / tiles (aligned with staff app tokens) */
   TEXT_DARK: "#2C2C2C",
+  /** Field labels — same as doctor `TEXT_60` */
+  TEXT_60: "#808080",
+  TEXT_40: "#A8ABAB",
   TEXT_70: "#6B6B6B",
   BACKGROUND: "#FFFFFF",
   SURFACE: "#F8FAFC",
@@ -17,7 +20,6 @@ export const COLORS = {
   /** Neumorphic inner-shadow fields (aligned with doctor app tokens) */
   DARK_SHADOW: "#C8CBCC",
   LIGHT_SHADOW: "#FFFFFF99",
-  TEXT_40: "#A8ABAB",
   TEXT_80: "#565656",
 
   SUCCESS: "#10B981",

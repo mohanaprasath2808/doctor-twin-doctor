@@ -1,41 +1,97 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
-  Image,
   FlatList,
+  Image,
+  ListRenderItem,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+
 import { COLORS } from "../../../constants/theme";
+import navigationStrings from "../../../constants/navigationStrings";
+import AppButton from "../../../components/Common/AppButton";
+import DeltaBadge from "../../../components/Common/DeltaBadge";
+import NeumorphicCard from "../../../components/Common/NeumorphicCard";
+import IconComponent from "../../../neomorphism/IconComponent";
+import ReusableButton from "../../../neomorphism/ReusableButton";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import AppointmentDummy from "../../../assets/images/tempImage/appointmentDummy.png";
-import navigationStrings from "../../../constants/navigationStrings";
 
-const APPOINTMENTS = [
+type TabKey = "upcoming" | "past";
+
+type UpcomingAppointment = {
+  id: string;
+  datetime: string;
+  doctor: string;
+  clinic: string;
+};
+
+type PastAppointment = UpcomingAppointment & {
+  status: "cancelled" | "completed";
+};
+
+const UPCOMING: UpcomingAppointment[] = [
   {
-    id: "1",
+    id: "u1",
     datetime: "Mon, Apr 30 – 3:00 PM",
     doctor: "Follow-up with Dr. Shahinaz Soliman",
-    clinic: "Soliman Care Clinic \u00b7 Torrance, CA",
+    clinic: "Soliman Care Clinic · Torrance, CA",
   },
   {
-    id: "2",
+    id: "u2",
     datetime: "Mon, Apr 30 – 3:00 PM",
     doctor: "Follow-up with Dr. Shahinaz Soliman",
-    clinic: "Soliman Care Clinic \u00b7 Torrance, CA",
+    clinic: "Soliman Care Clinic · Torrance, CA",
   },
 ];
 
+const PAST: PastAppointment[] = [
+  {
+    id: "p1",
+    datetime: "Mon, Apr 30 — 3:00 PM",
+    doctor: "Follow-up with Dr. Shahinaz Soliman",
+    clinic: "Soliman Care Clinic · Torrance, CA",
+    status: "cancelled",
+  },
+  {
+    id: "p2",
+    datetime: "Mon, Apr 30 — 3:00 PM",
+    doctor: "Follow-up with Dr. Shahinaz Soliman",
+    clinic: "Soliman Care Clinic · Torrance, CA",
+    status: "completed",
+  },
+];
+
+const TABS_GAP = 10;
+const HORIZONTAL = 16;
+
+/** Shared fill gradient for `ReusableButton` usages on this screen. */
+const REUSABLE_GRADIENT: [string, string] = ["#22D3EE", "#0F766E"];
+
+const HEIGHT_CARD_ROW_BTN = 40;
+const HEIGHT_SCHEDULE_FOOTER = 48;
+
 const Appointments = () => {
   const navigation = useNavigation<any>();
-  const renderAppointmentCard = ({ item }: { item: (typeof APPOINTMENTS)[number] }) => (
-    <View style={styles.card}>
-      <View style={styles.infoRow}>
+  const { width: windowWidth } = useWindowDimensions();
+  const [tab, setTab] = useState<TabKey>("upcoming");
+
+  const tabChipWidth = useMemo(
+    () => Math.max(120, Math.floor((windowWidth - HORIZONTAL * 2 - TABS_GAP) / 2)),
+    [windowWidth],
+  );
+
+  const listData = tab === "upcoming" ? UPCOMING : PAST;
+
+  const renderUpcoming: ListRenderItem<UpcomingAppointment> = ({ item }) => (
+    <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
+      <View style={styles.cardTopRow}>
         <Image source={AppointmentDummy} style={styles.avatar} />
         <View style={styles.infoTextWrap}>
           <Text style={styles.datetimeText}>{item.datetime}</Text>
@@ -43,283 +99,315 @@ const Appointments = () => {
           <Text style={styles.clinicText}>{item.clinic}</Text>
         </View>
       </View>
-
-      <View style={styles.actionsRow}>
-        <TouchableOpacity activeOpacity={0.85} style={styles.scheduleTouchable} onPress={() => navigation.navigate(navigationStrings.SCHEDULE_STEP_1)}>
-          <View style={styles.scheduleInner}>
-            <Text style={styles.scheduleText} numberOfLines={1}>
-              Schedule Appointment
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity activeOpacity={0.85} style={styles.detailsTouchable}>
-          <LinearGradient
-            colors={["#14B8D4", "#0E7490"]}
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
-            style={styles.detailsGradient}
-          >
-            <Text style={styles.detailsText}>View Details</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <AppButton
+        text="View Details"
+        borderWidth={1}
+        borderColor={COLORS.PRIMARY}
+        bgColor={COLORS.SURFACE}
+        height={HEIGHT_CARD_ROW_BTN}
+        borderRadius={60}
+        width="100%"
+        textStyle={styles.outlineButtonText}
+        onPress={() => navigation.navigate(navigationStrings.APPOINTMENT_DETAIL)}
+      />
+    </NeumorphicCard>
   );
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerRow}>
-        <TouchableOpacity activeOpacity={0.85} style={styles.backButton} onPress={() => navigation.goBack()}>
-          <LeftArrowIcon width={26} height={26} />
-        </TouchableOpacity>
-        <View style={styles.headerTitleWrap}>
-          <Text style={styles.title}>Appointments</Text>
+  const renderPast: ListRenderItem<PastAppointment> = ({ item }) => {
+    const statusStyle =
+      item.status === "cancelled"
+        ? { bg: "#FFEBEE", fg: "#C62828", shadow: "#E57373", label: "Cancelled" as const }
+        : { bg: "#E8F5E9", fg: "#2E7D32", shadow: "#81C784", label: "Completed" as const };
+
+    return (
+      <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
+        <View style={styles.cardTopRow}>
+          <Image source={AppointmentDummy} style={styles.avatar} />
+          <View style={styles.infoTextWrap}>
+            <Text style={styles.datetimeText}>{item.datetime}</Text>
+            <Text style={styles.doctorText}>{item.doctor}</Text>
+            <Text style={styles.clinicText}>{item.clinic}</Text>
+          </View>
+          <View style={styles.statusBadgeWrap}>
+            <DeltaBadge
+              icon={null}
+              value={statusStyle.label}
+              bgColor={statusStyle.bg}
+              darkShadowColor={statusStyle.shadow}
+              lightShadowColor="#FFFFFF99"
+              textColor={statusStyle.fg}
+              height={28}
+              textStyle={styles.statusBadgeText}
+            />
+          </View>
         </View>
-        <View style={styles.headerRightSpacer} />
+        <View style={styles.pastActionsRow}>
+          <View style={styles.halfBtn}>
+            <AppButton
+              text="Reschedule"
+              borderWidth={1}
+              borderColor={COLORS.PRIMARY}
+              bgColor={COLORS.SURFACE}
+              height={HEIGHT_CARD_ROW_BTN}
+              borderRadius={60}
+              width="100%"
+              textStyle={styles.outlineButtonText}
+              onPress={() => {}}
+            />
+          </View>
+          <View style={styles.halfBtn}>
+            <ReusableButton
+              title="View Details"
+              gradientColors={REUSABLE_GRADIENT}
+              onPress={() => navigation.navigate(navigationStrings.APPOINTMENT_DETAIL)}
+              height={HEIGHT_CARD_ROW_BTN}
+              width="100%"
+              borderRadius={60}
+              containerStyle={styles.cardPrimaryBtn}
+            />
+          </View>
+        </View>
+      </NeumorphicCard>
+    );
+  };
+
+  const keyExtractor = (item: UpcomingAppointment | PastAppointment) => item.id;
+
+  return (
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <View style={styles.header}>
+        <IconComponent
+          icon={<LeftArrowIcon width={18} height={18} />}
+          width={40}
+          height={40}
+          radius={20}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.headerTitle}>Appointments</Text>
+        <View style={styles.headerSpacer} />
       </View>
 
       <View style={styles.tabsRow}>
-        <TouchableOpacity activeOpacity={0.9} style={styles.upcomingTabTouchable}>
-          <LinearGradient
-            colors={["#5ED9EC", "#14B8D4"]}
-            start={{ x: 1, y: 1 }}
-            end={{ x: 1, y: 0.5 }}
-            style={styles.upcomingTab}
-          >
-            <Text style={styles.upcomingTabText}>Upcoming</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.85} style={styles.pastTab}>
-          <Text style={styles.pastTabText}>Past</Text>
-        </TouchableOpacity>
+        <AppointmentTabChip
+          title="Upcoming"
+          chipWidth={tabChipWidth}
+          selected={tab === "upcoming"}
+          onPress={() => setTab("upcoming")}
+        />
+        <AppointmentTabChip
+          title="Past"
+          chipWidth={tabChipWidth}
+          selected={tab === "past"}
+          onPress={() => setTab("past")}
+        />
       </View>
 
       <FlatList
-        data={APPOINTMENTS}
-        keyExtractor={(item) => item.id}
-        renderItem={renderAppointmentCard}
+        style={styles.list}
+        data={listData}
+        keyExtractor={keyExtractor}
+        extraData={tab}
+        renderItem={
+          tab === "upcoming"
+            ? (renderUpcoming as ListRenderItem<(typeof listData)[number]>)
+            : (renderPast as ListRenderItem<(typeof listData)[number]>)
+        }
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       />
+
+      <View style={styles.footer}>
+        <ReusableButton
+          title="+ Schedule New Appointment"
+          gradientColors={REUSABLE_GRADIENT}
+          height={HEIGHT_SCHEDULE_FOOTER}
+          onPress={() => navigation.navigate(navigationStrings.SCHEDULE_STEP_1)}
+          containerStyle={styles.scheduleCta}
+        />
+      </View>
     </SafeAreaView>
   );
 };
 
+/** Selected: same gradient `ReusableButton` as footer; unselected: `NeumorphicCard`. */
+const AppointmentTabChip = ({
+  title,
+  chipWidth,
+  selected,
+  onPress,
+}: {
+  title: string;
+  chipWidth: number;
+  selected: boolean;
+  onPress: () => void;
+}) =>
+  selected ? (
+    <View style={[styles.filterPress, { width: chipWidth }]}>
+      <ReusableButton
+        title={title}
+        gradientColors={REUSABLE_GRADIENT}
+        onPress={onPress}
+        width={chipWidth}
+        height={40}
+        borderRadius={20}
+        containerStyle={styles.tabSelectedBtn}
+        textStyle={styles.tabReusableTitle}
+      />
+    </View>
+  ) : (
+    <Pressable onPress={onPress} style={[styles.filterPress, { width: chipWidth }]}>
+      <NeumorphicCard
+        outerStyle={[styles.tabCardOuter, { width: chipWidth }]}
+        innerStyle={styles.tabCardInner}
+        borderRadius={20}
+      >
+        <Text style={styles.unselectedTabLabel} numberOfLines={1}>
+          {title}
+        </Text>
+      </NeumorphicCard>
+    </Pressable>
+  );
+
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: COLORS.SURFACE,
   },
-  headerRow: {
+  header: {
+    marginTop: 6,
+    paddingHorizontal: HORIZONTAL,
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    marginTop: Platform.OS === "ios" ? 8 : 16,
-    paddingHorizontal: 16,
+    justifyContent: "space-between",
   },
-  headerTitleWrap: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 8,
-  },
-  headerRightSpacer: {
-    width: 40,
-    height: 40,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.SURFACE,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  title: {
+  headerTitle: {
     fontSize: 18,
-    lineHeight: 22,
     fontWeight: "600",
-    letterSpacing: 0.18,
     color: COLORS.TEXT_PRIMARY,
     textAlign: "center",
   },
+  headerSpacer: {
+    width: 40,
+    height: 40,
+  },
   tabsRow: {
     marginTop: 20,
+    paddingHorizontal: HORIZONTAL,
     flexDirection: "row",
+    gap: TABS_GAP,
     alignItems: "center",
-    gap: 10,
-    paddingHorizontal: 16,
   },
-  upcomingTabTouchable: {
-    borderRadius: 114,
-    shadowColor: "#3F97B2",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
+  filterPress: {
+    flexShrink: 0,
   },
-  upcomingTab: {
+  tabCardOuter: {},
+  tabCardInner: {
+    paddingHorizontal: 18,
     height: 40,
-    paddingHorizontal: 20,
-    borderRadius: 114,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.35)",
+    borderRadius: 20,
   },
-  upcomingTabText: {
+  tabSelectedBtn: {
+    alignSelf: "stretch",
+  },
+  tabReusableTitle: {
     fontSize: 14,
-    lineHeight: 18,
+    fontWeight: "600",
+    paddingHorizontal: 8,
+  },
+  unselectedTabLabel: {
+    color: COLORS.TEXT_70,
+    fontSize: 14,
     fontWeight: "500",
-    color: COLORS.WHITE,
+    textAlign: "center",
   },
-  pastTab: {
-    height: 40,
-    paddingHorizontal: 20,
-    borderRadius: 64,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.SURFACE,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  pastTabText: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_80,
+  list: {
+    flex: 1,
   },
   listContent: {
+    paddingHorizontal: HORIZONTAL,
     paddingTop: 20,
-    paddingBottom: 24,
-    gap: 20,
-    paddingHorizontal: 16,
+    paddingBottom: 12,
+    gap: 16,
+    flexGrow: 1,
   },
-  card: {
+  footer: {
+    paddingHorizontal: HORIZONTAL,
+    paddingTop: 8,
+    paddingBottom: Platform.OS === "android" ? 16 : 8,
+  },
+  scheduleCta: {
+    alignSelf: "stretch",
+  },
+  /** Primary actions in cards — same gradient + sizing family as footer CTA. */
+  cardPrimaryBtn: {
+    alignSelf: "stretch",
+  },
+  cardOuter: {
     width: "100%",
-    maxWidth: 382,
-    alignSelf: "center",
-    minHeight: 142,
-    borderRadius: 10,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 13,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
   },
-  infoRow: {
+  cardInner: {
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    gap: 12,
+  },
+  cardTopRow: {
     flexDirection: "row",
     alignItems: "flex-start",
+    gap: 10,
   },
   avatar: {
     width: 40,
     height: 40,
-    borderRadius: 114,
+    borderRadius: 20,
     resizeMode: "cover",
   },
   infoTextWrap: {
-    marginLeft: 10,
     flex: 1,
+    minWidth: 0,
   },
   datetimeText: {
     fontSize: 16,
     lineHeight: 20,
-    fontWeight: "500",
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
   },
   doctorText: {
-    marginTop: 5,
-    fontSize: 12,
-    lineHeight: 14,
+    marginTop: 4,
+    fontSize: 14,
+    lineHeight: 18,
     fontWeight: "400",
     color: COLORS.TEXT_PRIMARY,
   },
   clinicText: {
-    marginTop: 5,
+    marginTop: 4,
     fontSize: 12,
     lineHeight: 14,
     fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_70,
   },
-  actionsRow: {
-    marginTop: 13,
+  outlineButtonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: COLORS.PRIMARY,
+  },
+  statusBadgeWrap: {
+    flexShrink: 0,
+  },
+  statusBadgeText: {
+    fontSize: 11,
+    fontWeight: "600",
+  },
+  pastActionsRow: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
+    alignItems: "stretch",
+    gap: 10,
   },
-  scheduleTouchable: {
+  halfBtn: {
     flex: 1,
-    borderRadius: 60,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  scheduleInner: {
-    height: 40,
-    borderRadius: 60,
-    borderWidth: 1,
-    borderColor: "#0E7490",
-    backgroundColor: COLORS.SURFACE,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 16,
-  },
-  scheduleText: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "500",
-    color: "#0E7490",
-    textAlign: "center",
-  },
-  detailsTouchable: {
-    flex: 1,
-    borderRadius: 60,
-    shadowColor: "#34718D",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 5 },
-    }),
-  },
-  detailsGradient: {
-    height: 40,
-    borderRadius: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 16,
-  },
-  detailsText: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "500",
-    color: COLORS.WHITE,
-    textAlign: "center",
+    minWidth: 0,
   },
 });
 

@@ -1,458 +1,363 @@
-import React, { useState } from "react";
-import { FlatList, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useContext, useRef, useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { BottomSheetModal as BSModal } from "@gorhom/bottom-sheet";
+
+import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import NeumorphicCheckboxMark from "../../components/Auth/NeumorphicCheckboxMark";
+import SelectPharmacySheet, {
+  type SelectListItem,
+} from "../../components/BottomSheets/SelectPharmacySheet";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import NeumorphicSwitch from "../../components/Common/NeumorphicSwitch";
+import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
+import InputField from "../../neomorphism/InputField";
+import ReusableButton from "../../neomorphism/ReusableButton";
 import { COLORS } from "../../constants/theme";
+import navigationStrings from "../../constants/navigationStrings";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
-import LeftArrowIcon from "../../assets/icons/leftArrow.svg";
-import TickIcon from "../../assets/icons/tick.svg";
 import BellIcon from "../../assets/icons/bell.svg";
-import DropDownIcon from "../../assets/icons/dropDown.svg";
-import ProfileAvatar from "../../components/Auth/ProfileAvatar";
-import ReusableButton from "../../neomorphism/ReusableButton";
-import InnerShadowView from "../../neomorphism/InnerShadowView";
-import SelectLocationBottomSheet from "../../components/App/BottomSheets/SelectLocationBottomSheet";
-import navigationStrings from "../../constants/navigationStrings";
+import DropDown from "../../assets/icons/dropDown.svg";
+import LeftArrow from "../../assets/icons/leftArrow.svg";
+import { AuthContext } from "../../context/AuthContext";
 
-const COMMUNICATION_LABELS = ["Email", "App Notification", "SMS"];
+const DISPLAY_NAME = "Sarah";
 
-/** Lighter inset than before — softer dark edge, gentler highlight */
-const LIGHT_INNER_SHADOW = {
-  darkShadowDx: 2,
-  darkShadowDy: 2,
-  darkShadowBlur: 6,
-  darkShadowColor: "#A0A4A855",
-  lightShadowDx: -2,
-  lightShadowDy: -2,
-  lightShadowBlur: 4,
-  lightShadowColor: "#FFFFFFCC",
-} as const;
+/** Sample options — replace with API data when wired. */
+const PHARMACY_ITEMS: SelectListItem[] = [
+  { id: "torrance-1", label: "Torrance Imaging Center" },
+  { id: "torrance-2", label: "Torrance Imaging Center" },
+  { id: "torrance-3", label: "Torrance Imaging Center" },
+  { id: "torrance-4", label: "Torrance Imaging Center" },
+  { id: "torrance-5", label: "Torrance Imaging Center" },
+  { id: "torrance-6", label: "Torrance Imaging Center" },
+  { id: "torrance-7", label: "Torrance Imaging Center" },
+  { id: "torrance-8", label: "Torrance Imaging Center" },
+  { id: "torrance-9", label: "Torrance Imaging Center" },
+  { id: "torrance-10", label: "Torrance Imaging Center" },
+  { id: "torrance-11", label: "Torrance Imaging Center" },
+];
+
+type CommKey = "email" | "app" | "sms";
 
 const SetPreferences = () => {
   const navigation = useNavigation<any>();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [communicationChecked, setCommunicationChecked] = useState<boolean[]>(() =>
-    Array.from({ length: COMMUNICATION_LABELS.length }, (_, index) => index === 0),
-  );
-  const [pharmacySheetVisible, setPharmacySheetVisible] = useState(false);
-  const [pharmacyLabel, setPharmacyLabel] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
+  const pharmacySheetRef = useRef<BSModal>(null);
+  const auth = useContext(AuthContext);
+  if (!auth) {
+    throw new Error("SetPreferences requires AuthContextProvider");
+  }
+  const { setIsLogin } = auth;
 
-  const toggleCommunication = (index: number) => {
-    setCommunicationChecked((prev) => {
-      const next = [...prev];
-      next[index] = !next[index];
-      return next;
-    });
+  const [pharmacy, setPharmacy] = useState("");
+  const [selectedPharmacyId, setSelectedPharmacyId] = useState<string | null>(null);
+  const [notificationsOn, setNotificationsOn] = useState(true);
+  const [communication, setCommunication] = useState<Record<CommKey, boolean>>({
+    email: false,
+    app: false,
+    sms: false,
+  });
+
+  const toggleComm = (key: CommKey) => {
+    setCommunication((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const renderCommunicationItem = ({ item, index }: { item: string; index: number }) => (
-    <TouchableOpacity
-      activeOpacity={0.85}
-      style={styles.communicationRow}
-      onPress={() => toggleCommunication(index)}
-    >
-      {communicationChecked[index] ? (
-        <View style={[styles.communicationCheckbox, styles.communicationCheckboxChecked]}>
-          <TickIcon width={12} height={10} />
-        </View>
-      ) : (
-        <View style={styles.communicationCheckboxInnerWrap}>
-          <InnerShadowView
-            width={20}
-            height={20}
-            borderRadius={6}
-            color={COLORS.SURFACE}
-            {...LIGHT_INNER_SHADOW}
-          />
-        </View>
-      )}
-      <Text style={styles.communicationText}>{item}</Text>
-      {index < COMMUNICATION_LABELS.length - 1 ? <View style={styles.divider} /> : null}
-    </TouchableOpacity>
-  );
+  const handleContinue = () => {
+    setIsLogin(true);
+  };
 
   return (
-    <>
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headerRow}>
-        <TouchableOpacity
-          activeOpacity={0.85}
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <LeftArrowIcon width={26} height={26} />
-        </TouchableOpacity>
-        <View style={styles.headerTitleWrap}>
-          <Text style={styles.title}>Set Preferences</Text>
-        </View>
-        <View style={styles.headerRightSpacer} />
-      </View>
-
-      <ProfileAvatar
-        overlaySource={OverlayImage}
-        imageSource={DoctorTempImage}
-        containerStyle={styles.imageContainer}
-        wrapperStyle={styles.wrapper}
-        overlayStyle={styles.overlayImage}
-        imageStyle={styles.image}
-      />
-
-      <View style={styles.pharmacyCard}>
-        <Text style={styles.sectionHeading}>Pharmacy</Text>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Pharmacy</Text>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={styles.dropdownField}
-            onPress={() => setPharmacySheetVisible(true)}
-          >
-            <Text
-              style={[
-                styles.dropdownPlaceholder,
-                pharmacyLabel ? styles.dropdownValue : null,
-              ]}
-            >
-              {pharmacyLabel ?? "Select Pharmacy"}
-            </Text>
-            <DropDownIcon width={10} height={10} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.notificationCard}>
-        <View style={styles.notificationLeft}>
-          <View style={styles.iconShell}>
-            <InnerShadowView
-              width={40}
-              height={40}
-              borderRadius={20}
-              color={COLORS.SURFACE}
-              {...LIGHT_INNER_SHADOW}
+    <SafeAreaView style={styles.safe} edges={["top", "left", "right", "bottom"]}>
+      <KeyboardAvoidingView
+        style={styles.keyboardWrapper}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
+      >
+        <View style={styles.column}>
+          <View style={styles.header}>
+            <InnerShadowIcon
+              icon={<LeftArrow width={22} height={22} />}
+              size={40}
+              radius={20}
+              onPress={() => navigation.goBack()}
             />
-            <View style={styles.iconOverlay}>
-              <BellIcon width={20} height={20} />
-            </View>
+            <Text style={styles.headerTitle}>Set Preferences</Text>
+            <View style={styles.headerSpacer} />
           </View>
-          <Text style={styles.notificationText}>Enable Notifications</Text>
+
+          <ScrollView
+            style={styles.scroll}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContent}
+          >
+            <ProfileAvatar
+              overlaySource={OverlayImage}
+              imageSource={DoctorTempImage}
+              containerStyle={styles.avatarContainer}
+              wrapperStyle={styles.avatarWrapper}
+              overlayStyle={styles.avatarOverlay}
+              imageStyle={styles.avatarImage}
+            />
+
+            <Text style={styles.greeting}>Hi {DISPLAY_NAME},</Text>
+
+            <Text style={styles.blockTitle}>Pharmacy</Text>
+            <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.pharmacyCardInner}>
+              <Text style={styles.innerLabel}>Pharmacy</Text>
+              <Pressable
+                onPress={() => pharmacySheetRef.current?.present()}
+                style={({ pressed }) => [pressed && styles.pressablePressed]}
+              >
+                <InputField
+                  value={pharmacy}
+                  editable={false}
+                  showSoftInputOnFocus={false}
+                  placeholder="Select Pharmacy"
+                  onChangeText={setPharmacy}
+                  containerStyle={styles.pharmacyField}
+                  rightIcon={<DropDown width={16} height={16} />}
+                />
+              </Pressable>
+            </NeumorphicCard>
+
+            <NeumorphicCard
+              outerStyle={[styles.cardOuter, styles.notifCard]}
+              innerStyle={styles.notifInner}
+            >
+              <InnerShadowIcon
+                icon={<BellIcon width={20} height={20} />}
+                size={40}
+                radius={20}
+                style={styles.bellInset}
+              />
+              <Text style={styles.notifLabel}>Enable Notifications</Text>
+              <NeumorphicSwitch value={notificationsOn} onValueChange={setNotificationsOn} />
+            </NeumorphicCard>
+
+            <Text style={[styles.blockTitle, styles.commSectionTitle]}>Communication</Text>
+            <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.commCardInner}>
+              <CommRow
+                label="Email"
+                selected={communication.email}
+                onPress={() => toggleComm("email")}
+                showDivider
+              />
+              <CommRow
+                label="App Notification"
+                selected={communication.app}
+                onPress={() => toggleComm("app")}
+                showDivider
+              />
+              <CommRow
+                label="SMS"
+                selected={communication.sms}
+                onPress={() => toggleComm("sms")}
+                showDivider={false}
+              />
+            </NeumorphicCard>
+          </ScrollView>
+
+          <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 16) }]}>
+            <ReusableButton
+              title="Continue"
+              onPress={handleContinue}
+              containerStyle={styles.continueBtn}
+            />
+          </View>
         </View>
+      </KeyboardAvoidingView>
 
-        <TouchableOpacity
-          activeOpacity={0.85}
-          style={styles.toggleWrap}
-          onPress={() => setNotificationsEnabled((prev) => !prev)}
-        >
-          <InnerShadowView
-            width={52}
-            height={28}
-            borderRadius={114}
-            color={COLORS.SURFACE}
-            {...LIGHT_INNER_SHADOW}
-          />
-          <View
-            style={[
-              styles.toggleThumb,
-              notificationsEnabled ? styles.toggleThumbOn : styles.toggleThumbOff,
-            ]}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.sectionLabel}>Communication</Text>
-
-      <View style={styles.communicationCard}>
-        <FlatList
-          data={COMMUNICATION_LABELS}
-          keyExtractor={(item) => item}
-          renderItem={renderCommunicationItem}
-          scrollEnabled={false}
-        />
-      </View>
-
-      <View style={styles.footer}>
-        <ReusableButton
-          title="Continue"
-          textColor="#FFFFFF"
-          gradientColors={["#14B8D4", "#0E7490"]}
-          backgroundColor="#0E7490"
-          borderRadius={30}
-          height={48}
-          containerStyle={styles.continueButton}
-          onPress={() => navigation.navigate(navigationStrings.SYNC)}
-        />
-      </View>
+      <SelectPharmacySheet
+        ref={pharmacySheetRef}
+        items={PHARMACY_ITEMS}
+        selectedId={selectedPharmacyId}
+        title="Select Location"
+        onConfirm={(id) => {
+          setSelectedPharmacyId(id);
+          const row = PHARMACY_ITEMS.find((i) => i.id === id);
+          if (row) setPharmacy(row.label);
+        }}
+      />
     </SafeAreaView>
-    <SelectLocationBottomSheet
-      visible={pharmacySheetVisible}
-      onClose={() => setPharmacySheetVisible(false)}
-      onConfirm={(name) => setPharmacyLabel(name)}
-    />
-    </>
   );
 };
 
+type CommRowProps = {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+  showDivider: boolean;
+};
+
+const CommRow: React.FC<CommRowProps> = ({ label, selected, onPress, showDivider }) => (
+  <Pressable
+    onPress={onPress}
+    style={({ pressed }) => [
+      styles.commRow,
+      showDivider && styles.commRowDivider,
+      pressed && styles.pressablePressed,
+    ]}
+  >
+    <NeumorphicCheckboxMark selected={selected} />
+    <Text style={styles.commLabel}>{label}</Text>
+  </Pressable>
+);
+
+export default SetPreferences;
+
 const styles = StyleSheet.create({
-  container: {
+  safe: {
     flex: 1,
     backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 20,
   },
-  headerRow: {
+  keyboardWrapper: {
+    flex: 1,
+  },
+  column: {
+    flex: 1,
+  },
+  scroll: {
+    flex: 1,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    backgroundColor: COLORS.SURFACE,
+  },
+  header: {
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    marginTop: Platform.OS === "ios" ? 8 : 16,
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingTop: Platform.OS === "ios" ? 4 : 8,
+    paddingBottom: 8,
   },
-  headerTitleWrap: {
+  headerTitle: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 8,
-  },
-  headerRightSpacer: {
-    width: 40,
-    height: 40,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.SURFACE,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-  },
-  title: {
     fontSize: 18,
-    lineHeight: 22,
     fontWeight: "600",
-    letterSpacing: 0.18,
     color: COLORS.TEXT_PRIMARY,
     textAlign: "center",
   },
-  imageContainer: {
-    alignItems: "center",
+  headerSpacer: {
+    width: 44,
+    height: 44,
   },
-  wrapper: {
-    width: 200,
-    height: 200,
+  scrollContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  avatarContainer: {
+    alignItems: "center",
+    paddingTop: 4,
+  },
+  avatarWrapper: {
+    width: 180,
+    height: 180,
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
   },
-  overlayImage: {
+  avatarOverlay: {
     width: "100%",
     height: "100%",
     resizeMode: "contain",
     position: "absolute",
     borderRadius: 115,
   },
-  image: {
-    width: 124,
-    height: 124,
+  avatarImage: {
+    width: 112,
+    height: 112,
     resizeMode: "contain",
     borderRadius: 115,
   },
-  pharmacyCard: {
-    marginTop: 8,
-    width: "100%",
-    maxWidth: 382,
-    alignSelf: "center",
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 14,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-  },
-  sectionHeading: {
+  greeting: {
+    marginTop: 10,
+    textAlign: "center",
     fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "500",
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
   },
-  inputGroup: {
-    marginTop: 16,
-    gap: 4,
-  },
-  inputLabel: {
-    fontSize: 12,
-    lineHeight: 14,
-    fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_60,
-  },
-  dropdownField: {
-    height: 46,
-    borderRadius: 64,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.38,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  dropdownPlaceholder: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_40,
-  },
-  dropdownValue: {
-    color: COLORS.TEXT_PRIMARY,
-  },
-  notificationCard: {
+  blockTitle: {
     marginTop: 20,
-    width: "100%",
-    maxWidth: 382,
-    alignSelf: "center",
-    minHeight: 68,
-    borderRadius: 10,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 10,
-    paddingVertical: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-  },
-  notificationLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  iconShell: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    overflow: "hidden",
-  },
-  iconOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  notificationText: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "500",
-    color: COLORS.TEXT_PRIMARY,
-  },
-  toggleWrap: {
-    width: 52,
-    height: 28,
-    borderRadius: 114,
-    justifyContent: "center",
-  },
-  toggleThumb: {
-    position: "absolute",
-    width: 20,
-    height: 20,
-    borderRadius: 62,
-    top: 4,
-    backgroundColor: "#0E7490",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-  },
-  toggleThumbOn: {
-    right: 4,
-  },
-  toggleThumbOff: {
-    left: 4,
-      opacity: 0.7,
-    backgroundColor: COLORS.WHITE,
-  },
-  sectionLabel: {
-    marginTop: 16,
+    marginBottom: 8,
     fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "500",
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
   },
-  communicationCard: {
-    marginTop: 14,
+  commSectionTitle: {
+    marginTop: 20,
+  },
+  cardOuter: {
     width: "100%",
-    maxWidth: 382,
-    alignSelf: "center",
-    borderRadius: 10,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 10,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
   },
-  communicationRow: {
-    minHeight: 50,
-    justifyContent: "center",
-    paddingLeft: 36,
-    position: "relative",
+  pharmacyCardInner: {
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
-  communicationCheckbox: {
-    position: "absolute",
-    left: 0,
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    justifyContent: "center",
+  pharmacyField: {
+    marginTop: 0,
+  },
+  innerLabel: {
+    fontSize: 12,
+    color: COLORS.TEXT_PRIMARY_60,
+    marginBottom: 6,
+  },
+  notifCard: {
+    marginTop: 12,
+  },
+  notifInner: {
+    flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 14,
   },
-  communicationCheckboxChecked: {
-    backgroundColor: "#0E7490",
-    shadowColor: "#34718D99",
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
+  bellInset: {
+    marginRight: 12,
   },
-  communicationCheckboxInnerWrap: {
-    position: "absolute",
-    left: 0,
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    overflow: "hidden",
-  },
-  communicationText: {
-    fontSize: 14,
-    lineHeight: 18,
+  notifLabel: {
+    flex: 1,
+    fontSize: 15,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },
-  divider: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 1,
-    backgroundColor: COLORS.TEXT_PRIMARY_10,
+  commCardInner: {
+    paddingVertical: 4,
+    paddingHorizontal: 0,
   },
-  footer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    paddingBottom: Platform.OS === "ios" ? 20 : 24,
+  commRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
   },
-  continueButton: {
-    marginBottom: 4,
+  commRowDivider: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: COLORS.TEXT_PRIMARY_10,
+  },
+  commLabel: {
+    marginLeft: 12,
+    fontSize: 15,
+    fontWeight: "500",
+    color: COLORS.TEXT_PRIMARY,
+  },
+  continueBtn: {
+    width: "100%",
+  },
+  pressablePressed: {
+    opacity: 0.92,
   },
 });
-
-export default SetPreferences;
