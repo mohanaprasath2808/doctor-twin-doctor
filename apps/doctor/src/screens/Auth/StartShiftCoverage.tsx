@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { FlatList, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { BottomSheetModal as BSModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -20,6 +20,7 @@ import DeltaBadge from '../../components/Common/DeltaBadge';
 import AppButton from '../../components/Common/AppButton';
 import ReusableButton from '../../neomorphism/ReusableButton';
 import navigationStrings from '../../constants/navigationStrings';
+import { AuthContext } from '../../context/AuthContext';
 
 type SelectType = 'role' | 'location' | null;
 
@@ -53,6 +54,11 @@ const formatCountdown = (totalSeconds: number) => {
 
 const StartShiftCoverage = () => {
   const navigation = useNavigation<any>();
+  const auth = useContext(AuthContext);
+  if (!auth) {
+    throw new Error('StartShiftCoverage must be used within AuthContextProvider');
+  }
+  const { setIsLogin } = auth;
   const pickerRef = useRef<BSModal>(null);
   const [selectedRole, setSelectedRole] = useState(ROLE_OPTIONS[0]);
   const [selectedLocation, setSelectedLocation] = useState(LOCATION_OPTIONS[0]);
@@ -229,7 +235,7 @@ const StartShiftCoverage = () => {
         <ReusableButton
           title="Start Shift"
           containerStyle={styles.startShiftBtn}
-          onPress={() => navigation.navigate(navigationStrings.LEGAL_CONSENT)}
+          onPress={() => setIsLogin(true)}
         />
       </View>
 
@@ -296,6 +302,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.SURFACE,
     paddingHorizontal: 16,
+    paddingBottom: Platform.OS === 'android' ? 20 : 0,
   },
   header: {
     marginTop: 4,

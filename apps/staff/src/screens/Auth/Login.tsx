@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
@@ -38,7 +38,10 @@ const Login = () => {
 
   //Forgot Password Handler
   const handleForgotPassword = () => {
-    navigation.navigate(navigationStrings.FORGOT_PASSWORD);
+    Keyboard.dismiss();
+    requestAnimationFrame(() => {
+      navigation.navigate(navigationStrings.FORGOT_PASSWORD);
+    });
   };
 
   return (
@@ -93,9 +96,11 @@ const Login = () => {
               style={styles.forgotWrap}
               activeOpacity={0.7}
               onPress={handleForgotPassword}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
               <Text style={styles.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
+
 
             <ReusableButton
               title="Login"
@@ -178,8 +183,12 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   forgotWrap: {
+    width: "100%",
     alignItems: "flex-end",
     marginTop: 12,
+    paddingVertical: 6,
+    zIndex: 2,
+    elevation: 2,
   },
   forgotText: {
     fontSize: 14,

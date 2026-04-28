@@ -33,7 +33,9 @@ const Login = () => {
 
   //Login Button Handler
   const handleLogin = () => {
-    navigation.navigate(navigationStrings.OTP_VERIFICATION);
+    navigation.navigate(navigationStrings.OTP_VERIFICATION, {
+      source: 'login',
+    });
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -59,6 +61,7 @@ const Login = () => {
             <InputField
               placeholder="Enter email"
               leftIcon={<MailIcon width={18} height={18} />}
+              containerStyle={{ paddingHorizontal: 20 }}
             />
 
             {/* Password */}
@@ -75,6 +78,7 @@ const Login = () => {
                 )
               }
               onRightIconPress={() => setSecure(!secure)}
+              containerStyle={{ paddingHorizontal: 20 }}
             />
 
             {/* Forgot Password */}
@@ -86,24 +90,28 @@ const Login = () => {
             </TouchableOpacity>
 
             {/* Login Button */}
-            <ReusableButton
-              title="Login"
-              onPress={handleLogin}
-              containerStyle={styles.loginBtn}
-              backgroundColor="#2E3A8C"
-              textColor="#FFFFFF"
-            />
+            <View style={{ paddingHorizontal: 20 }}>
+
+              <ReusableButton
+                title="Login"
+                onPress={handleLogin}
+                containerStyle={styles.loginBtn}
+                backgroundColor="#2E3A8C"
+                textColor="#FFFFFF"
+              />
+            </View>
+
           </View>
 
           {/* Sign Up */}
-          <View style={styles.signupContainer}>
+          {/* <View style={styles.signupContainer}>
             <Text style={styles.signupText}>Don’t have an account? </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate(navigationStrings.SIGNUP)}
             >
               <Text style={styles.signup}>Sign Up</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </KeyboardAvoidingWrapper>
     </SafeAreaView>
@@ -116,7 +124,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 20,
   },
   keyboardWrapper: {
     flex: 1,
@@ -161,15 +168,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.TEXT_DARK,
     marginBottom: 10,
+    paddingHorizontal: 20,
   },
   label: {
     fontSize: 12,
     color: COLORS.TEXT_60,
     marginTop: 10,
+    paddingHorizontal: 20,
   },
   forgotContainer: {
     alignItems: 'flex-end',
     marginTop: 10,
+    paddingHorizontal: 20,
   },
   forgotText: {
     fontSize: 14,

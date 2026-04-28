@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   Image,
   FlatList,
+  Pressable,
   Platform,
   StyleSheet,
   Text,
@@ -15,24 +16,49 @@ import { COLORS } from "../../../constants/theme";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import AppointmentDummy from "../../../assets/images/tempImage/appointmentDummy.png";
 import navigationStrings from "../../../constants/navigationStrings";
+import FilterChip from "../../../components/Common/FilterChip";
+import DeltaBadge from "../../../components/Common/DeltaBadge";
+import IconComponent from "../../../neomorphism/IconComponent";
 
 const APPOINTMENTS = [
   {
     id: "1",
+    status: "upcoming" as const,
     datetime: "Mon, Apr 30 – 3:00 PM",
     doctor: "Follow-up with Dr. Shahinaz Soliman",
     clinic: "Soliman Care Clinic \u00b7 Torrance, CA",
   },
   {
     id: "2",
-    datetime: "Mon, Apr 30 – 3:00 PM",
+    status: "upcoming" as const,
+    datetime: "Tue, May 7 – 11:30 AM",
     doctor: "Follow-up with Dr. Shahinaz Soliman",
+    clinic: "Soliman Care Clinic \u00b7 Torrance, CA",
+  },
+  {
+    id: "3",
+    status: "past" as const,
+    datetime: "Thu, Apr 04 – 2:00 PM",
+    doctor: "Consult with Dr. Shahinaz Soliman",
     clinic: "Soliman Care Clinic \u00b7 Torrance, CA",
   },
 ];
 
+const APPOINTMENT_FILTERS = [
+  { key: "upcoming", label: "Upcoming" },
+  { key: "past", label: "Past" },
+] as const;
+
+type AppointmentFilterKey = (typeof APPOINTMENT_FILTERS)[number]["key"];
+
 const Appointments = () => {
   const navigation = useNavigation<any>();
+  const [selectedFilter, setSelectedFilter] = useState<AppointmentFilterKey>("upcoming");
+
+  const visibleAppointments = useMemo(() => {
+    return APPOINTMENTS.filter((item) => item.status === selectedFilter);
+  }, [selectedFilter]);
+
   const renderAppointmentCard = ({ item }: { item: (typeof APPOINTMENTS)[number] }) => (
     <View style={styles.card}>
       <View style={styles.infoRow}>
@@ -69,38 +95,65 @@ const Appointments = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerRow}>
-        <TouchableOpacity activeOpacity={0.85} style={styles.backButton} onPress={() => navigation.goBack()}>
-          <LeftArrowIcon width={26} height={26} />
-        </TouchableOpacity>
-        <View style={styles.headerTitleWrap}>
-          <Text style={styles.title}>Appointments</Text>
-        </View>
-        <View style={styles.headerRightSpacer} />
-      </View>
-
-      <View style={styles.tabsRow}>
-        <TouchableOpacity activeOpacity={0.9} style={styles.upcomingTabTouchable}>
-          <LinearGradient
-            colors={["#5ED9EC", "#14B8D4"]}
-            start={{ x: 1, y: 1 }}
-            end={{ x: 1, y: 0.5 }}
-            style={styles.upcomingTab}
-          >
-            <Text style={styles.upcomingTabText}>Upcoming</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.85} style={styles.pastTab}>
-          <Text style={styles.pastTabText}>Past</Text>
-        </TouchableOpacity>
+      <View style={styles.header}>
+        <IconComponent
+          icon={<LeftArrowIcon width={18} height={18} />}
+          width={40}
+          height={40}
+          radius={20}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.headerTitle}>Appointments</Text>
+        <View style={styles.headerSpacer} />
       </View>
 
       <FlatList
-        data={APPOINTMENTS}
+        data={APPOINTMENT_FILTERS}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.key}
+        extraData={selectedFilter}
+        contentContainerStyle={styles.filtersRow}
+        ItemSeparatorComponent={() => <View style={styles.filterSeparator} />}
+        style={styles.filtersList}
+        renderItem={({ item }) =>
+          item.key === selectedFilter ? (
+            <Pressable
+              onPress={() => setSelectedFilter(item.key)}
+              style={styles.filterPressable}
+            >
+              <DeltaBadge
+                value={item.label}
+                width={96}
+                height={40}
+                radius={20}
+                bgColor="#5ED9EC"
+                darkShadowColor="#3F97B2"
+                textColor={COLORS.WHITE}
+                textStyle={styles.filterSelectedText}
+              />
+            </Pressable>
+          ) : (
+            <FilterChip
+              title={item.label}
+              selected={false}
+              onPress={() => setSelectedFilter(item.key)}
+              height={40}
+              borderRadius={20}
+              style={styles.filterPressable}
+              textStyle={styles.filterText}
+            />
+          )
+        }
+      />
+
+      <FlatList
+        data={visibleAppointments}
         keyExtractor={(item) => item.id}
         renderItem={renderAppointmentCard}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={<Text style={styles.emptyText}>No appointments found.</Text>}
       />
     </SafeAreaView>
   );
@@ -111,102 +164,48 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.SURFACE,
   },
-  headerRow: {
+  header: {
+    marginTop: Platform.OS === "ios" ? 8 : 16,
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    marginTop: Platform.OS === "ios" ? 8 : 16,
     paddingHorizontal: 16,
   },
-  headerTitleWrap: {
+  headerTitle: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 8,
-  },
-  headerRightSpacer: {
-    width: 40,
-    height: 40,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.SURFACE,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  title: {
     fontSize: 18,
     lineHeight: 22,
+    textAlign: "center",
     fontWeight: "600",
     letterSpacing: 0.18,
     color: COLORS.TEXT_PRIMARY,
-    textAlign: "center",
   },
-  tabsRow: {
-    marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
+  headerSpacer: {
+    width: 40,
+    height: 40,
+  },
+  filtersList: {
+    borderWidth: 1,
+    borderColor: "red",
     paddingHorizontal: 16,
   },
-  upcomingTabTouchable: {
-    borderRadius: 114,
-    shadowColor: "#3F97B2",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  upcomingTab: {
-    height: 40,
-    paddingHorizontal: 20,
-    borderRadius: 114,
+  filtersRow: {
     alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.35)",
+    paddingRight: 8,
   },
-  upcomingTabText: {
+  filterSeparator: {
+    width: 10,
+  },
+  filterPressable: {},
+  filterText: {
     fontSize: 14,
-    lineHeight: 18,
     fontWeight: "500",
-    color: COLORS.WHITE,
-  },
-  pastTab: {
-    height: 40,
-    paddingHorizontal: 20,
-    borderRadius: 64,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.SURFACE,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  pastTabText: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_80,
   },
+  filterSelectedText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
   listContent: {
-    paddingTop: 20,
-    paddingBottom: 24,
     gap: 20,
     paddingHorizontal: 16,
   },
@@ -320,6 +319,13 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: COLORS.WHITE,
     textAlign: "center",
+  },
+  emptyText: {
+    marginTop: 24,
+    textAlign: "center",
+    fontSize: 14,
+    color: COLORS.TEXT_PRIMARY_70,
+    fontWeight: "500",
   },
 });
 

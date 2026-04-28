@@ -139,20 +139,26 @@ const SecureLogin = () => {
   }, [continueOnboarding, setIsLogin]);
 
   const onOptionPress = (id: string) => {
-    if (id === "face-id") {
-      if (!faceIdAvailable) {
-        Alert.alert(
-          "Face ID not supported",
-          Platform.OS === "ios"
-            ? "This device does not support Face ID."
-            : "This device does not support face unlock (e.g. fingerprint-only phones). Use User PIN or SSO.",
-        );
+    switch (id) {
+      case "face-id":
+        if (!faceIdAvailable) {
+          Alert.alert(
+            "Face ID not supported",
+            Platform.OS === "ios"
+              ? "This device does not support Face ID."
+              : "This device does not support face unlock (e.g. fingerprint-only phones). Use User PIN or SSO.",
+          );
+          return;
+        }
+        void onFaceIdPress();
         return;
-      }
-      void onFaceIdPress();
-      return;
+      case "sso-login":
+        navigation.navigate(navigationStrings.SSO_SIGN_IN);
+        return;
+      case "user-pin":
+      default:
+        continueOnboarding();
     }
-    continueOnboarding();
   };
 
   return (

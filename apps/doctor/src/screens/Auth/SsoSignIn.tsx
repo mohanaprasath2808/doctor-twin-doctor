@@ -14,18 +14,20 @@ import ProfileAvatar from '../../components/Auth/ProfileAvatar';
 import OverlayImage from '../../assets/image/imageBgShadow.png';
 import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
 import navigationStrings from '../../constants/navigationStrings';
+import IconComponent from '../../neomorphism/IconComponent';
+import BackIcon from '../../assets/icon/backArrow.svg';
 
 const SsoSignIn = () => {
   const navigation = useNavigation<any>();
   const [secure, setSecure] = useState(true);
 
-  const handleBack = () => {
-    navigation.navigate(navigationStrings.LOGIN);
+  const handleSignIn = () => {
+    navigation.navigate(navigationStrings.OTP_VERIFICATION, {
+      source: 'sso-sign-in',
+    });
   };
 
-  const handleSignIn = () => {
-    navigation.navigate(navigationStrings.HIPAA_PRIVACY_GATE);
-  };
+  const canGoBack = navigation.canGoBack();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,15 +36,19 @@ const SsoSignIn = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
       >
         <View style={styles.header}>
-          {/* <IconComponent
-            icon={<BackIcon width={22} height={22} />}
-            width={42}
-            height={42}
-            radius={21}
-            onPress={handleBack}
-          /> */}
+          {canGoBack ? (
+            <IconComponent
+              icon={<BackIcon width={22} height={22} />}
+              width={40}
+              height={40}
+              radius={20}
+              onPress={() => navigation.goBack()}
+            />
+          ) : (
+            <View style={styles.headerSpacer} />
+          )}
           <Text style={styles.headerTitle}>SSO / Single Sign On</Text>
-          {/* <View style={styles.headerSpacer} /> */}
+          <View style={styles.headerSpacer} />
         </View>
 
         <ProfileAvatar
@@ -57,12 +63,12 @@ const SsoSignIn = () => {
         <Text style={styles.subTitle}>Sign in with your hospital credentials</Text>
 
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Email</Text>
+          {/* <Text style={styles.label}>Email</Text>
           <InputField
             placeholder="Enter email"
             leftIcon={<MailIcon width={18} height={18} />}
             containerStyle={{ marginTop: 1 }}
-          />
+          /> */}
 
           <Text style={[styles.label, styles.passwordLabel]}>Password</Text>
           <InputField
@@ -104,18 +110,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    marginTop: Platform.OS === 'ios' ? 4 : 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: Platform.OS === "ios" ? 4 : 12,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    flex: 1,
+    textAlign: "center",
     color: COLORS.TEXT_DARK,
+    fontSize: 18,
+    fontWeight: "600",
   },
   headerSpacer: {
-    width: 42,
+    width: 40,
   },
   imageContainer: {
     marginTop: 20,

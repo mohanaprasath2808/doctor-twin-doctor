@@ -21,5 +21,8 @@
     "staff:start": "npm --workspace @doctor-twin/staff run start",
     "staff:android": "npm --workspace @doctor-twin/staff run android",
     "staff:ios": "npm --workspace @doctor-twin/staff run ios"
+  },
+  "overrides": {
+    "react-native-svg": "15.15.4"
   }
 }

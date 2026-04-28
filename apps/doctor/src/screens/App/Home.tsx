@@ -193,7 +193,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -221,7 +221,7 @@ const Home = () => {
             <InnerShadowIcon icon={item.icon()} size={40} />
           </View>
           <View style={styles.cardTextWrap}>
-            <Text style={styles.cardLabel} numberOfLines={2}>
+            <Text style={styles.cardLabel} numberOfLines={1}>
               {item.label}
             </Text>
             {item.badgeType === "sub" && item.badge && (

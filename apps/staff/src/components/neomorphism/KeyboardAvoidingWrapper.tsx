@@ -30,7 +30,7 @@ const KeyboardAvoidingWrapper: React.FC<KeyboardAvoidingWrapperProps> = ({
       <ScrollView
         bounces={false}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+        keyboardShouldPersistTaps="always"
         contentContainerStyle={[styles.content, contentContainerStyle]}
       >
         {children}

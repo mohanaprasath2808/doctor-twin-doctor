@@ -54,7 +54,7 @@ const EnableVoiceHandsFree = () => {
 
       <ReusableButton
         title="Enable Voice Mode"
-        onPress={() => navigation.navigate(navigationStrings.ROLE_AND_LOCATION)}
+        onPress={() => navigation.navigate(navigationStrings.LEGAL_CONSENT)}
         containerStyle={styles.voiceBtn}
         backgroundColor="#2E3A8C"
         textColor="#FFFFFF"
