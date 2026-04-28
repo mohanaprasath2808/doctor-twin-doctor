@@ -1,25 +1,35 @@
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import {
   FlatList,
+  ListRenderItem,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
+import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+
+import NeumorphicCard from "../../../components/Common/NeumorphicCard";
+import AppButton from "../../../components/Common/AppButton";
+import IconComponent from "../../../neomorphism/IconComponent";
+import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
+import InputField from "../../../neomorphism/InputField";
+import ReusableButton from "../../../neomorphism/ReusableButton";
+import SelectSearchSheet from "../../../components/BottomSheets/SelectSearchSheet";
+import type { SelectSearchSheetItem } from "../../../components/BottomSheets/SelectSearchSheet";
 import { COLORS } from "../../../constants/theme";
+import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import TickIcon from "../../../assets/icons/tick.svg";
 import DropDownIcon from "../../../assets/icons/dropDown.svg";
 import DoctorIcon from "../../../assets/icons/doctor.svg";
 import AetnaPpoIcon from "../../../assets/icons/aetnaPpo.svg";
-import InnerShadowView from "../../../neomorphism/InnerShadowView";
-import ReusableButton from "../../../neomorphism/ReusableButton";
-import navigationStrings from "../../../constants/navigationStrings";
+import DoctorTempImage from "../../../assets/images/tempImage/doctorTempImage.png";
 
 const VISIT_REASONS = [
   "General Consultation",
@@ -29,68 +39,92 @@ const VISIT_REASONS = [
   "Other",
 ];
 
-const CHECKBOX_INNER = {
-  darkShadowDx: 2,
-  darkShadowDy: 2,
-  darkShadowBlur: 6,
-  darkShadowColor: "#A0A4A855",
-  lightShadowDx: -2,
-  lightShadowDy: -2,
-  lightShadowBlur: 4,
-  lightShadowColor: "#FFFFFFCC",
-} as const;
+const PROVIDER_ITEMS: SelectSearchSheetItem[] = [
+  { id: "p1", label: "Dr. Shahinaz Twin", image: DoctorTempImage },
+  { id: "p2", label: "Dr. Lisa Shaw", image: DoctorTempImage },
+];
+
+const INSURANCE_ITEMS: SelectSearchSheetItem[] = [
+  { id: "i1", label: "Aetna PPO" },
+  { id: "i2", label: "Aetna PPO" },
+  { id: "i3", label: "Aetna PPO" },
+];
 
 const ScheduleStep1 = () => {
   const navigation = useNavigation<any>();
-  const insets = useSafeAreaInsets();
-  const [selectedReasonIndex, setSelectedReasonIndex] = useState(0);
+  const providerSheetRef = useRef<BottomSheetModal>(null);
+  const insuranceSheetRef = useRef<BottomSheetModal>(null);
 
-  const renderReasonItem = ({ item, index }: { item: string; index: number }) => {
+  const [selectedReasonIndex, setSelectedReasonIndex] = useState(0);
+  const [otherReason, setOtherReason] = useState("");
+  const [selectedProviderId, setSelectedProviderId] = useState<string | null>(
+    PROVIDER_ITEMS[0]?.id ?? null,
+  );
+  const [selectedInsuranceId, setSelectedInsuranceId] = useState<string | null>(
+    INSURANCE_ITEMS[0]?.id ?? null,
+  );
+
+  const providerLabel =
+    PROVIDER_ITEMS.find((p) => p.id === selectedProviderId)?.label ?? "Dr. Shahinaz Twin";
+  const insuranceLabel =
+    INSURANCE_ITEMS.find((i) => i.id === selectedInsuranceId)?.label ?? "Aetna PPO";
+  const selectedReason = VISIT_REASONS[selectedReasonIndex] ?? "";
+  const isOtherSelected = selectedReason.toLowerCase() === "other";
+
+  const renderReasonItem: ListRenderItem<string> = ({ item, index }) => {
     const isSelected = selectedReasonIndex === index;
     return (
-      <TouchableOpacity
-        activeOpacity={0.85}
-        style={styles.reasonRow}
-        onPress={() => setSelectedReasonIndex(index)}
-      >
-        {isSelected ? (
-          <View style={styles.reasonSelectedWrap}>
-            <LinearGradient
-              colors={["#14B8D4", "#0E7490"]}
-              start={{ x: 0.5, y: 0 }}
-              end={{ x: 0.5, y: 1 }}
-              style={styles.reasonSelected}
-            >
-              <TickIcon width={14} height={11} />
-            </LinearGradient>
-          </View>
-        ) : (
-          <View style={styles.reasonUnselectedWrap}>
-            <InnerShadowView
-              width={30}
-              height={30}
-              borderRadius={46}
-              color={COLORS.SURFACE}
-              {...CHECKBOX_INNER}
-            />
-          </View>
-        )}
-        <Text style={styles.reasonText}>{item}</Text>
+      <View>
+        <Pressable
+          onPress={() => setSelectedReasonIndex(index)}
+          style={({ pressed }) => [styles.reasonRow, pressed && styles.reasonRowPressed]}
+        >
+          {isSelected ? (
+            <View style={styles.reasonSelectedWrap}>
+              <LinearGradient
+                colors={["#14B8D4", "#0E7490"]}
+                start={{ x: 0.5, y: 0 }}
+                end={{ x: 0.5, y: 1 }}
+                style={styles.reasonSelected}
+              >
+                <TickIcon width={14} height={11} />
+              </LinearGradient>
+            </View>
+          ) : (
+            <View style={styles.reasonUnselectedWrap}>
+              <InnerShadowIcon
+                size={30}
+                radius={15}
+                surfaceColor={COLORS.INNER_SURFACE}
+                icon={<View style={styles.radioEmpty} />}
+              />
+            </View>
+          )}
+          <Text style={styles.reasonText}>{item}</Text>
+        </Pressable>
         {index < VISIT_REASONS.length - 1 ? <View style={styles.reasonDivider} /> : null}
-      </TouchableOpacity>
+      </View>
     );
   };
+
+  const onProviderPicked = useCallback((id: string) => {
+    setSelectedProviderId(id);
+  }, []);
+
+  const onInsurancePicked = useCallback((id: string) => {
+    setSelectedInsuranceId(id);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerRow}>
-        <TouchableOpacity
-          activeOpacity={0.85}
-          style={styles.backButton}
+        <IconComponent
+          icon={<LeftArrowIcon width={18} height={18} />}
+          width={40}
+          height={40}
+          radius={20}
           onPress={() => navigation.goBack()}
-        >
-          <LeftArrowIcon width={26} height={26} />
-        </TouchableOpacity>
+        />
         <View style={styles.headerTitleWrap}>
           <Text style={styles.title}>Schedule Appointment</Text>
         </View>
@@ -101,12 +135,13 @@ const ScheduleStep1 = () => {
         style={styles.scrollArea}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         <View style={styles.progressRow}>
           <LinearGradient
             colors={["#14B8D4", "#0E7490"]}
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
             style={styles.progressActive}
           />
           <View style={styles.progressInactive} />
@@ -115,62 +150,112 @@ const ScheduleStep1 = () => {
         <Text style={styles.stepText}>Step 1</Text>
         <Text style={styles.sectionTitle}>What&apos;s the reason for your visit?</Text>
 
-        <View style={styles.reasonsCard}>
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.reasonsInner}
+          borderRadius={10}
+        >
           <FlatList
             data={VISIT_REASONS}
             keyExtractor={(item) => item}
             renderItem={renderReasonItem}
             scrollEnabled={false}
           />
-        </View>
 
-        <View style={styles.providerCard}>
+          {isOtherSelected ? (
+            <InputField
+              value={otherReason}
+              onChangeText={setOtherReason}
+              placeholder="Please specify"
+              containerStyle={styles.otherReasonField}
+              borderRadius={64}
+              minHeight={48}
+            />
+          ) : null}
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.sectionCardInner}
+          borderRadius={10}
+        >
           <Text style={styles.cardTitle}>Provider</Text>
-          <TouchableOpacity activeOpacity={0.85} style={styles.providerField}>
-            <View style={styles.providerLeft}>
-              <DoctorIcon width={18} height={18} />
-              <Text style={styles.providerName}>Dr. Shahinaz Twin</Text>
+          <Pressable
+            onPress={() => providerSheetRef.current?.present()}
+            style={({ pressed }) => [styles.dropdownPress, pressed && styles.dropdownPressPressed]}
+          >
+            <View pointerEvents="none">
+              <InputField
+                value={providerLabel}
+                editable={false}
+                placeholder="Select provider"
+                leftIcon={<DoctorIcon width={18} height={18} />}
+                rightIcon={<DropDownIcon width={10} height={10} />}
+                onRightIconPress={() => providerSheetRef.current?.present()}
+                containerStyle={styles.providerFieldContainer}
+                borderRadius={64}
+                height={46}
+              />
             </View>
-            <DropDownIcon width={10} height={10} />
-          </TouchableOpacity>
-        </View>
+          </Pressable>
+        </NeumorphicCard>
 
-        <View style={styles.insuranceCard}>
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.sectionCardInner}
+          borderRadius={10}
+        >
           <Text style={styles.cardTitle}>Insurance</Text>
           <View style={styles.insuranceRow}>
             <View style={styles.insuranceLeft}>
-              <View style={styles.insuranceIconWrap}>
-                <InnerShadowView
-                  width={40}
-                  height={40}
-                  borderRadius={114}
-                  color={COLORS.SURFACE}
-                  {...CHECKBOX_INNER}
-                />
-                <View style={styles.insuranceIconOverlay}>
-                  <AetnaPpoIcon width={20} height={20} />
-                </View>
-              </View>
-              <Text style={styles.insuranceName}>Aetna PPO</Text>
+              <InnerShadowIcon
+                size={40}
+                radius={10}
+                surfaceColor={COLORS.INNER_SURFACE}
+                icon={<AetnaPpoIcon width={22} height={22} />}
+              />
+              <Text style={styles.insuranceName}>{insuranceLabel}</Text>
             </View>
-            <TouchableOpacity activeOpacity={0.85} style={styles.changeButton}>
-              <Text style={styles.changeText}>Change</Text>
-            </TouchableOpacity>
+            <AppButton
+              text="Change"
+              borderWidth={1}
+              borderColor={COLORS.PRIMARY}
+              bgColor={COLORS.SURFACE}
+              width={72}
+              height={32}
+              borderRadius={60}
+              textStyle={styles.changeBtnText}
+              onPress={() => insuranceSheetRef.current?.present()}
+            />
           </View>
-        </View>
+        </NeumorphicCard>
       </ScrollView>
 
       <View style={styles.footer}>
         <ReusableButton
           title="Next"
-          textColor={COLORS.WHITE}
-          gradientColors={["#14B8D4", "#0E7490"]}
-          backgroundColor="#0E7490"
-          borderRadius={60}
-                  height={48}
-                  onPress={() => navigation.navigate(navigationStrings.SCHEDULE_STEP_2)}
+          height={48}
+          onPress={() => navigation.navigate(navigationStrings.SCHEDULE_STEP_2)}
         />
       </View>
+
+      <SelectSearchSheet
+        ref={providerSheetRef}
+        title="Select Provider"
+        items={PROVIDER_ITEMS}
+        selectedId={selectedProviderId}
+        searchPlaceholder="Search Provider"
+        onConfirm={onProviderPicked}
+      />
+
+      <SelectSearchSheet
+        ref={insuranceSheetRef}
+        title="Select Insurance"
+        items={INSURANCE_ITEMS}
+        selectedId={selectedInsuranceId}
+        searchPlaceholder="Search insurance"
+        onConfirm={onInsurancePicked}
+      />
     </SafeAreaView>
   );
 };
@@ -181,38 +266,20 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.SURFACE,
   },
   headerRow: {
+    marginTop: Platform.OS === "ios" ? 8 : 12,
+    paddingHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
-    marginTop: Platform.OS === "ios" ? 8 : 16,
-    paddingHorizontal: 16,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 62,
-    backgroundColor: COLORS.SURFACE,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
+    justifyContent: "space-between",
   },
   headerTitleWrap: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 8,
   },
   title: {
     fontSize: 18,
-    lineHeight: 22,
     fontWeight: "600",
-    letterSpacing: 0.18,
     color: COLORS.TEXT_PRIMARY,
     textAlign: "center",
   },
@@ -248,42 +315,59 @@ const styles = StyleSheet.create({
   stepText: {
     marginTop: 14,
     fontSize: 14,
-    lineHeight: 18,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY_70,
   },
   sectionTitle: {
     marginTop: 16,
     fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "500",
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
   },
-  reasonsCard: {
+  cardOuter: {
     marginTop: 16,
     width: "100%",
-    maxWidth: 382,
-    alignSelf: "center",
-    backgroundColor: COLORS.SURFACE,
+    alignSelf: "stretch",
+  },
+  reasonsInner: {
     borderRadius: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+  },
+  sectionCardInner: {
+    borderRadius: 10,
+    paddingVertical: 12,
     paddingHorizontal: 10,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.TEXT_PRIMARY,
+  },
+  dropdownPress: {
+    marginTop: 8,
+    width: "100%",
+    borderRadius: 64,
+  },
+  dropdownPressPressed: {
+    opacity: 0.92,
+  },
+  providerFieldContainer: {
+    marginTop: 0,
+    width: "100%",
   },
   reasonRow: {
-    minHeight: 62,
-    justifyContent: "center",
-    paddingLeft: 46,
-    position: "relative",
+    minHeight: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 6,
+    paddingVertical: 8,
+  },
+  reasonRowPressed: {
+    opacity: 0.95,
   },
   reasonSelectedWrap: {
-    position: "absolute",
-    left: 0,
     width: 30,
     height: 30,
     borderRadius: 60,
@@ -303,160 +387,63 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   reasonUnselectedWrap: {
-    position: "absolute",
-    left: 0,
     width: 30,
     height: 30,
-    borderRadius: 46,
-    overflow: "hidden",
+  },
+  radioEmpty: {
+    width: 2,
+    height: 2,
   },
   reasonText: {
     fontSize: 14,
-    lineHeight: 18,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },
   reasonDivider: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 1,
+    height: StyleSheet.hairlineWidth,
     backgroundColor: COLORS.TEXT_PRIMARY_10,
+    marginLeft: 48,
   },
-  providerCard: {
-    marginTop: 20,
+  otherReasonField: {
+    marginTop: 8,
+    marginBottom: 4,
     width: "100%",
-    maxWidth: 382,
-    alignSelf: "center",
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 14,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  cardTitle: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "500",
-    color: COLORS.TEXT_PRIMARY,
-  },
-  providerField: {
-    marginTop: 12,
-    height: 46,
-    borderRadius: 64,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
-  },
-  providerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  providerName: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY,
-  },
-  insuranceCard: {
-    marginTop: 20,
-    width: "100%",
-    maxWidth: 382,
-    alignSelf: "center",
-    backgroundColor: COLORS.SURFACE,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 14,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    ...Platform.select({
-      android: { elevation: 3 },
-    }),
   },
   insuranceRow: {
     marginTop: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: 12,
   },
   insuranceLeft: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-  },
-  insuranceIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 114,
-    overflow: "hidden",
-  },
-  insuranceIconOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    alignItems: "center",
-    justifyContent: "center",
+    minWidth: 0,
   },
   insuranceName: {
     fontSize: 14,
-    lineHeight: 18,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
+    flex: 1,
   },
-  changeButton: {
-    width: 65,
-    height: 28,
-    borderRadius: 60,
-    borderWidth: 1,
-    borderColor: "#0E7490",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLORS.SURFACE,
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    ...Platform.select({
-      android: { elevation: 2 },
-    }),
-  },
-  changeText: {
+  changeBtnText: {
     fontSize: 12,
-    lineHeight: 14,
-    fontWeight: "500",
-    color: "#0E7490",
+    fontWeight: "600",
+    color: COLORS.PRIMARY,
   },
   footer: {
     paddingTop: 12,
-    paddingBottom: Platform.OS === "ios" ? 20 : 24,
-    width: "100%",
-    alignSelf: "center",
+    paddingBottom: Platform.OS === "ios" ? 20 : 16,
     paddingHorizontal: 16,
   },
   scrollArea: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 16,
+    paddingBottom: 24,
     paddingHorizontal: 16,
   },
 });

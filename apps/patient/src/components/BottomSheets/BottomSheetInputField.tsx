@@ -1,65 +1,64 @@
 import React, { useState } from "react";
 import {
   View,
-  TextInput,
-  TextInputProps,
   StyleProp,
   StyleSheet,
+  TextInput,
+  TextInputProps,
   TouchableOpacity,
   Platform,
   ViewStyle,
 } from "react-native";
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
-import InnerShadowView from "./InnerShadowView";
-import { COLORS } from "../constants/theme";
+import InnerShadowView from "../../neomorphism/InnerShadowView";
+import { COLORS } from "../../constants/theme";
 
-interface Props {
+type ShellProps = {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   onRightIconPress?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
   borderRadius?: number;
-  /** Fixed row height for single-line fields. Takes precedence over `minHeight`. */
   height?: number;
   minHeight?: number;
-  isFocused?: boolean;
-}
+};
+
+type Props = ShellProps & TextInputProps;
 
 const HEIGHT = 46;
 const RADIUS = 64;
-
-/** Stronger vertical inner shadow (Skia dy/blur), without changing input row height. */
 const INNER_SHADOW_DY = 4;
 const INNER_SHADOW_BLUR = 5;
 
 /**
- * Matches `apps/staff` / `apps/doctor` neomorphism `InputField`:
- * empty + blurred → raised outer shadows only;
- * focused or has text → softer outer shadows + `InnerShadowView` inner recess.
+ * Same neumorphic chrome as {@link ../../neomorphism/InputField} but uses
+ * `BottomSheetTextInput` so the keyboard interacts correctly inside `@gorhom/bottom-sheet`.
  */
-const InputField: React.FC<Props & TextInputProps> = ({
-  leftIcon,
-  rightIcon,
-  onRightIconPress,
-  containerStyle,
-  borderRadius,
-  height: heightProp,
-  minHeight,
-  isFocused,
-  style,
-  ...props
-}) => {
+const BottomSheetInputField = React.forwardRef(function BottomSheetInputField(
+  props: Props,
+  forwardedRef: React.ForwardedRef<TextInput>,
+) {
+  const {
+    leftIcon,
+    rightIcon,
+    onRightIconPress,
+    containerStyle,
+    borderRadius,
+    height: heightProp,
+    minHeight,
+    style,
+    ...rest
+  } = props;
+
   const radius = borderRadius ?? RADIUS;
   const fieldHeight = heightProp ?? minHeight ?? HEIGHT;
   const [focused, setFocused] = useState(false);
   const [surfaceWidth, setSurfaceWidth] = useState(0);
-  const [inputHeight, setInputHeight] = useState(fieldHeight);
-  const valueText = String(props.value ?? props.defaultValue ?? "");
-  const hasText = valueText.trim().length > 0;
-  const isFocusControlled = typeof isFocused === "boolean";
-  const showFocusedState = isFocusControlled ? isFocused : focused || hasText;
 
-  const resolvedShadowHeight = Math.max(fieldHeight, inputHeight);
+  const valueText = String(rest.value ?? rest.defaultValue ?? "");
+  const hasText = valueText.trim().length > 0;
+  const showFocusedState = focused || hasText;
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -122,14 +121,15 @@ const InputField: React.FC<Props & TextInputProps> = ({
             >
               {showFocusedState && surfaceWidth > 0 && (
                 <View
+                  pointerEvents="none"
                   style={[
                     styles.shadowWrapper,
-                    { height: resolvedShadowHeight, borderRadius: radius },
+                    { height: fieldHeight, borderRadius: radius },
                   ]}
                 >
                   <InnerShadowView
                     width={surfaceWidth}
-                    height={resolvedShadowHeight}
+                    height={fieldHeight}
                     borderRadius={radius}
                     color="#FFFFFF"
                     darkShadowDy={INNER_SHADOW_DY}
@@ -146,51 +146,33 @@ const InputField: React.FC<Props & TextInputProps> = ({
                   {
                     borderRadius: radius,
                     minHeight: fieldHeight,
-                    height: props.multiline ? undefined : fieldHeight,
-                    alignItems: props.multiline ? "flex-start" : "center",
-                    paddingTop: props.multiline ? 12 : 0,
+                    height: fieldHeight,
                   },
                 ]}
-                onLayout={(event) => {
-                  if (!props.multiline) return;
-                  const nextHeight = event.nativeEvent.layout.height;
-                  if (nextHeight > 0 && Math.abs(nextHeight - inputHeight) > 1) {
-                    setInputHeight(nextHeight);
-                  }
-                }}
               >
-                {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
+                {leftIcon ? <View style={styles.leftIcon}>{leftIcon}</View> : null}
 
-                <TextInput
-                  {...props}
-                  style={[
-                    styles.input,
-                    hasText ? styles.inputTyped : styles.inputPlaceholder,
-                    props.multiline && {
-                      minHeight: Math.max(40, fieldHeight - 24),
-                      textAlignVertical: "top",
-                    },
-                    style,
-                  ]}
-                  placeholderTextColor={COLORS.TEXT_40}
-                  multiline={props.multiline}
-                  numberOfLines={props.multiline ? props.numberOfLines : 1}
+                <BottomSheetTextInput
+                  {...rest}
+                  ref={forwardedRef as any}
+                  style={[styles.input, hasText ? styles.inputTyped : styles.inputPlaceholder, style]}
+                  placeholderTextColor={rest.placeholderTextColor ?? COLORS.TEXT_40}
                   allowFontScaling={false}
                   onFocus={(e) => {
                     setFocused(true);
-                    props.onFocus?.(e);
+                    rest.onFocus?.(e);
                   }}
                   onBlur={(e) => {
                     setFocused(false);
-                    props.onBlur?.(e);
+                    rest.onBlur?.(e);
                   }}
                 />
 
-                {rightIcon && (
+                {rightIcon ? (
                   <TouchableOpacity onPress={onRightIconPress} style={styles.rightIcon}>
                     {rightIcon}
                   </TouchableOpacity>
-                )}
+                ) : null}
               </View>
             </View>
           </View>
@@ -198,16 +180,17 @@ const InputField: React.FC<Props & TextInputProps> = ({
       </View>
     </View>
   );
-};
+});
 
-export default InputField;
+BottomSheetInputField.displayName = "BottomSheetInputField";
+
+export default BottomSheetInputField;
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginTop: 12,
+    marginTop: 0,
   },
-  /** Idle drop shadow lives here so one native outline follows the pill (`elevation` / iOS shadow). */
   outerPill: {
     width: "100%",
     overflow: "visible",
@@ -316,6 +299,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     includeFontPadding: false,
+    paddingVertical: 0,
   },
   inputPlaceholder: {
     fontWeight: "400",

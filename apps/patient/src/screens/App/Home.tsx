@@ -1,13 +1,15 @@
 import React from "react";
-import { FlatList, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import AppButton from "../../components/Common/AppButton";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import NeumorphicQuickActionTile from "../../components/Common/NeumorphicQuickActionTile";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
+import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../constants/theme";
-import InnerShadowView from "../../neomorphism/InnerShadowView";
-import NeumorphicQuickActionTile from "../../components/Common/NeumorphicQuickActionTile";
 import navigationStrings from "../../constants/navigationStrings";
 import MessageIcon from "../../assets/icons/message.svg";
 import ScheduleIcon from "../../assets/icons/schedule.svg";
@@ -58,12 +60,17 @@ const Home = () => {
       icon={item.icon}
       label={item.label}
       badge={item.badge}
+      labelNumberOfLines={1}
     />
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+      >
         <ProfileAvatar
           overlaySource={OverlayImage}
           imageSource={DoctorTempImage}
@@ -76,20 +83,30 @@ const Home = () => {
         <Text style={styles.heading}>Welcome back, Sarah!</Text>
         <Text style={styles.subHeading}>Here&apos;s how I can assist you</Text>
 
-        <View style={styles.alertCard}>
-          <View style={styles.alertLeft}>
-            <View style={styles.iconWrap}>
-              <View style={styles.iconInnerShadow}>
-                <InnerShadowView width={40} height={40} borderRadius={20} color="#F7FBFF" />
-              </View>
-              <MessageIcon width={20} height={20} />
-            </View>
-            <Text style={styles.alertText}>You have a new message from{"\n"}your care tewam</Text>
-          </View>
-          <TouchableOpacity style={styles.viewBtn} activeOpacity={0.85}>
-            <Text style={styles.viewBtnText}>View</Text>
-          </TouchableOpacity>
-        </View>
+        <NeumorphicCard
+          outerStyle={styles.messageCardOuter}
+          innerStyle={styles.messageCardInner}
+          borderRadius={10}
+        >
+          <InnerShadowIcon
+            icon={<MessageIcon width={20} height={20} />}
+            size={40}
+            radius={20}
+            surfaceColor={COLORS.INNER_SURFACE}
+          />
+          <Text style={styles.alertText}>You have a new message from{"\n"}your care team</Text>
+          <AppButton
+            text="View"
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            width={60}
+            height={28}
+            borderRadius={14}
+            textStyle={styles.viewButtonText}
+            onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
+          />
+        </NeumorphicCard>
 
         <View style={styles.grid}>
           <FlatList
@@ -98,6 +115,7 @@ const Home = () => {
             renderItem={renderQuickAction}
             numColumns={4}
             scrollEnabled={false}
+            columnWrapperStyle={styles.gridColumn}
           />
         </View>
       </ScrollView>
@@ -111,8 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.SURFACE,
   },
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 130,
+    paddingBottom: 50,
   },
   avatarContainer: {
     alignItems: "center",
@@ -154,51 +171,26 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "#6B6B6B",
   },
-  alertCard: {
+  messageCardOuter: {
     marginTop: 20,
-    height: 60,
-    borderRadius: 10,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    shadowColor: "#728EAB",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    marginHorizontal: 16,
+    alignSelf: "stretch",
   },
-  alertLeft: {
+  messageCardInner: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-  },
-  iconWrap: {
-    width: 40,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  iconInnerShadow: {
-    position: "absolute",
+    paddingVertical: 8,
+    paddingHorizontal: 8,
   },
   alertText: {
+    flex: 1,
     fontSize: 14,
     lineHeight: 18,
     color: COLORS.TEXT_PRIMARY,
     fontWeight: "400",
   },
-  viewBtn: {
-    width: 60,
-    height: 28,
-    borderRadius: 60,
-    borderWidth: 1,
-    borderColor: COLORS.PRIMARY,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLORS.SURFACE,
-  },
-  viewBtnText: {
+  viewButtonText: {
     color: COLORS.PRIMARY,
     fontSize: 12,
     lineHeight: 14,
@@ -208,11 +200,16 @@ const styles = StyleSheet.create({
     marginTop: 18,
     flexDirection: "row",
     flexWrap: "wrap",
+    flex: 1,
   },
   tile: {
-    width: "25%",
+    width: "23%",
     alignItems: "center",
     marginBottom: 16,
+  },
+  gridColumn: {
+    paddingHorizontal: 16,
+    gap: 10,
   },
 });
 

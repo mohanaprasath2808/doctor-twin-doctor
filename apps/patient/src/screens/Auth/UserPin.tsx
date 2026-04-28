@@ -1,56 +1,35 @@
-import React, { useContext, useEffect, useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import OtpTextInput from "../../components/Auth/OtpTextInput";
-import OtpTimer from "../../components/Auth/OtpTimer";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import { COLORS } from "../../constants/theme";
-import navigationStrings from "../../constants/navigationStrings";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
-import type { OtpVerificationFlow } from "../../constants/authNavigation";
 import { AuthContext } from "../../context/AuthContext";
+import navigationStrings from "../../constants/navigationStrings";
 
-function resolveFlow(routeParams: unknown): OtpVerificationFlow {
-  const raw = routeParams as { flow?: OtpVerificationFlow } | undefined;
-  return raw?.flow ?? "signup";
-}
-
-const OtpVerification = () => {
+const UserPinScreen = () => {
   const navigation = useNavigation<any>();
-  const route = useRoute();
-  const [otp, setOtp] = useState("");
-
-  const authContext = useContext(AuthContext);
-  if (!authContext) {
-    throw new Error("OtpVerification must be used within AuthContextProvider");
+  const [pin, setPin] = useState("");
+  const auth = useContext(AuthContext);
+  if (!auth) {
+    throw new Error("UserPin requires AuthContextProvider");
   }
-  const { setIsLogin } = authContext;
+  const { setIsLogin } = auth;
 
-  const flow = resolveFlow(route.params);
-
-  useEffect(() => {
-    setOtp("");
-  }, [flow]);
-
-  const handleVerify = () => {
-    switch (flow) {
-      case "userPin":
-        navigation.navigate(navigationStrings.USER_PIN);
-        return;
-      case "signup":
-      case "otpLogin":
-        navigation.navigate(navigationStrings.CHOOSE_LOGIN_METHOD);
-        return;
-      case "otpFromChooser":
-      case "faceId":
-        setIsLogin(true);
-        return;
-      default:
-        navigation.navigate(navigationStrings.CHOOSE_LOGIN_METHOD);
-    }
+  const handleContinue = () => {
+    navigation.navigate(navigationStrings.VERIFY_IDENTITY);
   };
 
   return (
@@ -74,23 +53,37 @@ const OtpVerification = () => {
             onPress={() => navigation.goBack()}
           />
 
-          <Text style={styles.title}>Verification Code</Text>
-          <Text style={styles.subTitle}>Enter the 4-digit code sent to your Email address</Text>
+          <Text style={styles.title}>Set your User PIN</Text>
+          <Text style={styles.subTitle}>Enter the 4-digit code to set your PIN</Text>
 
-          <View style={styles.otpContainer}>
-            <OtpTextInput otp={otp} setOtp={setOtp} />
+          <View style={styles.pinContainer}>
+            <OtpTextInput otp={pin} setOtp={setPin} />
           </View>
 
-          <OtpTimer initialSeconds={30} onResend={() => {}} />
+          <ReusableButton
+            title="Continue"
+            onPress={handleContinue}
+            containerStyle={styles.ctaBtn}
+          />
 
-          <ReusableButton title="Verify" onPress={handleVerify} containerStyle={styles.verifyBtn} />
+          <View style={styles.footerRow}>
+            <Text style={styles.footerMuted}>Do you remember PIN? </Text>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                /** Wire to Forgot PIN flow when that screen exists in AuthStack. */
+              }}
+            >
+              <Text style={styles.footerLink}>Forgot PIN</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-export default OtpVerification;
+export default UserPinScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -123,14 +116,31 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
     fontWeight: "400",
   },
-  otpContainer: {
+  pinContainer: {
     marginTop: 32,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
-  verifyBtn: {
-    marginTop: 28,
+  ctaBtn: {
+    marginTop: 36,
     width: "100%",
+  },
+  footerRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    marginTop: 28,
+    paddingHorizontal: 8,
+  },
+  footerMuted: {
+    fontSize: 14,
+    color: COLORS.TEXT_PRIMARY_60,
+    fontWeight: "400",
+  },
+  footerLink: {
+    fontSize: 14,
+    color: COLORS.SECONDARY,
+    fontWeight: "600",
   },
 });

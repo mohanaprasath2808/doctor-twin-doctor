@@ -116,6 +116,7 @@ const AppButton: React.FC<AppButtonProps> = ({
             style={[
               { borderRadius: Math.max(0, borderRadius - resolvedBorderWidth) },
               {
+                position: "absolute",
                 top: resolvedBorderWidth,
                 left: resolvedBorderWidth,
                 right: resolvedBorderWidth,
@@ -140,15 +141,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
   },
+  /** Soft neumorphic outer shadow — aligned with `NeumorphicCard` / header icon pills across apps */
   shadow: Platform.select({
     ios: {
-      shadowColor: "#A0B4C8",
-      shadowOffset: { width: 3, height: 2 },
-      shadowOpacity: 0.18,
-      shadowRadius: 6,
+      shadowColor: "#C8CBCC",
+      shadowOffset: { width: 4, height: 4 },
+      shadowOpacity: 0.35,
+      shadowRadius: 10,
     },
     android: {
-      elevation: 3,
+      elevation: 4,
+      shadowColor: "#C8CBCC",
     },
     default: {},
   }) as ViewStyle,
