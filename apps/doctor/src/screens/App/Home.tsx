@@ -193,7 +193,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -221,7 +221,7 @@ const Home = () => {
             <InnerShadowIcon icon={item.icon()} size={40} />
           </View>
           <View style={styles.cardTextWrap}>
-            <Text style={styles.cardLabel} numberOfLines={1}>
+            <Text style={styles.cardLabel} numberOfLines={2}>
               {item.label}
             </Text>
             {item.badgeType === "sub" && item.badge && (
@@ -302,13 +302,17 @@ const styles = StyleSheet.create({
   },
   greetingLight: {
     fontSize: 16,
+    lineHeight: 20,
     color: COLORS.TEXT_80,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
   },
   greetingBold: {
     fontSize: 16,
+    lineHeight: 20,
     color: COLORS.TEXT_DARK,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
   },
   bellWrap: {
     width: 44,
@@ -377,9 +381,10 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 16,
-    fontWeight: "500",
     color: COLORS.PRIMARY,
     lineHeight: 20,
+    fontFamily: "SF-Pro-Text-Medium",
+    fontWeight: "500",
   },
   subBadgeText: {
     fontSize: 10,
@@ -427,7 +432,7 @@ const styles = StyleSheet.create({
   },
   greetingContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "baseline",
     gap: 6,
   },
 });

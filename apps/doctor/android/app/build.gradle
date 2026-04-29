@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.doctortwindoctor'
+    namespace 'com.solimancare.doctor'
     defaultConfig {
-        applicationId 'com.anonymous.doctortwindoctor'
+        applicationId 'com.solimancare.doctor'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

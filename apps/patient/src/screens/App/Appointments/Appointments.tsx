@@ -51,7 +51,6 @@ const UPCOMING: UpcomingAppointment[] = [
   },
   {
     id: "3",
-    status: "past" as const,
     datetime: "Thu, Apr 04 – 2:00 PM",
     doctor: "Consult with Dr. Shahinaz Soliman",
     clinic: "Soliman Care Clinic \u00b7 Torrance, CA",
@@ -159,7 +158,7 @@ const Appointments = () => {
               borderRadius={60}
               width="100%"
               textStyle={styles.outlineButtonText}
-              onPress={() => { }}
+              onPress={() => {}}
             />
           </View>
           <View style={styles.halfBtn}>
