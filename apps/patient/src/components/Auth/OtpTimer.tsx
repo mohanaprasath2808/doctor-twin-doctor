@@ -74,18 +74,18 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   timerSeconds: {
-    color: COLORS.TEXT_PRIMARY,
+    color: COLORS.ACCENT_LIGHT,
     fontWeight: "600",
   },
   resendText: {
     textAlign: "center",
-    color: COLORS.TEXT_PRIMARY,
+    color: COLORS.TEXT_60,
     fontSize: 14,
     fontWeight: "400",
   },
   resendLink: {
-    color: COLORS.PRIMARY,
-    fontWeight: "600",
+    color: COLORS.ACCENT_LIGHT,
+    fontWeight: "500",
   },
 });
 

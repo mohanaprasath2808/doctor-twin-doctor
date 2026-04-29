@@ -4,7 +4,6 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import { useNavigation } from "@react-navigation/native";
 
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
-import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import InputField from "../../neomorphism/InputField";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import { COLORS } from "../../constants/theme";
@@ -15,6 +14,7 @@ import FlagIcon from "../../assets/icons/flagIcon.svg";
 import DropDown from "../../assets/icons/dropDown.svg";
 import BirthIcon from "../../assets/icons/birth.svg";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
+import IconComponent from "../../neomorphism/IconComponent";
 
 const DISPLAY_NAME = "Sarah";
 
@@ -39,9 +39,10 @@ const VerifyIdentity = () => {
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.scrollContent}
           >
-            <InnerShadowIcon
+            <IconComponent
               icon={<LeftArrow width={22} height={22} />}
-              size={40}
+              width={40}
+              height={40}
               radius={20}
               style={styles.backButton}
               onPress={() => navigation.goBack()}
@@ -162,16 +163,15 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 16,
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
     textAlign: "center",
   },
   subtitle: {
-    marginTop: 10,
-    fontSize: 15,
+    marginTop: 16,
+    fontSize: 16,
     lineHeight: 22,
-    color: COLORS.TEXT_PRIMARY_60,
-    textAlign: "center",
+    color: COLORS.TEXT_PRIMARY_80,
     paddingHorizontal: 8,
     fontWeight: "400",
   },

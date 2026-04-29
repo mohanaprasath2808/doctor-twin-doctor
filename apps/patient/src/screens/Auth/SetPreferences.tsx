@@ -30,6 +30,7 @@ import BellIcon from "../../assets/icons/bell.svg";
 import DropDown from "../../assets/icons/dropDown.svg";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
 import { AuthContext } from "../../context/AuthContext";
+import IconComponent from "../../neomorphism/IconComponent";
 
 const DISPLAY_NAME = "Sarah";
 
@@ -85,16 +86,7 @@ const SetPreferences = () => {
         keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
       >
         <View style={styles.column}>
-          <View style={styles.header}>
-            <InnerShadowIcon
-              icon={<LeftArrow width={22} height={22} />}
-              size={40}
-              radius={20}
-              onPress={() => navigation.goBack()}
-            />
-            <Text style={styles.headerTitle}>Set Preferences</Text>
-            <View style={styles.headerSpacer} />
-          </View>
+
 
           <ScrollView
             style={styles.scroll}
@@ -103,6 +95,17 @@ const SetPreferences = () => {
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.scrollContent}
           >
+            <View style={styles.header}>
+              <IconComponent
+                icon={<LeftArrow width={22} height={22} />}
+                width={40}
+                height={40}
+                radius={20}
+                onPress={() => navigation.goBack()}
+              />
+              <Text style={styles.headerTitle}>Set Preferences</Text>
+              <View style={styles.headerSpacer} />
+            </View>
             <ProfileAvatar
               overlaySource={OverlayImage}
               imageSource={DoctorTempImage}
@@ -112,10 +115,10 @@ const SetPreferences = () => {
               imageStyle={styles.avatarImage}
             />
 
-            <Text style={styles.greeting}>Hi {DISPLAY_NAME},</Text>
 
-            <Text style={styles.blockTitle}>Pharmacy</Text>
             <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.pharmacyCardInner}>
+              <Text style={styles.blockTitle}>Pharmacy</Text>
+
               <Text style={styles.innerLabel}>Pharmacy</Text>
               <Pressable
                 onPress={() => pharmacySheetRef.current?.present()}
@@ -128,7 +131,9 @@ const SetPreferences = () => {
                   placeholder="Select Pharmacy"
                   onChangeText={setPharmacy}
                   containerStyle={styles.pharmacyField}
-                  rightIcon={<DropDown width={16} height={16} />}
+                  style={styles.pharmacyInput}
+                  height={46}
+                  rightIcon={<DropDown width={10} height={10} />}
                 />
               </Pressable>
             </NeumorphicCard>
@@ -138,7 +143,7 @@ const SetPreferences = () => {
               innerStyle={styles.notifInner}
             >
               <InnerShadowIcon
-                icon={<BellIcon width={20} height={20} />}
+                icon={<BellIcon width={18} height={18} />}
                 size={40}
                 radius={20}
                 style={styles.bellInset}
@@ -147,8 +152,9 @@ const SetPreferences = () => {
               <NeumorphicSwitch value={notificationsOn} onValueChange={setNotificationsOn} />
             </NeumorphicCard>
 
-            <Text style={[styles.blockTitle, styles.commSectionTitle]}>Communication</Text>
-            <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.commCardInner}>
+            <NeumorphicCard outerStyle={[styles.cardOuter, { marginTop: 20 }]} innerStyle={styles.commCardInner}>
+              <Text style={[styles.blockTitle, { marginHorizontal: 10 }]}>Communication</Text>
+
               <CommRow
                 label="Email"
                 selected={communication.email}
@@ -235,13 +241,12 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 16,
     paddingTop: 12,
-    backgroundColor: COLORS.SURFACE,
+    backgroundColor: COLORS.SURFACE
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 12,
     paddingTop: Platform.OS === "ios" ? 4 : 8,
     paddingBottom: 8,
   },
@@ -262,7 +267,7 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     alignItems: "center",
-    paddingTop: 4,
+    marginTop: 4,
   },
   avatarWrapper: {
     width: 180,
@@ -292,8 +297,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
   },
   blockTitle: {
-    marginTop: 20,
-    marginBottom: 8,
+    marginBottom: 10,
     fontSize: 16,
     fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
@@ -311,19 +315,24 @@ const styles = StyleSheet.create({
   pharmacyField: {
     marginTop: 0,
   },
+  pharmacyInput: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: COLORS.TEXT_40,
+  },
   innerLabel: {
     fontSize: 12,
     color: COLORS.TEXT_PRIMARY_60,
     marginBottom: 6,
   },
   notifCard: {
-    marginTop: 12,
+    marginTop: 20,
   },
   notifInner: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
   },
   bellInset: {
     marginRight: 12,
@@ -335,7 +344,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
   },
   commCardInner: {
-    paddingVertical: 4,
+    paddingVertical: 14,
     paddingHorizontal: 0,
   },
   commRow: {

@@ -18,6 +18,8 @@ const navigationStrings = {
   HOME: "Home",
   APPOINTMENTS: "Appointments",
   APPOINTMENT_DETAIL: "AppointmentDetail",
+  APPOINTMENT_CONFIRM: "AppointmentConfirm",
+  APPOINTMENT_SCHEDULED: "AppointmentScheduled",
   SCHEDULE_STEP_1: "ScheduleStep1",
   SCHEDULE_STEP_2: "ScheduleStep2",
   NOTIFICATIONS: "Notifications",

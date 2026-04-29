@@ -1,7 +1,8 @@
 export const COLORS = {
   PRIMARY: "#0E7F90",
   SECONDARY: "#14BBD4",
-  ACCENT: "#11BBD4", // + #0E7F90 blend in Figma
+  ACCENT: "#11BBD4",
+  ACCENT_LIGHT: "#0E7F90", // + #0E7F90 blend in Figma
 
   TEXT_PRIMARY: "#2C2C2C",
   /** Neumorphic raised controls / tiles (aligned with staff app tokens) */

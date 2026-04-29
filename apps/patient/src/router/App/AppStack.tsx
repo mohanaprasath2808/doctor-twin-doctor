@@ -3,6 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import navigationStrings from "../../constants/navigationStrings";
 import Appointments from "../../screens/App/Appointments/Appointments";
 import AppointmentDetail from "../../screens/App/Appointments/AppointmentDetail";
+import AppointmentConfirm from "../../screens/App/Appointments/AppointmentConfirm";
+import AppointmentScheduled from "../../screens/App/Appointments/AppointmentScheduled";
 import ScheduleStep1 from "../../screens/App/Appointments/ScheduleStep1";
 import ScheduleStep2 from "../../screens/App/Appointments/ScheduleStep2";
 import Labs from "../../screens/App/Labs/Labs";
@@ -25,6 +27,14 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.APPOINTMENT_DETAIL}
         component={AppointmentDetail}
+      />
+      <Stack.Screen
+        name={navigationStrings.APPOINTMENT_CONFIRM}
+        component={AppointmentConfirm}
+      />
+      <Stack.Screen
+        name={navigationStrings.APPOINTMENT_SCHEDULED}
+        component={AppointmentScheduled}
       />
       <Stack.Screen
         name={navigationStrings.SCHEDULE_STEP_1}

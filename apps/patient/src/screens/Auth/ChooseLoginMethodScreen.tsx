@@ -78,11 +78,11 @@ const LoginMethodRow: React.FC<RowProps> = ({ label, icon, onPress }) => (
   <NeumorphicCard
     outerStyle={styles.cardOuter}
     innerStyle={styles.cardInner}
-    borderRadius={12}
+    borderRadius={10}
     onPress={onPress}
     activeOpacity={0.88}
   >
-    <InnerShadowIcon icon={icon} size={40} radius={20} />
+    <InnerShadowIcon icon={icon} size={40} radius={114} />
     <Text style={styles.rowLabel}>{label}</Text>
     <RightArrowIcon width={10} height={10} />
   </NeumorphicCard>
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     borderRadius: 115,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 20,
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
     textAlign: "center",
     marginTop: 4,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 16,
     fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_60,
+    color: COLORS.TEXT_PRIMARY_80,
     textAlign: "center",
   },
   cards: {
@@ -144,19 +144,16 @@ const styles = StyleSheet.create({
   },
   cardOuter: {
     width: "100%",
-    minHeight: 60,
   },
   cardInner: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    minHeight: 60,
+    padding: 6,
     gap: 12,
   },
   rowLabel: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },

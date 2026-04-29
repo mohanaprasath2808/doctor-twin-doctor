@@ -126,14 +126,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontWeight: "700",
-    color: "#2D2D2D",
+    fontWeight: "600",
+    color: COLORS.TEXT_DARK,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
     fontWeight: "400",
-    color: "#8E8E93",
+    color: COLORS.TEXT_80,
     textAlign: "center",
     marginTop: 8,
   },
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: "#8E8E93",
+    color: COLORS.TEXT_60,
     marginBottom: 4,
   },
   inputField: {
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   footerLink: {
-    color: COLORS.SECONDARY,
+    color: "#0E7490",
     fontWeight: "600",
     fontSize: 14,
   },

@@ -12,6 +12,7 @@ import navigationStrings from "../../constants/navigationStrings";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
 import type { OtpVerificationFlow } from "../../constants/authNavigation";
 import { AuthContext } from "../../context/AuthContext";
+import IconComponent from "../../neomorphism/IconComponent";
 
 function resolveFlow(routeParams: unknown): OtpVerificationFlow {
   const raw = routeParams as { flow?: OtpVerificationFlow } | undefined;
@@ -66,9 +67,10 @@ const OtpVerification = () => {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.scrollContent}
         >
-          <InnerShadowIcon
+          <IconComponent
             icon={<LeftArrow width={22} height={22} />}
-            size={40}
+            width={40}
+            height={40}
             radius={20}
             style={styles.backButton}
             onPress={() => navigation.goBack()}
@@ -81,7 +83,7 @@ const OtpVerification = () => {
             <OtpTextInput otp={otp} setOtp={setOtp} />
           </View>
 
-          <OtpTimer initialSeconds={30} onResend={() => {}} />
+          <OtpTimer initialSeconds={30} onResend={() => { }} />
 
           <ReusableButton title="Verify" onPress={handleVerify} containerStyle={styles.verifyBtn} />
         </ScrollView>
@@ -111,20 +113,18 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 20,
-    fontSize: 26,
-    fontWeight: "700",
+    fontSize: 32,
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
-    letterSpacing: -0.3,
   },
   subTitle: {
     marginTop: 10,
-    fontSize: 15,
-    lineHeight: 22,
-    color: COLORS.TEXT_PRIMARY,
+    fontSize: 14,
+    color: COLORS.TEXT_60,
     fontWeight: "400",
   },
   otpContainer: {
-    marginTop: 32,
+    marginTop: 28,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",

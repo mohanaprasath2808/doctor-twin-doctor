@@ -18,6 +18,7 @@ import { COLORS } from "../../constants/theme";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
 import { AuthContext } from "../../context/AuthContext";
 import navigationStrings from "../../constants/navigationStrings";
+import IconComponent from "../../neomorphism/IconComponent";
 
 const UserPinScreen = () => {
   const navigation = useNavigation<any>();
@@ -45,9 +46,10 @@ const UserPinScreen = () => {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={styles.scrollContent}
         >
-          <InnerShadowIcon
+          <IconComponent
             icon={<LeftArrow width={22} height={22} />}
-            size={40}
+            width={40}
+            height={40}
             radius={20}
             style={styles.backButton}
             onPress={() => navigation.goBack()}
@@ -104,20 +106,18 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 20,
-    fontSize: 26,
-    fontWeight: "700",
+    fontSize: 32,
+    fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
-    letterSpacing: -0.3,
   },
   subTitle: {
     marginTop: 10,
-    fontSize: 15,
-    lineHeight: 22,
-    color: COLORS.TEXT_PRIMARY,
+    fontSize: 14,
+    color: COLORS.TEXT_60,
     fontWeight: "400",
   },
   pinContainer: {
-    marginTop: 32,
+    marginTop: 28,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     fontSize: 14,
-    color: COLORS.SECONDARY,
+    color: COLORS.ACCENT_LIGHT,
     fontWeight: "600",
   },
 });

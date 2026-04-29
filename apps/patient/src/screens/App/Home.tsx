@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, Platform, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
@@ -43,9 +43,32 @@ const QUICK_ACTIONS = [
 
 const Home = () => {
   const navigation = useNavigation<any>();
-  const renderQuickAction = ({ item }: { item: (typeof QUICK_ACTIONS)[number] }) => (
+  const { width: screenWidth } = useWindowDimensions();
+  const numColumns = 4;
+  const horizontalPadding = 16;
+  const columnGap = 10;
+  const rowGap = 10;
+  const tileWidth =
+    (screenWidth - horizontalPadding * 2 - columnGap * (numColumns - 1)) / numColumns;
+  const outerDiameter = Math.min(88, tileWidth);
+  const innerShadowDiameter = Math.max(56, outerDiameter - 16);
+
+  const renderQuickAction = ({
+    item,
+    index,
+  }: {
+    item: (typeof QUICK_ACTIONS)[number];
+    index: number;
+  }) => (
     <NeumorphicQuickActionTile
-      containerStyle={styles.tile}
+      containerStyle={[
+        styles.tile,
+        {
+          width: tileWidth,
+          marginRight: (index + 1) % numColumns === 0 ? 0 : columnGap,
+          marginBottom: rowGap,
+        },
+      ]}
       onPress={() => {
         if (item.id === "schedule") {
           navigation.navigate(navigationStrings.APPOINTMENTS);
@@ -61,6 +84,8 @@ const Home = () => {
       label={item.label}
       badge={item.badge}
       labelNumberOfLines={1}
+      outerDiameter={outerDiameter}
+      innerShadowDiameter={innerShadowDiameter}
     />
   );
 
@@ -113,8 +138,9 @@ const Home = () => {
             data={QUICK_ACTIONS}
             keyExtractor={(item) => item.id}
             renderItem={renderQuickAction}
-            numColumns={4}
+            numColumns={numColumns}
             scrollEnabled={false}
+            contentContainerStyle={styles.gridContent}
             columnWrapperStyle={styles.gridColumn}
           />
         </View>
@@ -198,18 +224,16 @@ const styles = StyleSheet.create({
   },
   grid: {
     marginTop: 18,
-    flexDirection: "row",
-    flexWrap: "wrap",
     flex: 1,
   },
+  gridContent: {
+    paddingHorizontal: 16,
+  },
   tile: {
-    width: "23%",
     alignItems: "center",
-    marginBottom: 16,
   },
   gridColumn: {
-    paddingHorizontal: 16,
-    gap: 10,
+    justifyContent: "flex-start",
   },
 });
 
