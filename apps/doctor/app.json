@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.doctortwindoctor",
+      "bundleIdentifier": "com.solimancare.doctor",
       "appleTeamId": "2VSJ2UH66N"
     },
     "android": {
@@ -24,13 +24,27 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.doctortwindoctor"
+      "package": "com.solimancare.doctor",
+      "permissions": ["android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "@react-native-community/datetimepicker"
-    ]
+      "@react-native-community/datetimepicker",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID"
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "739e7ad7-54d7-47b4-bfa9-f9c3ed7ad693"
+      }
+    },
+    "owner": "solimancare-1"
   }
 }

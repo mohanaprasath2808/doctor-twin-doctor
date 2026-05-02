@@ -1,0 +1,34 @@
+import navigationStrings from "../../constants/navigationStrings";
+import type {
+  AssignTaskParams,
+  PatientTaskDetailParams,
+  StaffFormParams,
+} from "./AppStack";
+
+export type { StaffFormParams };
+
+export type AppStackParamList = {
+  [navigationStrings.SHIFT_START]: undefined;
+  [navigationStrings.BOTTOM_NAVIGATION]:
+    | undefined
+    | {
+        screen?: string;
+        params?: Record<string, unknown>;
+      };
+  [navigationStrings.STAFF]: undefined;
+  [navigationStrings.STAFF_FORM]: StaffFormParams | undefined;
+  [navigationStrings.TASK_INBOX]: undefined;
+  [navigationStrings.PATIENT_TASK_DETAIL]: PatientTaskDetailParams;
+  [navigationStrings.ASSIGN_TASK]: AssignTaskParams | undefined;
+  [navigationStrings.ESCALATE_TASK]: undefined;
+  [navigationStrings.TASK_COMPLETED]: undefined;
+  [navigationStrings.SCHEDULING]: undefined;
+  [navigationStrings.SCHEDULING_CANCELLATION]: undefined;
+  [navigationStrings.SCHEDULING_NO_SHOW]: undefined;
+  [navigationStrings.SCHEDULING_URGENT_OPENING]: undefined;
+  [navigationStrings.SCHEDULING_PENDING_APPROVALS]: undefined;
+  [navigationStrings.SCHEDULING_NOTIFY_PATIENT]: undefined;
+  [navigationStrings.SCHEDULING_FILL_SLOT]: undefined;
+  [navigationStrings.SCHEDULING_ASSIGN_TASK]: undefined;
+  [navigationStrings.SCHEDULING_RESCHEDULE]: undefined;
+};

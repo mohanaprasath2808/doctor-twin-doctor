@@ -1,12 +1,16 @@
 import React from "react";
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import AppButton from "../../components/Common/AppButton";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import NeumorphicQuickActionTile from "../../components/Common/NeumorphicQuickActionTile";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
-import InnerShadowView from "../../neomorphism/InnerShadowView";
+import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../constants/theme";
-import BottomNavbar from "../../components/App/BottomNavbar";
+import navigationStrings from "../../constants/navigationStrings";
 import MessageIcon from "../../assets/icons/message.svg";
 import ScheduleIcon from "../../assets/icons/schedule.svg";
 import TelemedicineIcon from "../../assets/icons/telemedicine.svg";
@@ -38,9 +42,63 @@ const QUICK_ACTIONS = [
 ];
 
 const Home = () => {
+  const navigation = useNavigation<any>();
+  const { width: screenWidth } = useWindowDimensions();
+  const numColumns = 4;
+  const horizontalPadding = 16;
+  const columnGap = 10;
+  const rowGap = 10;
+  const tileWidth =
+    (screenWidth - horizontalPadding * 2 - columnGap * (numColumns - 1)) / numColumns;
+  const outerDiameter = Math.min(88, tileWidth);
+  const innerShadowDiameter = Math.max(56, outerDiameter - 16);
+
+  const renderQuickAction = ({
+    item,
+    index,
+  }: {
+    item: (typeof QUICK_ACTIONS)[number];
+    index: number;
+  }) => (
+    <NeumorphicQuickActionTile
+      containerStyle={[
+        styles.tile,
+        {
+          width: tileWidth,
+          marginRight: (index + 1) % numColumns === 0 ? 0 : columnGap,
+          marginBottom: rowGap,
+        },
+      ]}
+      onPress={() => {
+        if (item.id === "schedule") {
+          navigation.navigate(navigationStrings.APPOINTMENTS);
+        }
+        if (item.id === "message") {
+          navigation.navigate(navigationStrings.NOTIFICATIONS);
+        }
+        if (item.id === "lab") {
+          navigation.navigate(navigationStrings.LABS);
+        }
+        if (item.id === "wellness") {
+          navigation.navigate(navigationStrings.WELLNESS_MEDSPA);
+        }
+      }}
+      icon={item.icon}
+      label={item.label}
+      badge={item.badge}
+      labelNumberOfLines={1}
+      outerDiameter={outerDiameter}
+      innerShadowDiameter={innerShadowDiameter}
+    />
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+      >
         <ProfileAvatar
           overlaySource={OverlayImage}
           imageSource={DoctorTempImage}
@@ -53,42 +111,43 @@ const Home = () => {
         <Text style={styles.heading}>Welcome back, Sarah!</Text>
         <Text style={styles.subHeading}>Here&apos;s how I can assist you</Text>
 
-        <View style={styles.alertCard}>
-          <View style={styles.alertLeft}>
-            <View style={styles.iconWrap}>
-              <View style={styles.iconInnerShadow}>
-                <InnerShadowView width={40} height={40} borderRadius={20} color="#F7FBFF" />
-              </View>
-              <MessageIcon width={20} height={20} />
-            </View>
-            <Text style={styles.alertText}>You have a new message from{"\n"}your care tewam</Text>
-          </View>
-          <TouchableOpacity style={styles.viewBtn} activeOpacity={0.85}>
-            <Text style={styles.viewBtnText}>View</Text>
-          </TouchableOpacity>
-        </View>
+        <NeumorphicCard
+          outerStyle={styles.messageCardOuter}
+          innerStyle={styles.messageCardInner}
+          borderRadius={10}
+        >
+          <InnerShadowIcon
+            icon={<MessageIcon width={20} height={20} />}
+            size={40}
+            radius={20}
+            surfaceColor={COLORS.INNER_SURFACE}
+          />
+          <Text style={styles.alertText}>You have a new message from{"\n"}your care team</Text>
+          <AppButton
+            text="View"
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            width={60}
+            height={28}
+            borderRadius={14}
+            textStyle={styles.viewButtonText}
+            onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
+          />
+        </NeumorphicCard>
 
         <View style={styles.grid}>
-          {QUICK_ACTIONS.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.tile} activeOpacity={0.85}>
-              <View style={styles.tileOuter}>
-                <View style={styles.tileInnerShadow}>
-                  <InnerShadowView width={72} height={72} borderRadius={36} color="#F7FBFF" />
-                </View>
-                {item.icon}
-                {!!item.badge && (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{item.badge}</Text>
-                  </View>
-                )}
-              </View>
-              <Text style={styles.tileLabel}>{item.label}</Text>
-            </TouchableOpacity>
-          ))}
+          <FlatList
+            data={QUICK_ACTIONS}
+            keyExtractor={(item) => item.id}
+            renderItem={renderQuickAction}
+            numColumns={numColumns}
+            scrollEnabled={false}
+            contentContainerStyle={styles.gridContent}
+            columnWrapperStyle={styles.gridColumn}
+          />
         </View>
       </ScrollView>
-
-      <BottomNavbar />
     </SafeAreaView>
   );
 };
@@ -99,8 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.SURFACE,
   },
   content: {
-    paddingHorizontal: 16,
-    paddingBottom: 130,
+    paddingBottom: 50,
   },
   avatarContainer: {
     alignItems: "center",
@@ -142,51 +200,26 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "#6B6B6B",
   },
-  alertCard: {
+  messageCardOuter: {
     marginTop: 20,
-    height: 60,
-    borderRadius: 10,
-    backgroundColor: COLORS.SURFACE,
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    shadowColor: "#728EAB",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    marginHorizontal: 16,
+    alignSelf: "stretch",
   },
-  alertLeft: {
+  messageCardInner: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-  },
-  iconWrap: {
-    width: 40,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  iconInnerShadow: {
-    position: "absolute",
+    paddingVertical: 8,
+    paddingHorizontal: 8,
   },
   alertText: {
+    flex: 1,
     fontSize: 14,
     lineHeight: 18,
     color: COLORS.TEXT_PRIMARY,
     fontWeight: "400",
   },
-  viewBtn: {
-    width: 60,
-    height: 28,
-    borderRadius: 60,
-    borderWidth: 1,
-    borderColor: COLORS.PRIMARY,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: COLORS.SURFACE,
-  },
-  viewBtnText: {
+  viewButtonText: {
     color: COLORS.PRIMARY,
     fontSize: 12,
     lineHeight: 14,
@@ -194,53 +227,16 @@ const styles = StyleSheet.create({
   },
   grid: {
     marginTop: 18,
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flex: 1,
+  },
+  gridContent: {
+    paddingHorizontal: 16,
   },
   tile: {
-    width: "25%",
     alignItems: "center",
-    marginBottom: 16,
   },
-  tileOuter: {
-    width: 88,
-    height: 88,
-    borderRadius: 44,
-    backgroundColor: COLORS.SURFACE,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#728EAB",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    marginBottom: 10,
-  },
-  tileInnerShadow: {
-    position: "absolute",
-  },
-  badge: {
-    position: "absolute",
-    right: 2,
-    top: 2,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: COLORS.CRITICAL,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badgeText: {
-    color: COLORS.WHITE,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "500",
-  },
-  tileLabel: {
-    fontSize: 12,
-    lineHeight: 14,
-    fontWeight: "500",
-    color: COLORS.TEXT_PRIMARY,
-    textAlign: "center",
+  gridColumn: {
+    justifyContent: "flex-start",
   },
 });
 

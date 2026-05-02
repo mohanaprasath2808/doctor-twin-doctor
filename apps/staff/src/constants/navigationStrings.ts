@@ -1,6 +1,41 @@
 const navigationStrings = {
+  //AUTH
   LOGIN: "Login",
+  FORGOT_PASSWORD: "ForgotPassword",
+  RESET_PASSWORD: "ResetPassword",
+
+  //APP
+  SHIFT_START: "ShiftStart",
   HOME: "Home",
-};
+  HOME_MAIN: "HomeMain",
+  TASK_INBOX: "TaskInbox",
+  PATIENT_TASK_DETAIL: "PatientTaskDetail",
+  ASSIGN_TASK: "AssignTask",
+  ESCALATE_TASK: "EscalateTask",
+  TASK_COMPLETED: "TaskCompleted",
+  BOTTOM_NAVIGATION: "BottomNavigation",
+  CALENDAR: "Calendar",
+  PROFILE: "Profile",
+  END_SHIFT_SUMMARY: "EndShiftSummary",
+  GENERAL_SETTINGS: "GeneralSettings",
+  HELP_TRAINING: "HelpTraining",
+  SCHEDULING: "Scheduling",
+  STAFF: "Staff",
+  STAFF_FORM: "StaffForm",
+  SCHEDULING_CANCELLATION: "SchedulingCancellation",
+  SCHEDULING_NO_SHOW: "SchedulingNoShow",
+  SCHEDULING_URGENT_OPENING: "SchedulingUrgentOpening",
+  SCHEDULING_PENDING_APPROVALS: "SchedulingPendingApprovals",
+  SCHEDULING_NOTIFY_PATIENT: "SchedulingNotifyPatient",
+  SCHEDULING_FILL_SLOT: "SchedulingFillSlot",
+  SCHEDULING_ASSIGN_TASK: "SchedulingAssignTask",
+  SCHEDULING_RESCHEDULE: "SchedulingReschedule",
+  LABS: "Labs",
+  LABS_ASSIGN_NURSE: "LabsAssignNurse",
+  LABS_ESCALATE_MESSAGE: "LabsEscalateMessage",
+  LABS_NOTIFY_PATIENT: "LabsNotifyPatient",
+  LABS_SCHEDULE_VISIT: "LabsScheduleVisit",
+  LABS_ACTION_COMPLETED: "LabsActionCompleted",
+} as const;
 
 export default navigationStrings;

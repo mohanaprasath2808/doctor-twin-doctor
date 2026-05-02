@@ -1,5 +1,6 @@
 const navigationStrings = {
   //AUTH
+  AUTH_BOOTSTRAP: "AuthBootstrap",
   LOGIN: "Login",
   SSO_SIGN_IN: "SsoSignIn",
   HIPAA_PRIVACY_GATE: "HipaaPrivacyGate",
@@ -18,6 +19,7 @@ const navigationStrings = {
   RESET_PASSWORD: "ResetPassword",
   //APP
   HOME: "Home",
+  MORNING_BRIEF: "MorningBrief",
   PRACTICE_INTELLIGENCE: "PracticeIntelligence",
   STAFF_CONSOLE: "StaffConsole",
   DOCTOR_REVIEW: "DoctorReview",

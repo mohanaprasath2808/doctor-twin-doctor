@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../constants/theme';
 import navigationStrings from '../../constants/navigationStrings';
 import IconComponent from '../../neomorphism/IconComponent';
@@ -120,22 +120,6 @@ const HipaaPrivacyGate = () => {
           backgroundColor="#2E3A8C"
           textColor="#FFFFFF"
         />
-
-        <View style={styles.returnContainer}>
-          <Text style={styles.returnText}>Return to </Text>
-          <Pressable
-            onPress={() =>
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: navigationStrings.SSO_SIGN_IN }],
-                })
-              )
-            }
-          >
-            <Text style={styles.loginText}>Login</Text>
-          </Pressable>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -239,23 +223,5 @@ const styles = StyleSheet.create({
   },
   confirmBtn: {
     marginTop: 30,
-  },
-  returnContainer: {
-    marginTop: 24,
-    marginBottom: 6,
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  returnText: {
-    color: COLORS.TEXT_60,
-    fontSize: 14,
-    fontWeight: '400',
-  },
-  loginText: {
-    color: COLORS.PRIMARY,
-    fontSize: 14,
-    fontWeight: '600',
-  },
+  }
 });

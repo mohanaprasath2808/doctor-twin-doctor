@@ -6,7 +6,6 @@ import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
-  LayoutChangeEvent,
   Platform,
   ViewStyle,
 } from "react-native";
@@ -20,148 +19,183 @@ interface Props {
   onRightIconPress?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
   borderRadius?: number;
+  /** Fixed row height for single-line fields. Takes precedence over `minHeight`. */
+  height?: number;
   minHeight?: number;
+  isFocused?: boolean;
 }
 
 const HEIGHT = 46;
 const RADIUS = 64;
 
+/** Stronger vertical inner shadow (Skia dy/blur), without changing input row height. */
+const INNER_SHADOW_DY = 4;
+const INNER_SHADOW_BLUR = 5;
+
+/**
+ * Matches `apps/staff` / `apps/doctor` neomorphism `InputField`:
+ * empty + blurred → raised outer shadows only;
+ * focused or has text → softer outer shadows + `InnerShadowView` inner recess.
+ */
 const InputField: React.FC<Props & TextInputProps> = ({
   leftIcon,
   rightIcon,
   onRightIconPress,
   containerStyle,
   borderRadius,
+  height: heightProp,
   minHeight,
+  isFocused,
   style,
   ...props
 }) => {
   const radius = borderRadius ?? RADIUS;
-  const fieldMinHeight = minHeight ?? HEIGHT;
+  const fieldHeight = heightProp ?? minHeight ?? HEIGHT;
   const [focused, setFocused] = useState(false);
-  const [width, setWidth] = useState(0);
-  const [inputHeight, setInputHeight] = useState(fieldMinHeight);
+  const [surfaceWidth, setSurfaceWidth] = useState(0);
+  const [inputHeight, setInputHeight] = useState(fieldHeight);
   const valueText = String(props.value ?? props.defaultValue ?? "");
   const hasText = valueText.trim().length > 0;
-  const showFocusedState = focused || hasText;
+  const isFocusControlled = typeof isFocused === "boolean";
+  const showFocusedState = isFocusControlled ? isFocused : focused || hasText;
 
-  const onLayout = (e: LayoutChangeEvent) => {
-    setWidth(e.nativeEvent.layout.width);
-  };
-
-  const resolvedShadowHeight = Math.max(fieldMinHeight, inputHeight);
+  const resolvedShadowHeight = Math.max(fieldHeight, inputHeight);
 
   return (
-    <View style={[styles.container, containerStyle]} onLayout={onLayout}>
-      <LinearGradient
-        colors={["#D6E3F399", "#FFFFFFCC", "#FFFFFF80", "#FFFFFF00"]}
-        locations={[0, 0.4, 0.7, 1]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={[styles.gradientBorder, { borderRadius: radius }]}
+    <View style={[styles.container, containerStyle]}>
+      <View
+        collapsable={false}
+        style={[
+          styles.outerPill,
+          { borderRadius: radius },
+          !showFocusedState && styles.outerPillIdle,
+        ]}
       >
-        <View style={styles.innerWrapper}>
-          <View
-            pointerEvents="none"
-            style={[
-              styles.shadowLayer,
-              styles.shadowDark,
-              { borderRadius: radius },
-              showFocusedState && styles.shadowDarkFocused,
-            ]}
-          />
-          <View
-            pointerEvents="none"
-            style={[
-              styles.shadowLayer,
-              styles.shadowLight,
-              { borderRadius: radius },
-              showFocusedState && styles.shadowLightFocused,
-            ]}
-          />
-          <View
-            pointerEvents="none"
-            style={[
-              styles.shadowLayer,
-              styles.shadowSoft,
-              { borderRadius: radius },
-            ]}
-          />
-
-          <View style={[styles.surface, { borderRadius: radius }]}>
-            {showFocusedState && width > 0 && (
-              <View
-                style={[
-                  styles.shadowWrapper,
-                  { height: resolvedShadowHeight, borderRadius: radius },
-                ]}
-              >
-                <InnerShadowView
-                  width={width}
-                  height={resolvedShadowHeight}
-                  borderRadius={radius}
-                  color="#F7FBFF"
+        <LinearGradient
+          colors={
+            showFocusedState
+              ? ["#D6E3F399", "#FFFFFFCC", "#FFFFFF80", "#FFFFFF00"]
+              : ["#E8EDF266", "#FFFFFFEE", COLORS.INNER_SURFACE, COLORS.INNER_SURFACE]
+          }
+          locations={showFocusedState ? [0, 0.4, 0.7, 1] : [0, 0.35, 0.72, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.gradientBorder, { borderRadius: radius }]}
+        >
+          <View style={[styles.innerWrapper, { borderRadius: radius }]}>
+            {showFocusedState ? (
+              <>
+                <View
+                  pointerEvents="none"
+                  style={[
+                    styles.shadowLayer,
+                    styles.shadowDark,
+                    { borderRadius: radius },
+                    styles.shadowDarkFocused,
+                  ]}
                 />
-              </View>
-            )}
+                <View
+                  pointerEvents="none"
+                  style={[
+                    styles.shadowLayer,
+                    styles.shadowLight,
+                    { borderRadius: radius },
+                    styles.shadowLightFocused,
+                  ]}
+                />
+                <View
+                  pointerEvents="none"
+                  style={[styles.shadowLayer, styles.shadowSoft, { borderRadius: radius }]}
+                />
+              </>
+            ) : null}
 
             <View
               style={[
-                styles.inputWrapper,
+                styles.surface,
                 {
                   borderRadius: radius,
-                  minHeight: fieldMinHeight,
-                  height: props.multiline ? undefined : fieldMinHeight,
-                  alignItems: props.multiline ? "flex-start" : "center",
-                  paddingTop: props.multiline ? 12 : 0,
+                  backgroundColor: showFocusedState ? COLORS.BACKGROUND : COLORS.INNER_SURFACE,
                 },
               ]}
-              onLayout={(event) => {
-                if (!props.multiline) return;
-                const nextHeight = event.nativeEvent.layout.height;
-                if (nextHeight > 0 && Math.abs(nextHeight - inputHeight) > 1) {
-                  setInputHeight(nextHeight);
-                }
-              }}
+              onLayout={(e) => setSurfaceWidth(e.nativeEvent.layout.width)}
             >
-              {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
-
-              <TextInput
-                {...props}
-                style={[
-                  styles.input,
-                  props.multiline && {
-                    minHeight: Math.max(40, fieldMinHeight - 24),
-                    textAlignVertical: "top",
-                  },
-                  style,
-                ]}
-                placeholderTextColor="#ABABAB"
-                multiline={props.multiline}
-                numberOfLines={props.multiline ? props.numberOfLines : 1}
-                allowFontScaling={false}
-                onFocus={(e) => {
-                  setFocused(true);
-                  props.onFocus?.(e);
-                }}
-                onBlur={(e) => {
-                  setFocused(false);
-                  props.onBlur?.(e);
-                }}
-              />
-
-              {rightIcon && (
-                <TouchableOpacity
-                  onPress={onRightIconPress}
-                  style={styles.rightIcon}
+              {showFocusedState && surfaceWidth > 0 && (
+                <View
+                  style={[
+                    styles.shadowWrapper,
+                    { height: resolvedShadowHeight, borderRadius: radius },
+                  ]}
                 >
-                  {rightIcon}
-                </TouchableOpacity>
+                  <InnerShadowView
+                    width={surfaceWidth}
+                    height={resolvedShadowHeight}
+                    borderRadius={radius}
+                    color="#FFFFFF"
+                    darkShadowDy={INNER_SHADOW_DY}
+                    darkShadowBlur={INNER_SHADOW_BLUR}
+                    lightShadowDy={-INNER_SHADOW_DY}
+                    lightShadowBlur={INNER_SHADOW_BLUR}
+                  />
+                </View>
               )}
+
+              <View
+                style={[
+                  styles.inputWrapper,
+                  {
+                    borderRadius: radius,
+                    minHeight: fieldHeight,
+                    height: props.multiline ? undefined : fieldHeight,
+                    alignItems: props.multiline ? "flex-start" : "center",
+                    paddingTop: props.multiline ? 12 : 0,
+                  },
+                ]}
+                onLayout={(event) => {
+                  if (!props.multiline) return;
+                  const nextHeight = event.nativeEvent.layout.height;
+                  if (nextHeight > 0 && Math.abs(nextHeight - inputHeight) > 1) {
+                    setInputHeight(nextHeight);
+                  }
+                }}
+              >
+                {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
+
+                <TextInput
+                  {...props}
+                  style={[
+                    styles.input,
+                    hasText ? styles.inputTyped : styles.inputPlaceholder,
+                    props.multiline && {
+                      minHeight: Math.max(40, fieldHeight - 24),
+                      textAlignVertical: "top",
+                    },
+                    style,
+                  ]}
+                  placeholderTextColor={COLORS.TEXT_40}
+                  multiline={props.multiline}
+                  numberOfLines={props.multiline ? props.numberOfLines : 1}
+                  allowFontScaling={false}
+                  onFocus={(e) => {
+                    setFocused(true);
+                    props.onFocus?.(e);
+                  }}
+                  onBlur={(e) => {
+                    setFocused(false);
+                    props.onBlur?.(e);
+                  }}
+                />
+
+                {rightIcon && (
+                  <TouchableOpacity onPress={onRightIconPress} style={styles.rightIcon}>
+                    {rightIcon}
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </View>
-        </View>
-      </LinearGradient>
+        </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -171,21 +205,39 @@ export default InputField;
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginTop: 15,
+    marginTop: 12,
+  },
+  /** Idle drop shadow lives here so one native outline follows the pill (`elevation` / iOS shadow). */
+  outerPill: {
+    width: "100%",
+    overflow: "visible",
+  },
+  outerPillIdle: {
+    backgroundColor: COLORS.INNER_SURFACE,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#64748B",
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.12,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   gradientBorder: {
     borderRadius: RADIUS,
+    width: "100%",
     padding: 0.6,
-    overflow: "visible",
+    overflow: "hidden",
   },
   innerWrapper: {
-    borderRadius: RADIUS,
     overflow: "visible",
   },
   shadowLayer: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: RADIUS,
-    backgroundColor: COLORS.SURFACE,
+    backgroundColor: "#FAFAFA",
   },
   shadowDark: {
     ...Platform.select({
@@ -242,7 +294,6 @@ const styles = StyleSheet.create({
   surface: {
     borderRadius: RADIUS,
     overflow: "hidden",
-    backgroundColor: "#F7FBFF",
   },
   shadowWrapper: {
     position: "absolute",
@@ -254,7 +305,7 @@ const styles = StyleSheet.create({
     height: HEIGHT,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     zIndex: 1,
     borderRadius: RADIUS,
   },
@@ -263,12 +314,17 @@ const styles = StyleSheet.create({
     height: "100%",
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: "400",
-    lineHeight: 18,
+    lineHeight: 20,
     includeFontPadding: false,
   },
+  inputPlaceholder: {
+    fontWeight: "400",
+  },
+  inputTyped: {
+    fontWeight: "500",
+  },
   leftIcon: {
-    marginRight: 8,
+    marginRight: 10,
     justifyContent: "center",
     alignItems: "center",
   },

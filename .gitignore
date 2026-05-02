@@ -39,3 +39,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+apps/*/ios/Pods/
+apps/*/ios/build/
+apps/*/android/build/
+apps/*/ios/.xcode.env.local

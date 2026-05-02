@@ -1,106 +1,146 @@
-import React from "react";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { COLORS } from "../../constants/theme";
+
+import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import InputField from "../../neomorphism/InputField";
 import ReusableButton from "../../neomorphism/ReusableButton";
-import BirthIcon from "../../assets/icons/birth.svg";
+import { COLORS } from "../../constants/theme";
+import navigationStrings from "../../constants/navigationStrings";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
-import ProfileAvatar from "../../components/Auth/ProfileAvatar";
-import LeftArrowIcon from "../../assets/icons/leftArrow.svg";
-import navigationStrings from "../../constants/navigationStrings";
+import FlagIcon from "../../assets/icons/flagIcon.svg";
+import DropDown from "../../assets/icons/dropDown.svg";
+import BirthIcon from "../../assets/icons/birth.svg";
+import LeftArrow from "../../assets/icons/leftArrow.svg";
+import IconComponent from "../../neomorphism/IconComponent";
+
+const DISPLAY_NAME = "Sarah";
 
 const VerifyIdentity = () => {
   const navigation = useNavigation<any>();
+  const insets = useSafeAreaInsets();
+  const [phone, setPhone] = useState("0123456789");
+  const [dob, setDob] = useState("27/03/1997");
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        activeOpacity={0.85}
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+      <KeyboardAvoidingView
+        style={styles.keyboardWrapper}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
       >
-        <LeftArrowIcon width={26} height={26} />
-      </TouchableOpacity>
+        <View style={styles.column}>
+          <ScrollView
+            style={styles.scroll}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContent}
+          >
+            <IconComponent
+              icon={<LeftArrow width={22} height={22} />}
+              width={40}
+              height={40}
+              radius={20}
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+            />
 
-      <ProfileAvatar
-        overlaySource={OverlayImage}
-        imageSource={DoctorTempImage}
-        containerStyle={styles.imageContainer}
-        wrapperStyle={styles.wrapper}
-        overlayStyle={styles.overlayImage}
-        imageStyle={styles.image}
-      />
+            <ProfileAvatar
+              overlaySource={OverlayImage}
+              imageSource={DoctorTempImage}
+              containerStyle={styles.imageContainer}
+              wrapperStyle={styles.avatarWrapper}
+              overlayStyle={styles.overlayImage}
+              imageStyle={styles.avatarImage}
+            />
 
-      <Text style={styles.title}>Verify Your Identity</Text>
-      <Text style={styles.subtitle}>
-        Hi Sarah, we&apos;re here to confirm your identity for security.
-      </Text>
+            <Text style={styles.title}>Verify Your Identity</Text>
+            <Text style={styles.subtitle}>
+              {`Hi ${DISPLAY_NAME}, we're here to confirm your identity for security.`}
+            </Text>
 
-      <View style={styles.fields}>
-        <View style={styles.fieldGroup}>
-          <Text style={styles.label}>Phone Number</Text>
-          <View style={styles.readOnlyRow}>
-            <View style={styles.phonePrefix}>
-              <Text style={styles.flagEmoji}>🇬🇧</Text>
-              <Text style={styles.chevron}>▼</Text>
+            <View style={styles.form}>
+              <Text style={styles.label}>Phone Number</Text>
+              <InputField
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="Enter phone number"
+                keyboardType="phone-pad"
+                autoCorrect={false}
+                leftIcon={
+                  <View style={styles.flagRow}>
+                    <FlagIcon width={18} height={18} />
+                    {/* <View style={styles.flagChevron}>
+                      <DropDown width={12} height={12} />
+                    </View> */}
+                  </View>
+                }
+                containerStyle={styles.inputField}
+                editable={false}
+              />
+
+              <Text style={[styles.label, styles.labelSecond]}>Birth of Date</Text>
+              <InputField
+                value={dob}
+                onChangeText={setDob}
+                placeholder="DD/MM/YYYY"
+                leftIcon={<BirthIcon width={18} height={18} />}
+                containerStyle={styles.inputField}
+                editable={false}
+              />
             </View>
-            <View style={styles.verticalRule} />
-            <Text style={styles.readOnlyValue}>0123456789</Text>
+          </ScrollView>
+
+          <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 20) }]}>
+            <ReusableButton
+              title="Next"
+              onPress={() => navigation.navigate(navigationStrings.SET_PREFERENCES)}
+              containerStyle={styles.cta}
+            />
           </View>
         </View>
-
-        <View style={styles.fieldGroup}>
-          <Text style={styles.label}>Birth of Date</Text>
-          <View style={styles.readOnlyRow}>
-            <BirthIcon width={18} height={18} />
-            <Text style={[styles.readOnlyValue, styles.dobValue]}>27/03/1997</Text>
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.footer}>
-        <ReusableButton
-          title="Next"
-          textColor="#FFFFFF"
-          gradientColors={["#14B8D4", "#0E7490"]}
-          backgroundColor="#0E7490"
-          borderRadius={30}
-          height={48}
-          containerStyle={styles.nextButton}
-          onPress={() => navigation.navigate(navigationStrings.ACCEPT_CONSENT)}
-        />
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
+export default VerifyIdentity;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.SURFACE,
+    backgroundColor: COLORS.BACKGROUND,
+  },
+  keyboardWrapper: {
+    flex: 1,
+  },
+  column: {
+    flex: 1,
+  },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: Platform.OS === "ios" ? 4 : 12,
+  },
+  footer: {
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    backgroundColor: COLORS.BACKGROUND,
   },
   backButton: {
-    marginTop: Platform.OS === "ios" ? 8 : 16,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.SURFACE,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    alignSelf: "flex-start",
   },
   imageContainer: {
     alignItems: "center",
-    paddingTop: Platform.OS === "ios" ? 10 : 20,
-    marginTop: -45,
+    marginTop: 8,
   },
-  wrapper: {
+  avatarWrapper: {
     width: 200,
     height: 200,
     justifyContent: "center",
@@ -114,104 +154,50 @@ const styles = StyleSheet.create({
     position: "absolute",
     borderRadius: 115,
   },
-  image: {
+  avatarImage: {
     width: 124,
     height: 124,
     resizeMode: "contain",
     borderRadius: 115,
   },
   title: {
+    marginTop: 16,
     fontSize: 22,
-    lineHeight: 26,
     fontWeight: "600",
-    letterSpacing: 0.22,
     color: COLORS.TEXT_PRIMARY,
     textAlign: "center",
   },
   subtitle: {
-    marginTop: 20,
-    width: "100%",
-    maxWidth: 352,
+    marginTop: 16,
     fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "400",
+    lineHeight: 22,
     color: COLORS.TEXT_PRIMARY_80,
-    textAlign: "left",
+    paddingHorizontal: 8,
+    fontWeight: "400",
   },
-  fields: {
-    marginTop: 20,
-    gap: 24,
+  form: {
+    marginTop: 28,
     width: "100%",
-    maxWidth: 374,
-    alignSelf: "center",
-  },
-  fieldGroup: {
-    gap: 4,
   },
   label: {
     fontSize: 12,
-    lineHeight: 14,
-    fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_60,
-  },
-  readOnlyRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 46,
-    paddingVertical: 15,
-    paddingHorizontal: 16,
-    borderRadius: 64,
-    backgroundColor: COLORS.SURFACE,
-    gap: 10,
-    shadowColor: "#728EAB",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  phonePrefix: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  flagEmoji: {
-    fontSize: 18,
-    lineHeight: 18,
-  },
-  chevron: {
-    fontSize: 8,
-    lineHeight: 10,
-    color: COLORS.TEXT_PRIMARY_60,
-    marginTop: 2,
-  },
-  verticalRule: {
-    width: 1,
-    height: 24,
-    backgroundColor: COLORS.TEXT_PRIMARY_20,
-    marginHorizontal: 2,
-  },
-  readOnlyValue: {
-    flex: 1,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY,
-  },
-  dobValue: {
-    flex: 0,
-    marginLeft: 0,
-  },
-  footer: {
-    flex: 1,
-    justifyContent: "flex-end",
-    paddingTop: 8,
-    paddingBottom: Platform.OS === "ios" ? 20 : 24,
-    width: "100%",
-    maxWidth: 374,
-    alignSelf: "center",
-  },
-  nextButton: {
     marginBottom: 4,
   },
+  labelSecond: {
+    marginTop: 16,
+  },
+  inputField: {
+    marginTop: 0,
+  },
+  flagRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  flagChevron: {
+    marginLeft: 4,
+  },
+  cta: {
+    width: "100%",
+  },
 });
-
-export default VerifyIdentity;

@@ -1,0 +1,159 @@
+import React from "react";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+
+import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
+import AppButton from "../../../components/Common/AppButton";
+import IconComponent from "../../../neomorphism/IconComponent";
+import ReusableButton from "../../../neomorphism/ReusableButton";
+import { COLORS } from "../../../constants/theme";
+import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
+import GreenTickImage from "../../../assets/images/greenTick.png";
+import OverlayImage from "../../../assets/images/imageBgShadow.png";
+import navigationStrings from "../../../constants/navigationStrings";
+
+const AppointmentScheduled = () => {
+  const navigation = useNavigation<any>();
+
+  return (
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <ScrollView>
+        <View style={styles.header}>
+          <IconComponent
+            icon={<LeftArrowIcon width={18} height={18} />}
+            width={40}
+            height={40}
+            radius={20}
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.headerTitle}>Appointment Scheduled</Text>
+          <View style={styles.headerSpacer} />
+        </View>
+
+        <View style={styles.content}>
+          <ProfileAvatar
+            overlaySource={OverlayImage}
+            imageSource={GreenTickImage}
+            containerStyle={styles.imageContainer}
+            wrapperStyle={styles.avatarWrap}
+            overlayStyle={styles.overlayImage}
+            imageStyle={styles.avatarImage}
+          />
+
+          <Text style={styles.title}>Appointment Scheduled!</Text>
+          <Text style={styles.subtitle}>
+            You're all set, Sarah.{"\n"}See you on Monday, April 30 at 3:00 PM.
+          </Text>
+
+          <View style={styles.actionRow}>
+            <AppButton
+              text="Add to Calender"
+              borderWidth={1}
+              borderColor={COLORS.PRIMARY}
+              bgColor={COLORS.SURFACE}
+              textStyle={styles.addToCalendarText}
+              height={48}
+              borderRadius={28}
+              width="100%"
+              style={styles.actionBtn}
+              onPress={() => navigation.navigate(navigationStrings.APPOINTMENTS)}
+            />
+            <ReusableButton
+              title="Done"
+              gradientColors={["#22D3EE", "#0F766E"]}
+              height={48}
+              borderRadius={28}
+              width="100%"
+              containerStyle={styles.actionBtn}
+              onPress={() => navigation.pop(4)}
+            />
+          </View>
+
+        </View>
+      </ScrollView>
+
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: COLORS.SURFACE,
+  },
+  header: {
+    marginTop: Platform.OS === "ios" ? 8 : 6,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "600",
+    color: COLORS.TEXT_DARK,
+    textAlign: "center",
+  },
+  headerSpacer: {
+    width: 40,
+    height: 40,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20
+  },
+  title: {
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "500",
+    color: COLORS.TEXT_DARK,
+  },
+  subtitle: {
+    marginTop: 10,
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "400",
+    color: COLORS.TEXT_70,
+  },
+  actionRow: {
+    marginTop: 40,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  actionBtn: {
+    flex: 1,
+  },
+  addToCalendarText: {
+    color: COLORS.PRIMARY,
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  imageContainer: {
+    alignItems: "center",
+    marginTop: 120,
+  },
+  avatarWrap: {
+    width: 230,
+    height: 230,
+  },
+  overlayImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+    position: "absolute",
+    borderRadius: 110,
+  },
+  avatarImage: {
+    width: 142,
+    height: 142,
+    resizeMode: "contain",
+    borderRadius: 110,
+  },
+
+});
+
+export default AppointmentScheduled;

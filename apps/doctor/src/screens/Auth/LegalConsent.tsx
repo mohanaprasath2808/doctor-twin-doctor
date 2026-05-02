@@ -83,7 +83,7 @@ const LegalConsent = () => {
 
         <ReusableButton
           title="Confirm"
-          onPress={() => navigation.navigate(navigationStrings.SECURE_LOGIN)}
+          onPress={() => navigation.navigate(navigationStrings.ROLE_AND_LOCATION)}
           containerStyle={styles.confirmBtn}
           backgroundColor="#2E3A8C"
           textColor="#FFFFFF"

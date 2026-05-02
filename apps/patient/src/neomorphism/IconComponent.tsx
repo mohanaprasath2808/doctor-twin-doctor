@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   surface: {
     flex: 1,
-    backgroundColor: COLORS.SURFACE,
+    backgroundColor: COLORS.INNER_SURFACE,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -6,12 +6,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../constants/theme";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import IconComponent from "../../neomorphism/IconComponent";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../../context/AuthContext";
 import BackIcon from "../../assets/icon/backArrow.svg";
+import navigationStrings from "../../constants/navigationStrings";
+
+type OtpSource = "login" | "sso-sign-in" | "user-pin";
+
+type OtpRouteParams = {
+  source?: OtpSource;
+};
 
 const OtpVerification = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const [otp, setOtp] = useState("");
   const authContext = useContext(AuthContext);
   if (!authContext) {
@@ -20,7 +28,19 @@ const OtpVerification = () => {
   const { setIsLogin } = authContext;
   //Verify OTP Handler
   const handleVerify = () => {
-    setIsLogin(true);
+    const source = (route.params as OtpRouteParams | undefined)?.source;
+
+    switch (source) {
+      case "login":
+        navigation.navigate(navigationStrings.SECURE_LOGIN as never);
+        return;
+      case "sso-sign-in":
+      case "user-pin":
+        navigation.navigate(navigationStrings.HIPAA_PRIVACY_GATE as never);
+        return;
+      default:
+        setIsLogin(true);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>

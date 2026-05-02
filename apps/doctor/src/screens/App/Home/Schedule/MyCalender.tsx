@@ -1,10 +1,7 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
-  Animated,
   Dimensions,
   FlatList,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   StyleSheet,
   Text,
   View,
@@ -23,9 +20,9 @@ import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import { Image } from "react-native";
 import navigationStrings from "../../../../constants/navigationStrings";
 import PlusIcon from "../../../../assets/icon/plusIcon.svg";
+import Carousel from "react-native-reanimated-carousel";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const DAY_ITEM_WIDTH = 150;
-const SIDE_PADDING = (SCREEN_WIDTH - DAY_ITEM_WIDTH) / 2;
 
 const weekday = [
   "Sunday",
@@ -53,9 +50,8 @@ const month = [
 
 const MyCalender = () => {
   const navigation = useNavigation<any>();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const dayListRef = useRef<FlatList<any>>(null);
-  const scrollX = useRef(new Animated.Value(0)).current;
+  const initialDayIndex = 1;
+  const [activeIndex, setActiveIndex] = useState(initialDayIndex);
 
   const days = useMemo(() => {
     const today = new Date();
@@ -92,17 +88,6 @@ const MyCalender = () => {
     },
   ];
 
-  const onDayScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const x = e.nativeEvent.contentOffset.x;
-    const index = Math.round(x / DAY_ITEM_WIDTH);
-    const bounded = Math.max(0, Math.min(index, days.length - 1));
-    setActiveIndex(bounded);
-    dayListRef.current?.scrollToOffset({
-      offset: bounded * DAY_ITEM_WIDTH,
-      animated: true,
-    });
-  };
-
   const renderDayItem = ({
     item,
     index,
@@ -111,36 +96,15 @@ const MyCalender = () => {
     index: number;
   }) => {
     const isActive = index === activeIndex;
-    const inputRange = [
-      (index - 1) * DAY_ITEM_WIDTH,
-      index * DAY_ITEM_WIDTH,
-      (index + 1) * DAY_ITEM_WIDTH,
-    ];
-    const scale = scrollX.interpolate({
-      inputRange,
-      outputRange: [0.86, 1, 0.86],
-      extrapolate: "clamp",
-    });
-    const opacity = scrollX.interpolate({
-      inputRange,
-      outputRange: [0.5, 1, 0.5],
-      extrapolate: "clamp",
-    });
 
     return (
-      <Animated.View
-        style={[
-          styles.dayItem,
-          !isActive && styles.dayItemInactive,
-          { transform: [{ scale }], opacity },
-        ]}
-      >
+      <View style={[styles.dayItem, !isActive && styles.dayItemInactive]}>
         <Image
           source={OverlayImage}
-          style={styles.dayOverlay}
+          style={[styles.dayOverlay, !isActive && styles.dayOverlayInactive]}
           resizeMode="contain"
         />
-        <View style={styles.dayContent}>
+        <View style={[styles.dayContent, !isActive && styles.dayContentInactive]}>
           <Text style={[styles.dayMonth, !isActive && styles.dayTextInactive]}>
             {item.month}
           </Text>
@@ -151,7 +115,7 @@ const MyCalender = () => {
             {item.weekDay}
           </Text>
         </View>
-      </Animated.View>
+      </View>
     );
   };
 
@@ -210,25 +174,21 @@ const MyCalender = () => {
       </View>
 
       <View style={styles.topArea}>
-        <Animated.FlatList
-          ref={dayListRef}
-          horizontal
+        <Carousel
+          width={DAY_ITEM_WIDTH}
+          height={170}
           data={days}
-          keyExtractor={(item) => item.id}
           renderItem={renderDayItem}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: SIDE_PADDING }}
-          snapToInterval={DAY_ITEM_WIDTH}
-          snapToAlignment="center"
-          decelerationRate="fast"
-          disableIntervalMomentum
-          onMomentumScrollEnd={onDayScrollEnd}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: true },
-          )}
-          scrollEventThrottle={16}
-          bounces={false}
+          defaultIndex={initialDayIndex}
+          mode="parallax"
+          modeConfig={{
+            parallaxScrollingScale: 1,
+            parallaxAdjacentItemScale: 0.62,
+            parallaxScrollingOffset: 78,
+          }}
+          loop={false}
+          onSnapToItem={setActiveIndex}
+          style={styles.dayCarousel}
         />
       </View>
 
@@ -274,13 +234,14 @@ const styles = StyleSheet.create({
   },
   headerSpacer: { width: 40, height: 40 },
   topArea: { marginTop: 18, height: 182 },
+  dayCarousel: { width: "100%" },
   dayItem: {
     width: DAY_ITEM_WIDTH,
     alignItems: "center",
     justifyContent: "center",
     opacity: 1,
   },
-  dayItemInactive: { opacity: 0.45 },
+  dayItemInactive: { opacity: 0.44 },
   dayOverlay: {
     position: "absolute",
     width: 150,
@@ -291,6 +252,12 @@ const styles = StyleSheet.create({
     height: 110,
     justifyContent: "center",
     alignItems: "center",
+  },
+  dayContentInactive: {
+    transform: [{ scale: 0.9 }],
+  },
+  dayOverlayInactive: {
+    opacity: 0.72,
   },
   dayMonth: {
     color: COLORS.PRIMARY,
@@ -311,7 +278,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     textAlign: "center",
   },
-  dayTextInactive: { color: COLORS.PRIMARY },
+  dayTextInactive: { color: COLORS.TEXT_40 },
   eventsList: { paddingHorizontal: 16, paddingTop: 4 },
   eventOuter: { width: "100%" },
   eventInner: {

@@ -1,12 +1,5 @@
 import React, { useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
@@ -30,6 +23,7 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import PatientIcon from "../../assets/icon/patientIcon.svg";
+import MicOutlineIcon from "../../assets/icon/micOutlineIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
 import IconComponent from "../../neomorphism/IconComponent";
@@ -96,27 +90,26 @@ const GRID_ITEMS: GridItem[] = [
     label: "Refills",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
-  {
-    id: 11,
-    label: "Patient",
-    icon: () => <PatientIcon width={18} height={18} />,
-  },
-  {
-    id: 12,
-    label: "Labs",
-    icon: () => <BrainIcon width={18} height={18} />,
-  },
-  {
-    id: 13,
-    label: "Payer Rules",
-    icon: () => <BrainIcon width={18} height={18} />,
-  },
-  {
-    id: 14,
-    label: "Patient Verification",
-    icon: () => <PatientIcon width={18} height={18} />,
-  },
-
+  // {
+  //   id: 11,
+  //   label: "Patient",
+  //   icon: () => <PatientIcon width={18} height={18} />,
+  // },
+  // {
+  //   id: 12,
+  //   label: "Labs",
+  //   icon: () => <BrainIcon width={18} height={18} />,
+  // },
+  // {
+  //   id: 13,
+  //   label: "Payer Rules",
+  //   icon: () => <BrainIcon width={18} height={18} />,
+  // },
+  // {
+  //   id: 14,
+  //   label: "Patient Verification",
+  //   icon: () => <PatientIcon width={18} height={18} />,
+  // },
 ];
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -134,18 +127,15 @@ const Home = () => {
   const { notificationsData, messagesData } = appContext;
   const gridItems = GRID_ITEMS.map((item) => {
     switch (item.id) {
-
       case 1:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
+          onPress: () => navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
         };
       case 2:
         return {
           ...item,
-          badge:
-            messagesData.length > 0 ? String(messagesData.length) : undefined,
+          badge: messagesData.length > 0 ? String(messagesData.length) : undefined,
           badgeType: messagesData.length > 0 ? ("dot" as const) : undefined,
         };
       case 10:
@@ -171,20 +161,17 @@ const Home = () => {
       case 12:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.LABS_DASHBOARD),
+          onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
         };
       case 13:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
+          onPress: () => navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
         };
       case 14:
         return {
           ...item,
-          onPress: () =>
-            navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
+          onPress: () => navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
         };
       default:
         return item;
@@ -195,11 +182,7 @@ const Home = () => {
     <View style={styles.listHeader}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <DoctorAvatar
-            source={DoctorTempImage}
-            imageSize={38}
-            containerSize={44}
-          />
+          <DoctorAvatar source={DoctorTempImage} imageSize={38} containerSize={44} />
           <View style={styles.greetingContainer}>
             <Text style={styles.greetingLight}>Good Morning</Text>
             <Text style={styles.greetingBold}>Dr. Soliman</Text>
@@ -211,7 +194,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -225,14 +208,25 @@ const Home = () => {
         overlayStyle={styles.overlayImage}
         imageStyle={styles.image}
       />
+
+      {/* <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.morningBriefCta}
+        onPress={() => navigation.navigate(navigationStrings.MORNING_BRIEF)}
+      >
+        <NeumorphicCard
+          borderRadius={12}
+          outerStyle={styles.morningBriefOuter}
+          innerStyle={styles.morningBriefInner}
+        >
+          <InnerShadowIcon icon={<MicOutlineIcon width={16} height={16} />} size={34} radius={17} />
+          <Text style={styles.morningBriefText}>Morning Brief</Text>
+        </NeumorphicCard>
+      </TouchableOpacity> */}
     </View>
   );
   const renderItem = ({ item }: { item: GridItem }) => (
-    <TouchableOpacity
-      style={styles.gridCell}
-      activeOpacity={0.8}
-      onPress={() => item.onPress?.()}
-    >
+    <TouchableOpacity style={styles.gridCell} activeOpacity={0.8} onPress={() => item.onPress?.()}>
       <View style={styles.cardOuter}>
         <NeumorphicCard
           borderRadius={CARD_CORNER_RADIUS}
@@ -243,7 +237,9 @@ const Home = () => {
             <InnerShadowIcon icon={item.icon()} size={40} />
           </View>
           <View style={styles.cardTextWrap}>
-            <Text style={styles.cardLabel} numberOfLines={2}>{item.label}</Text>
+            <Text style={styles.cardLabel} numberOfLines={2}>
+              {item.label}
+            </Text>
             {item.badgeType === "sub" && item.badge && (
               <DeltaBadge
                 icon={null}
@@ -324,11 +320,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.TEXT_80,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
   },
   greetingBold: {
     fontSize: 16,
     color: COLORS.TEXT_DARK,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    paddingTop: 3,
   },
   bellWrap: {
     width: 44,
@@ -397,9 +396,10 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 16,
-    fontWeight: "500",
     color: COLORS.PRIMARY,
     lineHeight: 20,
+    fontFamily: "SF-Pro-Text-Medium",
+    fontWeight: "500",
   },
   subBadgeText: {
     fontSize: 10,
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: "center",
     paddingTop: 10,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   wrapper: {
     width: 240,
@@ -447,7 +447,29 @@ const styles = StyleSheet.create({
   },
   greetingContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "baseline",
     gap: 6,
+  },
+  morningBriefCta: {
+    alignSelf: "center",
+    width: "100%",
+    maxWidth: 220,
+    marginBottom: 16,
+  },
+  morningBriefOuter: {
+    width: "100%",
+  },
+  morningBriefInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  morningBriefText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: COLORS.PRIMARY_DARK,
   },
 });

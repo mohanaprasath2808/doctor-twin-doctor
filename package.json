@@ -1,29 +1,28 @@
 {
   "name": "doctor-twin-monorepo",
   "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
-  "overrides": {
-    "react-native-gesture-handler": "~2.28.0"
-  },
-  "scripts": {
-    "doctor:start": "npm run start -w @doctor-twin/doctor",
-    "doctor:android": "npm run android -w @doctor-twin/doctor",
-    "doctor:ios": "npm run ios -w @doctor-twin/doctor",
-    "patient": "npm run start -w @doctor-twin/patient",
-    "patient:android": "npm run android -w @doctor-twin/patient",
-    "patient:ios": "npm run ios -w @doctor-twin/patient",
-    "staff:start": "npm run start -w @doctor-twin/staff",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
-  },
   "version": "1.0.0",
-  "dependencies": {
-    "@react-native-community/netinfo": "^12.0.1",
-    "expo": "~54.0.33",
-    "react": "19.1.0",
-    "react-native": "0.81.5",
-    "react-native-timeline-flatlist": "^1.0.0"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "node ./scripts/run-workspace-app.mjs start",
+    "android": "node ./scripts/run-workspace-app.mjs android",
+    "ios": "node ./scripts/run-workspace-app.mjs ios",
+    "clean:modules": "rm -rf node_modules apps/*/node_modules packages/*/node_modules",
+    "clean:workspace": "npm run clean:modules && npm install",
+    "doctor:start": "npm --workspace @doctor-twin/doctor run start",
+    "doctor:android": "npm --workspace @doctor-twin/doctor run android",
+    "doctor:ios": "npm --workspace @doctor-twin/doctor run ios",
+    "patient:start": "npm --workspace @doctor-twin/patient run start",
+    "patient:android": "npm --workspace @doctor-twin/patient run android",
+    "patient:ios": "npm --workspace @doctor-twin/patient run ios",
+    "staff:start": "npm --workspace @doctor-twin/staff run start",
+    "staff:android": "npm --workspace @doctor-twin/staff run android",
+    "staff:ios": "npm --workspace @doctor-twin/staff run ios"
+  },
+  "overrides": {
+    "react-native-svg": "15.15.4"
   }
 }
