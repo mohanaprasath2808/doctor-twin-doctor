@@ -79,6 +79,9 @@ const Home = () => {
         if (item.id === "lab") {
           navigation.navigate(navigationStrings.LABS);
         }
+        if (item.id === "wellness") {
+          navigation.navigate(navigationStrings.WELLNESS_MEDSPA);
+        }
       }}
       icon={item.icon}
       label={item.label}

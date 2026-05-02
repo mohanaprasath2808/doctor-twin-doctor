@@ -1,20 +1,19 @@
 import React from "react";
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
-import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
 import IconComponent from "../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../constants/theme";
+import navigationStrings from "../../constants/navigationStrings";
 import LeftArrowIcon from "../../assets/icons/leftArrow.svg";
-import EditPencilIcon from "../../assets/icons/editPencilIcon.svg";
+import EditPencilIcon from "../../assets/icons/editIcon.svg";
 import PhoneIcon from "../../assets/icons/phoneIcon.svg";
-import PhoneIconRed from "../../assets/icons/phoneIconRed.svg";
-import MailIcon from "../../assets/icons/mailIcon.svg";
+import PhoneIconRed from "../../assets/icons/redPhoneIcon.svg";
+import MailIcon from "../../assets/icons/mailBox.svg";
 import LabLocationPin from "../../assets/icons/labLocationPin.svg";
-import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
 
 const ICON_INNER = 18;
@@ -43,31 +42,22 @@ const MyProfile = () => {
             width={40}
             height={40}
             radius={20}
-            onPress={() => {}}
+            onPress={() => navigation.navigate(navigationStrings.EDIT_PROFILE)}
           />
         </View>
 
         <NeumorphicCard
           outerStyle={styles.mainCardOuter}
           innerStyle={styles.mainCardInner}
-          borderRadius={16}
+          borderRadius={10}
           backgroundColor={COLORS.WHITE}
         >
           <View style={styles.profileHeader}>
-            <ProfileAvatar
-              overlaySource={OverlayImage}
-              imageSource={DoctorTempImage}
-              containerStyle={styles.avatarContainer}
-              wrapperStyle={styles.avatarWrapper}
-              overlayStyle={styles.avatarOverlay}
-              imageStyle={styles.avatarImage}
-            />
+            <Image source={DoctorTempImage} width={80} height={80} style={styles.avatarImage} />
             <Text style={styles.profileName}>Sarah Johnson</Text>
           </View>
 
-          <View style={styles.divider} />
-
-          <View style={styles.infoRow}>
+          <View style={[styles.infoRow, { marginTop: 30 }]}>
             <InnerShadowIcon
               icon={<PhoneIcon width={ICON_INNER} height={ICON_INNER} />}
               size={40}
@@ -111,7 +101,7 @@ const MyProfile = () => {
         <NeumorphicCard
           outerStyle={styles.emergencyCardOuter}
           innerStyle={styles.emergencyCardInner}
-          borderRadius={16}
+          borderRadius={10}
           backgroundColor={COLORS.WHITE}
         >
           <Text style={styles.emergencyTitle}>Emergency Contact</Text>
@@ -157,7 +147,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
   },
   mainCardOuter: {
-    marginTop: 8,
+    marginTop: 30,
   },
   mainCardInner: {
     paddingVertical: 16,
@@ -190,8 +180,8 @@ const styles = StyleSheet.create({
   },
   profileName: {
     marginTop: 12,
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },
   divider: {
@@ -208,13 +198,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   infoPrimary: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },
   infoSubtitle: {
     marginTop: 2,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_60,
   },
@@ -227,7 +217,7 @@ const styles = StyleSheet.create({
   },
   emergencyTitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
     marginBottom: 12,
   },
@@ -236,14 +226,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   emergencyName: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "400",
     color: COLORS.TEXT_PRIMARY,
   },
   emergencyPhone: {
     marginTop: 4,
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },
 });

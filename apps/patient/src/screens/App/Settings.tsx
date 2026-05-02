@@ -14,12 +14,12 @@ import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
 import BellIcon from "../../assets/icons/bell.svg";
 
-import MyRecordsIcon from "../../assets/icons/myRecords.svg";
+import ProfileIcon from "../../assets/icons/profile.svg";
 import MessageIcon from "../../assets/icons/message.svg";
-import PrivacyIcon from "../../assets/icons/privacy.svg";
+import PrivacyIcon from "../../assets/icons/shieldWithLock.svg";
 import ContactSupportIcon from "../../assets/icons/contactSupport.svg";
-import WarningRedIcon from "../../assets/icons/warningRed.svg";
-import AppointmentsRemindersIcon from "../../assets/icons/appointmentsReminders.svg";
+import WarningRedIcon from "../../assets/icons/emergencyIcon.svg";
+import MessageWithQuestion from "../../assets/icons/messageWithQuestion.svg";
 
 const ICON_SIZE = 32;
 
@@ -28,29 +28,29 @@ const SETTINGS_ACTIONS: {
   label: string;
   icon: React.ReactNode;
 }[] = [
-  { id: "profile", label: "My Profile", icon: <MyRecordsIcon width={ICON_SIZE} height={ICON_SIZE} /> },
-  { id: "communication", label: "Communication", icon: <MessageIcon width={ICON_SIZE} height={ICON_SIZE} /> },
-  {
-    id: "privacy",
-    label: "Privacy & Security",
-    icon: <PrivacyIcon width={ICON_SIZE} height={ICON_SIZE} />,
-  },
-  {
-    id: "help",
-    label: "Help / Training",
-    icon: <AppointmentsRemindersIcon width={ICON_SIZE} height={ICON_SIZE} />,
-  },
-  {
-    id: "support",
-    label: "Support Ticket",
-    icon: <ContactSupportIcon width={ICON_SIZE} height={ICON_SIZE} />,
-  },
-  {
-    id: "emergency",
-    label: "Emergency / Safety",
-    icon: <WarningRedIcon width={ICON_SIZE} height={ICON_SIZE} />,
-  },
-];
+    { id: "profile", label: "My Profile", icon: <ProfileIcon width={ICON_SIZE} height={ICON_SIZE} /> },
+    { id: "communication", label: "Communication", icon: <MessageIcon width={ICON_SIZE} height={ICON_SIZE} /> },
+    {
+      id: "privacy",
+      label: "Privacy & Security",
+      icon: <PrivacyIcon width={ICON_SIZE} height={ICON_SIZE} />,
+    },
+    {
+      id: "help",
+      label: "Help / Training",
+      icon: <MessageWithQuestion width={ICON_SIZE} height={ICON_SIZE} />,
+    },
+    {
+      id: "support",
+      label: "Support Ticket",
+      icon: <ContactSupportIcon width={ICON_SIZE} height={ICON_SIZE} />,
+    },
+    {
+      id: "emergency",
+      label: "Emergency / Safety",
+      icon: <WarningRedIcon width={ICON_SIZE} height={ICON_SIZE} />,
+    },
+  ];
 
 const Settings = () => {
   const navigation = useNavigation<any>();
@@ -100,6 +100,21 @@ const Settings = () => {
               onPress={() => {
                 if (item.id === "profile") {
                   navigation.navigate(navigationStrings.MY_PROFILE);
+                }
+                if (item.id === "communication") {
+                  navigation.navigate(navigationStrings.COMMUNICATION);
+                }
+                if (item.id === "privacy") {
+                  navigation.navigate(navigationStrings.PRIVACY_SECURITY);
+                }
+                if (item.id === "help") {
+                  navigation.navigate(navigationStrings.HELP_TRAINING);
+                }
+                if (item.id === "support") {
+                  navigation.navigate(navigationStrings.SUPPORT_TICKET);
+                }
+                if (item.id === "emergency") {
+                  navigation.navigate(navigationStrings.EMERGENCY_SAFETY);
                 }
               }}
               icon={item.icon}

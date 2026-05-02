@@ -122,8 +122,8 @@ const Appointments = () => {
   const renderPast: ListRenderItem<PastAppointment> = ({ item }) => {
     const statusStyle =
       item.status === "cancelled"
-        ? { bg: "#FFEBEE", fg: "#C62828", shadow: "#E57373", label: "Cancelled" as const }
-        : { bg: "#E8F5E9", fg: "#2E7D32", shadow: "#81C784", label: "Completed" as const };
+        ? { bg: "#FDECEC", fg: COLORS.ALERT, shadow: "#F2CACA", label: "Cancelled" as const }
+        : { bg: "#D3FFF1", fg: COLORS.SUCCESS, shadow: "#A9E9D5", label: "Completed" as const };
 
     return (
       <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
@@ -252,10 +252,12 @@ const AppointmentTabChip = ({
     <View style={[styles.filterPress, { width: chipWidth }]}>
       <ReusableButton
         title={title}
-        gradientColors={REUSABLE_GRADIENT}
+        gradientColors={["#3F97B2", "#14B8D4"]}
+        borderGradientColors={["#D6E3F3", "#FFFFFF"]}
         onPress={onPress}
         width={chipWidth}
         height={40}
+        backgroundColor="#14B8D4"
         borderRadius={20}
         containerStyle={styles.tabSelectedBtn}
         textStyle={styles.tabReusableTitle}

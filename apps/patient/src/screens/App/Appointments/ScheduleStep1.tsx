@@ -16,6 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import AppButton from "../../../components/Common/AppButton";
+import StepProgressRow from "../../../components/Common/StepProgressRow";
 import IconComponent from "../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import InputField from "../../../neomorphism/InputField";
@@ -137,15 +138,32 @@ const ScheduleStep1 = () => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.progressRow}>
-          <LinearGradient
-            colors={["#14B8D4", "#0E7490"]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={styles.progressActive}
-          />
-          <View style={styles.progressInactive} />
-        </View>
+        <StepProgressRow
+          totalSteps={2}
+          currentStep={1}
+          onStepPress={(step) => {
+            if (step === 2) {
+              navigation.navigate(navigationStrings.SCHEDULE_STEP_2);
+            }
+          }}
+          containerStyle={styles.progressRow}
+          segmentHeight={12}
+          segmentBorderRadius={12}
+          activeGradientColors={["#14B8D4", "#0E7490"]}
+          inactiveBackgroundColor="#F7FBFF"
+          activeShadowColor="#C1D5EE"
+          activeShadowOpacity={0.3}
+          activeShadowRadius={4}
+          activeShadowOffset={{ width: 2, height: 2 }}
+          inactiveDarkShadowColor="#C8CBCC"
+          inactiveLightShadowColor={COLORS.LIGHT_SHADOW}
+          inactiveDarkShadowDx={2}
+          inactiveDarkShadowDy={2}
+          inactiveDarkShadowBlur={6}
+          inactiveLightShadowDx={-2}
+          inactiveLightShadowDy={-2}
+          inactiveLightShadowBlur={6}
+        />
 
         <Text style={styles.stepText}>Step 1</Text>
         <Text style={styles.sectionTitle}>What&apos;s the reason for your visit?</Text>
@@ -169,7 +187,7 @@ const ScheduleStep1 = () => {
               placeholder="Please specify"
               containerStyle={styles.otherReasonField}
               borderRadius={64}
-              minHeight={48}
+              minHeight={38}
             />
           ) : null}
         </NeumorphicCard>
@@ -194,7 +212,7 @@ const ScheduleStep1 = () => {
                 onRightIconPress={() => providerSheetRef.current?.present()}
                 containerStyle={styles.providerFieldContainer}
                 borderRadius={64}
-                height={46}
+                height={38}
               />
             </View>
           </Pressable>
@@ -289,28 +307,6 @@ const styles = StyleSheet.create({
   },
   progressRow: {
     marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  progressActive: {
-    flex: 1,
-    height: 12,
-    borderRadius: 60,
-    shadowColor: "#C1D5EE",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  progressInactive: {
-    flex: 1,
-    height: 12,
-    borderRadius: 12,
-    backgroundColor: "#F7FBFF",
-    shadowColor: "#C8CBCC",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.35,
-    shadowRadius: 6,
   },
   stepText: {
     marginTop: 14,
@@ -331,8 +327,8 @@ const styles = StyleSheet.create({
   },
   reasonsInner: {
     borderRadius: 10,
-    paddingVertical: 4,
-    paddingHorizontal: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   sectionCardInner: {
     borderRadius: 10,
@@ -361,8 +357,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    paddingHorizontal: 6,
-    paddingVertical: 8,
   },
   reasonRowPressed: {
     opacity: 0.95,

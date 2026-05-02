@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import DeltaBadge from "../../../components/Common/DeltaBadge";
 import FilterChip from "../../../components/Common/FilterChip";
-import StepProgressRow from "../../../components/Common/StepProgressRow";
+import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import IconComponent from "../../../neomorphism/IconComponent";
+import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import { NeumorphicCalendar } from "../../../neomorphism/NeumorphicCalendar";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import { COLORS } from "../../../constants/theme";
 import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
+import WellnessIcon from "../../../assets/icons/wellness.svg";
 
 const SLOT_OPTIONS = [
   { label: "10:15 AM", width: 106 },
@@ -19,10 +21,24 @@ const SLOT_OPTIONS = [
   { label: "3:00 PM", width: 102 },
 ];
 
-const ScheduleStep2 = () => {
+const BookAppointment = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [selectedSlot, setSelectedSlot] = useState("10:15 AM");
+
+  const treatmentName = useMemo(
+    () => route?.params?.treatment?.title ?? "Hydrafacial",
+    [route?.params?.treatment?.title],
+  );
+  const backRouteName = useMemo(
+    () => route?.params?.backRouteName ?? navigationStrings.WELLNESS_MEDSPA,
+    [route?.params?.backRouteName],
+  );
+  const secondaryButtonLabel = useMemo(
+    () => route?.params?.backButtonLabel ?? "Back to Wellness",
+    [route?.params?.backButtonLabel],
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
@@ -35,7 +51,7 @@ const ScheduleStep2 = () => {
           onPress={() => navigation.goBack()}
         />
         <View style={styles.headerTitleWrap}>
-          <Text style={styles.title}>Schedule Appointment</Text>
+          <Text style={styles.title}>Book Appointment</Text>
         </View>
         <View style={styles.headerRightSpacer} />
       </View>
@@ -46,25 +62,11 @@ const ScheduleStep2 = () => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <StepProgressRow
-          totalSteps={2}
-          currentStep={2}
-          onStepPress={(step) => {
-            if (step === 1) {
-              navigation.goBack();
-            }
-          }}
-          containerStyle={styles.progressRow}
-          segmentHeight={12}
-          segmentBorderRadius={12}
-          activeGradientColors={["#14B8D4", "#0E7490"]}
-          activeShadowColor="#C1D5EE"
-          activeShadowOpacity={0.3}
-          activeShadowRadius={4}
-          activeShadowOffset={{ width: 2, height: 2 }}
-        />
+        <NeumorphicCard outerStyle={styles.treatmentOuter} innerStyle={styles.treatmentInner} borderRadius={10}>
+          <InnerShadowIcon icon={<WellnessIcon width={20} height={20} />} size={40} radius={20} />
+          <Text style={styles.treatmentName}>{treatmentName}</Text>
+        </NeumorphicCard>
 
-        <Text style={styles.stepText}>Step 2</Text>
         <Text style={styles.sectionTitle}>Calender</Text>
         <NeumorphicCalendar initialDate={selectedDate} onDateChange={setSelectedDate} />
 
@@ -111,21 +113,29 @@ const ScheduleStep2 = () => {
 
       <View style={styles.footer}>
         <ReusableButton
-          title="Done"
+          title="Confirm Appointment"
           height={48}
           borderRadius={25}
           width="100%"
           gradientColors={["#22D3EE", "#0F766E"]}
           backgroundColor={COLORS.PRIMARY}
-          onPress={() => navigation.navigate(navigationStrings.APPOINTMENT_CONFIRM)}
+          onPress={() =>
+            navigation.navigate(navigationStrings.BOOK_APPOINTED, {
+              title: "Book Appointed",
+              message: "Appointment Booked Successfully",
+              subtitle: "I'll remind you and stay with you.",
+              primaryButtonLabel: "View Appointment",
+              primaryButtonRoute: navigationStrings.APPOINTMENTS,
+              secondaryButtonLabel,
+              secondaryButtonRoute: backRouteName,
+            })
+          }
           containerStyle={styles.doneBtn}
         />
       </View>
     </SafeAreaView>
   );
 };
-
-export default ScheduleStep2;
 
 const styles = StyleSheet.create({
   container: {
@@ -161,19 +171,26 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     paddingHorizontal: 16,
   },
-  progressRow: {
-    marginTop: 20,
+  treatmentOuter: {
+    marginTop: 24,
+    width: "100%",
   },
-  stepText: {
-    marginTop: 14,
+  treatmentInner: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  treatmentName: {
     fontSize: 14,
     fontWeight: "500",
-    color: COLORS.TEXT_PRIMARY_70,
+    color: COLORS.TEXT_PRIMARY,
   },
   sectionTitle: {
-    marginTop: 16,
+    marginTop: 18,
     marginBottom: 10,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "500",
     color: COLORS.TEXT_DARK,
   },
@@ -216,3 +233,5 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
 });
+
+export default BookAppointment;
