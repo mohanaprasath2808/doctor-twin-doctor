@@ -23,6 +23,7 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import PatientIcon from "../../assets/icon/patientIcon.svg";
+import MicOutlineIcon from "../../assets/icon/micOutlineIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
 import IconComponent from "../../neomorphism/IconComponent";
@@ -89,26 +90,26 @@ const GRID_ITEMS: GridItem[] = [
     label: "Refills",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
-  {
-    id: 11,
-    label: "Patient",
-    icon: () => <PatientIcon width={18} height={18} />,
-  },
-  {
-    id: 12,
-    label: "Labs",
-    icon: () => <BrainIcon width={18} height={18} />,
-  },
-  {
-    id: 13,
-    label: "Payer Rules",
-    icon: () => <BrainIcon width={18} height={18} />,
-  },
-  {
-    id: 14,
-    label: "Patient Verification",
-    icon: () => <PatientIcon width={18} height={18} />,
-  },
+  // {
+  //   id: 11,
+  //   label: "Patient",
+  //   icon: () => <PatientIcon width={18} height={18} />,
+  // },
+  // {
+  //   id: 12,
+  //   label: "Labs",
+  //   icon: () => <BrainIcon width={18} height={18} />,
+  // },
+  // {
+  //   id: 13,
+  //   label: "Payer Rules",
+  //   icon: () => <BrainIcon width={18} height={18} />,
+  // },
+  // {
+  //   id: 14,
+  //   label: "Patient Verification",
+  //   icon: () => <PatientIcon width={18} height={18} />,
+  // },
 ];
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
@@ -207,6 +208,21 @@ const Home = () => {
         overlayStyle={styles.overlayImage}
         imageStyle={styles.image}
       />
+
+      {/* <TouchableOpacity
+        activeOpacity={0.85}
+        style={styles.morningBriefCta}
+        onPress={() => navigation.navigate(navigationStrings.MORNING_BRIEF)}
+      >
+        <NeumorphicCard
+          borderRadius={12}
+          outerStyle={styles.morningBriefOuter}
+          innerStyle={styles.morningBriefInner}
+        >
+          <InnerShadowIcon icon={<MicOutlineIcon width={16} height={16} />} size={34} radius={17} />
+          <Text style={styles.morningBriefText}>Morning Brief</Text>
+        </NeumorphicCard>
+      </TouchableOpacity> */}
     </View>
   );
   const renderItem = ({ item }: { item: GridItem }) => (
@@ -302,17 +318,16 @@ const styles = StyleSheet.create({
   },
   greetingLight: {
     fontSize: 16,
-    lineHeight: 20,
     color: COLORS.TEXT_80,
     fontWeight: "400",
     fontFamily: "SF-Pro-Text-Regular",
   },
   greetingBold: {
     fontSize: 16,
-    lineHeight: 20,
     color: COLORS.TEXT_DARK,
     fontWeight: "500",
     fontFamily: "SF-Pro-Text-Medium",
+    paddingTop: 3,
   },
   bellWrap: {
     width: 44,
@@ -409,7 +424,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: "center",
     paddingTop: 10,
-    marginBottom: 16,
+    marginBottom: 10,
   },
   wrapper: {
     width: 240,
@@ -434,5 +449,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     gap: 6,
+  },
+  morningBriefCta: {
+    alignSelf: "center",
+    width: "100%",
+    maxWidth: 220,
+    marginBottom: 16,
+  },
+  morningBriefOuter: {
+    width: "100%",
+  },
+  morningBriefInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  morningBriefText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: COLORS.PRIMARY_DARK,
   },
 });

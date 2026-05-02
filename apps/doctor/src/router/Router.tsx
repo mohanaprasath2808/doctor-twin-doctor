@@ -1,13 +1,13 @@
 import React from "react";
 import AuthStack from "./Auth/AuthStack";
-import AppStack from "./App/AppStack";
+import BottomBarNavigation from "./App/BottomBarNavigation";
 import { useRoute } from "./useRoute";
 
 type RouteType = 'auth' | 'app';
 
 const stack: Record<RouteType, React.ReactElement> = {
     auth: <AuthStack />,
-    app: <AppStack />,
+    app: <BottomBarNavigation />,
 }
 
 const Router = () => {

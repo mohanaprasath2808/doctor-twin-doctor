@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import navigationStrings from "../../constants/navigationStrings";
 import Home from "../../screens/App/Home";
+import MorningBrief from "../../screens/App/Home/MorningBrief";
 import PracticeIntelligence from "../../screens/App/Home/PracticeIntelligence";
 import ReportHub from "../../screens/App/Home/PractceIntelligence/ReportHub";
 import Schedule from "../../screens/App/Home/Schedule/Schedule";
@@ -63,6 +64,13 @@ const AppStack = () => {
           headerShown: false,
           headerShadowVisible: false,
           headerBackButtonDisplayMode: "minimal",
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.MORNING_BRIEF}
+        component={MorningBrief}
+        options={{
+          headerShown: false,
         }}
       />
       <Stack.Screen

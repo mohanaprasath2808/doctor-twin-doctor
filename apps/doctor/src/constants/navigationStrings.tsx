@@ -19,6 +19,7 @@ const navigationStrings = {
   RESET_PASSWORD: "ResetPassword",
   //APP
   HOME: "Home",
+  MORNING_BRIEF: "MorningBrief",
   PRACTICE_INTELLIGENCE: "PracticeIntelligence",
   STAFF_CONSOLE: "StaffConsole",
   DOCTOR_REVIEW: "DoctorReview",

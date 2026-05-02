@@ -14,7 +14,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   return (
     <AuthContext.Provider
       value={{
