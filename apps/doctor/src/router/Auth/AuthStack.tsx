@@ -22,7 +22,7 @@ const Stack = createNativeStackNavigator();
 
 /**
  * Temporary demo flow (until API integration): each primary action advances in order,
- * then EmergencyAccess calls AuthContext setIsLogin(true) so Router mounts AppStack (Home).
+ * then EmergencyAccess calls useAuthStore setIsLogin(true) so Router mounts AppStack (Home).
  *
  * Order: Bootstrap → SSO → … → Secure login → … → Emergency access → App (Home).
  * Returning users: Bootstrap → Secure login (Face ID) → App.

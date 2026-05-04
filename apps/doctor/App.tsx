@@ -1,4 +1,4 @@
-import { Modal, Platform, StyleSheet, Text, View } from "react-native";
+import { Modal, Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ToastProvider } from "react-native-toast-notifications";
 import { NavigationContainer } from "@react-navigation/native";
@@ -6,15 +6,17 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import Router from "./src/router/Router";
-import AuthContextProvider from "./src/context/AuthContext";
-import AppContextProvider from "./src/context/AppContext";
+import { useAuthStore } from "./src/store/useAuthStore";
 import { COLORS } from "./src/constants/theme";
 import OfflineMode from "./src/screens/Auth/OfflineMode";
 import { useFonts } from "expo-font";
+import NeomorphicToast from "./src/neomorphism/NeomorphicToast";
 
 const App = () => {
   const [isOffline, setIsOffline] = useState(false);
   const [isOfflineDismissed, setIsOfflineDismissed] = useState(false);
+  const [sessionHydrated, setSessionHydrated] = useState(false);
+  const hydrateFromStorage = useAuthStore((s) => s.hydrateFromStorage);
 
   const [fontLoaded] = useFonts({
     "SF-Pro-Display-Regular": require("./src/assets/fonts/SF-Pro-Display-Regular.otf"),
@@ -108,7 +110,11 @@ const App = () => {
     };
   }, []);
 
-  if (!fontLoaded) {
+  useEffect(() => {
+    void hydrateFromStorage().finally(() => setSessionHydrated(true));
+  }, [hydrateFromStorage]);
+
+  if (!fontLoaded || !sessionHydrated) {
     return null;
   }
 
@@ -119,39 +125,23 @@ const App = () => {
       placement="top"
       offsetTop={Platform.OS === "android" ? 40 : 0}
       renderType={{
-        success: (toast) => (
-          <View pointerEvents="box-none" style={styles.toastContainer}>
-            <Text style={styles.toastText}>{toast.message}</Text>
-          </View>
-        ),
-        danger: (toast) => (
-          <View pointerEvents="box-none" style={styles.toastContainer}>
-            <Text style={styles.toastText}>{toast.message}</Text>
-          </View>
-        ),
-        warning: (toast) => (
-          <View pointerEvents="box-none" style={styles.toastContainer}>
-            <Text style={styles.toastText}>{toast.message}</Text>
-          </View>
-        ),
+        success: (toast) => <NeomorphicToast toast={toast} variant="success" />,
+        warning: (toast) => <NeomorphicToast toast={toast} variant="warning" />,
+        danger: (toast) => <NeomorphicToast toast={toast} variant="danger" />,
       }}
     >
       <StatusBar style="light" backgroundColor={COLORS.PRIMARY} />
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BottomSheetModalProvider>
           <NavigationContainer>
-            <AppContextProvider>
-              <AuthContextProvider>
-                <Router />
-                <Modal
-                  visible={shouldShowOfflineMode}
-                  animationType="fade"
-                  presentationStyle="fullScreen"
-                >
-                  <OfflineMode onClose={() => setIsOfflineDismissed(true)} />
-                </Modal>
-              </AuthContextProvider>
-            </AppContextProvider>
+            <Router />
+            <Modal
+              visible={shouldShowOfflineMode}
+              animationType="fade"
+              presentationStyle="fullScreen"
+            >
+              <OfflineMode onClose={() => setIsOfflineDismissed(true)} />
+            </Modal>
           </NavigationContainer>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
@@ -160,27 +150,3 @@ const App = () => {
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  toastContainer: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#22c55e",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  toastText: {
-    color: "#fff",
-    fontSize: 14,
-    fontFamily: "Manrope-Medium",
-  },
-});

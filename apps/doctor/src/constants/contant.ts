@@ -38,3 +38,6 @@ export const getCurrentDate = () =>
 export const LOCAL_STORAGE_KEYS = {
   FACE_ID_ENABLED: "faceIdEnabled",
 };
+
+//EMAIL REGEX
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

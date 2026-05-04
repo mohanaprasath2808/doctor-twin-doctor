@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../constants/theme';
-import { ensureLocalSessionId } from '../../auth/localSession';
-import { AuthContext } from '../../context/AuthContext';
+import { useAuthStore } from '../../store/useAuthStore';
 import IconComponent from '../../neomorphism/IconComponent';
 import ProfileAvatar from '../../components/Auth/ProfileAvatar';
 import NeumorphicCard from '../../components/Common/NeumorphicCard';
@@ -36,11 +35,7 @@ const LAB_ALERTS = [
 
 const EmergencyAccess = () => {
   const navigation = useNavigation<any>();
-  const auth = useContext(AuthContext);
-  if (!auth) {
-    throw new Error('EmergencyAccess must be used within AuthContextProvider');
-  }
-  const { setIsLogin } = auth;
+  const setIsLogin = useAuthStore((s) => s.setIsLogin);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -98,8 +93,7 @@ const EmergencyAccess = () => {
       </View>
 
       <Pressable
-        onPress={async () => {
-          await ensureLocalSessionId();
+        onPress={() => {
           setIsLogin(true);
         }}
       >

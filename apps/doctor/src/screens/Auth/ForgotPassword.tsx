@@ -1,25 +1,42 @@
-import React from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../constants/theme';
-import IconComponent from '../../neomorphism/IconComponent';
-import InputField from '../../neomorphism/InputField';
-import ReusableButton from '../../neomorphism/ReusableButton';
-import MailIcon from '../../assets/icon/mailIcon.svg';
-import BackIcon from '../../assets/icon/backArrow.svg';
-import navigationStrings from '../../constants/navigationStrings';
+import React, { useState } from "react";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { COLORS } from "../../constants/theme";
+import IconComponent from "../../neomorphism/IconComponent";
+import InputField from "../../neomorphism/InputField";
+import ReusableButton from "../../neomorphism/ReusableButton";
+import MailIcon from "../../assets/icon/mailIcon.svg";
+import BackIcon from "../../assets/icon/backArrow.svg";
+import navigationStrings from "../../constants/navigationStrings";
+import { ForgotPasswordRouteParams } from "../../types/authRoute";
+import { useToast } from "react-native-toast-notifications";
+import { EMAIL_REGEX } from "../../constants/contant";
 const ForgotPassword = () => {
+  const toast = useToast();
+  const route = useRoute();
   const navigation = useNavigation<any>();
-
+  const { email } = route.params as ForgotPasswordRouteParams;
+  console.log(email, "email in Forgot Password Screen");
+  //local state
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState(email);
+  //context
+  // const handleResendOtp =
   //Reset Password Handler
+
   const handleResetPassword = () => {
+    // if (!forgotPasswordEmail.trim()) {
+    //   toast.show("Please enter email.", { type: "warning" });
+    //   return;
+    // }
+    // if (!EMAIL_REGEX.test(forgotPasswordEmail)) {
+    //   toast.show("Please enter a valid email.", { type: "warning" });
+    //   return;
+    // }
+
+    // try{
+    //   const response = await handleResendOtp(forgotPasswordEmail);
+    // }
     navigation.navigate(navigationStrings.RESET_PASSWORD);
   };
 
@@ -36,14 +53,16 @@ const ForgotPassword = () => {
 
       <Text style={styles.title}>Forgot your password?</Text>
       <Text style={styles.subtitle}>
-        Please enter the email address associated with your account, and we’ll
-        email you a link to reset your password.
+        Please enter the email address associated with your account, and we’ll email you a link to
+        reset your password.
       </Text>
 
       <Text style={styles.label}>Email</Text>
       <InputField
         placeholder="Enter email"
         leftIcon={<MailIcon width={18} height={18} />}
+        value={forgotPasswordEmail}
+        onChangeText={setForgotPasswordEmail}
       />
 
       <ReusableButton
@@ -73,45 +92,45 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   backButton: {
-    marginTop: Platform.OS === 'ios' ? 6 : 16,
+    marginTop: Platform.OS === "ios" ? 6 : 16,
   },
   title: {
     marginTop: 24,
     fontSize: 32,
-    fontWeight: '600',
+    fontWeight: "600",
     color: COLORS.TEXT_DARK,
   },
   subtitle: {
     marginTop: 10,
     fontSize: 14,
     color: COLORS.TEXT_60,
-    fontWeight: '400',
+    fontWeight: "400",
     lineHeight: 18,
   },
   label: {
     marginTop: 24,
     fontSize: 12,
     color: COLORS.TEXT_60,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   resetBtn: {
     marginTop: 26,
   },
   footerContainer: {
-    marginTop: 'auto',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: "auto",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingBottom: 20,
   },
   footerText: {
     fontSize: 14,
     color: COLORS.TEXT_60,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   loginText: {
     fontSize: 14,
     color: COLORS.PRIMARY,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -11,10 +11,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import * as LocalAuthentication from "expo-local-authentication";
-import { hasLocalSession } from "../../auth/localSession";
+import { hasAuthSession } from "../../utils/authStorage";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuthStore } from "../../store/useAuthStore";
+import { useAppStore } from "../../store/useAppStore";
+import { handleResendOtp as requestResendOtp } from "../../service/authService";
 import IconComponent from "../../neomorphism/IconComponent";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
@@ -25,6 +27,7 @@ import FaceScanIcon from "../../assets/icon/faceScanIcon.svg";
 import PasswordIcon from "../../assets/icon/lockIcon.svg";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
+import { useToast } from "react-native-toast-notifications";
 
 const FACE_ID_LABEL = Platform.OS === "ios" ? "Face ID" : "Face unlock";
 
@@ -54,11 +57,11 @@ const SECURE_OPTIONS = [
 
 const SecureLogin = () => {
   const navigation = useNavigation<any>();
-  const auth = useContext(AuthContext);
-  if (!auth) {
-    throw new Error("SecureLogin must be used within AuthContextProvider");
-  }
-  const { setIsLogin } = auth;
+  const toast = useToast();
+  const setIsLogin = useAuthStore((s) => s.setIsLogin);
+  const userData = useAuthStore((s) => s.userData);
+  const loading = useAppStore((s) => s.loading);
+  const setLoading = useAppStore((s) => s.setLoading);
   const [biometricBusy, setBiometricBusy] = useState(false);
   /** Face ID / face unlock hardware reported by the OS (fingerprint-only devices stay false). */
   const [faceIdAvailable, setFaceIdAvailable] = useState(false);
@@ -85,7 +88,7 @@ const SecureLogin = () => {
   const onFaceIdPress = useCallback(async () => {
     setBiometricBusy(true);
     try {
-      const stored = await hasLocalSession();
+      const stored = await hasAuthSession();
       if (!stored) {
         Alert.alert(
           "Complete setup first",
@@ -150,15 +153,71 @@ const SecureLogin = () => {
           );
           return;
         }
-        void onFaceIdPress();
+        void (async () => {
+          const email = userData?.email?.trim();
+          if (!email) {
+            toast.show("No saved email. Sign in with Login first.", { type: "warning" });
+            return;
+          }
+          if (userData?.face_id_set !== true) {
+            setLoading(true);
+            try {
+              const result = await requestResendOtp(email, "login");
+              if (!result.ok) {
+                toast.show("Could not send code. Try again.", { type: "danger" });
+                return;
+              }
+              toast.show("Verification code sent.", { type: "success" });
+              navigation.navigate(navigationStrings.OTP_VERIFICATION, {
+                email,
+                source: "login",
+                loginOtpNext: "faceId",
+              });
+            } finally {
+              setLoading(false);
+            }
+            return;
+          }
+          await onFaceIdPress();
+        })();
         return;
       case "sso-login":
         navigation.navigate(navigationStrings.SSO_SIGN_IN);
         return;
-      case "user-pin":
+      case "user-pin": {
+        void (async () => {
+          const email = userData?.email?.trim();
+          if (!email) {
+            toast.show("No saved email. Sign in with Login first.", { type: "warning" });
+            return;
+          }
+          setLoading(true);
+          try {
+            const result = await requestResendOtp(email, "login");
+            if (!result.ok) {
+              toast.show("Could not send code. Try again.", { type: "danger" });
+              return;
+            }
+            toast.show("Verification code sent.", { type: "success" });
+            navigation.navigate(navigationStrings.OTP_VERIFICATION, {
+              source: "login",
+              email,
+              loginOtpNext: "userPin",
+            });
+          } finally {
+            setLoading(false);
+          }
+        })();
+        return;
+      }
       default:
         continueOnboarding();
     }
+  };
+
+  //handle go back
+  const handleGoBack = () => {
+    toast.show("You cannot go back from this screen.", { type: "warning" });
   };
 
   return (
@@ -170,7 +229,7 @@ const SecureLogin = () => {
             width={40}
             height={40}
             radius={20}
-            onPress={() => navigation.goBack()}
+            onPress={handleGoBack}
           />
         ) : (
           <View style={styles.headerSpacer} />
@@ -190,7 +249,7 @@ const SecureLogin = () => {
 
       <Text style={styles.welcomeText}>Welcome Back Dr.Twin</Text>
 
-      {biometricBusy ? (
+      {biometricBusy || loading ? (
         <View style={styles.busyWrap}>
           <ActivityIndicator size="large" color={COLORS.PRIMARY_DARK} />
         </View>
@@ -204,7 +263,7 @@ const SecureLogin = () => {
               styles.optionPress,
               option.id === "face-id" && !faceIdAvailable && styles.optionDisabled,
             ]}
-            disabled={biometricBusy}
+            disabled={biometricBusy || loading}
             onPress={() => onOptionPress(option.id)}
           >
             <NeumorphicCard

@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
-import { hasLocalSession } from "../../auth/localSession";
+import { hasAuthSession } from "../../utils/authStorage";
 
 /**
  * Decides initial auth flow: returning users (local session) → Secure Login for Face ID;
@@ -16,7 +16,7 @@ const AuthBootstrap = () => {
     let cancelled = false;
     (async () => {
       try {
-        const returning = await hasLocalSession();
+        const returning = await hasAuthSession();
         if (cancelled) return;
         navigation.replace(
           returning ? navigationStrings.SECURE_LOGIN : navigationStrings.SSO_SIGN_IN,

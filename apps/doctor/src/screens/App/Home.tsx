@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -6,7 +6,7 @@ import { COLORS } from "../../constants/theme";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
-import { AppContext } from "../../context/AppContext";
+import { useAppStore } from "../../store/useAppStore";
 import NotificationIcon from "../../assets/icon/notificationIcon.svg";
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import DoctorAvatar from "../../components/Common/DoctorAvatar";
@@ -120,11 +120,8 @@ const CARD_CORNER_RADIUS = 12;
 
 const Home = () => {
   const navigation = useNavigation<any>();
-  const appContext = useContext(AppContext);
-  if (!appContext) {
-    throw new Error("useContext must be used within AppContextProvider");
-  }
-  const { notificationsData, messagesData } = appContext;
+  const notificationsData = useAppStore((s) => s.notificationsData);
+  const messagesData = useAppStore((s) => s.messagesData);
   const gridItems = GRID_ITEMS.map((item) => {
     switch (item.id) {
       case 1:
