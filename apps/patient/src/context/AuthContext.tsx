@@ -28,7 +28,7 @@ const parseResponseBody = async (request: Response) => {
 
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const toast = useToast();
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
 
   //handle login
   const handleLogin = async (phoneNumber: string) => {

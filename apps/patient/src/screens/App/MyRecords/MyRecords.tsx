@@ -69,7 +69,12 @@ const MyRecords = () => {
         </Text>
 
         <View style={styles.cardsBlock}>
-          <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
+          <NeumorphicCard
+            outerStyle={styles.cardOuter}
+            innerStyle={styles.cardInner}
+            borderRadius={10}
+            onPress={() => navigation.navigate(navigationStrings.PROBLEM_LIST)}
+          >
             <InnerShadowIcon
               icon={<LabClipboardIcon width={18} height={18} />}
               size={40}
@@ -83,7 +88,12 @@ const MyRecords = () => {
             <RightArrowIcon width={10} height={10} />
           </NeumorphicCard>
 
-          <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.cardInner} borderRadius={10}>
+          <NeumorphicCard
+            outerStyle={[styles.cardOuter, styles.cardGap]}
+            innerStyle={styles.cardInner}
+            borderRadius={10}
+            onPress={() => navigation.navigate(navigationStrings.ALLERGIES)}
+          >
             <InnerShadowIcon
               icon={<WarningTealIcon width={18} height={18} />}
               size={40}
@@ -158,7 +168,12 @@ const MyRecords = () => {
             <RightArrowIcon width={10} height={10} />
           </NeumorphicCard>
 
-          <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.cardInner} borderRadius={10}>
+          <NeumorphicCard
+            outerStyle={[styles.cardOuter, styles.cardGap]}
+            innerStyle={styles.cardInner}
+            borderRadius={10}
+            onPress={() => navigation.navigate(navigationStrings.UPLOAD_CENTER)}
+          >
             <InnerShadowIcon
               icon={<DownloadIcon width={18} height={18} />}
               size={40}

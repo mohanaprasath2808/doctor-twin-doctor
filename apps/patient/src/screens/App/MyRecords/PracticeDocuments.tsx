@@ -71,7 +71,7 @@ const PracticeDocuments = () => {
               outerStyle={styles.cardOuter}
               innerStyle={styles.cardInner}
               borderRadius={10}
-              onPress={() => navigation.navigate(navigationStrings.VIEW_PDF)}
+              onPress={() => navigation.navigate(navigationStrings.VIEW_REPORT)}
             >
               <InnerShadowIcon
                 icon={<MyRecordsIcon width={18} height={18} />}
@@ -137,10 +137,8 @@ const styles = StyleSheet.create({
   },
   avatar: { width: 124, height: 124, borderRadius: 115, resizeMode: "contain" },
   subGreeting: {
-    marginTop: 10,
     textAlign: "center",
     fontSize: 16,
-    lineHeight: 22,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },
