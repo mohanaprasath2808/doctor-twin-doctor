@@ -79,6 +79,15 @@ const Home = () => {
         if (item.id === "lab") {
           navigation.navigate(navigationStrings.LABS);
         }
+        if (item.id === "imaging") {
+          navigation.navigate(navigationStrings.IMAGING);
+        }
+        if (item.id === "billing") {
+          navigation.navigate(navigationStrings.BILLING);
+        }
+        if (item.id === "records") {
+          navigation.navigate(navigationStrings.MY_RECORDS);
+        }
         if (item.id === "wellness") {
           navigation.navigate(navigationStrings.WELLNESS_MEDSPA);
         }

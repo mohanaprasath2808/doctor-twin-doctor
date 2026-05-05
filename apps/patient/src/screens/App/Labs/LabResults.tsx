@@ -244,9 +244,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    lineHeight: 22,
     fontWeight: "600",
-    letterSpacing: 0.18,
     color: COLORS.TEXT_PRIMARY,
   },
   notifWrap: {
