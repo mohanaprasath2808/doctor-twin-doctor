@@ -3,6 +3,7 @@ const navigationStrings = {
   AUTH_BOOTSTRAP: "AuthBootstrap",
   LOGIN: "Login",
   SSO_SIGN_IN: "SsoSignIn",
+  ONBOARDING_STACK: "OnboardingStack",
   HIPAA_PRIVACY_GATE: "HipaaPrivacyGate",
   ENABLE_VOICE_HANDS_FREE: "EnableVoiceHandsFree",
   ROLE_AND_LOCATION: "RoleAndLocation",

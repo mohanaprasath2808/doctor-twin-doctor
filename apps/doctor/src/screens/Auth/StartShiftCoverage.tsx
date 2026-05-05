@@ -21,6 +21,7 @@ import AppButton from '../../components/Common/AppButton';
 import ReusableButton from '../../neomorphism/ReusableButton';
 import navigationStrings from '../../constants/navigationStrings';
 import { useAuthStore } from '../../store/useAuthStore';
+import { setCompletedOnboarding } from '../../utils/authStorage';
 
 type SelectType = 'role' | 'location' | null;
 
@@ -231,7 +232,10 @@ const StartShiftCoverage = () => {
         <ReusableButton
           title="Start Shift"
           containerStyle={styles.startShiftBtn}
-          onPress={() => setIsLogin(true)}
+          onPress={() => {
+            void setCompletedOnboarding(true);
+            setIsLogin(true);
+          }}
         />
       </View>
 

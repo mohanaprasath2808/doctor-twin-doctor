@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { COLORS } from "../../constants/theme";
@@ -12,6 +12,7 @@ import type { SetUserPinRouteParams } from "../../types/authRoute";
 import { handleResendOtp as requestResendOtp } from "../../service/authService";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useToast } from "react-native-toast-notifications";
+import { hasCompletedOnboarding } from "../../utils/authStorage";
 
 const SetUserPin = () => {
   const navigation = useNavigation<any>();
@@ -21,7 +22,7 @@ const SetUserPin = () => {
   const { mode = "create" } = (route.params ?? {}) as SetUserPinRouteParams;
   const [pin, setPin] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
+  const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const onContinue = async () => {
     if (userData && userData.face_id_set !== true) {
       setSubmitting(true);
@@ -32,16 +33,19 @@ const SetUserPin = () => {
           return;
         }
         toast.show("Verification code sent.", { type: "success" });
-        navigation.navigate(navigationStrings.OTP_VERIFICATION, {
-          email: userData.email,
-          source: "face-id-setup",
+        navigation.navigate(navigationStrings.SECURE_LOGIN, {
+          source: "user-pin",
         });
       } finally {
         setSubmitting(false);
       }
       return;
     }
-    navigation.navigate(navigationStrings.HIPAA_PRIVACY_GATE);
+    if (await hasCompletedOnboarding()) {
+      setIsLogin(true);
+      return;
+    }
+    navigation.navigate(navigationStrings.ONBOARDING_STACK);
   };
 
   const title = mode === "verify" ? "Enter your User PIN" : "Set your User PIN";
@@ -50,6 +54,8 @@ const SetUserPin = () => {
       ? "Enter your 4-digit PIN to continue"
       : "Enter a 4-digit code to set your PIN";
 
+  //handle forgot pin
+  const handleForgotPin = () => {};
   return (
     <SafeAreaView style={styles.container}>
       <IconComponent
@@ -76,6 +82,13 @@ const SetUserPin = () => {
         backgroundColor="#2E3A8C"
         textColor="#FFFFFF"
       />
+
+      <View style={styles.forgotPinRow}>
+        <Text style={styles.forgotPinText}>Do you remember PIN?</Text>
+        <TouchableOpacity onPress={handleForgotPin}>
+          <Text style={styles.forgotPinButtonText}>Forgot PIN</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -110,5 +123,24 @@ const styles = StyleSheet.create({
   },
   continueBtn: {
     marginTop: 40,
+  },
+  forgotPinRow: {
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 4,
+  },
+  forgotPinText: {
+    fontSize: 14,
+    color: COLORS.TEXT_60,
+    fontWeight: "400",
+    fontFamily: "SF Pro Text Medium",
+  },
+  forgotPinButtonText: {
+    fontSize: 14,
+    color: COLORS.PRIMARY,
+    fontWeight: "600",
+    fontFamily: "SF Pro Text Medium",
   },
 });

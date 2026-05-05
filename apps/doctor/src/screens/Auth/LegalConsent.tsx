@@ -1,23 +1,35 @@
-import React, { useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../constants/theme';
-import navigationStrings from '../../constants/navigationStrings';
-import IconComponent from '../../neomorphism/IconComponent';
-import ProfileAvatar from '../../components/Auth/ProfileAvatar';
-import NeumorphicCard from '../../components/Common/NeumorphicCard';
-import NeumorphicCheckboxMark from '../../components/Common/NeumorphicCheckboxMark';
-import ReusableButton from '../../neomorphism/ReusableButton';
-import BackIcon from '../../assets/icon/backArrow.svg';
-import OverlayImage from '../../assets/image/imageBgShadow.png';
-import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
+import React, { useState } from "react";
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../../constants/theme";
+import navigationStrings from "../../constants/navigationStrings";
+import IconComponent from "../../neomorphism/IconComponent";
+import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import NeumorphicCheckboxMark from "../../components/Common/NeumorphicCheckboxMark";
+import ReusableButton from "../../neomorphism/ReusableButton";
+import BackIcon from "../../assets/icon/backArrow.svg";
+import OverlayImage from "../../assets/image/imageBgShadow.png";
+import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
+import { useToast } from "react-native-toast-notifications";
 
 const LegalConsent = () => {
   const navigation = useNavigation<any>();
+  const toast = useToast();
+  const [isAIUsageConsent, setIsAIUsageConsent] = useState(false);
   const [isPrivateEnvironment, setIsPrivateEnvironment] = useState(false);
   const [hasDelegationPermission, setHasDelegationPermission] = useState(false);
 
+  //handle confirm
+  const handleConfirm = () => {
+    toast.hideAll();
+    if (!isAIUsageConsent || !isPrivateEnvironment || !hasDelegationPermission) {
+      toast.show("Please agree to the terms and conditions.", { type: "warning" });
+      return;
+    }
+    navigation.navigate(navigationStrings.ROLE_AND_LOCATION);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -53,10 +65,13 @@ const LegalConsent = () => {
         >
           <Text style={styles.cardTitle}>By continuing, you agree:</Text>
 
-          <View style={[styles.selectionRow, { marginTop: 21 }]}>
-            <NeumorphicCheckboxMark selected />
+          <Pressable
+            style={[styles.selectionRow, { marginTop: 21 }]}
+            onPress={() => setIsAIUsageConsent(!isAIUsageConsent)}
+          >
+            <NeumorphicCheckboxMark selected={isAIUsageConsent} />
             <Text style={styles.selectionText}>AI usage consent</Text>
-          </View>
+          </Pressable>
 
           <View style={styles.divider} />
 
@@ -65,9 +80,7 @@ const LegalConsent = () => {
             onPress={() => setIsPrivateEnvironment(!isPrivateEnvironment)}
           >
             <NeumorphicCheckboxMark selected={isPrivateEnvironment} />
-            <Text style={styles.selectionText}>
-              Yes, I confirm I am in a private environment
-            </Text>
+            <Text style={styles.selectionText}>Yes, I confirm I am in a private environment</Text>
           </Pressable>
 
           <View style={styles.divider} />
@@ -83,7 +96,7 @@ const LegalConsent = () => {
 
         <ReusableButton
           title="Confirm"
-          onPress={() => navigation.navigate(navigationStrings.ROLE_AND_LOCATION)}
+          onPress={handleConfirm}
           containerStyle={styles.confirmBtn}
           backgroundColor="#2E3A8C"
           textColor="#FFFFFF"
@@ -109,17 +122,17 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   header: {
-    marginTop: Platform.OS === 'ios' ? 4 : 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    marginTop: Platform.OS === "ios" ? 4 : 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerTitle: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
     color: COLORS.TEXT_DARK,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   headerSpacer: {
     width: 42,
@@ -144,23 +157,23 @@ const styles = StyleSheet.create({
   },
   agreeInner: {
     paddingHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: 14,
   },
   cardTitle: {
     color: COLORS.TEXT_DARK,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   selectionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 16,
   },
   selectionText: {
     flex: 1,
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '500'
+    fontWeight: "500",
   },
   divider: {
     height: 1,
@@ -171,10 +184,10 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   confirmBtn: {
-    marginTop: 'auto',
+    marginTop: "auto",
     marginBottom: 12,
   },
 });

@@ -1,14 +1,16 @@
 import {
   KeyboardAvoidingView,
   Linking,
+  Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -24,6 +26,10 @@ import InputField from "../../neomorphism/InputField";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import NeumorphicCheckboxMark from "../../components/Auth/NeumorphicCheckboxMark";
+import { AuthContext } from "../../context/AuthContext";
+import { useToast } from "react-native-toast-notifications";
+import { EMAIL_REGEX, formatDateForApi } from "../../constants/constant";
+import { NeumorphicCalendar } from "../../neomorphism/NeumorphicCalendar";
 
 /** Replace with your live policy URLs when ready. */
 const TERMS_URL = "https://example.com/terms-of-service";
@@ -31,16 +37,59 @@ const PRIVACY_URL = "https://example.com/privacy-policy";
 const HIPAA_URL = "https://example.com/hipaa";
 
 const SignUpScreen = () => {
+  const toast = useToast();
   const navigation = useNavigation<any>();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [selectedBirthDate, setSelectedBirthDate] = useState<Date | null>(null);
+  const [isCalendarVisible, setIsCalendarVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  //CONTEXT
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("SignUpScreen must be used within AuthContextProvider");
+  }
+  const { handleSignUp } = authContext;
 
-  const handleRegister = () => {
-    navigation.navigate(navigationStrings.OTP_VERIFICATION, { flow: "signup" as const });
+  const handleRegister = async () => {
+    toast.hideAll();
+    if (!firstName || !lastName || !email || !phone || !birthDate) {
+      toast.show("Please fill all the fields", { type: "warning" });
+      return;
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      toast.show("Please enter a valid email", { type: "warning" });
+      return;
+    }
+    if (!termsAccepted) {
+      toast.show("Please accept Terms, Privacy and HIPAA consent to continue.", {
+        type: "warning",
+      });
+      return;
+    }
+    try {
+      const result = await handleSignUp(
+        firstName,
+        lastName,
+        email,
+        phone,
+        birthDate,
+        termsAccepted ? true : false,
+      );
+      console.log(result, "result in handleRegister");
+      if (result.ok) {
+        navigation.navigate(navigationStrings.OTP_VERIFICATION, { flow: "signup" as const });
+      } else {
+        toast.show(result.message || "Signup failed. Please try again.", { type: "danger" });
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Something went wrong.";
+      toast.show(message, { type: "danger" });
+      console.log(message, "error in handleRegister");
+    }
   };
 
   return (
@@ -120,15 +169,17 @@ const SignUpScreen = () => {
             />
 
             <Text style={styles.label}>Birth of Date</Text>
-            <InputField
-              value={birthDate}
-              onChangeText={setBirthDate}
-              placeholder="DD/MM/YYYY"
-              keyboardType="numbers-and-punctuation"
-              autoCorrect={false}
-              leftIcon={<BirthIcon width={18} height={18} />}
-              containerStyle={styles.inputField}
-            />
+            <Pressable onPress={() => setIsCalendarVisible(true)}>
+              <View pointerEvents="none">
+                <InputField
+                  value={birthDate}
+                  placeholder="DD/MM/YYYY"
+                  editable={false}
+                  leftIcon={<BirthIcon width={18} height={18} />}
+                  containerStyle={styles.inputField}
+                />
+              </View>
+            </Pressable>
 
             <View style={styles.termsRow}>
               <TouchableOpacity
@@ -165,6 +216,31 @@ const SignUpScreen = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <Modal
+        visible={isCalendarVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setIsCalendarVisible(false)}
+      >
+        <View style={styles.calendarOverlay}>
+          <View style={styles.calendarContainer}>
+            <NeumorphicCalendar
+              initialDate={selectedBirthDate ?? undefined}
+              maxDate={new Date()}
+              onDateChange={(date) => {
+                setSelectedBirthDate(date);
+                setBirthDate(formatDateForApi(date));
+              }}
+            />
+            <ReusableButton
+              title="Done"
+              onPress={() => setIsCalendarVisible(false)}
+              containerStyle={styles.calendarDoneBtn}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -251,6 +327,20 @@ const styles = StyleSheet.create({
   },
   inputField: {
     marginTop: 0,
+  },
+  calendarOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: "center",
+    paddingHorizontal: 16,
+  },
+  calendarContainer: {
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: 16,
+    padding: 12,
+  },
+  calendarDoneBtn: {
+    marginTop: 12,
   },
   termsRow: {
     flexDirection: "row",

@@ -15,7 +15,7 @@ import type { OtpRouteParams } from "../../types/authRoute";
 import { handleResendOtp as requestResendOtp, handleVerifyOtp } from "../../service/authService";
 import { useToast } from "react-native-toast-notifications";
 import { setSecureItem } from "../../utils/secureStorage";
-import { AUTH_STORAGE_KEYS } from "../../utils/authStorage";
+import { AUTH_STORAGE_KEYS, hasCompletedOnboarding } from "../../utils/authStorage";
 
 const OtpVerification = () => {
   const toast = useToast();
@@ -28,6 +28,7 @@ const OtpVerification = () => {
   const [otp, setOtp] = useState("");
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const setUserData = useAuthStore((s) => s.setUserData);
+  const otpType = source === "faceId" || source === "pinOtp" ? source : "login";
 
   const onVerifyPress = async (): Promise<void> => {
     toast.hideAll();
@@ -44,7 +45,10 @@ const OtpVerification = () => {
 
     setLoading(true);
     try {
-      const response = await handleVerifyOtp(email, otp, "login");
+      console.log(otpType, "otpType in OtpVerification Screen");
+      console.log(otp, "otp in OtpVerification Screen");
+      console.log(email, "email in OtpVerification Screen");
+      const response = await handleVerifyOtp(email, otp, otpType);
       console.log(response, "response in OtpVerification Screen");
       if (!response.ok) {
         toast.show("Verification failed.", { type: "danger" });
@@ -78,17 +82,23 @@ const OtpVerification = () => {
         return;
       }
 
-      if (source === "face-id-setup") {
+      if (source === "faceId") {
         navigation.navigate(navigationStrings.SECURE_LOGIN);
+        return;
+      }
+
+      if (source === "pinOtp") {
+        navigation.navigate(navigationStrings.SET_USER_PIN, { mode: "create" });
         return;
       }
 
       switch (source) {
         case "sso-sign-in":
-          navigation.navigate(navigationStrings.HIPAA_PRIVACY_GATE);
-          return;
-        case "user-pin":
-          navigation.navigate(navigationStrings.SET_USER_PIN);
+          if (await hasCompletedOnboarding()) {
+            navigation.navigate(navigationStrings.SECURE_LOGIN);
+          } else {
+            setIsLogin(true);
+          }
           return;
         default:
           setIsLogin(true);
@@ -111,7 +121,8 @@ const OtpVerification = () => {
 
     setLoading(true);
     try {
-      const result: any = await requestResendOtp(email, "login");
+      console.log(otpType, "otpType in OtpVerification Screen");
+      const result: any = await requestResendOtp(email, otpType);
       console.log(result, "result in OtpVerification Screen");
       if (result?.ok) {
         toast.show(`Otp code: ${result.data.data.otp}`, { type: "success" });
@@ -127,7 +138,7 @@ const OtpVerification = () => {
   };
 
   const subTitle =
-    source === "face-id-setup"
+    source === "faceId"
       ? "Enter the verification code sent for Face ID setup"
       : "Enter the 4-digit code sent to your email address";
 

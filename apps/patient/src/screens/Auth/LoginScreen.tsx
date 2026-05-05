@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -19,15 +19,41 @@ import FlagIcon from "../../assets/icons/flagIcon.svg";
 import InputField from "../../neomorphism/InputField";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import { AuthContext } from "../../context/AuthContext";
+import { useToast } from "react-native-toast-notifications";
 
 const DISPLAY_NAME = "Sarah";
 
 const LoginScreen = () => {
+  const toast = useToast();
   const navigation = useNavigation<any>();
   const [phone, setPhone] = useState("");
+  //CONTEXT
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("LoginScreen must be used within AuthContextProvider");
+  }
 
-  const handleLogin = () => {
-    navigation.navigate(navigationStrings.OTP_VERIFICATION, { flow: "otpLogin" as const });
+  const { handleLogin } = authContext;
+  const handleLoginPress = async () => {
+    toast.hideAll();
+    if (!phone) {
+      toast.show("Please enter phone number", { type: "warning" });
+      return;
+    }
+    try {
+      const result = await handleLogin(phone);
+      console.log(result, "result in handleLoginPress");
+      if (result.ok) {
+        navigation.navigate(navigationStrings.OTP_VERIFICATION, { flow: "otpLogin" as const });
+      } else {
+        toast.show(result.message || "Login failed. Please try again.", { type: "danger" });
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Something went wrong.";
+      toast.show(message, { type: "danger" });
+      console.log(message, "error in handleLoginPress");
+    }
   };
 
   return (
@@ -67,7 +93,11 @@ const LoginScreen = () => {
               containerStyle={styles.inputField}
             />
 
-            <ReusableButton title="Login" onPress={handleLogin} containerStyle={styles.loginBtn} />
+            <ReusableButton
+              title="Login"
+              onPress={handleLoginPress}
+              containerStyle={styles.loginBtn}
+            />
           </View>
         </ScrollView>
 

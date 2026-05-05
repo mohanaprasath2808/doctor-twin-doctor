@@ -1,35 +1,36 @@
-import React from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../constants/theme';
-import { useAuthStore } from '../../store/useAuthStore';
-import IconComponent from '../../neomorphism/IconComponent';
-import ProfileAvatar from '../../components/Auth/ProfileAvatar';
-import NeumorphicCard from '../../components/Common/NeumorphicCard';
-import InnerShadowIcon from '../../neomorphism/InnerShadowIcon';
-import BackIcon from '../../assets/icon/backArrow.svg';
-import WarningIcon from '../../assets/icon/warningIcon.svg';
-import AppointmentCalendarIcon from '../../assets/icon/appointmentCalendarIcon.svg';
-import RightArrowIcon from '../../assets/icon/rightArrow.svg';
-import OverlayImage from '../../assets/image/imageBgShadow.png';
-import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
+import React from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../../constants/theme";
+import { useAuthStore } from "../../store/useAuthStore";
+import IconComponent from "../../neomorphism/IconComponent";
+import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
+import BackIcon from "../../assets/icon/backArrow.svg";
+import WarningIcon from "../../assets/icon/warningIcon.svg";
+import AppointmentCalendarIcon from "../../assets/icon/appointmentCalendarIcon.svg";
+import RightArrowIcon from "../../assets/icon/rightArrow.svg";
+import OverlayImage from "../../assets/image/imageBgShadow.png";
+import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
+import navigationStrings from "../../constants/navigationStrings";
 
 const LAB_ALERTS = [
   {
-    id: 'critical-potassium',
-    title: 'Critically high potassium',
-    subTitle: 'Immediate attention needed for Sarah Williams',
+    id: "critical-potassium",
+    title: "Critically high potassium",
+    subTitle: "Immediate attention needed for Sarah Williams",
   },
   {
-    id: 'dangerous-lab',
-    title: 'Dangerous Lab Result',
-    subTitle: 'For David Johnson',
+    id: "dangerous-lab",
+    title: "Dangerous Lab Result",
+    subTitle: "For David Johnson",
   },
   {
-    id: 'neuro-symptom',
-    title: 'Possible neurological sympsiom',
-    subTitle: 'Dizzy nembiode reported by John Martiz',
+    id: "neuro-symptom",
+    title: "Possible neurological sympsiom",
+    subTitle: "Dizzy nembiode reported by John Martiz",
   },
 ];
 
@@ -82,7 +83,11 @@ const EmergencyAccess = () => {
             borderRadius={12}
           >
             <View style={styles.row}>
-              <InnerShadowIcon icon={<AppointmentCalendarIcon width={18} height={18} />} size={40} radius={20} />
+              <InnerShadowIcon
+                icon={<AppointmentCalendarIcon width={18} height={18} />}
+                size={40}
+                radius={20}
+              />
               <View style={styles.alertTextWrap}>
                 <Text style={styles.alertTitle}>{alert.title}</Text>
                 <Text style={styles.alertSubTitle}>{alert.subTitle}</Text>
@@ -94,7 +99,10 @@ const EmergencyAccess = () => {
 
       <Pressable
         onPress={() => {
-          setIsLogin(true);
+          navigation.reset({
+            index: 0,
+            routes: [{ name: navigationStrings.SECURE_LOGIN }],
+          });
         }}
       >
         <NeumorphicCard
@@ -104,10 +112,16 @@ const EmergencyAccess = () => {
         >
           <View style={styles.continueRow}>
             <View style={styles.row}>
-              <InnerShadowIcon icon={<AppointmentCalendarIcon width={18} height={18} />} size={40} radius={20} />
-              <Text style={styles.continueText}>Continue to Home (demo)</Text>
+              <InnerShadowIcon
+                icon={<AppointmentCalendarIcon width={18} height={18} />}
+                size={40}
+                radius={20}
+              />
+              <Text style={styles.continueText}>Continue to full login</Text>
             </View>
-            <RightArrowIcon width={10} height={10} />
+            <View style={styles.arrowContainer}>
+              <RightArrowIcon width={10} height={10} />
+            </View>
           </View>
         </NeumorphicCard>
       </Pressable>
@@ -126,17 +140,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   header: {
-    marginTop: Platform.OS === 'ios' ? 4 : 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    marginTop: Platform.OS === "ios" ? 4 : 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerTitle: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
     color: COLORS.TEXT_DARK,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   headerSpacer: {
     width: 40,
@@ -158,10 +172,10 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     marginTop: 10,
-    textAlign: 'center',
+    textAlign: "center",
     color: COLORS.PRIMARY_DARK,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   noticeOuter: {
     marginTop: 30,
@@ -171,15 +185,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   noticeText: {
     flex: 1,
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     lineHeight: 22,
   },
   alertList: {
@@ -187,7 +201,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   alertOuter: {
-    width: '100%',
+    width: "100%",
   },
   alertInner: {
     paddingHorizontal: 10,
@@ -199,13 +213,13 @@ const styles = StyleSheet.create({
   alertTitle: {
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   alertSubTitle: {
     marginTop: 2,
     color: COLORS.TEXT_60,
     fontSize: 12,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   continueOuter: {
     marginTop: 18,
@@ -215,21 +229,24 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   continueRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   continueText: {
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   footerHint: {
     marginTop: 74,
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
     color: COLORS.TEXT_60,
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: "400",
+  },
+  arrowContainer: {
+    paddingRight: 7,
   },
 });

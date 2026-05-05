@@ -17,6 +17,7 @@ import navigationStrings from "../../constants/navigationStrings";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import { handleLogin as loginRequest } from "../../service/authService";
 import { useAppStore } from "../../store/useAppStore";
+import { EMAIL_REGEX } from "../../constants/contant";
 
 const Login = () => {
   const navigation = useNavigation<any>();
@@ -36,8 +37,16 @@ const Login = () => {
   const onLoginPress = async (): Promise<void> => {
     toast.hideAll();
     const trimmedEmail = email.trim();
-    if (!trimmedEmail || !password) {
-      toast.show("Please enter email and password.", { type: "warning" });
+    if (!trimmedEmail) {
+      toast.show("Please enter email.", { type: "warning" });
+      return;
+    }
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      toast.show("Please enter a valid email.", { type: "warning" });
+      return;
+    }
+    if (!password) {
+      toast.show("Please enter password.", { type: "warning" });
       return;
     }
     setLoading(true);
@@ -52,10 +61,10 @@ const Login = () => {
         });
         toast.show(`Otp code : ${response?.data?.otp}`, { type: "success" });
       } else {
-        toast.show(response?.message, { type: "danger" });
+        toast.show(response?.detail, { type: "danger" });
       }
     } catch (e) {
-      const message = e instanceof Error ? e.message : "Something went wrong.";
+      const message = (e as any)?.detail || (e as any)?.message || "Something went wrong.";
       console.log(message, "message in Login Screen");
       toast.show(message, { type: "danger" });
     } finally {
@@ -117,7 +126,7 @@ const Login = () => {
             {/* Login Button */}
             <View style={{ paddingHorizontal: 20 }}>
               <ReusableButton
-                title={loading ? "Signing in…" : "Login"}
+                title={loading ? "Logging in…" : "Login"}
                 onPress={onLoginPress}
                 disabled={loading}
                 containerStyle={styles.loginBtn}
