@@ -1,4 +1,4 @@
-export type OtpFlowSource = "login" | "sso-sign-in" | "user-pin" | "face-id-setup";
+export type OtpFlowSource = "login" | "sso-sign-in" | "pinOtp" | "faceId";
 
 /** Post-verify destination when `source` is `login` (all use the same `otp_type: login` on the API). */
 export type LoginOtpNextRoute = "normalLogin" | "userPin" | "faceId";
@@ -15,5 +15,13 @@ export type SetUserPinRouteParams = {
 };
 
 export type ForgotPasswordRouteParams = {
+  email: string;
+};
+
+export type ResetPasswordRouteParams = {
+  email: string;
+};
+
+export type SsoSignInRouteParams = {
   email: string;
 };

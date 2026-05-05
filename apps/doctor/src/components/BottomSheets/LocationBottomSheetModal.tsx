@@ -87,6 +87,8 @@ const LocationBottomSheetModal = forwardRef<
             <ReusableButton
               title="Done"
               containerStyle={styles.doneBtn}
+              height={52}
+              borderRadius={26}
               onPress={() => {
                 onSelectDone(draftValue);
                 (ref as React.RefObject<BSModal>)?.current?.dismiss();

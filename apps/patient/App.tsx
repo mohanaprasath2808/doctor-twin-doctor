@@ -1,5 +1,5 @@
 import React from "react";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { Platform, StatusBar, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthContextProvider from "./src/context/AuthContext";
@@ -8,6 +8,8 @@ import Router from "./src/router/Router";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { COLORS } from "./src/constants/theme";
 import { useFonts } from "expo-font";
+import { ToastProvider } from "react-native-toast-notifications";
+import NeomorphicToast from "./src/neomorphism/NeomorphicToast";
 const App = () => {
 
   const [fontLoaded] = useFonts({
@@ -53,18 +55,28 @@ const App = () => {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar backgroundColor={COLORS.PRIMARY} barStyle="dark-content" />
-      <NavigationContainer>
-        <AuthContextProvider>
-          <AppContextProvider>
-            <BottomSheetModalProvider>
-              <Router />
-            </BottomSheetModalProvider>
-          </AppContextProvider>
-        </AuthContextProvider>
-      </NavigationContainer>
-    </GestureHandlerRootView>
+    <ToastProvider
+      placement="top"
+      offsetTop={Platform.OS === "android" ? 40 : 0}
+      renderType={{
+        success: (toast) => <NeomorphicToast toast={toast} variant="success" />,
+        warning: (toast) => <NeomorphicToast toast={toast} variant="warning" />,
+        danger: (toast) => <NeomorphicToast toast={toast} variant="danger" />,
+      }}
+    >
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar backgroundColor={COLORS.PRIMARY} barStyle="dark-content" />
+        <NavigationContainer>
+          <AuthContextProvider>
+            <AppContextProvider>
+              <BottomSheetModalProvider>
+                <Router />
+              </BottomSheetModalProvider>
+            </AppContextProvider>
+          </AuthContextProvider>
+        </NavigationContainer>
+      </GestureHandlerRootView>
+    </ToastProvider>
   );
 };
 

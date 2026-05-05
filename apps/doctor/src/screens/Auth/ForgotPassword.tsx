@@ -12,6 +12,9 @@ import navigationStrings from "../../constants/navigationStrings";
 import { ForgotPasswordRouteParams } from "../../types/authRoute";
 import { useToast } from "react-native-toast-notifications";
 import { EMAIL_REGEX } from "../../constants/contant";
+import { handleResendOtp } from "../../service/authService";
+import { useAppStore } from "../../store/useAppStore";
+
 const ForgotPassword = () => {
   const toast = useToast();
   const route = useRoute();
@@ -21,23 +24,38 @@ const ForgotPassword = () => {
   //local state
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState(email);
   //context
-  // const handleResendOtp =
+  const loading = useAppStore((s) => s.loading);
+  const setLoading = useAppStore((s) => s.setLoading);
   //Reset Password Handler
-
-  const handleResetPassword = () => {
-    // if (!forgotPasswordEmail.trim()) {
-    //   toast.show("Please enter email.", { type: "warning" });
-    //   return;
-    // }
-    // if (!EMAIL_REGEX.test(forgotPasswordEmail)) {
-    //   toast.show("Please enter a valid email.", { type: "warning" });
-    //   return;
-    // }
-
-    // try{
-    //   const response = await handleResendOtp(forgotPasswordEmail);
-    // }
-    navigation.navigate(navigationStrings.RESET_PASSWORD);
+  const handleResetPassword = async () => {
+    if (!forgotPasswordEmail.trim()) {
+      toast.show("Please enter email.", { type: "warning" });
+      return;
+    }
+    if (!EMAIL_REGEX.test(forgotPasswordEmail)) {
+      toast.show("Please enter a valid email.", { type: "warning" });
+      return;
+    }
+    try {
+      setLoading(true);
+      const response: any = await handleResendOtp(forgotPasswordEmail, "forgot_password");
+      console.log(response, "response in Forgot Password Screen");
+      if (response?.ok) {
+        navigation.navigate(navigationStrings.RESET_PASSWORD, {
+          email: forgotPasswordEmail,
+        });
+        const toastOtp = response?.data?.data?.otp;
+        toast.show(`Otp code : ${toastOtp}`, { type: "success" });
+      } else {
+        toast.show((response as any)?.detail, { type: "danger" });
+      }
+    } catch (e) {
+      const message = (e as any)?.detail || (e as any)?.message || "Something went wrong.";
+      console.log(message, "message in Forgot Password Screen");
+      toast.show(message, { type: "danger" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -66,11 +84,12 @@ const ForgotPassword = () => {
       />
 
       <ReusableButton
-        title="Reset Password"
+        title={loading ? "Resetting password…" : "Reset Password"}
         onPress={handleResetPassword}
         containerStyle={styles.resetBtn}
         backgroundColor="#2E3A8C"
         textColor="#FFFFFF"
+        disabled={loading}
       />
 
       <View style={styles.footerContainer}>

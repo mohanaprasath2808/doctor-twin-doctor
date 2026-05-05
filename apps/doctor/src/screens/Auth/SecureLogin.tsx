@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   Platform,
   Pressable,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { hasAuthSession } from "../../utils/authStorage";
 import { COLORS } from "../../constants/theme";
@@ -79,8 +80,6 @@ const SecureLogin = () => {
     };
   }, []);
 
-  const canGoBack = navigation.canGoBack();
-
   const continueOnboarding = useCallback(() => {
     navigation.navigate(navigationStrings.SET_USER_PIN);
   }, [navigation]);
@@ -141,6 +140,7 @@ const SecureLogin = () => {
     }
   }, [continueOnboarding, setIsLogin]);
 
+  console.log(userData, "userData in SecureLogin Screen");
   const onOptionPress = (id: string) => {
     switch (id) {
       case "face-id":
@@ -159,30 +159,34 @@ const SecureLogin = () => {
             toast.show("No saved email. Sign in with Login first.", { type: "warning" });
             return;
           }
+          const hasFaceId = Boolean(userData?.face_id_set);
+          if (hasFaceId) {
+            await onFaceIdPress();
+            return;
+          }
+
           if (userData?.face_id_set !== true) {
             setLoading(true);
             try {
-              const result = await requestResendOtp(email, "login");
+              const result: any = await requestResendOtp(email, "faceId");
               if (!result.ok) {
                 toast.show("Could not send code. Try again.", { type: "danger" });
                 return;
               }
-              toast.show("Verification code sent.", { type: "success" });
+              toast.show(`Otp code: ${result.data.data.otp}`, { type: "success" });
               navigation.navigate(navigationStrings.OTP_VERIFICATION, {
                 email,
-                source: "login",
-                loginOtpNext: "faceId",
+                source: "faceId",
               });
             } finally {
               setLoading(false);
             }
             return;
           }
-          await onFaceIdPress();
         })();
         return;
       case "sso-login":
-        navigation.navigate(navigationStrings.SSO_SIGN_IN);
+        navigation.navigate(navigationStrings.SSO_SIGN_IN, { email: userData?.email });
         return;
       case "user-pin": {
         void (async () => {
@@ -191,18 +195,25 @@ const SecureLogin = () => {
             toast.show("No saved email. Sign in with Login first.", { type: "warning" });
             return;
           }
+          const hasUserPin = Boolean(userData?.user_pin_set);
+          if (hasUserPin) {
+            navigation.navigate(navigationStrings.SET_USER_PIN, {
+              mode: "verify",
+            });
+            return;
+          }
+
           setLoading(true);
           try {
-            const result = await requestResendOtp(email, "login");
+            const result: any = await requestResendOtp(email, "pinOtp");
             if (!result.ok) {
               toast.show("Could not send code. Try again.", { type: "danger" });
               return;
             }
-            toast.show("Verification code sent.", { type: "success" });
+            toast.show(`Otp code: ${result.data.data.otp}`, { type: "success" });
             navigation.navigate(navigationStrings.OTP_VERIFICATION, {
-              source: "login",
+              source: "pinOtp",
               email,
-              loginOtpNext: "userPin",
             });
           } finally {
             setLoading(false);
@@ -215,15 +226,36 @@ const SecureLogin = () => {
     }
   };
 
-  //handle go back
-  const handleGoBack = () => {
+  //handle back blocked toast
+  const showBackBlockedToast = useCallback(() => {
     toast.show("You cannot go back from this screen.", { type: "warning" });
-  };
+  }, [toast]);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Blocks iOS swipe-back, header back, and programmatic back pops while this screen is focused.
+      const unsubscribeBeforeRemove = navigation.addListener("beforeRemove", (e: any) => {
+        e.preventDefault();
+        showBackBlockedToast();
+      });
+
+      // Blocks Android hardware back button.
+      const backSub = BackHandler.addEventListener("hardwareBackPress", () => {
+        showBackBlockedToast();
+        return true;
+      });
+
+      return () => {
+        unsubscribeBeforeRemove();
+        backSub.remove();
+      };
+    }, [navigation, showBackBlockedToast]),
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        {canGoBack ? (
+        {/* {canGoBack ? (
           <IconComponent
             icon={<BackIcon width={22} height={22} />}
             width={40}
@@ -233,9 +265,9 @@ const SecureLogin = () => {
           />
         ) : (
           <View style={styles.headerSpacer} />
-        )}
+        )} */}
         <Text style={styles.headerTitle}>Secure Login</Text>
-        <View style={styles.headerSpacer} />
+        {/* <View style={styles.headerSpacer} /> */}
       </View>
 
       <ProfileAvatar
@@ -298,7 +330,7 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "ios" ? 4 : 12,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   headerTitle: {
     flex: 1,
@@ -306,6 +338,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_DARK,
     fontSize: 18,
     fontWeight: "600",
+    alignSelf: "center",
   },
   headerSpacer: {
     width: 40,

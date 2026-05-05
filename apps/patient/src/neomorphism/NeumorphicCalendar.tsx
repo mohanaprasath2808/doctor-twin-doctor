@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import LeftArrowIcon from "../assets/icons/leftArrow.svg";
 import NeumorphicCard from "../components/Common/NeumorphicCard";
@@ -32,6 +32,7 @@ type DayCell = {
 type NeumorphicCalendarProps = {
   initialDate?: Date;
   onDateChange?: (date: Date) => void;
+  maxDate?: Date;
 };
 
 const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
@@ -87,13 +88,25 @@ const getRegionToday = () => {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 };
 
-export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCalendarProps) {
+const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+export function NeumorphicCalendar({ initialDate, onDateChange, maxDate }: NeumorphicCalendarProps) {
   const resolvedInitialDate = initialDate ?? getRegionToday();
   const [visibleYear, setVisibleYear] = useState(() => resolvedInitialDate.getFullYear());
   const [visibleMonth, setVisibleMonth] = useState(() => resolvedInitialDate.getMonth());
   const [selectedDate, setSelectedDate] = useState(() => resolvedInitialDate);
+  const [isYearPickerOpen, setIsYearPickerOpen] = useState(false);
+  const normalizedMaxDate = maxDate ? startOfDay(maxDate) : null;
 
   const grid = useMemo(() => buildGrid(visibleYear, visibleMonth), [visibleYear, visibleMonth]);
+  const availableYears = useMemo(() => {
+    const maxYear = normalizedMaxDate?.getFullYear() ?? getRegionToday().getFullYear();
+    const years: number[] = [];
+    for (let year = maxYear; year >= maxYear - 110; year -= 1) {
+      years.push(year);
+    }
+    return years;
+  }, [normalizedMaxDate]);
 
   const changeMonth = (delta: -1 | 1) => {
     const next = new Date(visibleYear, visibleMonth + delta, 1);
@@ -106,6 +119,20 @@ export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCale
     onDateChange?.(cell.date);
   };
 
+  const selectYear = (year: number) => {
+    const maxDay = getDaysInMonth(year, visibleMonth);
+    const safeDay = Math.min(selectedDate.getDate(), maxDay);
+    let nextSelected = new Date(year, visibleMonth, safeDay);
+    if (normalizedMaxDate && nextSelected > normalizedMaxDate) {
+      nextSelected = normalizedMaxDate;
+    }
+    setVisibleYear(nextSelected.getFullYear());
+    setVisibleMonth(nextSelected.getMonth());
+    setSelectedDate(nextSelected);
+    onDateChange?.(nextSelected);
+    setIsYearPickerOpen(false);
+  };
+
   return (
     <View style={styles.host}>
       <NeumorphicCard
@@ -115,7 +142,10 @@ export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCale
         innerStyle={styles.calendarInner}
       >
         <View style={styles.monthRow}>
-          <Text style={styles.monthText}>{`${MONTHS[visibleMonth].slice(0, 3)} ${visibleYear}`}</Text>
+          <Pressable onPress={() => setIsYearPickerOpen((prev) => !prev)} style={styles.monthPress}>
+            <Text style={styles.monthText}>{`${MONTHS[visibleMonth].slice(0, 3)} ${visibleYear}`}</Text>
+            <Text style={styles.yearHint}>{isYearPickerOpen ? "Hide" : "Year"}</Text>
+          </Pressable>
           <View style={styles.navGroup}>
             <IconComponent
               icon={<LeftArrowIcon width={12} height={12} />}
@@ -138,6 +168,28 @@ export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCale
           </View>
         </View>
 
+        {isYearPickerOpen && (
+          <View style={styles.yearPickerWrap}>
+            <ScrollView
+              style={styles.yearPickerScroll}
+              contentContainerStyle={styles.yearPicker}
+              showsVerticalScrollIndicator={false}
+            >
+              {availableYears.map((year) => (
+                <Pressable
+                  key={year}
+                  style={[styles.yearChip, year === visibleYear && styles.yearChipActive]}
+                  onPress={() => selectYear(year)}
+                >
+                  <Text style={[styles.yearChipText, year === visibleYear && styles.yearChipTextActive]}>
+                    {year}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
         <View style={styles.weekdayRow}>
           {WEEKDAYS.map((dayLabel) => (
             <View key={dayLabel} style={styles.weekdayCell}>
@@ -149,9 +201,14 @@ export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCale
         <View style={styles.grid}>
           {grid.map((cell, idx) => {
             const isSelected = sameDate(cell.date, selectedDate);
+            const isDisabled = normalizedMaxDate ? cell.date > normalizedMaxDate : false;
             return (
               <View key={`${cell.day}-${idx}`} style={styles.gridCellWrap}>
-                <Pressable onPress={() => selectDay(cell)} style={styles.cellPress}>
+                <Pressable
+                  onPress={() => selectDay(cell)}
+                  style={styles.cellPress}
+                  disabled={isDisabled}
+                >
                   <NeumorphicCard
                     borderRadius={10}
                     backgroundColor={
@@ -165,6 +222,8 @@ export function NeumorphicCalendar({ initialDate, onDateChange }: NeumorphicCale
                         styles.dayText,
                         isSelected
                           ? styles.dayTextSelected
+                          : isDisabled
+                            ? styles.dayTextDisabled
                           : cell.isCurrentMonth
                             ? styles.dayTextCurrent
                             : styles.dayTextDimmed,
@@ -205,6 +264,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
   },
+  monthPress: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  yearHint: {
+    fontSize: 11,
+    color: COLORS.SECONDARY,
+    fontWeight: "600",
+  },
   navGroup: {
     flexDirection: "row",
     alignItems: "center",
@@ -217,6 +286,41 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 10,
     paddingHorizontal: 2,
+  },
+  yearPickerWrap: {
+    borderRadius: 12,
+    backgroundColor: "#EFF3F8",
+    marginBottom: 10,
+    overflow: "hidden",
+  },
+  yearPickerScroll: {
+    maxHeight: 130,
+  },
+  yearPicker: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    padding: 8,
+  },
+  yearChip: {
+    width: "23%",
+    minHeight: 30,
+    borderRadius: 10,
+    backgroundColor: COLORS.INNER_SURFACE,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  yearChipActive: {
+    backgroundColor: COLORS.SECONDARY,
+  },
+  yearChipText: {
+    fontSize: 13,
+    color: COLORS.TEXT_DARK,
+    fontWeight: "500",
+  },
+  yearChipTextActive: {
+    color: COLORS.WHITE,
+    fontWeight: "600",
   },
   weekdayCell: {
     flex: 1,
@@ -262,6 +366,10 @@ const styles = StyleSheet.create({
   },
   dayTextDimmed: {
     color: COLORS.TEXT_40,
+    fontWeight: "400",
+  },
+  dayTextDisabled: {
+    color: "#C2C6CD",
     fontWeight: "400",
   },
   dayTextSelected: {

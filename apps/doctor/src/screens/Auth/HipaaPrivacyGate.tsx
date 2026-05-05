@@ -1,36 +1,60 @@
-import React, { useState } from 'react';
-import {
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../constants/theme';
-import navigationStrings from '../../constants/navigationStrings';
-import IconComponent from '../../neomorphism/IconComponent';
-import ProfileAvatar from '../../components/Auth/ProfileAvatar';
-import NeumorphicCard from '../../components/Common/NeumorphicCard';
-import NeumorphicRadioMark from '../../components/Common/NeumorphicRadioMark';
-import InnerShadowIcon from '../../neomorphism/InnerShadowIcon';
-import ReusableButton from '../../neomorphism/ReusableButton';
-import BackIcon from '../../assets/icon/backArrow.svg';
-import WarningIcon from '../../assets/icon/warningIcon.svg';
-import OverlayImage from '../../assets/image/imageBgShadow.png';
-import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
+import React, { useCallback, useState } from "react";
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View, BackHandler } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { COLORS } from "../../constants/theme";
+import navigationStrings from "../../constants/navigationStrings";
+import IconComponent from "../../neomorphism/IconComponent";
+import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import NeumorphicRadioMark from "../../components/Common/NeumorphicRadioMark";
+import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
+import ReusableButton from "../../neomorphism/ReusableButton";
+import BackIcon from "../../assets/icon/backArrow.svg";
+import WarningIcon from "../../assets/icon/warningIcon.svg";
+import OverlayImage from "../../assets/image/imageBgShadow.png";
+import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
+import { useToast } from "react-native-toast-notifications";
 
 const HipaaPrivacyGate = () => {
   const navigation = useNavigation<any>();
-  const [isSecureCompliantAgreed, setIsSecureCompliantAgreed] = useState(true);
-  const [isPrivateEnvironmentConfirmed, setIsPrivateEnvironmentConfirmed] =
-    useState(false);
+  const toast = useToast();
+  const [isSecureCompliantAgreed, setIsSecureCompliantAgreed] = useState(false);
+  const [isPrivateEnvironmentConfirmed, setIsPrivateEnvironmentConfirmed] = useState(false);
 
   const handleConfirm = () => {
+    toast.hideAll();
+    if (!isSecureCompliantAgreed || !isPrivateEnvironmentConfirmed) {
+      toast.show("Please agree to the terms and conditions.", { type: "warning" });
+      return;
+    }
     navigation.navigate(navigationStrings.ENABLE_VOICE_HANDS_FREE);
   };
+
+  //show back blocked toast
+  const showBackBlockedToast = useCallback(() => {
+    toast.hideAll();
+    toast.show("You cannot go back from this screen.", { type: "warning" });
+  }, [toast]);
+  //block back button
+  useFocusEffect(
+    useCallback(() => {
+      //IOS
+      const unsubscribeBeforeRemove = navigation.addListener("beforeRemove", (e: any) => {
+        e.preventDefault();
+        navigation.goBack();
+      });
+      //Android
+      const backSub = BackHandler.addEventListener("hardwareBackPress", () => {
+        showBackBlockedToast();
+        return true;
+      });
+      return () => {
+        unsubscribeBeforeRemove();
+        backSub.remove();
+      };
+    }, [navigation]),
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,15 +64,7 @@ const HipaaPrivacyGate = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <IconComponent
-            icon={<BackIcon width={22} height={22} />}
-            width={40}
-            height={40}
-            radius={20}
-            onPress={() => navigation.goBack()}
-          />
           <Text style={styles.headerTitle}>HIPAA Privacy Gate</Text>
-          <View style={styles.headerSpacer} />
         </View>
 
         <ProfileAvatar
@@ -67,14 +83,8 @@ const HipaaPrivacyGate = () => {
         >
           <Text style={styles.cardTitle}>Warning</Text>
           <View style={styles.warningRow}>
-            <InnerShadowIcon
-              icon={<WarningIcon width={20} height={20} />}
-              size={40}
-              radius={20}
-            />
-            <Text style={styles.warningText}>
-              This is a private, HIPAA-compliant environment
-            </Text>
+            <InnerShadowIcon icon={<WarningIcon width={20} height={20} />} size={40} radius={20} />
+            <Text style={styles.warningText}>This is a private, HIPAA-compliant environment</Text>
           </View>
         </NeumorphicCard>
 
@@ -91,8 +101,7 @@ const HipaaPrivacyGate = () => {
           >
             <NeumorphicRadioMark selected={isSecureCompliantAgreed} />
             <Text style={styles.selectionText}>
-              You are in private, secure and compliant environment to access
-              patient information
+              You are in private, secure and compliant environment to access patient information
             </Text>
           </Pressable>
 
@@ -100,16 +109,10 @@ const HipaaPrivacyGate = () => {
 
           <Pressable
             style={styles.selectionRow}
-            onPress={() =>
-              setIsPrivateEnvironmentConfirmed(
-                !isPrivateEnvironmentConfirmed
-              )
-            }
+            onPress={() => setIsPrivateEnvironmentConfirmed(!isPrivateEnvironmentConfirmed)}
           >
             <NeumorphicRadioMark selected={isPrivateEnvironmentConfirmed} />
-            <Text style={styles.selectionText}>
-              Yes, I confirm I am in a private environment
-            </Text>
+            <Text style={styles.selectionText}>Yes, I confirm I am in a private environment</Text>
           </Pressable>
         </NeumorphicCard>
 
@@ -141,17 +144,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    marginTop: Platform.OS === 'ios' ? 4 : 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    marginTop: Platform.OS === "ios" ? 4 : 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerTitle: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
     color: COLORS.TEXT_DARK,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
+    alignSelf: "center",
   },
   headerSpacer: {
     width: 42,
@@ -181,20 +185,20 @@ const styles = StyleSheet.create({
   cardTitle: {
     color: COLORS.TEXT_DARK,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   warningRow: {
     marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   warningText: {
     flex: 1,
     color: COLORS.TEXT_80,
     fontSize: 14,
-    fontWeight: '500',
-    lineHeight: 20
+    fontWeight: "500",
+    lineHeight: 20,
   },
   agreeOuter: {
     marginTop: 20,
@@ -205,15 +209,15 @@ const styles = StyleSheet.create({
   },
   selectionRow: {
     marginTop: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   selectionText: {
     flex: 1,
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: "400",
     lineHeight: 20,
   },
   divider: {
@@ -223,5 +227,5 @@ const styles = StyleSheet.create({
   },
   confirmBtn: {
     marginTop: 30,
-  }
+  },
 });

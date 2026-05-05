@@ -84,11 +84,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
           />
           <View
             pointerEvents="none"
-            style={[
-              styles.shadowLayer,
-              styles.shadowSoft,
-              { borderRadius: radius },
-            ]}
+            style={[styles.shadowLayer, styles.shadowSoft, { borderRadius: radius }]}
           />
 
           <View style={[styles.surface, { borderRadius: radius }]}>
@@ -154,10 +150,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
               />
 
               {rightIcon && (
-                <TouchableOpacity
-                  onPress={onRightIconPress}
-                  style={styles.rightIcon}
-                >
+                <TouchableOpacity onPress={onRightIconPress} style={styles.rightIcon}>
                   {rightIcon}
                 </TouchableOpacity>
               )}

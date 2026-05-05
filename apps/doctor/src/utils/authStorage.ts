@@ -1,10 +1,11 @@
 import type { ApiSessionUser } from "../types/session";
-import { getSecureItem } from "./secureStorage";
+import { getSecureItem, setSecureItem } from "./secureStorage";
 
 export const AUTH_STORAGE_KEYS = {
   ACCESS_TOKEN: `access_token`,
   REFRESH_TOKEN: `refresh_token`,
   USER_DATA: `user_data`,
+  ONBOARDING_COMPLETED: "onboarding_completed",
 } as const;
 export async function getAccessToken(): Promise<string | null> {
   return getSecureItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN);
@@ -28,4 +29,13 @@ export async function getStoredSessionUser(): Promise<ApiSessionUser | null> {
 export async function hasAuthSession(): Promise<boolean> {
   const t = await getAccessToken();
   return t != null && t.length > 0;
+}
+
+export async function hasCompletedOnboarding(): Promise<boolean> {
+  const raw = await getSecureItem(AUTH_STORAGE_KEYS.ONBOARDING_COMPLETED);
+  return raw === "true";
+}
+
+export async function setCompletedOnboarding(value: boolean): Promise<void> {
+  await setSecureItem(AUTH_STORAGE_KEYS.ONBOARDING_COMPLETED, value ? "true" : "false");
 }
