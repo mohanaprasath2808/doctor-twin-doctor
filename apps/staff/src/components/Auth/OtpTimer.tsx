@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS } from "../../constants/theme";
 
 interface OtpTimerProps {
@@ -50,15 +50,19 @@ const OtpTimer: React.FC<OtpTimerProps> = ({ onResend, initialSeconds = 30 }) =>
           You can resend OTP in <Text style={styles.timerSeconds}>{formattedTime}</Text>
         </Text>
       ) : (
-        <View style={styles.resendRow}>
+        <View style={styles.resendRow} collapsable={false}>
           <Text style={styles.resendMuted}>{`Didn't get the code? `}</Text>
-          <TouchableOpacity
+          <Pressable
             onPress={handleResend}
-            activeOpacity={0.7}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            hitSlop={{ top: 12, bottom: 12, left: 8, right: 8 }}
+            android_ripple={{ color: "rgba(22, 101, 52, 0.12)" }}
+            style={({ pressed }) => [
+              styles.resendPressable,
+              Platform.OS === "ios" && pressed && styles.resendPressed,
+            ]}
           >
             <Text style={styles.resendLink}>Resend OTP</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       )}
     </View>
@@ -69,6 +73,12 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 20,
     alignItems: "center",
+    // Android: keep this subtree above neighbors that use elevation / shadows so touches hit the link.
+    zIndex: 1,
+    ...Platform.select({
+      android: { elevation: 6 },
+      default: {},
+    }),
   },
   timerText: {
     textAlign: "center",
@@ -85,6 +95,16 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
+  },
+  resendPressable: {
+    alignSelf: "center",
+    justifyContent: "center",
+    minHeight: 44,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+  },
+  resendPressed: {
+    opacity: 0.65,
   },
   resendMuted: {
     textAlign: "center",

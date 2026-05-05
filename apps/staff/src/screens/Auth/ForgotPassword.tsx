@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -13,10 +13,54 @@ import ReusableButton from "../../components/neomorphism/ReusableButton";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
 import type { AuthStackParamList } from "../../router/Auth/types";
+import { validateEmail } from "../utills/validations";
+import { useToast } from "react-native-toast-notifications";
+import { AuthContext } from "../../context/AuthContext";
 
 const ForgotPassword = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("ForgotPassword must be used within AuthContextProvider");
+  }
+  const { resendOtp, isLoading } = authContext;
   const [email, setEmail] = useState("");
+  const toast = useToast();
+
+  const handleForgotPassword = async () => {
+    try {
+      const { isValid, email } = handleValidate();
+      if (!isValid) {
+        return;
+      }
+      const response = await resendOtp(email ?? "", "forgot_password");
+      if (response) {
+        navigation.navigate(navigationStrings.RESET_PASSWORD, { email: email ?? "" });
+      }
+    } catch (error) {
+      toast.show("Failed to send reset password email", {
+        type: "danger",
+      });
+      console.error(error);
+    }
+  };
+
+  const handleValidate = () => {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      toast.show("Email is required", {
+        type: "danger",
+      });
+      return { isValid: false, email: null };
+    }
+    if (!validateEmail(trimmedEmail)) {
+      toast.show("Please enter a valid email address", {
+        type: "danger",
+      });
+      return { isValid: false, email: null };
+    }
+    return { isValid: true, email: trimmedEmail, password: null };
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -54,8 +98,9 @@ const ForgotPassword = () => {
           />
 
           <ReusableButton
-            title="Reset Password"
-            onPress={() => navigation.navigate(navigationStrings.RESET_PASSWORD)}
+            title={isLoading ? "Sending..." : "Reset Password"}
+            onPress={handleForgotPassword}
+            disabled={isLoading}
             containerStyle={styles.resetBtn}
             gradientColors={["#A7F3D0", "#166534"]}
             backgroundColor={COLORS.PRIMARY}

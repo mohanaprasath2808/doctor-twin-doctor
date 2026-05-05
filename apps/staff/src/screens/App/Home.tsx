@@ -72,11 +72,14 @@ const Home = () => {
     return (inner - GRID_GAP * (GRID_COLUMNS - 1)) / GRID_COLUMNS;
   }, [windowWidth]);
 
-  const openCalendar = useCallback(() => {
-    navigation.navigate(navigationStrings.CALENDAR);
-  }, [navigation]);
+  /** Same scaling as patient Home: circle fits column width, inner well tracks outer. */
+  const outerDiameter = useMemo(() => Math.min(88, tileWidth), [tileWidth]);
+  const innerShadowDiameter = useMemo(
+    () => Math.max(56, outerDiameter - 16),
+    [outerDiameter],
+  );
 
-  const noop = useCallback(() => {}, []);
+  const noop = useCallback(() => { }, []);
 
   const openTaskInbox = useCallback(() => {
     navigation.navigate(navigationStrings.TASK_INBOX);
@@ -168,10 +171,8 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-    [noop, openScheduling, openTaskInbox, openStaff],
+    [noop, openLabs, openScheduling, openTaskInbox, openStaff],
   );
-
-  const totalRows = Math.ceil(tiles.length / GRID_COLUMNS);
 
   const listHeader = useMemo(
     () => (
@@ -193,24 +194,26 @@ const Home = () => {
   );
 
   const renderTile = useCallback(
-    ({ item, index }: { item: TileItem; index: number }) => {
-      const rowIndex = Math.floor(index / GRID_COLUMNS);
-      return (
-        <NeumorphicQuickActionTile
-          onPress={item.onPress ?? noop}
-          icon={hasPositiveBadgeCount(item.dataCount) ? item.iconRed : item.iconGreen}
-          label={item.label}
-          badge={item.dataCount}
-          containerStyle={[
-            styles.tileContainer,
-            { width: tileWidth },
-            index % GRID_COLUMNS !== GRID_COLUMNS - 1 && styles.tileSpacingRight,
-            rowIndex < totalRows - 1 && styles.rowSpacing,
-          ]}
-        />
-      );
-    },
-    [noop, tileWidth, totalRows],
+    ({ item, index }: { item: TileItem; index: number }) => (
+      <NeumorphicQuickActionTile
+        onPress={item.onPress ?? noop}
+        icon={hasPositiveBadgeCount(item.dataCount) ? item.iconRed : item.iconGreen}
+        label={item.label}
+        badge={item.dataCount}
+        labelNumberOfLines={1}
+        outerDiameter={outerDiameter}
+        innerShadowDiameter={innerShadowDiameter}
+        containerStyle={[
+          styles.tile,
+          {
+            width: tileWidth,
+            marginRight: (index + 1) % GRID_COLUMNS === 0 ? 0 : GRID_GAP,
+            marginBottom: GRID_GAP,
+          },
+        ]}
+      />
+    ),
+    [innerShadowDiameter, noop, outerDiameter, tileWidth],
   );
 
   return (
@@ -277,15 +280,9 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_80,
     textAlign: "center",
   },
-  tileContainer: {
-    marginBottom: 0,
-  },
-  /** `gap` / `rowGap` are unreliable on some Android RN builds; use margins instead. */
-  tileSpacingRight: {
-    marginRight: GRID_GAP,
-  },
-  rowSpacing: {
-    marginBottom: GRID_GAP,
+  /** Aligns with patient Home grid tiles; margins handle gaps (reliable on Android). */
+  tile: {
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",

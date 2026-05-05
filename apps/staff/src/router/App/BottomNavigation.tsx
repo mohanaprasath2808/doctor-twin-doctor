@@ -1,92 +1,127 @@
 import React from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator, type BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute, type RouteProp } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 import CalendarIcon from "../../assets/icon/calendarIcon.svg";
+import MicIcon from "../../assets/icon/micIcon.svg";
 import ProfileIcon from "../../assets/icon/profileIcon.svg";
 import NeumorphicCard from "../../components/neomorphism/NeumorphicCard";
-import {
-  StaffMicBarFabOverlay,
-  StaffMicBarQueueColumn,
-} from "../../components/navigation/QueueMicTabButton";
+import InnerShadowIcon from "../../components/neomorphism/InnerShadowIcon";
+import { QueueMicButton } from "../../components/navigation/QueueMicTabButton";
 import navigationStrings from "../../constants/navigationStrings";
+import { COLORS } from "../../constants/theme";
 import Calendar from "../../screens/App/Calendar";
 import Profile from "../../screens/App/Profile/Profile";
-import { COLORS } from "../../constants/theme";
 import Home from "../../screens/App/Home";
 
 const Tab = createBottomTabNavigator();
 
 /**
- * When `insets.bottom` is 0 (common on Android), still lift content above system nav / gesture area.
- * Added on top of `useSafeAreaInsets().bottom` for home indicator + comfort.
+ * Add route names here when a nested flow under the Home tab should hide bottom tabs.
+ * Example: full-screen forms, media capture, or other focused experiences.
  */
-const MIN_BOTTOM_INSET = Platform.select({ ios: 14, android: 20, default: 14 });
-const EXTRA_TAB_PADDING = 8;
+/** Extend this list when the Home tab hosts a navigator and screens should hide the tab bar */
+const HIDE_TABS_ON_ROUTES: readonly string[] = [];
 
-/** Inner tab row (Calendar | mic | Profile), excluding safe-area bottom padding. */
-const TAB_BAR_ROW_HEIGHT = 84;
-/** Must match `NeumorphicCard` inner padding and `StaffMicBarFabOverlay` so the mic lines up with the row. */
-const TAB_BAR_INNER_PADDING_TOP = 10;
+const isTabHiddenForRoute = (route: RouteProp<Record<string, object | undefined>, string>) => {
+  const nestedRouteName = getFocusedRouteNameFromRoute(route);
+  return nestedRouteName != null && HIDE_TABS_ON_ROUTES.includes(nestedRouteName);
+};
+
+type TabName =
+  | typeof navigationStrings.CALENDAR
+  | typeof navigationStrings.HOME
+  | typeof navigationStrings.PROFILE;
+
+const TAB_SCREENS: Array<{ name: TabName; label: string; component: React.ComponentType<any> }> = [
+  { name: navigationStrings.CALENDAR, label: "Calendar", component: Calendar },
+  { name: navigationStrings.HOME, label: "Queue", component: Home },
+  { name: navigationStrings.PROFILE, label: "Profile", component: Profile },
+];
+
+const TAB_ICON: Record<TabName, React.ComponentType<{ width?: number; height?: number }>> = {
+  [navigationStrings.CALENDAR]: CalendarIcon,
+  [navigationStrings.HOME]: MicIcon,
+  [navigationStrings.PROFILE]: ProfileIcon,
+};
+
+const MIN_BOTTOM_INSET = Platform.select({ ios: 14, android: 20, default: 14 });
+const QUEUE_SIZE = 80;
+const QUEUE_RADIUS = QUEUE_SIZE / 2;
 
 function StaffTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
-  const active = state.routes[state.index]?.name;
-
-  const isActive = (name: string) => active === name;
-  const tint = (name: string) => (isActive(name) ? COLORS.PRIMARY : COLORS.TEXT_60);
-
-  const bottomPad = Math.max(insets.bottom, MIN_BOTTOM_INSET) + EXTRA_TAB_PADDING;
+  const active = state.routes[state.index]?.name as TabName;
+  const homeRoute = state.routes.find((r) => r.name === navigationStrings.HOME);
+  const hideBar = homeRoute != null && isTabHiddenForRoute(homeRoute as any);
+  if (hideBar) return null;
 
   return (
-    <View style={[styles.tabBarOuter, { paddingBottom: bottomPad }]}>
+    <View
+      style={[styles.tabBarOuter, { paddingBottom: Math.max(insets.bottom, MIN_BOTTOM_INSET) }]}
+    >
       <View style={styles.tabBarCardWrap}>
         <NeumorphicCard
           borderRadius={16}
           backgroundColor={COLORS.INNER_SURFACE}
-          innerStyle={styles.neumorphicCardInner}
+          outerStyle={styles.tabNeumorphOuter}
+          innerStyle={styles.tabNeumorphInner}
         >
           <View style={styles.tabRow}>
-            <Pressable
-              style={styles.sideTab}
-              onPress={() => navigation.navigate(navigationStrings.CALENDAR)}
-              accessibilityRole="button"
-              accessibilityState={{ selected: isActive(navigationStrings.CALENDAR) }}
-            >
-              <CalendarIcon width={24} height={24} color={tint(navigationStrings.CALENDAR)} />
-              <Text style={[styles.tabLabel, { color: tint(navigationStrings.CALENDAR) }]}>
-                Calendar
-              </Text>
-            </Pressable>
-
-            <StaffMicBarQueueColumn
-              onMicPress={() => {
-                navigation.navigate(navigationStrings.HOME);
-              }}
-            />
-
-            <Pressable
-              style={styles.sideTab}
-              onPress={() => navigation.navigate(navigationStrings.PROFILE)}
-              accessibilityRole="button"
-              accessibilityState={{ selected: isActive(navigationStrings.PROFILE) }}
-            >
-              <ProfileIcon width={24} height={24} color={tint(navigationStrings.PROFILE)} />
-              <Text style={[styles.tabLabel, { color: tint(navigationStrings.PROFILE) }]}>
-                Profile
-              </Text>
-            </Pressable>
+            {TAB_SCREENS.map((tab) => {
+              const Icon = TAB_ICON[tab.name];
+              const selected = active === tab.name;
+              const isCenter = tab.name === navigationStrings.HOME;
+              return (
+                <Pressable
+                  key={tab.name}
+                  onPress={() => navigation.navigate(tab.name)}
+                  style={[styles.tabPress, isCenter && styles.centerSlot]}
+                  accessibilityRole="button"
+                  accessibilityLabel={tab.label}
+                  accessibilityState={{ selected }}
+                >
+                  {isCenter ? (
+                    <View style={styles.queuePlaceholder} />
+                  ) : selected ? (
+                    <InnerShadowIcon size={50} radius={25} icon={<Icon width={22} height={22} />} />
+                  ) : (
+                    <View style={styles.inactiveIconWrap}>
+                      <Icon width={22} height={22} />
+                    </View>
+                  )}
+                  <Text
+                    style={[
+                      styles.tabLabel,
+                      selected ? styles.tabLabelActive : styles.tabLabelInactive,
+                    ]}
+                  >
+                    {tab.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
         </NeumorphicCard>
-        <StaffMicBarFabOverlay
-          innerPaddingTop={TAB_BAR_INNER_PADDING_TOP}
-          onMicPress={() => {
-            navigation.navigate(navigationStrings.HOME);
-          }}
-        />
+
+        <Pressable
+          style={styles.queueOverlayPress}
+          onPress={() => navigation.navigate(navigationStrings.HOME)}
+          accessibilityRole="button"
+          accessibilityLabel="Queue"
+          accessibilityState={{ selected: active === navigationStrings.HOME }}
+        >
+          <View style={styles.queueActiveOuter}>
+            <QueueMicButton />
+          </View>
+        </Pressable>
+
       </View>
     </View>
   );
+
 }
 
 const BottomNavigation = () => {
@@ -99,9 +134,14 @@ const BottomNavigation = () => {
         tabBarStyle: styles.tabBarHost,
       }}
     >
-      <Tab.Screen name={navigationStrings.HOME} component={Home} />
-      <Tab.Screen name={navigationStrings.CALENDAR} component={Calendar} />
-      <Tab.Screen name={navigationStrings.PROFILE} component={Profile} />
+      {TAB_SCREENS.map((tab) => (
+        <Tab.Screen
+          key={tab.name}
+          name={tab.name}
+          component={tab.component}
+          options={{ title: tab.label }}
+        />
+      ))}
     </Tab.Navigator>
   );
 };
@@ -109,42 +149,85 @@ const BottomNavigation = () => {
 export default BottomNavigation;
 
 const styles = StyleSheet.create({
-  /** Let the lifted center mic extend above the bar; default tab bar clips overflow. */
   tabBarHost: {
-    overflow: "visible",
-    backgroundColor: "transparent",
+    overflow: "hidden",
+    backgroundColor: COLORS.INNER_SURFACE,
     borderTopWidth: 0,
     elevation: 0,
   },
   tabBarOuter: {
-    backgroundColor: COLORS.INNER_SURFACE,
     width: "100%",
+    backgroundColor: COLORS.INNER_SURFACE,
     overflow: "visible",
   },
   tabBarCardWrap: {
-    position: "relative",
     marginHorizontal: 12,
+    position: "relative",
+    overflow: "visible",
   },
-  neumorphicCardInner: {
-    paddingTop: TAB_BAR_INNER_PADDING_TOP,
-    minHeight: TAB_BAR_ROW_HEIGHT,
+  tabNeumorphOuter: {
+    width: "100%",
+  },
+  tabNeumorphInner: {
+    minHeight: 84,
+    paddingVertical: 10,
+    backgroundColor: COLORS.INNER_SURFACE,
   },
   tabRow: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     flex: 1,
     backgroundColor: COLORS.INNER_SURFACE,
   },
-  sideTab: {
+  tabPress: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingTop: 4,
+    justifyContent: "center",
+  },
+  centerSlot: {
+    paddingTop: 6,
+  },
+  queuePlaceholder: {
+    width: 50,
+    height: 50,
+  },
+  queueOverlayPress: {
+    position: "absolute",
+    top: -10,
+    alignSelf: "center",
+    zIndex: 20,
+  },
+  inactiveIconWrap: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.95,
+  },
+  queueActiveOuter: {
+    width: QUEUE_SIZE,
+    height: QUEUE_SIZE,
+    borderRadius: QUEUE_RADIUS,
+    marginTop: -16,
+    position: "relative",
+    overflow: "visible",
+    alignItems: "center",
+    justifyContent: "center",
   },
   tabLabel: {
-    marginTop: 4,
+    marginTop: 6,
     fontSize: 12,
+    lineHeight: 14,
+    textAlign: "center",
+  },
+  tabLabelActive: {
+    color: COLORS.PRIMARY,
     fontWeight: "500",
+  },
+  tabLabelInactive: {
+    color: COLORS.TEXT_50,
+    fontWeight: "400",
   },
 });

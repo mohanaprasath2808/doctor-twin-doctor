@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   },
   endShiftButtonContainer: {
     marginHorizontal: H_PADDING,
-    marginTop: 30,
+    marginTop: 20,
 
   },
   endShiftButton: {

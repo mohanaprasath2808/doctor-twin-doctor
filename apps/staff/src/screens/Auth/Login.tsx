@@ -18,23 +18,25 @@ import KeyboardAvoidingWrapper from "../../components/neomorphism/KeyboardAvoidi
 import { greetingLabel } from "../../constants/constant";
 import navigationStrings from "../../constants/navigationStrings";
 import type { AuthStackParamList } from "../../router/Auth/types";
+import { useToast } from "react-native-toast-notifications";
+import { validateEmail } from "../utills/validations";
 
 const DISPLAY_NAME = "Lorena";
 
 const Login = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const authContext = useContext(AuthContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("jeevananthan@apzzo.com");
+  const [password, setPassword] = useState("Jeeva2002$$$");
   const [secure, setSecure] = useState(true);
-
+  const toast = useToast();
   const greet = useMemo(() => greetingLabel(), []);
 
   if (!authContext) {
     throw new Error("Login must be used within AuthContextProvider");
   }
 
-  const { setIsLogin } = authContext;
+  const { isLoading, login } = authContext;
 
   //Forgot Password Handler
   const handleForgotPassword = () => {
@@ -43,6 +45,48 @@ const Login = () => {
       navigation.navigate(navigationStrings.FORGOT_PASSWORD);
     });
   };
+
+  const handleLogin = async () => {
+    try {
+      const { isValid, email, password } = handleValidate();
+      if (!isValid) {
+        return;
+      }
+      await login(email ?? '', password ?? '');
+    } catch (error) {
+      toast.show("Invalid email or password", {
+        type: "danger",
+      });
+      console.error(error);
+    }
+  };
+
+  const handleValidate = () => {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail) {
+      toast.show("Email is required", {
+        type: "danger",
+      });
+      return { isValid: false, email: null, password: null };
+    }
+
+    if (!validateEmail(trimmedEmail)) {
+      toast.show("Please enter a valid email address", {
+        type: "danger",
+      });
+      return { isValid: false, email: null, password: null };
+    }
+
+    if (!trimmedPassword) {
+      toast.show("Password is required", {
+        type: "danger",
+      });
+      return { isValid: false, email: null, password: null };
+    }
+    return { isValid: true, email: trimmedEmail, password: trimmedPassword };
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -103,8 +147,9 @@ const Login = () => {
 
 
             <ReusableButton
-              title="Login"
-              onPress={() => setIsLogin(true)}
+              title={isLoading ? "Logging in..." : "Login"}
+              disabled={isLoading}
+              onPress={handleLogin}
               containerStyle={styles.loginBtn}
               gradientColors={["#A7F3D0", "#166534"]}
               backgroundColor={COLORS.PRIMARY}
