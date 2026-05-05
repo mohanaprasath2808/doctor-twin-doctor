@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { Platform, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { COLORS } from "../../constants/theme";
@@ -7,6 +7,8 @@ import { COLORS } from "../../constants/theme";
 type StatusDotProps = {
   color: string;
   size?: number;
+  text?: string | number;
+  textStyle?: StyleProp<TextStyle>;
   outerGradientColors?: [string, string];
   style?: StyleProp<ViewStyle>;
 };
@@ -15,6 +17,8 @@ type StatusDotProps = {
 const StatusDot: React.FC<StatusDotProps> = ({
   color,
   size = 8,
+  text,
+  textStyle,
   outerGradientColors = ["#D6E3F3", "#FFFFFF"],
   style,
 }) => {
@@ -69,7 +73,9 @@ const StatusDot: React.FC<StatusDotProps> = ({
               backgroundColor: color,
             },
           ]}
-        />
+        >
+          {text != null ? <Text style={[styles.innerText, textStyle]}>{text}</Text> : null}
+        </View>
       </LinearGradient>
     </View>
   );
@@ -123,5 +129,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  inner: {},
+  inner: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  innerText: {
+    color: COLORS.WHITE,
+    fontSize: 10,
+    fontWeight: "600",
+    includeFontPadding: false,
+    textAlignVertical: "center",
+  },
 });

@@ -8,6 +8,7 @@ import AppointmentScheduled from "../../screens/App/Appointments/AppointmentSche
 import ScheduleStep1 from "../../screens/App/Appointments/ScheduleStep1";
 import ScheduleStep2 from "../../screens/App/Appointments/ScheduleStep2";
 import Labs from "../../screens/App/Labs/Labs";
+import Imaging from "../../screens/App/Imaging/Imaging";
 import LabRequest from "../../screens/App/Labs/LabRequest";
 import LabResults from "../../screens/App/Labs/LabResults";
 import LabResultDetail from "../../screens/App/Labs/LabResultDetail";
@@ -29,6 +30,18 @@ import TreatmentResult from "../../screens/App/Wellness/TreatmentResult";
 import Membership from "../../screens/App/Wellness/Membership";
 import CompleteSubscription from "../../screens/App/Wellness/CompleteSubscription";
 import BottomNavigation from "./BottomNavigation";
+import ImagingRequest from "../../screens/App/Imaging/ImagingRequest";
+import ImagingResults from "../../screens/App/Imaging/ImagingResults";
+import ImagingResultsDetails from "../../screens/App/Imaging/ImagingResultsDetails";
+import ViewReport from "../../screens/App/Imaging/ViewReport";
+import ViewDocument from "../../screens/App/Imaging/ViewDocument";
+import Billing from "../../screens/App/Billing/Billing";
+import StatementDetail from "../../screens/App/Billing/StatementDetail";
+import PaymentSuccessful from "../../screens/App/Billing/PaymentSuccessful";
+import MyRecords from "../../screens/App/MyRecords/MyRecords";
+import ImmunizationRecord from "../../screens/App/MyRecords/ImmunizationRecord";
+import FormsLibrary from "../../screens/App/MyRecords/FormsLibrary";
+import PracticeDocuments from "../../screens/App/MyRecords/PracticeDocuments";
 
 const Stack = createStackNavigator();
 
@@ -79,6 +92,25 @@ const AppStack = () => {
         component={ScheduleStep2}
       />
       <Stack.Screen name={navigationStrings.LABS} component={Labs} />
+      <Stack.Screen name={navigationStrings.IMAGING} component={Imaging} />
+      <Stack.Screen name={navigationStrings.IMAGING_REQUEST} component={ImagingRequest} />
+      <Stack.Screen name={navigationStrings.IMAGING_RESULTS} component={ImagingResults} />
+      <Stack.Screen
+        name={navigationStrings.IMAGING_RESULTS_DETAILS}
+        component={ImagingResultsDetails}
+      />
+      <Stack.Screen name={navigationStrings.VIEW_REPORT} component={ViewReport} />
+      <Stack.Screen name={navigationStrings.VIEW_PDF} component={ViewDocument} />
+      <Stack.Screen name={navigationStrings.BILLING} component={Billing} />
+      <Stack.Screen name={navigationStrings.STATEMENT_DETAIL} component={StatementDetail} />
+      <Stack.Screen name={navigationStrings.PAYMENT_SUCCESSFUL} component={PaymentSuccessful} />
+      <Stack.Screen name={navigationStrings.MY_RECORDS} component={MyRecords} />
+      <Stack.Screen
+        name={navigationStrings.IMMUNIZATION_RECORD}
+        component={ImmunizationRecord}
+      />
+      <Stack.Screen name={navigationStrings.FORMS_LIBRARY} component={FormsLibrary} />
+      <Stack.Screen name={navigationStrings.PRACTICE_DOCUMENTS} component={PracticeDocuments} />
       <Stack.Screen name={navigationStrings.LAB_REQUEST} component={LabRequest} />
       <Stack.Screen name={navigationStrings.LAB_RESULTS} component={LabResults} />
       <Stack.Screen
