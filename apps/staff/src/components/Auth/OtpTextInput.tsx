@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet, TextInput, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS } from "../../constants/theme";
@@ -10,14 +10,39 @@ interface OtpTextInputProps {
   onFilled?: (otp: string) => void;
 }
 
+export type OtpTextInputRef = {
+  focusFirst: () => void;
+  /** Blur all cells, clear focus styling, then focus the first cell (e.g. after resend OTP). */
+  resetFocusState: () => void;
+};
+
 const DIGITS = 4;
 const CELL_SIZE = 54;
 const CELL_RADIUS = CELL_SIZE / 2;
 
-const OtpTextInput: React.FC<OtpTextInputProps> = ({ otp, setOtp, onFilled }) => {
+const OtpTextInput = React.forwardRef<OtpTextInputRef, OtpTextInputProps>(
+  ({ otp, setOtp, onFilled }, ref) => {
   const [values, setValues] = useState<string[]>(Array(DIGITS).fill(""));
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const inputsRef = useRef<Array<TextInput | null>>([]);
+
+  useImperativeHandle(ref, () => ({
+    focusFirst: () => {
+      inputsRef.current[0]?.focus();
+      setFocusedIndex(0);
+    },
+    resetFocusState: () => {
+      inputsRef.current.forEach((input) => input?.blur());
+      setFocusedIndex(null);
+      // Defer past the next paint so parent `setOtp("")` has synced into `values` via useEffect.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          inputsRef.current[0]?.focus();
+          setFocusedIndex(0);
+        });
+      });
+    },
+  }));
 
   useEffect(() => {
     const next = Array(DIGITS)
@@ -95,8 +120,8 @@ const OtpTextInput: React.FC<OtpTextInputProps> = ({ otp, setOtp, onFilled }) =>
                   />
                 </View>
                 <TextInput
-                  ref={(ref) => {
-                    inputsRef.current[index] = ref;
+                  ref={(inputRef) => {
+                    inputsRef.current[index] = inputRef;
                   }}
                   style={styles.input}
                   value={values[index]}
@@ -123,7 +148,10 @@ const OtpTextInput: React.FC<OtpTextInputProps> = ({ otp, setOtp, onFilled }) =>
   );
 
   return <View style={styles.container}>{cells}</View>;
-};
+  },
+);
+
+OtpTextInput.displayName = "OtpTextInput";
 
 const styles = StyleSheet.create({
   container: {

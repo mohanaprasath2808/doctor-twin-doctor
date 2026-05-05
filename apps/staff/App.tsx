@@ -6,6 +6,9 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import AuthContextProvider from "./src/context/AuthContext";
 import Router from "./src/router/Router";
 import { useFonts } from "expo-font";
+import { Platform } from "react-native";
+import { ToastProvider } from "react-native-toast-notifications";
+import NeomorphicToast from "./src/components/neomorphism/NeomorphicToast";
 
 const App = () => {
   const [fontLoaded] = useFonts({
@@ -52,16 +55,32 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="dark" />
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <NavigationContainer>
-            <AuthContextProvider>
-              <Router />
-            </AuthContextProvider>
-          </NavigationContainer>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
+      <ToastProvider
+        placement="top"
+        offsetTop={Platform.OS === "android" ? 40 : 0}
+        renderType={{
+          success: (toast) => (
+            <NeomorphicToast toast={toast} variant="success" />
+          ),
+          danger: (toast) => (
+            <NeomorphicToast toast={toast} variant="danger" />
+          ),
+          warning: (toast) => (
+            <NeomorphicToast toast={toast} variant="warning" />
+          ),
+        }}
+      >
+        <StatusBar style="dark" />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <NavigationContainer>
+              <AuthContextProvider>
+                <Router />
+              </AuthContextProvider>
+            </NavigationContainer>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </ToastProvider>
     </SafeAreaProvider>
   );
 };

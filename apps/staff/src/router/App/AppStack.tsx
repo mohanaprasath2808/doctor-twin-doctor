@@ -59,6 +59,7 @@ export type StaffFormParams = {
 
 /** Must match `navigationStrings` + screen `name` props below. */
 export type AppStackParamList = {
+  Login: undefined;
   ShiftStart: undefined;
   BottomNavigation: undefined;
   TaskInbox: undefined;

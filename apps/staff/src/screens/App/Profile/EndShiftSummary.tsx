@@ -16,6 +16,7 @@ import ProfileAvatar from "../../../components/neomorphism/ProfileAvatar";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
 import { AuthContext } from "../../../context/AuthContext";
+import { secureStorage } from "../../../storage/secureStorage";
 
 type SummaryMetric = {
   id: string;
@@ -55,7 +56,7 @@ const EndShiftSummary = () => {
   if (!authContext) {
     throw new Error("EndShiftSummary must be used within AuthContextProvider");
   }
-  const { setIsLogin } = authContext;
+  const { logout } = authContext;
   const bottomPad = Math.max(insets.bottom, 12) + TAB_BAR_CLEARANCE;
 
   const renderBulletItem = ({ item }: { item: SummaryBullet }) => (
@@ -64,6 +65,10 @@ const EndShiftSummary = () => {
       <Text style={styles.bulletText}>{item.text}</Text>
     </View>
   );
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -160,7 +165,7 @@ const EndShiftSummary = () => {
               borderColor={COLORS.ALERT}
               bgColor="#FDECEC"
               textStyle={styles.endShiftText}
-              onPress={() => { setIsLogin(false) }}
+              onPress={() => void handleLogout()}
             />
             {/* <AppButton
               text="Review Shift"

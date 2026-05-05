@@ -1,5 +1,5 @@
 export type AuthStackParamList = {
   Login: undefined;
   ForgotPassword: undefined;
-  ResetPassword: undefined;
+  ResetPassword: { email: string };
 };

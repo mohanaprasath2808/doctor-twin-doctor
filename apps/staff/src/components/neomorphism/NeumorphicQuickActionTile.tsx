@@ -42,6 +42,8 @@ export type NeumorphicQuickActionTileProps = {
   /** `borderWidth` sets the gradient ring thickness on the badge and on the inner `InnerShadowView` when alert. */
   badgeStyle?: StyleProp<ViewStyle>;
   badgeTextStyle?: StyleProp<TextStyle>;
+  /** Max lines for the label when there is no `subtitle` (default 2). */
+  labelNumberOfLines?: number;
 };
 
 /** Same border math as `StatusDot`: inner diameter + 2×borderWidth = outer; `padding` on `LinearGradient` = ring thickness. */
@@ -111,6 +113,7 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
   labelStyle,
   badgeStyle,
   badgeTextStyle,
+  labelNumberOfLines = 2,
 }) => {
   const outerRadius = outerDiameter / 2;
   const innerRadius = innerShadowBorderRadius ?? Math.max(0, innerShadowDiameter / 2);
@@ -313,9 +316,11 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
           </Text>
         </View>
       ) : (
-        <Text style={[styles.tileLabel, labelStyle]} numberOfLines={2}>
-          {label}
-        </Text>
+        <View style={styles.tileLabelWrap}>
+          <Text style={[styles.tileLabel, labelStyle]} numberOfLines={labelNumberOfLines}>
+            {label}
+          </Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -483,16 +488,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "400",
   },
+  tileLabelWrap: {
+    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: 2,
+  },
   tileLabel: {
     fontSize: 12,
     lineHeight: 14,
     fontWeight: "500",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
+    width: "100%",
   },
   labelBlock: {
     alignItems: "center",
-    maxWidth: 110,
+    width: "100%",
+    paddingHorizontal: 2,
   },
   tileTitle: {
     fontSize: 14,
