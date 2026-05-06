@@ -1,5 +1,5 @@
 import type { ApiSessionUser } from "../types/session";
-import { getSecureItem, setSecureItem } from "./secureStorage";
+import { deleteSecureItem, getSecureItem, setSecureItem } from "./secureStorage";
 
 export const AUTH_STORAGE_KEYS = {
   ACCESS_TOKEN: `access_token`,
@@ -38,4 +38,13 @@ export async function hasCompletedOnboarding(): Promise<boolean> {
 
 export async function setCompletedOnboarding(value: boolean): Promise<void> {
   await setSecureItem(AUTH_STORAGE_KEYS.ONBOARDING_COMPLETED, value ? "true" : "false");
+}
+
+export async function clearAuthSession(): Promise<void> {
+  await Promise.all([
+    deleteSecureItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN),
+    deleteSecureItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN),
+    deleteSecureItem(AUTH_STORAGE_KEYS.USER_DATA),
+    deleteSecureItem(AUTH_STORAGE_KEYS.ONBOARDING_COMPLETED),
+  ]);
 }

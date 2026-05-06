@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { COLORS } from '../../constants/theme';
 import InnerShadowView from '../../neomorphism/InnerShadowView';
@@ -8,6 +8,7 @@ interface OtpTextInputProps {
   otp: string;
   setOtp: (otp: string) => void;
   onFilled?: (otp: string) => void;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 const DIGITS = 4;
@@ -18,6 +19,7 @@ const OtpTextInput: React.FC<OtpTextInputProps> = ({
   otp,
   setOtp,
   onFilled,
+  containerStyle,
 }) => {
   const [values, setValues] = useState<string[]>(Array(DIGITS).fill(''));
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
@@ -132,7 +134,7 @@ const OtpTextInput: React.FC<OtpTextInputProps> = ({
     [focusedIndex, values],
   );
 
-  return <View style={styles.container}>{cells}</View>;
+  return <View style={[styles.container, containerStyle]}>{cells}</View>;
 };
 
 const styles = StyleSheet.create({

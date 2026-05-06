@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -9,53 +9,119 @@ import BackIcon from "../../assets/icon/backArrow.svg";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import OtpTextInput from "../../components/Auth/OtpTextInput";
 import type { SetUserPinRouteParams } from "../../types/authRoute";
-import { handleResendOtp as requestResendOtp } from "../../service/authService";
+import {
+  handleResendOtp as requestResendOtp,
+  handleSetUserPin,
+  handleVerifyUserPin,
+} from "../../service/authService";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useToast } from "react-native-toast-notifications";
 import { hasCompletedOnboarding } from "../../utils/authStorage";
+import { useAppStore } from "../../store/useAppStore";
 
 const SetUserPin = () => {
   const navigation = useNavigation<any>();
   const route = useRoute();
-  const toast = useToast();
-  const userData = useAuthStore((s) => s.userData);
   const { mode = "create" } = (route.params ?? {}) as SetUserPinRouteParams;
-  const [pin, setPin] = useState("");
+  const toast = useToast();
+  //local state
   const [submitting, setSubmitting] = useState(false);
+  const [pin, setPin] = useState("");
+  const [autoNavigate, setAutoNavigate] = useState(false);
+  //store state
+  const userData = useAuthStore((s) => s.userData);
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
-  const onContinue = async () => {
-    if (userData && userData.face_id_set !== true) {
-      setSubmitting(true);
-      try {
-        const result = await requestResendOtp(userData.email, "login");
-        if (!result.ok) {
-          toast.show("Could not send code. Try again.", { type: "danger" });
-          return;
-        }
-        toast.show("Verification code sent.", { type: "success" });
-        navigation.navigate(navigationStrings.SECURE_LOGIN, {
-          source: "user-pin",
-        });
-      } finally {
-        setSubmitting(false);
-      }
-      return;
-    }
-    if (await hasCompletedOnboarding()) {
-      setIsLogin(true);
-      return;
-    }
-    navigation.navigate(navigationStrings.ONBOARDING_STACK);
-  };
+  const loading = useAppStore((s) => s.loading);
+  const setLoading = useAppStore((s) => s.setLoading);
 
   const title = mode === "verify" ? "Enter your User PIN" : "Set your User PIN";
   const subtitle =
     mode === "verify"
       ? "Enter your 4-digit PIN to continue"
       : "Enter a 4-digit code to set your PIN";
+  //handle set user pin
+  const requestSetUserPin = async () => {
+    toast.hideAll();
+    if (pin.trim().length !== 4) {
+      toast.show("Please enter a valid 4-digit PIN.", { type: "warning" });
+      return;
+    }
+    const userId = userData?.user_id;
+    if (!userId) {
+      toast.show("User not found. Please login again.", { type: "warning" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const response: any = await handleSetUserPin(userId, pin);
+      console.log(response, "response in requestSetUserPin");
+      if (response.ok) {
+        toast.show("User pin set successfully.", { type: "success" });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: navigationStrings.SECURE_LOGIN }],
+        });
+      } else {
+        toast.show(response?.data?.error, { type: "danger" });
+      }
+    } catch (error) {
+      toast.show("Something went wrong. Try again.", { type: "danger" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  //handle verify user pin
+  const requestVerifyUserPin = async () => {
+    toast.hideAll();
+    if (pin.trim().length !== 4) {
+      toast.show("Please enter a valid 4-digit PIN.", { type: "warning" });
+      return;
+    }
+    const userId = userData?.user_id;
+    if (!userId) {
+      toast.show("User not found. Please login again.", { type: "warning" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      setLoading(true);
+      const response: any = await handleVerifyUserPin(userId, pin);
+      console.log(response, "response in requestVerifyUserPin");
+      if (response.ok) {
+        if (await hasCompletedOnboarding()) {
+          setIsLogin(true);
+        } else {
+          // Onboarding not completed → go to HIPAA gate first.
+          navigation.navigate(navigationStrings.ONBOARDING_STACK);
+        }
+      } else {
+        const result = response?.data?.meta?.failedAttempts;
+        if (result >= 3) {
+          setAutoNavigate(true);
+          return;
+        }
+        toast.show(response?.data?.error, { type: "danger" });
+      }
+    } catch (error) {
+      toast.show("Something went wrong. Try again.", { type: "danger" });
+    } finally {
+      setLoading(false);
+      setSubmitting(false);
+    }
+  };
 
   //handle forgot pin
   const handleForgotPin = () => {};
+
+  //automatic navigation to Device Trust Verification Screen
+  useEffect(() => {
+    if (mode === "verify") {
+      if (autoNavigate) {
+        navigation.navigate(navigationStrings.DEVICE_TRUST_VERIFICATION);
+      }
+    }
+  }, [mode, navigation, autoNavigate]);
   return (
     <SafeAreaView style={styles.container}>
       <IconComponent
@@ -75,20 +141,30 @@ const SetUserPin = () => {
       </View>
 
       <ReusableButton
-        title="Continue"
-        onPress={onContinue}
-        disabled={submitting}
+        title={
+          submitting || loading
+            ? mode === "create"
+              ? "Setting PIN…"
+              : "Verifying PIN…"
+            : mode === "create"
+              ? "Set PIN"
+              : "Verify PIN"
+        }
+        onPress={mode === "create" ? requestSetUserPin : requestVerifyUserPin}
+        disabled={submitting || loading}
         containerStyle={styles.continueBtn}
         backgroundColor="#2E3A8C"
         textColor="#FFFFFF"
       />
 
-      <View style={styles.forgotPinRow}>
-        <Text style={styles.forgotPinText}>Do you remember PIN?</Text>
-        <TouchableOpacity onPress={handleForgotPin}>
-          <Text style={styles.forgotPinButtonText}>Forgot PIN</Text>
-        </TouchableOpacity>
-      </View>
+      {!(mode === "create") && (
+        <View style={styles.forgotPinRow}>
+          <Text style={styles.forgotPinText}>Do you remember PIN?</Text>
+          <TouchableOpacity onPress={handleForgotPin}>
+            <Text style={styles.forgotPinButtonText}>Forgot PIN</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

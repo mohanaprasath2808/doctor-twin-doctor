@@ -62,10 +62,10 @@ const ResetPassword = () => {
         setToken(response?.data?.data?.token);
         toast.show("OTP verified successfully.", { type: "success" });
       } else {
-        toast.show((response as any)?.detail, { type: "danger" });
+        toast.show((response as any)?.error, { type: "danger" });
       }
     } catch (e) {
-      const message = (e as any)?.detail || (e as any)?.message || "Something went wrong.";
+      const message = (e as any)?.error || (e as any)?.message || "Something went wrong.";
       console.log(message, "message in Reset Password Screen");
       toast.show(message, { type: "danger" });
     } finally {
@@ -115,10 +115,10 @@ const ResetPassword = () => {
         toast.show("Password reset successfully.", { type: "success" });
         navigation.pop(2);
       } else {
-        toast.show((response as any)?.detail, { type: "danger" });
+        toast.show((response as any)?.error, { type: "danger" });
       }
     } catch (e) {
-      const message = (e as any)?.detail || (e as any)?.message || "Something went wrong.";
+      const message = (e as any)?.error || (e as any)?.message || "Something went wrong.";
       console.log(message, "message in Reset Password Screen");
       toast.show(message, { type: "danger" });
     } finally {

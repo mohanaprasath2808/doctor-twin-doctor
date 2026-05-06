@@ -28,7 +28,8 @@ const OtpVerification = () => {
   const [otp, setOtp] = useState("");
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const setUserData = useAuthStore((s) => s.setUserData);
-  const otpType = source === "faceId" || source === "pinOtp" ? source : "login";
+  const otpType =
+    source === "faceId" || source === "pinOtp" || source === "backupcode" ? source : "login";
 
   const onVerifyPress = async (): Promise<void> => {
     toast.hideAll();
@@ -45,9 +46,6 @@ const OtpVerification = () => {
 
     setLoading(true);
     try {
-      console.log(otpType, "otpType in OtpVerification Screen");
-      console.log(otp, "otp in OtpVerification Screen");
-      console.log(email, "email in OtpVerification Screen");
       const response = await handleVerifyOtp(email, otp, otpType);
       console.log(response, "response in OtpVerification Screen");
       if (!response.ok) {
@@ -56,14 +54,16 @@ const OtpVerification = () => {
       }
       const raw: any = response.data;
       const session = raw?.data?.data ?? raw?.data ?? raw;
-      if (!session?.access_token || !session?.refresh_token || !session?.user) {
-        toast.show("Session could not be saved. Try again.", { type: "danger" });
-        return;
+      if (source === "login") {
+        if (!session?.access_token || !session?.refresh_token || !session?.user) {
+          toast.show("Session could not be saved. Try again.", { type: "danger" });
+          return;
+        }
+        await setSecureItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, String(session.access_token));
+        await setSecureItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN, String(session.refresh_token));
+        await setSecureItem(AUTH_STORAGE_KEYS.USER_DATA, JSON.stringify(session.user));
+        setUserData(session.user);
       }
-      await setSecureItem(AUTH_STORAGE_KEYS.ACCESS_TOKEN, String(session.access_token));
-      await setSecureItem(AUTH_STORAGE_KEYS.REFRESH_TOKEN, String(session.refresh_token));
-      await setSecureItem(AUTH_STORAGE_KEYS.USER_DATA, JSON.stringify(session.user));
-      setUserData(session.user);
 
       if (source === "login") {
         if (loginOtpNext === "normalLogin") {
@@ -92,6 +92,15 @@ const OtpVerification = () => {
         return;
       }
 
+      if (source === "backupcode") {
+        const codes = session?.backupCodes ?? session?.backup_codes ?? session?.codes ?? session;
+        navigation.navigate(navigationStrings.BACKUP_CODES_SESSION_TIMEOUT, {
+          backupCodes: Array.isArray(codes) ? codes : [],
+          response: raw,
+        });
+        return;
+      }
+
       switch (source) {
         case "sso-sign-in":
           if (await hasCompletedOnboarding()) {
@@ -113,6 +122,7 @@ const OtpVerification = () => {
 
   const onResendPress = async (): Promise<void> => {
     toast.hideAll();
+    setOtp("");
 
     if (!email?.trim()) {
       toast.show("Missing email. Go back and sign in again.", { type: "danger" });

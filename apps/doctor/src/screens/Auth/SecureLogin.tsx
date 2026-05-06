@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as LocalAuthentication from "expo-local-authentication";
-import { hasAuthSession } from "../../utils/authStorage";
+import { hasAuthSession, hasCompletedOnboarding } from "../../utils/authStorage";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -29,7 +29,6 @@ import PasswordIcon from "../../assets/icon/lockIcon.svg";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
 import { useToast } from "react-native-toast-notifications";
-
 const FACE_ID_LABEL = Platform.OS === "ios" ? "Face ID" : "Face unlock";
 
 const FACE_PROMPT = Platform.OS === "ios" ? "Unlock with Face ID" : "Unlock with face unlock";
@@ -61,6 +60,9 @@ const SecureLogin = () => {
   const toast = useToast();
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const userData = useAuthStore((s) => s.userData);
+  console.log(userData, "userData in SecureLogin Screen");
+  const getUser = useAuthStore((s) => s.getUser);
+  const logout = useAuthStore((s) => s.logout);
   const loading = useAppStore((s) => s.loading);
   const setLoading = useAppStore((s) => s.setLoading);
   const [biometricBusy, setBiometricBusy] = useState(false);
@@ -79,7 +81,11 @@ const SecureLogin = () => {
       cancelled = true;
     };
   }, []);
-
+  useFocusEffect(
+    useCallback(() => {
+      void getUser();
+    }, [getUser]),
+  );
   const continueOnboarding = useCallback(() => {
     navigation.navigate(navigationStrings.SET_USER_PIN);
   }, [navigation]);
@@ -133,15 +139,19 @@ const SecureLogin = () => {
       });
 
       if (result.success) {
-        setIsLogin(true);
+        if (await hasCompletedOnboarding()) {
+          setIsLogin(true);
+        } else {
+          navigation.navigate(navigationStrings.ONBOARDING_STACK);
+        }
       }
     } finally {
       setBiometricBusy(false);
     }
-  }, [continueOnboarding, setIsLogin]);
+  }, [continueOnboarding, navigation, setIsLogin]);
 
-  console.log(userData, "userData in SecureLogin Screen");
   const onOptionPress = (id: string) => {
+    toast.hideAll();
     switch (id) {
       case "face-id":
         if (!faceIdAvailable) {
@@ -159,12 +169,6 @@ const SecureLogin = () => {
             toast.show("No saved email. Sign in with Login first.", { type: "warning" });
             return;
           }
-          const hasFaceId = Boolean(userData?.face_id_set);
-          if (hasFaceId) {
-            await onFaceIdPress();
-            return;
-          }
-
           if (userData?.face_id_set !== true) {
             setLoading(true);
             try {
@@ -183,6 +187,8 @@ const SecureLogin = () => {
             }
             return;
           }
+
+          await onFaceIdPress();
         })();
         return;
       case "sso-login":
@@ -267,6 +273,29 @@ const SecureLogin = () => {
           <View style={styles.headerSpacer} />
         )} */}
         <Text style={styles.headerTitle}>Secure Login</Text>
+        <Pressable
+          onPress={() => {
+            Alert.alert("Logout", "Are you sure you want to logout?", [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Logout",
+                style: "destructive",
+                onPress: () => {
+                  void (async () => {
+                    await logout();
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: navigationStrings.LOGIN }],
+                    });
+                  })();
+                },
+              },
+            ]);
+          }}
+          style={styles.logoutBtn}
+        >
+          <Text style={styles.logoutText}>Logout</Text>
+        </Pressable>
         {/* <View style={styles.headerSpacer} /> */}
       </View>
 
@@ -342,6 +371,17 @@ const styles = StyleSheet.create({
   },
   headerSpacer: {
     width: 40,
+  },
+  logoutBtn: {
+    position: "absolute",
+    right: 0,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+  },
+  logoutText: {
+    color: COLORS.PRIMARY,
+    fontSize: 14,
+    fontWeight: "600",
   },
   imageContainer: {
     marginTop: 24,

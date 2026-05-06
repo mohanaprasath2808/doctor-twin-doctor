@@ -38,7 +38,9 @@ const AuthStack = () => {
 
       const hasSessionBundle = !!accessToken?.trim() && !!refreshToken?.trim() && !!user;
       if (!cancelled) {
-        setInitialRouteName(hasSessionBundle ? navigationStrings.SECURE_LOGIN : navigationStrings.LOGIN);
+        setInitialRouteName(
+          hasSessionBundle ? navigationStrings.SECURE_LOGIN : navigationStrings.LOGIN,
+        );
       }
     };
 

@@ -54,10 +54,10 @@ const SsoSignIn = () => {
           });
         }
       } else {
-        toast.show(response?.detail, { type: "danger" });
+        toast.show(response?.error, { type: "danger" });
       }
     } catch (e) {
-      const message = (e as any)?.detail || (e as any)?.message || "Something went wrong.";
+      const message = (e as any)?.error || (e as any)?.message || "Something went wrong.";
       console.log(message, "message in SsoSignIn Screen");
       toast.show(message, { type: "danger" });
     } finally {
