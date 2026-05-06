@@ -106,7 +106,7 @@ const ProblemDetail = () => {
 
         <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.cardInner} borderRadius={10}>
           <Text style={styles.sectionTitle}>Current Management</Text>
-          <View style={styles.managementRow}>
+          <View style={[styles.managementRow, { marginTop: 10 }]}>
             <InnerShadowIcon
               icon={<TickIcon width={18} height={18} />}
               size={40}

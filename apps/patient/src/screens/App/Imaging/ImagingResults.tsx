@@ -249,12 +249,12 @@ const styles = StyleSheet.create({
   filtersList: {
     flexGrow: 0,
     flex: 0,
+    paddingTop: 20,
   },
   filtersRow: {
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingTop: 30,
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   filterSeparator: {
     width: 10,
@@ -273,6 +273,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   cardsListContent: {
+    paddingTop: 10,
     paddingBottom: 16,
   },
   cardSeparator: {

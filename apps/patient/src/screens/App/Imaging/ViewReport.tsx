@@ -160,11 +160,11 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   actionCardInner: {
-    height: 64,
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 12,
+    paddingVertical: 10,
     gap: 12,
   },
   actionTitle: {

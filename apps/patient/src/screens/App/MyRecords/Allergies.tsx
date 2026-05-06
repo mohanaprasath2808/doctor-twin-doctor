@@ -163,7 +163,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.SURFACE,
   },
   list: {
-    marginTop: 20,
+    marginTop: 10,
+    paddingVertical: 10,
     paddingHorizontal: 16,
   },
   listContent: {

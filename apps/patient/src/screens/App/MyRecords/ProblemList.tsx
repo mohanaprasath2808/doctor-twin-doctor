@@ -31,17 +31,17 @@ const PROBLEMS: ProblemItem[] = [
 const paletteForStatus = (status: ProblemStatus) =>
   status === "active"
     ? {
-        value: "Active",
-        bgColor: "#D3FFF1",
-        textColor: "#10B981",
-        darkShadowColor: "rgba(16, 185, 129, 0.35)",
-      }
+      value: "Active",
+      bgColor: "#D3FFF1",
+      textColor: "#10B981",
+      darkShadowColor: "rgba(16, 185, 129, 0.35)",
+    }
     : {
-        value: "Resolved",
-        bgColor: "#D3FFF1",
-        textColor: "#39A071",
-        darkShadowColor: "rgba(57, 160, 113, 0.35)",
-      };
+      value: "Resolved",
+      bgColor: "#D3FFF1",
+      textColor: "#39A071",
+      darkShadowColor: "rgba(57, 160, 113, 0.35)",
+    };
 
 const ProblemList = () => {
   const navigation = useNavigation<any>();
@@ -153,7 +153,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.SURFACE,
   },
   list: {
-    marginTop: 20,
+    marginTop: 10,
+    paddingVertical: 10,
     paddingHorizontal: 16,
   },
   listContent: {

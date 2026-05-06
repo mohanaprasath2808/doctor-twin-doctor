@@ -82,23 +82,25 @@ const AllergyDetail = () => {
         <Text style={styles.heroText}>You’re allergic to penicillin. I’ll help{"\n"}you stay safe.</Text>
 
         <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
-          <InnerShadowIcon
-            icon={<WarningTealIcon width={18} height={18} />}
-            size={40}
-            radius={20}
-            surfaceColor={COLORS.INNER_SURFACE}
-          />
-          <View style={styles.itemTextWrap}>
-            <Text style={styles.itemTitle}>{title}</Text>
-            <Text style={styles.itemSub}>Reaction: {reaction}</Text>
+          <View style={styles.topRow}>
+            <InnerShadowIcon
+              icon={<WarningTealIcon width={18} height={18} />}
+              size={40}
+              radius={20}
+              surfaceColor={COLORS.INNER_SURFACE}
+            />
+            <View style={styles.itemTextWrap}>
+              <Text style={styles.itemTitle}>{title}</Text>
+              <Text style={styles.itemSub}>Reaction: {reaction}</Text>
+            </View>
+            <DeltaBadge
+              value="Active"
+              bgColor="#D3FFF1"
+              darkShadowColor="rgba(16, 185, 129, 0.35)"
+              textColor="#10B981"
+              height={26}
+            />
           </View>
-          <DeltaBadge
-            value={palette.value}
-            bgColor={palette.bgColor}
-            darkShadowColor={palette.darkShadowColor}
-            textColor={palette.textColor}
-            height={26}
-          />
         </NeumorphicCard>
 
         <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.cardInner} borderRadius={10}>
@@ -235,19 +237,22 @@ const styles = StyleSheet.create({
   itemTextWrap: {
     flex: 1,
     minWidth: 0,
-    marginLeft: 10,
-    marginRight: 10,
   },
   itemTitle: {
     fontSize: 14,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
   },
+  topRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
   itemSub: {
     marginTop: 4,
     fontSize: 12,
-    fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_60,
+    fontWeight: "500",
+    color: COLORS.TEXT_PRIMARY_80,
   },
   sectionTitle: {
     fontSize: 16,

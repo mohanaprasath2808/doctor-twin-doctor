@@ -99,27 +99,28 @@ const UploadCenter = () => {
           />
         </NeumorphicCard>
 
-        <View style={styles.bottomActions}>
-          <View style={styles.btnHalf}>
-            <AppButton
-              text="Request My Records"
-              borderWidth={1}
-              borderColor={COLORS.PRIMARY}
-              bgColor={COLORS.SURFACE}
-              textStyle={styles.secondaryText}
-              style={styles.actionBtn}
-              onPress={() => navigation.navigate(navigationStrings.REQUEST_RECORDS)}
-            />
-          </View>
-          <View style={styles.btnHalf}>
-            <ReusableButton
-              title="Send Records"
-              containerStyle={styles.actionBtn}
-              onPress={() => undefined}
-            />
-          </View>
-        </View>
+
       </ScrollView>
+      <View style={styles.bottomActions}>
+        <View style={styles.btnHalf}>
+          <AppButton
+            text="Request My Records"
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            textStyle={styles.secondaryText}
+            style={styles.actionBtn}
+            onPress={() => navigation.navigate(navigationStrings.REQUEST_RECORDS)}
+          />
+        </View>
+        <View style={styles.btnHalf}>
+          <ReusableButton
+            title="Send Records"
+            containerStyle={styles.actionBtn}
+            onPress={() => undefined}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -155,7 +156,6 @@ const styles = StyleSheet.create({
   },
   avatar: { width: 124, height: 124, borderRadius: 115, resizeMode: "contain" },
   subGreeting: {
-    marginTop: 10,
     textAlign: "center",
     fontSize: 16,
     lineHeight: 22,
@@ -182,13 +182,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   uploadHint: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_60,
   },
   uploadBtn: {
-    width: 82,
-    height: 34,
+    width: 70,
+    height: 28,
     borderRadius: 17,
   },
   uploadBtnText: {
@@ -211,7 +211,8 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
   },
   filtersList: {
-    marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 5,
   },
   filtersRow: {
     paddingHorizontal: 12,
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   bottomActions: {
-    marginTop: 20,
+    marginHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,

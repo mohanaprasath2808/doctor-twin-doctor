@@ -83,7 +83,7 @@ const MyRecords = () => {
             />
             <View style={styles.cardTextWrap}>
               <Text style={styles.cardTitle}>Problem List</Text>
-              <Text style={styles.cardSubtitle}>Hypertension, Allergies...</Text>
+              <Text style={styles.cardSubtitle}>Hypertension, Allergies</Text>
             </View>
             <RightArrowIcon width={10} height={10} />
           </NeumorphicCard>

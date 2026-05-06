@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   cardInner: {
-    minHeight: 64,
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
