@@ -28,6 +28,7 @@ const ForgotPassword = () => {
   const setLoading = useAppStore((s) => s.setLoading);
   //Reset Password Handler
   const handleResetPassword = async () => {
+    toast.hideAll();
     if (!forgotPasswordEmail.trim()) {
       toast.show("Please enter email.", { type: "warning" });
       return;
