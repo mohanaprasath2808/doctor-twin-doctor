@@ -42,6 +42,12 @@ import MyRecords from "../../screens/App/MyRecords/MyRecords";
 import ImmunizationRecord from "../../screens/App/MyRecords/ImmunizationRecord";
 import FormsLibrary from "../../screens/App/MyRecords/FormsLibrary";
 import PracticeDocuments from "../../screens/App/MyRecords/PracticeDocuments";
+import UploadCenter from "../../screens/App/MyRecords/UploadCenter";
+import RequestRecords from "../../screens/App/MyRecords/RequestRecords";
+import ProblemList from "../../screens/App/MyRecords/ProblemList";
+import ProblemDetail from "../../screens/App/MyRecords/ProblemDetail";
+import Allergies from "../../screens/App/MyRecords/Allergies";
+import AllergyDetail from "../../screens/App/MyRecords/AllergyDetail";
 
 const Stack = createStackNavigator();
 
@@ -111,6 +117,12 @@ const AppStack = () => {
       />
       <Stack.Screen name={navigationStrings.FORMS_LIBRARY} component={FormsLibrary} />
       <Stack.Screen name={navigationStrings.PRACTICE_DOCUMENTS} component={PracticeDocuments} />
+      <Stack.Screen name={navigationStrings.UPLOAD_CENTER} component={UploadCenter} />
+      <Stack.Screen name={navigationStrings.REQUEST_RECORDS} component={RequestRecords} />
+      <Stack.Screen name={navigationStrings.PROBLEM_LIST} component={ProblemList} />
+      <Stack.Screen name={navigationStrings.PROBLEM_DETAIL} component={ProblemDetail} />
+      <Stack.Screen name={navigationStrings.ALLERGIES} component={Allergies} />
+      <Stack.Screen name={navigationStrings.ALLERGY_DETAIL} component={AllergyDetail} />
       <Stack.Screen name={navigationStrings.LAB_REQUEST} component={LabRequest} />
       <Stack.Screen name={navigationStrings.LAB_RESULTS} component={LabResults} />
       <Stack.Screen

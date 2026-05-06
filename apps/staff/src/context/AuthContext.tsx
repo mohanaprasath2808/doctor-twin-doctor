@@ -66,6 +66,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       cancelled = true;
     };
   }, []);
+
   const login = async (
     email: string,
     password: string,
@@ -102,9 +103,10 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
 
       console.log(response?.data, "response");
 
-    } catch (error) {
-      console.error(error);
-      throw error;
+    } catch (error: any) {
+      const errorData = error?.response?.data;
+      console.error(errorData, "error in login");
+      toast.show(errorData?.error || "Login failed", { type: "danger" });
     } finally {
       setIsLoading(false);
     }
@@ -132,11 +134,12 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         type: "danger",
       });
       return { ok: false, expires_at: null };
-    } catch (error) {
-      toast.show("Failed to send reset password email", {
+    } catch (error: any) {
+      const errorData = error?.response?.data;
+      console.error(errorData, "error in resendOtp");
+      toast.show(errorData?.error || "Failed to send reset password email", {
         type: "danger",
       });
-      console.error(error);
       return { ok: false, expires_at: null };
     } finally {
       setIsLoading(false);
@@ -168,8 +171,10 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       }
       toast.show("Invalid or expired OTP", { type: "danger" });
       return { verified: false, token: null, expires_at: null };
-    } catch (error) {
-      toast.show("Could not verify OTP. Try again.", { type: "danger" });
+    } catch (error: any) {
+      const errorData = error?.response?.data;
+      console.error(errorData, "error in verifyOtp");
+      toast.show(errorData?.error || "Could not verify OTP. Try again.", { type: "danger" });
       return { verified: false, token: null, expires_at: null };
     } finally {
       setIsLoading(false);
@@ -211,8 +216,9 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       return false;
     }
     catch (error: any) {
-      toast.show(error?.detail || error?.message || "Failed to reset password", { type: "danger" });
-      console.log(error?.message, error?.status);
+      const errorData = error?.response?.data;
+      console.error(errorData, "error in resetPassword");
+      toast.show(errorData?.error || "Failed to reset password", { type: "danger" });
       return false;
     }
     finally {
