@@ -83,7 +83,7 @@ const OtpVerification = () => {
             <OtpTextInput otp={otp} setOtp={setOtp} />
           </View>
 
-          <OtpTimer initialSeconds={30} onResend={() => { }} />
+          <OtpTimer initialSeconds={30} onResend={() => {}} />
 
           <ReusableButton title="Verify" onPress={handleVerify} containerStyle={styles.verifyBtn} />
         </ScrollView>
