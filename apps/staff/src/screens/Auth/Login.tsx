@@ -47,18 +47,11 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    try {
-      const { isValid, email, password } = handleValidate();
-      if (!isValid) {
-        return;
-      }
-      await login(email ?? '', password ?? '');
-    } catch (error) {
-      toast.show("Invalid email or password", {
-        type: "danger",
-      });
-      console.error(error);
+    const { isValid, email, password } = handleValidate();
+    if (!isValid) {
+      return;
     }
+    await login(email ?? '', password ?? '');
   };
 
   const handleValidate = () => {

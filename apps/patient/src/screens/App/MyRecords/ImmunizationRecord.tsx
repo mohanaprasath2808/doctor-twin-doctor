@@ -28,75 +28,79 @@ const ImmunizationRecord = () => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.header}>
-          <IconComponent
-            icon={<LeftArrowIcon width={18} height={18} />}
-            width={40}
-            height={40}
-            radius={20}
-            onPress={() => navigation.goBack()}
-          />
-          <Text style={styles.headerTitle}>Immunization Record</Text>
-          <View style={styles.notifWrap}>
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
             <IconComponent
-              icon={<NotificationIcon width={18} height={18} />}
+              icon={<LeftArrowIcon width={18} height={18} />}
               width={40}
               height={40}
               radius={20}
-              onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
+              onPress={() => navigation.goBack()}
             />
-            <View style={styles.notifDot} />
-          </View>
-        </View>
-
-        <ProfileAvatar
-          overlaySource={OverlayImage}
-          imageSource={DoctorTempImage}
-          containerStyle={styles.avatarWrap}
-          wrapperStyle={styles.avatarWrapper}
-          overlayStyle={styles.avatarOverlay}
-          imageStyle={styles.avatar}
-        />
-
-        <Text style={styles.subGreeting}>Here&apos;s your immunization record.</Text>
-
-        <View style={styles.cardsBlock}>
-          {rows.map((row) => (
-            <NeumorphicCard
-              key={row.title}
-              outerStyle={styles.cardOuter}
-              innerStyle={styles.cardInner}
-              borderRadius={10}
-            >
-              <InnerShadowIcon
-                icon={<InsuranceIcon width={18} height={18} />}
-                size={40}
+            <Text style={styles.headerTitle}>Immunization Record</Text>
+            <View style={styles.notifWrap}>
+              <IconComponent
+                icon={<NotificationIcon width={18} height={18} />}
+                width={40}
+                height={40}
                 radius={20}
-                surfaceColor={COLORS.INNER_SURFACE}
+                onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
               />
-              <View style={styles.cardTextWrap}>
-                <Text style={styles.cardTitle}>{row.title}</Text>
-                <Text style={styles.cardSubtitle}>{row.subtitle}</Text>
-              </View>
-            </NeumorphicCard>
-          ))}
-        </View>
+              <View style={styles.notifDot} />
+            </View>
+          </View>
 
-        <AppButton
-          text="Export record"
-          borderWidth={1}
-          borderColor={COLORS.PRIMARY}
-          bgColor={COLORS.SURFACE}
-          textStyle={styles.exportText}
-          style={styles.exportBtn}
-          onPress={() => undefined}
-        />
-      </ScrollView>
+          <ProfileAvatar
+            overlaySource={OverlayImage}
+            imageSource={DoctorTempImage}
+            containerStyle={styles.avatarWrap}
+            wrapperStyle={styles.avatarWrapper}
+            overlayStyle={styles.avatarOverlay}
+            imageStyle={styles.avatar}
+          />
+
+          <Text style={styles.subGreeting}>Here&apos;s your immunization record.</Text>
+
+          <View style={styles.cardsBlock}>
+            {rows.map((row) => (
+              <NeumorphicCard
+                key={row.title}
+                outerStyle={styles.cardOuter}
+                innerStyle={styles.cardInner}
+                borderRadius={10}
+              >
+                <InnerShadowIcon
+                  icon={<InsuranceIcon width={18} height={18} />}
+                  size={40}
+                  radius={20}
+                  surfaceColor={COLORS.INNER_SURFACE}
+                />
+                <View style={styles.cardTextWrap}>
+                  <Text style={styles.cardTitle}>{row.title}</Text>
+                  <Text style={styles.cardSubtitle}>{row.subtitle}</Text>
+                </View>
+              </NeumorphicCard>
+            ))}
+          </View>
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <AppButton
+            text="Export record"
+            borderWidth={1}
+            borderColor={COLORS.PRIMARY}
+            bgColor={COLORS.SURFACE}
+            textStyle={styles.exportText}
+            style={[styles.exportBtn, styles.exportBtnFooter]}
+            onPress={() => undefined}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -105,8 +109,9 @@ export default ImmunizationRecord;
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.SURFACE },
+  container: { flex: 1 },
   scroll: { flex: 1 },
-  content: { paddingHorizontal: 16, paddingBottom: 24 },
+  content: { paddingHorizontal: 16, paddingBottom: 120 },
   header: {
     marginTop: Platform.OS === "ios" ? 4 : 8,
     flexDirection: "row",
@@ -157,6 +162,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
   },
   cardsBlock: {
+    flex: 1,
     marginTop: 18,
     gap: 12,
   },
@@ -192,6 +198,15 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 48,
     borderRadius: 24,
+  },
+  exportBtnFooter: {
+    marginTop: 0,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 12,
+    backgroundColor: COLORS.SURFACE,
   },
   exportText: {
     color: COLORS.PRIMARY,

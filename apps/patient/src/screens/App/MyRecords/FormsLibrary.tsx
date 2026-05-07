@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY_60,
   },
   downloadBtn: {
-    width: 92,
-    height: 36,
+    width: 78,
+    height: 28,
     borderRadius: 18,
   },
   downloadText: {
