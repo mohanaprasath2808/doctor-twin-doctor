@@ -75,7 +75,10 @@ const OtpVerification = () => {
           return;
         }
         if (loginOtpNext === "faceId") {
-          setIsLogin(true);
+          // setIsLogin(true);
+          navigation.navigate(navigationStrings.ONBOARDING_STACK, {
+            screen: navigationStrings.START_SHIFT_COVERAGE,
+          });
           return;
         }
         navigation.navigate(navigationStrings.SECURE_LOGIN);
@@ -106,11 +109,17 @@ const OtpVerification = () => {
           if (await hasCompletedOnboarding()) {
             navigation.navigate(navigationStrings.SECURE_LOGIN);
           } else {
-            setIsLogin(true);
+            // setIsLogin(true);
+            navigation.navigate(navigationStrings.ONBOARDING_STACK, {
+              screen: navigationStrings.START_SHIFT_COVERAGE,
+            });
           }
           return;
         default:
-          setIsLogin(true);
+          // setIsLogin(true);
+          navigation.navigate(navigationStrings.ONBOARDING_STACK, {
+            screen: navigationStrings.START_SHIFT_COVERAGE,
+          });
       }
     } catch (e) {
       const message = e instanceof Error ? e.message : "Something went wrong.";

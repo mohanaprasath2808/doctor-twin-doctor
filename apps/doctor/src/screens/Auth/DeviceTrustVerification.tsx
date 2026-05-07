@@ -24,6 +24,7 @@ import {
 import { useToast } from "react-native-toast-notifications";
 import { useAppStore } from "../../store/useAppStore";
 import type { DeviceTrustVerificationRouteParams } from "../../types/authRoute";
+import { hasCompletedOnboarding } from "../../utils/authStorage";
 const DeviceTrustVerification = () => {
   const toast = useToast();
   const navigation = useNavigation<any>();
@@ -60,7 +61,17 @@ const DeviceTrustVerification = () => {
       const response = await handleVerifyBackupCode(userData?.email, otp);
       if (response.ok) {
         toast.show("Backup code verified successfully.", { type: "success" });
-        setIsLogin(true);
+        if (await hasCompletedOnboarding()) {
+          // setIsLogin(true);
+          navigation.navigate(navigationStrings.ONBOARDING_STACK, {
+            screen: navigationStrings.START_SHIFT_COVERAGE,
+          });
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: navigationStrings.ONBOARDING_STACK }],
+          });
+        }
       } else {
         toast.show("Failed to verify backup code. Please try again.", { type: "danger" });
       }

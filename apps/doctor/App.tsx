@@ -11,6 +11,7 @@ import { COLORS } from "./src/constants/theme";
 import OfflineMode from "./src/screens/Auth/OfflineMode";
 import { useFonts } from "expo-font";
 import NeomorphicToast from "./src/neomorphism/NeomorphicToast";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const App = () => {
   const [isOffline, setIsOffline] = useState(false);
@@ -130,21 +131,23 @@ const App = () => {
         danger: (toast) => <NeomorphicToast toast={toast} variant="danger" />,
       }}
     >
-      <StatusBar style="light" backgroundColor={COLORS.PRIMARY} />
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <NavigationContainer>
-            <Router />
-            <Modal
-              visible={shouldShowOfflineMode}
-              animationType="fade"
-              presentationStyle="fullScreen"
-            >
-              <OfflineMode onClose={() => setIsOfflineDismissed(true)} />
-            </Modal>
-          </NavigationContainer>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
+      <SafeAreaProvider>
+        <StatusBar style="light" backgroundColor={COLORS.PRIMARY} />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <NavigationContainer>
+              <Router />
+              <Modal
+                visible={shouldShowOfflineMode}
+                animationType="fade"
+                presentationStyle="fullScreen"
+              >
+                <OfflineMode onClose={() => setIsOfflineDismissed(true)} />
+              </Modal>
+            </NavigationContainer>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
     </ToastProvider>
   );
 };
