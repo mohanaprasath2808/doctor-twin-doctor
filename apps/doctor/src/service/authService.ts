@@ -22,7 +22,6 @@ type JwtPayload = { exp?: number };
 export const generateNewAccessToken = async (): Promise<string | null> => {
   const refreshToken = await getRefreshToken();
   if (!refreshToken) return null;
-
   const response = await fetch(REFRESH_TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -191,6 +190,7 @@ export const handleSetUserPin = async (user_id: string, pin: string) => {
 //GET USER
 export const handleGetUser = async () => {
   const accessToken = await validateToken();
+
   if (!accessToken) return {} as ApiSessionUser;
   const response = await fetch(GET_USER_URL, {
     method: "GET",
@@ -206,7 +206,6 @@ export const handleGetUser = async () => {
   } catch {
     // non-JSON body
   }
-
   if (data) {
     const anyData: any = data;
     const me: any = anyData?.data;

@@ -9,7 +9,7 @@ export const SET_USER_PIN_URL = `${BASE_URL}/auth/set-pin`;
 export const VERIFY_USER_PIN_URL = `${BASE_URL}/auth/verify-pin`;
 export const FETCH_BACKUP_CODES_URL = `${BASE_URL}/auth/backup-code/generate`;
 export const VERIFY_BACKUP_CODE_URL = `${BASE_URL}/auth/backup-code/verify`;
-export const REFRESH_TOKEN_URL = `${BASE_URL}/auth/refresh-token`;
+export const REFRESH_TOKEN_URL = `${BASE_URL}/auth/refresh`;
 
 //USER APIs
 export const UPDATE_USER_URL = `${BASE_URL}/auth/user`;

@@ -132,7 +132,7 @@ const App = () => {
       }}
     >
       <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor={COLORS.PRIMARY} />
+        <StatusBar style="dark" backgroundColor={COLORS.PRIMARY} />
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
             <NavigationContainer>
