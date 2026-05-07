@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import OtpTextInput from "../../components/Auth/OtpTextInput";
@@ -19,20 +19,122 @@ import LeftArrow from "../../assets/icons/leftArrow.svg";
 import { AuthContext } from "../../context/AuthContext";
 import navigationStrings from "../../constants/navigationStrings";
 import IconComponent from "../../neomorphism/IconComponent";
+import { UserPinRouteParams } from "../../types/authRoute";
+import { useToast } from "react-native-toast-notifications";
+import { getOnboardingCompleted } from "../../utils/authStorage";
 
 const UserPinScreen = () => {
+  const toast = useToast();
   const navigation = useNavigation<any>();
+  const route = useRoute();
+  const { mode = "verify" } = (route.params ?? {}) as UserPinRouteParams;
   const [pin, setPin] = useState("");
-  const auth = useContext(AuthContext);
-  if (!auth) {
+  const [submitting, setSubmitting] = useState(false);
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
     throw new Error("UserPin requires AuthContextProvider");
   }
-  const { setIsLogin } = auth;
+  const {
+    setIsLogin,
+    localUserData,
+    handleSetUserPin,
+    handleVerifyUserPin,
+    validateToken,
+    handleResendOtp,
+  } = authContext;
 
-  const handleContinue = () => {
-    navigation.navigate(navigationStrings.VERIFY_IDENTITY);
+  const title = mode === "create" ? "Set your User PIN" : "Enter your User PIN";
+  const subtitle =
+    mode === "create"
+      ? "Enter the 4-digit code to set your PIN"
+      : "Enter your 4-digit PIN to continue";
+
+  const requestSetUserPin = async () => {
+    toast.hideAll();
+    if (pin.trim().length !== 4) {
+      toast.show("Please enter a valid 4-digit PIN.", { type: "warning" });
+      return;
+    }
+    const userId = localUserData?.user_id;
+    if (!userId) {
+      toast.show("User not found. Please login again.", { type: "warning" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const response: any = await handleSetUserPin(userId, pin);
+      console.log(response, "response in requestSetUserPin");
+      if (response.ok) {
+        toast.show("User pin set successfully.", { type: "success" });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: navigationStrings.CHOOSE_LOGIN_METHOD }],
+        });
+      }
+    } catch (error: any) {
+      toast.show("Something went wrong. Try again.", { type: "danger" });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
+  const requestVerifyUserPin = async () => {
+    toast.hideAll();
+    if (pin.trim().length !== 4) {
+      toast.show("Please enter a valid 4-digit PIN.", { type: "warning" });
+      return;
+    }
+    const userId = localUserData?.user_id;
+    if (!userId) {
+      toast.show("User not found. Please login again.", { type: "warning" });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const response: any = await handleVerifyUserPin(userId, pin);
+      console.log(response, "response in requestVerifyUserPin");
+      if (response.ok) {
+        toast.show("User pin verified successfully.", { type: "success" });
+        const onboardingCompleted = await getOnboardingCompleted();
+        if (String(onboardingCompleted) === "true") {
+          setIsLogin(true);
+          return;
+        }
+        navigation.navigate(navigationStrings.VERIFY_IDENTITY);
+        return;
+      }
+      toast.show(response?.error || "Invalid PIN", { type: "danger" });
+    } catch (error: any) {
+      toast.show("Something went wrong. Try again.", { type: "danger" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  //handle forgot pin
+  const handleForgotPin = async () => {
+    toast.hideAll();
+    const accessToken = await validateToken();
+    if (!accessToken) {
+      toast.show("Please login again", { type: "danger" });
+      return;
+    }
+    try {
+      const response: any = await handleResendOtp(localUserData?.phone, "pinOtp");
+      if (response?.ok) {
+        toast.show(`Otp code : ${response?.data?.otp}`, { type: "success" });
+        navigation.navigate(navigationStrings.OTP_VERIFICATION, {
+          otpType: "pinOtp",
+          phone: localUserData?.phone,
+          forgotPin: true,
+        });
+      } else {
+        toast.show(response?.error || "Something went wrong. Try again.", { type: "danger" });
+      }
+    } catch (error: any) {
+      toast.show("Something went wrong. Try again.", { type: "danger" });
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -55,30 +157,27 @@ const UserPinScreen = () => {
             onPress={() => navigation.goBack()}
           />
 
-          <Text style={styles.title}>Set your User PIN</Text>
-          <Text style={styles.subTitle}>Enter the 4-digit code to set your PIN</Text>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subTitle}>{subtitle}</Text>
 
           <View style={styles.pinContainer}>
             <OtpTextInput otp={pin} setOtp={setPin} />
           </View>
 
           <ReusableButton
-            title="Continue"
-            onPress={handleContinue}
+            title={mode === "create" ? "Set PIN" : "Verify PIN"}
+            onPress={mode === "create" ? requestSetUserPin : requestVerifyUserPin}
             containerStyle={styles.ctaBtn}
           />
 
-          <View style={styles.footerRow}>
-            <Text style={styles.footerMuted}>Do you remember PIN? </Text>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => {
-                /** Wire to Forgot PIN flow when that screen exists in AuthStack. */
-              }}
-            >
-              <Text style={styles.footerLink}>Forgot PIN</Text>
-            </TouchableOpacity>
-          </View>
+          {mode === "verify" && (
+            <View style={styles.footerRow}>
+              <Text style={styles.footerMuted}>Do you remember PIN? </Text>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => handleForgotPin()}>
+                <Text style={styles.footerLink}>Forgot PIN</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

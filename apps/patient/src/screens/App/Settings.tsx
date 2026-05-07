@@ -58,7 +58,7 @@ const Settings = () => {
   if (!auth) {
     throw new Error("Settings must be used within AuthContextProvider");
   }
-  const { setIsLogin } = auth;
+  const { logout } = auth;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -128,7 +128,7 @@ const Settings = () => {
         <View style={styles.logoutSection}>
           <ReusableButton
             title="Logout"
-            onPress={() => setIsLogin(false)}
+            onPress={() => void logout()}
             width="100%"
             gradientColors={[COLORS.CRITICAL, "#DC2626"]}
           />

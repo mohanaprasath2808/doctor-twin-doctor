@@ -31,6 +31,8 @@ import DropDown from "../../assets/icons/dropDown.svg";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
 import { AuthContext } from "../../context/AuthContext";
 import IconComponent from "../../neomorphism/IconComponent";
+import { AUTH_LOCAL_STORAGE_KEYS } from "../../utils/authStorage";
+import { setSecureItem } from "../../utils/secureStorge";
 
 const DISPLAY_NAME = "Sarah";
 
@@ -74,7 +76,8 @@ const SetPreferences = () => {
     setCommunication((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    await setSecureItem(AUTH_LOCAL_STORAGE_KEYS.ONBOARDING_COMPLETED, "true");
     setIsLogin(true);
   };
 
@@ -86,8 +89,6 @@ const SetPreferences = () => {
         keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 0}
       >
         <View style={styles.column}>
-
-
           <ScrollView
             style={styles.scroll}
             bounces={false}
@@ -114,7 +115,6 @@ const SetPreferences = () => {
               overlayStyle={styles.avatarOverlay}
               imageStyle={styles.avatarImage}
             />
-
 
             <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.pharmacyCardInner}>
               <Text style={styles.blockTitle}>Pharmacy</Text>
@@ -152,7 +152,10 @@ const SetPreferences = () => {
               <NeumorphicSwitch value={notificationsOn} onValueChange={setNotificationsOn} />
             </NeumorphicCard>
 
-            <NeumorphicCard outerStyle={[styles.cardOuter, { marginTop: 20 }]} innerStyle={styles.commCardInner}>
+            <NeumorphicCard
+              outerStyle={[styles.cardOuter, { marginTop: 20 }]}
+              innerStyle={styles.commCardInner}
+            >
               <Text style={[styles.blockTitle, { marginHorizontal: 10 }]}>Communication</Text>
 
               <CommRow
@@ -241,7 +244,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 16,
     paddingTop: 12,
-    backgroundColor: COLORS.SURFACE
+    backgroundColor: COLORS.SURFACE,
   },
   header: {
     flexDirection: "row",

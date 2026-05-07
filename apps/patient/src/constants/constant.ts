@@ -16,3 +16,14 @@ export const formatDateForApi = (date: Date) => {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
+
+// format date coming from API (YYYY-MM-DD) to DD/MM/YYYY
+export const formatDobFromApi = (dateStr?: string | null) => {
+  if (!dateStr) return "";
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(dateStr));
+  if (match) {
+    const [, yyyy, mm, dd] = match;
+    return `${dd}/${mm}/${yyyy}`;
+  }
+  return String(dateStr);
+};
