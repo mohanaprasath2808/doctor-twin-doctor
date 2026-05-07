@@ -30,6 +30,7 @@ const UserPinScreen = () => {
   const { mode = "verify" } = (route.params ?? {}) as UserPinRouteParams;
   const [pin, setPin] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [forgotPinLoading, setForgotPinLoading] = useState(false);
   const authContext = useContext(AuthContext);
   if (!authContext) {
     throw new Error("UserPin requires AuthContextProvider");
@@ -114,9 +115,11 @@ const UserPinScreen = () => {
   //handle forgot pin
   const handleForgotPin = async () => {
     toast.hideAll();
+    setForgotPinLoading(true);
     const accessToken = await validateToken();
     if (!accessToken) {
       toast.show("Please login again", { type: "danger" });
+      setForgotPinLoading(false);
       return;
     }
     try {
@@ -133,8 +136,20 @@ const UserPinScreen = () => {
       }
     } catch (error: any) {
       toast.show("Something went wrong. Try again.", { type: "danger" });
+    } finally {
+      setForgotPinLoading(false);
     }
   };
+  const ctaTitle =
+    forgotPinLoading
+      ? "Loading..."
+      : submitting
+        ? mode === "create"
+          ? "Setting PIN…"
+          : "Verifying PIN…"
+        : mode === "create"
+          ? "Set PIN"
+          : "Verify PIN";
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -165,8 +180,9 @@ const UserPinScreen = () => {
           </View>
 
           <ReusableButton
-            title={mode === "create" ? "Set PIN" : "Verify PIN"}
+            title={ctaTitle}
             onPress={mode === "create" ? requestSetUserPin : requestVerifyUserPin}
+            disabled={submitting || forgotPinLoading}
             containerStyle={styles.ctaBtn}
           />
 

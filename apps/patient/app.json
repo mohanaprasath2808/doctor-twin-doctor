@@ -8,16 +8,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.doctortwinpatient"
+      "bundleIdentifier": "com.solimancare.patient"
     },
     "android": {
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.doctortwinpatient"
+      "package": "com.solimancare.patient"
     },
-    "plugins": [
-      "expo-font",
-      "@react-native-community/datetimepicker"
-    ]
+    "plugins": ["expo-font", "@react-native-community/datetimepicker"]
   }
 }

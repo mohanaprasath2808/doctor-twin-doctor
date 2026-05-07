@@ -21,4 +21,7 @@ export const COLORS = {
   /** Selected filter / DeltaGradientBadge */
   BADGE_SELECTED_BG: "#CFEFDC",
   BADGE_INNER_SHADOW_MINT: "#B8E3CC",
+  TOAST_WARNING_BG: "#FFFDF8",
+  TOAST_ERROR_BG: "#FDECEC",
+  TOAST_SUCCESS_BG: "#D3FFF1",
 };

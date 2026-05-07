@@ -26,8 +26,8 @@ const DISPLAY_NAME = "Lorena";
 const Login = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const authContext = useContext(AuthContext);
-  const [email, setEmail] = useState("jeevananthan@apzzo.com");
-  const [password, setPassword] = useState("Jeeva2002$$$");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [secure, setSecure] = useState(true);
   const toast = useToast();
   const greet = useMemo(() => greetingLabel(), []);
@@ -51,7 +51,7 @@ const Login = () => {
     if (!isValid) {
       return;
     }
-    await login(email ?? '', password ?? '');
+    await login(email ?? "", password ?? "");
   };
 
   const handleValidate = () => {
@@ -79,7 +79,7 @@ const Login = () => {
       return { isValid: false, email: null, password: null };
     }
     return { isValid: true, email: trimmedEmail, password: trimmedPassword };
-  }
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -138,7 +138,6 @@ const Login = () => {
               <Text style={styles.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
 
-
             <ReusableButton
               title={isLoading ? "Logging in..." : "Login"}
               disabled={isLoading}
@@ -147,6 +146,11 @@ const Login = () => {
               gradientColors={["#A7F3D0", "#166534"]}
               backgroundColor={COLORS.PRIMARY}
             />
+
+            <View style={styles.signupContainer}>
+              <Text style={styles.signupText}>Email: jeevananthan@apzzo.com</Text>
+              <Text style={styles.signupText}>Password: development2@dev</Text>
+            </View>
           </View>
         </View>
       </KeyboardAvoidingWrapper>
@@ -252,5 +256,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.PRIMARY,
     fontWeight: "500",
+  },
+  signupContainer: {
+    paddingTop: 10,
+    flexDirection: "column",
+    paddingBottom: 24,
+  },
+  signupText: {
+    textAlign: "center",
+    color: COLORS.TEXT_60,
+    fontSize: 14,
+    fontWeight: "400",
   },
 });
