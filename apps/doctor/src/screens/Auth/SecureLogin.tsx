@@ -140,7 +140,10 @@ const SecureLogin = () => {
 
       if (result.success) {
         if (await hasCompletedOnboarding()) {
-          setIsLogin(true);
+          // setIsLogin(true);
+          navigation.navigate(navigationStrings.ONBOARDING_STACK, {
+            screen: navigationStrings.START_SHIFT_COVERAGE,
+          });
         } else {
           navigation.navigate(navigationStrings.ONBOARDING_STACK);
         }

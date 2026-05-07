@@ -90,7 +90,10 @@ const SetUserPin = () => {
       console.log(response, "response in requestVerifyUserPin");
       if (response.ok) {
         if (await hasCompletedOnboarding()) {
-          setIsLogin(true);
+          // setIsLogin(true);
+          navigation.navigate(navigationStrings.ONBOARDING_STACK, {
+            screen: navigationStrings.START_SHIFT_COVERAGE,
+          });
         } else {
           // Onboarding not completed → go to HIPAA gate first.
           navigation.navigate(navigationStrings.ONBOARDING_STACK);
