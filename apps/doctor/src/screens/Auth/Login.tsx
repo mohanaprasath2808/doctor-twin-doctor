@@ -134,6 +134,11 @@ const Login = () => {
                 textColor="#FFFFFF"
               />
             </View>
+
+            <View style={[styles.signupContainer, { paddingTop: 20, marginHorizontal: 16 }]}>
+              <Text style={styles.signupText}>Email:  development@gmail.com</Text>
+              <Text style={styles.signupText}>Password: Development@dev</Text>
+            </View>
           </View>
         </View>
       </KeyboardAvoidingWrapper>
@@ -213,9 +218,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   signupContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: "column",
     paddingBottom: 24,
   },
   signupText: {

@@ -28,11 +28,13 @@ const SetUserPin = () => {
   const [submitting, setSubmitting] = useState(false);
   const [pin, setPin] = useState("");
   const [autoNavigate, setAutoNavigate] = useState(false);
+  const [forgotPinLoading, setForgotPinLoading] = useState(false);
   //store state
   const userData = useAuthStore((s) => s.userData);
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const loading = useAppStore((s) => s.loading);
   const setLoading = useAppStore((s) => s.setLoading);
+  const otpType = "pinOtp";
 
   const title = mode === "verify" ? "Enter your User PIN" : "Set your User PIN";
   const subtitle =
@@ -115,7 +117,34 @@ const SetUserPin = () => {
   };
 
   //handle forgot pin
-  const handleForgotPin = () => {};
+  const handleForgotPin = async () => {
+    toast.hideAll();
+    setForgotPinLoading(true);
+    setLoading(true);
+    const email = userData?.email?.trim();
+    if (!email) {
+      toast.show("No saved email. Sign in with Login first.", { type: "warning" });
+      setLoading(false);
+      setForgotPinLoading(false);
+      return;
+    }
+    try {
+      const result: any = await requestResendOtp(email, otpType);
+      if (result?.ok) {
+        toast.show(`Otp code: ${result.data.data.otp}`, { type: "success" });
+        navigation.replace(navigationStrings.OTP_VERIFICATION, { email, source: "pinOtp", loginOtpNext: "userPin" });
+      } else {
+        toast.show("Could not resend code. Try again.", { type: "danger" });
+      }
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "Something went wrong.";
+      toast.show(message, { type: "danger" });
+    } finally {
+      setLoading(false);
+      setForgotPinLoading(false);
+    }
+
+  };
 
   //automatic navigation to Device Trust Verification Screen
   useEffect(() => {
@@ -145,7 +174,9 @@ const SetUserPin = () => {
 
       <ReusableButton
         title={
-          submitting || loading
+          forgotPinLoading
+            ? "Loading..."
+            : submitting || loading
             ? mode === "create"
               ? "Setting PIN…"
               : "Verifying PIN…"
@@ -154,7 +185,7 @@ const SetUserPin = () => {
               : "Verify PIN"
         }
         onPress={mode === "create" ? requestSetUserPin : requestVerifyUserPin}
-        disabled={submitting || loading}
+        disabled={submitting || loading || forgotPinLoading}
         containerStyle={styles.continueBtn}
         backgroundColor="#2E3A8C"
         textColor="#FFFFFF"

@@ -27,6 +27,8 @@ import MicOutlineIcon from "../../assets/icon/micOutlineIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
 import IconComponent from "../../neomorphism/IconComponent";
+import AppButton from "../../components/Common/AppButton";
+import { useAuthStore } from "../../store/useAuthStore";
 // ─── Grid items ──────────────────────────────────────────────────────────────
 type GridItem = {
   id: number;
@@ -191,7 +193,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -220,6 +222,22 @@ const Home = () => {
           <Text style={styles.morningBriefText}>Morning Brief</Text>
         </NeumorphicCard>
       </TouchableOpacity> */}
+    </View>
+  );
+
+  const renderListFooter = () => (
+    <View style={styles.listFooter}>
+      <AppButton
+        text="Logout"
+        onPress={() => { useAuthStore.getState().logout(); }}
+        width="100%"
+        height={50}
+        borderRadius={25}
+        borderWidth={1}
+        borderColor={COLORS.ALERT}
+        bgColor={COLORS.SURFACE}
+        textStyle={styles.logoutButtonText}
+      />
     </View>
   );
   const renderItem = ({ item }: { item: GridItem }) => (
@@ -273,6 +291,7 @@ const Home = () => {
         columnWrapperStyle={styles.gridRow}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={renderListHeader}
+        ListFooterComponent={renderListFooter}
         renderItem={renderItem}
       />
     </SafeAreaView>
@@ -296,6 +315,11 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     width: "100%",
+  },
+  listFooter: {
+    width: "100%",
+    paddingTop: 12,
+    paddingBottom: 16,
   },
 
   // Header (horizontal padding comes from scrollContent only — keeps one edge line with the grid)
@@ -468,5 +492,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
+  },
+  logoutButtonText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: COLORS.ALERT,
   },
 });

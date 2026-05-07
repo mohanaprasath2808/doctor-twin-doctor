@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as LocalAuthentication from "expo-local-authentication";
-import { hasAuthSession, hasCompletedOnboarding } from "../../utils/authStorage";
+import { getStoredSessionUser, hasAuthSession, hasCompletedOnboarding } from "../../utils/authStorage";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -29,6 +29,7 @@ import PasswordIcon from "../../assets/icon/lockIcon.svg";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
 import { useToast } from "react-native-toast-notifications";
+import { ApiSessionUser } from "../../types/session";
 const FACE_ID_LABEL = Platform.OS === "ios" ? "Face ID" : "Face unlock";
 
 const FACE_PROMPT = Platform.OS === "ios" ? "Unlock with Face ID" : "Unlock with face unlock";
@@ -60,7 +61,6 @@ const SecureLogin = () => {
   const toast = useToast();
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const userData = useAuthStore((s) => s.userData);
-  console.log(userData, "userData in SecureLogin Screen");
   const getUser = useAuthStore((s) => s.getUser);
   const logout = useAuthStore((s) => s.logout);
   const loading = useAppStore((s) => s.loading);
@@ -194,9 +194,15 @@ const SecureLogin = () => {
           await onFaceIdPress();
         })();
         return;
-      case "sso-login":
+      case "sso-login": {
+        const email = userData?.email?.trim();
+        if (!email) {
+          toast.show("No saved email. Sign in with Login first.", { type: "warning" });
+          return;
+        }
         navigation.navigate(navigationStrings.SSO_SIGN_IN, { email: userData?.email });
         return;
+      }
       case "user-pin": {
         void (async () => {
           const email = userData?.email?.trim();

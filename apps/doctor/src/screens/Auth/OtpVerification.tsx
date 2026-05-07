@@ -28,6 +28,7 @@ const OtpVerification = () => {
   const [otp, setOtp] = useState("");
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const setUserData = useAuthStore((s) => s.setUserData);
+
   const otpType =
     source === "faceId" || source === "pinOtp" || source === "backupcode" ? source : "login";
 

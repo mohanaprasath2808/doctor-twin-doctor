@@ -17,6 +17,7 @@ export async function getRefreshToken(): Promise<string | null> {
 
 export async function getStoredSessionUser(): Promise<ApiSessionUser | null> {
   const raw = await getSecureItem(AUTH_STORAGE_KEYS.USER_DATA);
+
   if (!raw) return null;
   try {
     return JSON.parse(raw) as ApiSessionUser;
