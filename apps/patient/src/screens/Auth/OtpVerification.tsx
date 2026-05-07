@@ -10,47 +10,146 @@ import ReusableButton from "../../neomorphism/ReusableButton";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
-import type { OtpVerificationFlow } from "../../constants/authNavigation";
 import { AuthContext } from "../../context/AuthContext";
 import IconComponent from "../../neomorphism/IconComponent";
-
-function resolveFlow(routeParams: unknown): OtpVerificationFlow {
-  const raw = routeParams as { flow?: OtpVerificationFlow } | undefined;
-  return raw?.flow ?? "signup";
-}
+import type { OtpVerificationRouteParams } from "../../types/authRoute";
+import { useToast } from "react-native-toast-notifications";
+import { AUTH_LOCAL_STORAGE_KEYS, getOnboardingCompleted } from "../../utils/authStorage";
+import { setSecureItem } from "../../utils/secureStorge";
 
 const OtpVerification = () => {
+  const toast = useToast();
   const navigation = useNavigation<any>();
+  //route
   const route = useRoute();
+  const routeData = route.params as OtpVerificationRouteParams;
+  const phone = routeData?.phone;
+  const otpType = routeData?.otpType;
+  const forgotPin = routeData?.forgotPin;
+  const loginWithOtp = routeData?.loginWithOtp;
+  //local state
   const [otp, setOtp] = useState("");
-
+  //CONTEXT
   const authContext = useContext(AuthContext);
   if (!authContext) {
     throw new Error("OtpVerification must be used within AuthContextProvider");
   }
-  const { setIsLogin } = authContext;
-
-  const flow = resolveFlow(route.params);
+  const {
+    setIsLogin,
+    handleVerifyOtp,
+    handleResendOtp,
+    setLoading,
+    loading,
+    setAccessToken,
+    setRefreshToken,
+    setLocalUserData,
+  } = authContext;
 
   useEffect(() => {
     setOtp("");
-  }, [flow]);
+  }, [otpType]);
 
-  const handleVerify = () => {
-    switch (flow) {
-      case "userPin":
-        navigation.navigate(navigationStrings.USER_PIN);
-        return;
-      case "signup":
-      case "otpLogin":
-        navigation.navigate(navigationStrings.CHOOSE_LOGIN_METHOD);
-        return;
-      case "otpFromChooser":
-      case "faceId":
-        setIsLogin(true);
-        return;
-      default:
-        navigation.navigate(navigationStrings.CHOOSE_LOGIN_METHOD);
+  const handleVerify = async () => {
+    toast.hideAll();
+    if (otp.trim().length !== 4) {
+      toast.show("Please enter a 4-digit OTP", { type: "warning" });
+      return;
+    }
+    if (!phone?.trim()) {
+      toast.show("Missing phone number. Please go back and try again.", { type: "danger" });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const result: any = await handleVerifyOtp(phone, otp, otpType);
+      if (result?.ok) {
+        if (otpType === "login" || otpType === "signup") {
+          const accessToken = result?.data?.access_token;
+          const refreshToken = result?.data?.refresh_token;
+          const localUserData = result?.data?.user;
+
+          if (!accessToken || !refreshToken || !localUserData) {
+            toast.show("Session could not be saved. Try again.", { type: "danger" });
+            return;
+          }
+
+          // SecureStore values must be strings; save first, then show success.
+          await setSecureItem(AUTH_LOCAL_STORAGE_KEYS.ACCESS_TOKEN, String(accessToken));
+          await setSecureItem(AUTH_LOCAL_STORAGE_KEYS.REFRESH_TOKEN, String(refreshToken));
+          await setSecureItem(AUTH_LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(localUserData));
+          setLocalUserData(localUserData);
+          setAccessToken(accessToken);
+          setRefreshToken(refreshToken);
+        }
+
+        toast.show("OTP verified successfully", { type: "success" });
+        switch (otpType) {
+          case "pinOtp":
+            if (forgotPin) {
+              navigation.navigate(navigationStrings.USER_PIN, {
+                mode: "create",
+              });
+              return;
+            }
+            navigation.navigate(navigationStrings.USER_PIN, {
+              mode: "create",
+            });
+            return;
+          case "signup":
+          case "login":
+            if (otpType === "login" && loginWithOtp) {
+              const onboardingCompleted = await getOnboardingCompleted();
+              if (String(onboardingCompleted) === "true") {
+                setIsLogin(true);
+                return;
+              }
+              navigation.navigate(navigationStrings.VERIFY_IDENTITY);
+              return;
+            }
+            navigation.navigate(navigationStrings.CHOOSE_LOGIN_METHOD);
+            return;
+          case "otpFromChooser":
+            setIsLogin(true);
+            return;
+          case "faceId":
+            navigation.reset({
+              index: 0,
+              routes: [{ name: navigationStrings.CHOOSE_LOGIN_METHOD }],
+            });
+            return;
+          default:
+            navigation.navigate(navigationStrings.CHOOSE_LOGIN_METHOD);
+        }
+      } else {
+        toast.show(result?.error || "OTP verification failed", { type: "danger" });
+      }
+    } catch (error: any) {
+      const message = error?.error || "Something went wrong";
+      toast.show(message, { type: "danger" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //handle resend OTP
+  const handleResendOtpPress = async () => {
+    toast.hideAll();
+
+    if (!phone?.trim()) {
+      toast.show("Missing phone number. Please go back and try again.", { type: "danger" });
+      return;
+    }
+    try {
+      const result: any = await handleResendOtp(phone, "forgot_password");
+      if (result?.ok) {
+        toast.show(`Otp code : ${result?.data?.otp}`, { type: "success" });
+      } else {
+        toast.show(result?.error || "OTP resend failed", { type: "danger" });
+      }
+    } catch (error: any) {
+      const message = error?.error || "Something went wrong";
+      toast.show(message, { type: "danger" });
     }
   };
 
@@ -83,9 +182,14 @@ const OtpVerification = () => {
             <OtpTextInput otp={otp} setOtp={setOtp} />
           </View>
 
-          <OtpTimer initialSeconds={30} onResend={() => {}} />
+          <OtpTimer initialSeconds={30} onResend={handleResendOtpPress} />
 
-          <ReusableButton title="Verify" onPress={handleVerify} containerStyle={styles.verifyBtn} />
+          <ReusableButton
+            title={loading ? "Verifying…" : "Verify"}
+            onPress={handleVerify}
+            disabled={loading}
+            containerStyle={styles.verifyBtn}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

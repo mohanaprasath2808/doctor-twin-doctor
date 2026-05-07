@@ -52,7 +52,7 @@ const SignUpScreen = () => {
   if (!authContext) {
     throw new Error("SignUpScreen must be used within AuthContextProvider");
   }
-  const { handleSignUp } = authContext;
+  const { handleSignUp, loading, setLoading } = authContext;
 
   const handleRegister = async () => {
     toast.hideAll();
@@ -71,7 +71,8 @@ const SignUpScreen = () => {
       return;
     }
     try {
-      const result = await handleSignUp(
+      setLoading(true);
+      const result: any = await handleSignUp(
         firstName,
         lastName,
         email,
@@ -81,14 +82,21 @@ const SignUpScreen = () => {
       );
       console.log(result, "result in handleRegister");
       if (result.ok) {
-        navigation.navigate(navigationStrings.OTP_VERIFICATION, { flow: "signup" as const });
+        const otpToast = result?.data?.otp;
+        toast.show(`Otp code : ${otpToast}`, { type: "success" });
+        navigation.navigate(navigationStrings.OTP_VERIFICATION, {
+          otpType: "signup",
+          phone: phone,
+        });
       } else {
-        toast.show(result.message || "Signup failed. Please try again.", { type: "danger" });
+        toast.show(result?.error || "Signup failed. Please try again.", { type: "danger" });
       }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Something went wrong.";
+    } catch (error: any) {
+      const message = error?.error || "Something went wrong.";
       toast.show(message, { type: "danger" });
       console.log(message, "error in handleRegister");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -209,9 +217,10 @@ const SignUpScreen = () => {
             </View>
 
             <ReusableButton
-              title="Register"
+              title={loading ? "Registering..." : "Register"}
               onPress={handleRegister}
               containerStyle={styles.registerBtn}
+              disabled={loading}
             />
           </View>
         </ScrollView>

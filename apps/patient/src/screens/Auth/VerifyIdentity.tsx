@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -15,14 +15,27 @@ import DropDown from "../../assets/icons/dropDown.svg";
 import BirthIcon from "../../assets/icons/birth.svg";
 import LeftArrow from "../../assets/icons/leftArrow.svg";
 import IconComponent from "../../neomorphism/IconComponent";
-
-const DISPLAY_NAME = "Sarah";
+import { AuthContext } from "../../context/AuthContext";
+import { formatDobFromApi } from "../../constants/constant";
 
 const VerifyIdentity = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
-  const [phone, setPhone] = useState("0123456789");
-  const [dob, setDob] = useState("27/03/1997");
+  //context
+  const auth = useContext(AuthContext);
+  if (!auth) {
+    throw new Error("VerifyIdentity requires AuthContextProvider");
+  }
+  const { localUserData } = auth;
+
+  const displayName = useMemo(() => {
+    const name = (localUserData as any)?.name;
+    return typeof name === "string" && name.trim() ? name.trim() : "there";
+  }, [localUserData]);
+
+  //local state
+  const [dob, setDob] = useState(formatDobFromApi((localUserData as any)?.date_of_birth));
+  const [phone, setPhone] = useState((localUserData as any)?.phone ?? "");
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
@@ -59,7 +72,7 @@ const VerifyIdentity = () => {
 
             <Text style={styles.title}>Verify Your Identity</Text>
             <Text style={styles.subtitle}>
-              {`Hi ${DISPLAY_NAME}, we're here to confirm your identity for security.`}
+              {`Hi ${displayName}, we're here to confirm your identity for security.`}
             </Text>
 
             <View style={styles.form}>
