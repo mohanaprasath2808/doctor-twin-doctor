@@ -30,19 +30,47 @@ const DeviceSessions = () => {
           <View style={styles.headerSpacer} />
         </View>
 
-        <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={12}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <NeumorphicCard
+            outerStyle={styles.cardOuter}
+            innerStyle={styles.cardInner}
+            borderRadius={12}
+          >
             <Text style={styles.sectionTitle}>Current Device</Text>
-            <SessionRow icon={<MobilePhoneIcon width={18} height={18} />} device="iPhone 14" login="Last Login: 2 days ago" />
+            <SessionRow
+              icon={<MobilePhoneIcon width={18} height={18} />}
+              device="iPhone 14"
+              login="Last Login: 2 days ago"
+            />
           </NeumorphicCard>
 
-          <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={12}>
+          <NeumorphicCard
+            outerStyle={styles.cardOuter}
+            innerStyle={styles.cardInner}
+            borderRadius={12}
+          >
             <Text style={styles.sectionTitle}>Other Devices</Text>
-            <SessionRow icon={<DeskTopIcon width={18} height={18} />} device="Desktop" login="Last Login: 20 April 2025" />
+            <SessionRow
+              icon={<DeskTopIcon width={18} height={18} />}
+              device="Desktop"
+              login="Last Login: 20 April 2025"
+            />
             <Divider />
-            <SessionRow icon={<MobilePhoneIcon width={18} height={18} />} device="iPhone 15" login="Last Login: 20 April 2025" />
+            <SessionRow
+              icon={<MobilePhoneIcon width={18} height={18} />}
+              device="iPhone 15"
+              login="Last Login: 20 April 2025"
+            />
             <Divider />
-            <SessionRow icon={<DeskTopIcon width={18} height={18} />} device="Desktop" login="Last Login: 20 April 2025" />
+            <SessionRow
+              icon={<DeskTopIcon width={18} height={18} />}
+              device="Desktop"
+              login="Last Login: 20 April 2025"
+            />
           </NeumorphicCard>
         </ScrollView>
       </View>
@@ -74,7 +102,7 @@ const SessionRow = ({
       height={30}
       borderRadius={15}
       textStyle={styles.logoutText}
-      onPress={() => { }}
+      onPress={() => {}}
     />
   </View>
 );

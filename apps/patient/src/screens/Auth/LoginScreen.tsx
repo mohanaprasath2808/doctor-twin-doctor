@@ -33,8 +33,9 @@ const LoginScreen = () => {
   if (!authContext) {
     throw new Error("LoginScreen must be used within AuthContextProvider");
   }
+  const { handleLogin, loading, setLoading } = authContext;
 
-  const { handleLogin } = authContext;
+  //handle login press
   const handleLoginPress = async () => {
     toast.hideAll();
     if (!phone) {
@@ -42,17 +43,22 @@ const LoginScreen = () => {
       return;
     }
     try {
-      const result = await handleLogin(phone);
+      setLoading(true);
+      const result: any = await handleLogin(phone);
       console.log(result, "result in handleLoginPress");
-      if (result.ok) {
-        navigation.navigate(navigationStrings.OTP_VERIFICATION, { flow: "otpLogin" as const });
+      if (result?.ok) {
+        navigation.navigate(navigationStrings.OTP_VERIFICATION, { otpType: "login", phone: phone });
+        toast.show(`Otp code : ${result?.data?.otp}`, { type: "success" });
       } else {
-        toast.show(result.message || "Login failed. Please try again.", { type: "danger" });
+        toast.show(result?.error || result?.message || "Login failed. Please try again.", {
+          type: "danger",
+        });
       }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Something went wrong.";
+    } catch (error: any) {
+      const message = error?.error || "Something went wrong.";
       toast.show(message, { type: "danger" });
-      console.log(message, "error in handleLoginPress");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,8 +100,9 @@ const LoginScreen = () => {
             />
 
             <ReusableButton
-              title="Login"
+              title={loading ? "Logging in…" : "Login"}
               onPress={handleLoginPress}
+              disabled={loading}
               containerStyle={styles.loginBtn}
             />
           </View>
