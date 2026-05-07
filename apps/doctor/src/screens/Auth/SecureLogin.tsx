@@ -317,7 +317,7 @@ const SecureLogin = () => {
         imageStyle={styles.image}
       />
 
-      <Text style={styles.welcomeText}>Welcome Back Dr.Twin</Text>
+      <Text style={styles.welcomeText}>Welcome Back {userData?.name}</Text>
 
       {biometricBusy || loading ? (
         <View style={styles.busyWrap}>

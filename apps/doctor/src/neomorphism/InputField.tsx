@@ -53,52 +53,49 @@ const InputField: React.FC<Props & TextInputProps> = ({
   };
 
   const resolvedShadowHeight = Math.max(fieldMinHeight, inputHeight);
+  const iosContinuousCurve = Platform.OS === "ios" ? ({ borderCurve: "continuous" } as const) : null;
+  // iOS shadows can render "squared" corners when borderRadius is larger than half the view height.
+  // Clamp to a pill radius so the shadow path is consistent on both ends.
+  const cornerRadius = Math.min(radius, resolvedShadowHeight / 2);
 
   return (
     <View style={[styles.container, containerStyle]} onLayout={onLayout}>
-      <LinearGradient
-        colors={["#D6E3F399", "#FFFFFFCC", "#FFFFFF80", "#FFFFFF00"]}
-        locations={[0, 0.4, 0.7, 1]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={[styles.gradientBorder, { borderRadius: radius }]}
+      <View
+        style={[
+          styles.shadowDarkWrap,
+          { borderRadius: cornerRadius },
+          iosContinuousCurve,
+          showFocusedState && styles.shadowDarkWrapFocused,
+        ]}
       >
-        <View style={styles.innerWrapper}>
-          <View
-            pointerEvents="none"
-            style={[
-              styles.shadowLayer,
-              styles.shadowDark,
-              { borderRadius: radius },
-              showFocusedState && styles.shadowDarkFocused,
-            ]}
-          />
-          <View
-            pointerEvents="none"
-            style={[
-              styles.shadowLayer,
-              styles.shadowLight,
-              { borderRadius: radius },
-              showFocusedState && styles.shadowLightFocused,
-            ]}
-          />
-          <View
-            pointerEvents="none"
-            style={[styles.shadowLayer, styles.shadowSoft, { borderRadius: radius }]}
-          />
-
-          <View style={[styles.surface, { borderRadius: radius }]}>
+        <View
+          style={[
+            styles.shadowLightWrap,
+            { borderRadius: cornerRadius },
+            iosContinuousCurve,
+            showFocusedState && styles.shadowLightWrapFocused,
+          ]}
+        >
+          <LinearGradient
+            colors={["#D6E3F399", "#FFFFFFCC", "#FFFFFF80", "#FFFFFF00"]}
+            locations={[0, 0.4, 0.7, 1]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[styles.gradientBorder, { borderRadius: cornerRadius }, iosContinuousCurve]}
+          >
+            <View style={[styles.surface, { borderRadius: cornerRadius }, iosContinuousCurve]}>
             {showFocusedState && width > 0 && (
               <View
                 style={[
                   styles.shadowWrapper,
-                  { height: resolvedShadowHeight, borderRadius: radius },
+                    { height: resolvedShadowHeight, borderRadius: cornerRadius },
+                    iosContinuousCurve,
                 ]}
               >
                 <InnerShadowView
                   width={width}
                   height={resolvedShadowHeight}
-                  borderRadius={radius}
+                    borderRadius={cornerRadius}
                   color="#F7FBFF"
                 />
               </View>
@@ -108,12 +105,13 @@ const InputField: React.FC<Props & TextInputProps> = ({
               style={[
                 styles.inputWrapper,
                 {
-                  borderRadius: radius,
+                  borderRadius: cornerRadius,
                   minHeight: fieldMinHeight,
                   height: props.multiline ? undefined : fieldMinHeight,
                   alignItems: props.multiline ? "flex-start" : "center",
                   paddingTop: props.multiline ? 12 : 0,
                 },
+                  iosContinuousCurve,
               ]}
               onLayout={(event) => {
                 if (!props.multiline) return;
@@ -155,9 +153,10 @@ const InputField: React.FC<Props & TextInputProps> = ({
                 </TouchableOpacity>
               )}
             </View>
-          </View>
+            </View>
+          </LinearGradient>
         </View>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -172,18 +171,15 @@ const styles = StyleSheet.create({
   gradientBorder: {
     borderRadius: RADIUS,
     padding: 0.6,
-    overflow: "visible",
+    overflow: Platform.OS === "ios" ? "hidden" : "visible",
   },
   innerWrapper: {
     borderRadius: RADIUS,
     overflow: "visible",
   },
-  shadowLayer: {
-    ...StyleSheet.absoluteFillObject,
+  shadowDarkWrap: {
     borderRadius: RADIUS,
-    backgroundColor: COLORS.SURFACE,
-  },
-  shadowDark: {
+    backgroundColor: "#F7FBFF",
     ...Platform.select({
       ios: {
         shadowColor: "#C8CBCC",
@@ -196,7 +192,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  shadowLight: {
+  shadowLightWrap: {
+    borderRadius: RADIUS,
+    backgroundColor: "#F7FBFF",
     ...Platform.select({
       ios: {
         shadowColor: "#FFFFFF",
@@ -206,17 +204,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  shadowSoft: {
-    ...Platform.select({
-      ios: {
-        shadowColor: "#728EAB",
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-      },
-    }),
-  },
-  shadowDarkFocused: {
+  shadowDarkWrapFocused: {
     ...Platform.select({
       ios: {
         shadowOpacity: 0.35,
@@ -227,7 +215,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  shadowLightFocused: {
+  shadowLightWrapFocused: {
     ...Platform.select({
       ios: {
         shadowOpacity: 0.45,
