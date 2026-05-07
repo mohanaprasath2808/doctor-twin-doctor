@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.anonymous.doctortwinpatient</string>
+          <string>com.solimancare.patient</string>
         </array>
       </dict>
       <dict>

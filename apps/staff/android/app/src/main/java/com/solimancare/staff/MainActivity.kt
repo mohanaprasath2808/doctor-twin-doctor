@@ -1,4 +1,4 @@
-package com.anonymous.doctortwinstaff
+package com.solimancare.staff
 
 import android.os.Build
 import android.os.Bundle

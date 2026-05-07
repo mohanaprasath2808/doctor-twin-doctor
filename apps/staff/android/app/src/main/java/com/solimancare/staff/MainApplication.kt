@@ -1,4 +1,4 @@
-package com.anonymous.doctortwinpatient
+package com.solimancare.staff
 
 import android.app.Application
 import android.content.res.Configuration
