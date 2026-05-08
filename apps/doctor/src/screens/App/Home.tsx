@@ -131,6 +131,11 @@ const Home = () => {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
         };
+      case 4:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.TODAY_VISITS),
+        };
       case 2:
         return {
           ...item,
