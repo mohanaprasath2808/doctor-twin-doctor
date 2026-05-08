@@ -136,8 +136,8 @@ const Login = () => {
             </View>
 
             <View style={[styles.signupContainer, { paddingTop: 20, marginHorizontal: 16 }]}>
-              <Text style={styles.signupText}>Email:  development@gmail.com</Text>
-              <Text style={styles.signupText}>Password: Development@dev</Text>
+              <Text style={styles.signupText}>Email: development@gmail.com</Text>
+              <Text style={styles.signupText}>Password: Development2@dev</Text>
             </View>
           </View>
         </View>

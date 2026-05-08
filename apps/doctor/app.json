@@ -18,6 +18,7 @@
       "appleTeamId": "2VSJ2UH66N"
     },
     "android": {
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/appIcon.png",
         "backgroundColor": "#111747"

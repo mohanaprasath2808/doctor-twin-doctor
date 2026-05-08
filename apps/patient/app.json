@@ -15,6 +15,15 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.solimancare.patient"
     },
-    "plugins": ["expo-font", "@react-native-community/datetimepicker"]
+    "plugins": [
+      "expo-font",
+      "@react-native-community/datetimepicker"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b5d77fe1-d472-4682-a198-82b91b6db309"
+      }
+    },
+    "owner": "solimancare-1"
   }
 }
