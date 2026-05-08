@@ -7,6 +7,17 @@ import ReportHub from "../../screens/App/Home/PractceIntelligence/ReportHub";
 import Schedule from "../../screens/App/Home/Schedule/Schedule";
 import Patients from "../../screens/App/Home/Patient/Patients";
 import PatientSnapshot from "../../screens/App/Home/Patient/PatientSnapshot";
+import TodayVisits from "../../screens/App/Home/TodayVisits/TodayVisits";
+import VisitHub from "../../screens/App/Home/TodayVisits/VisitHub";
+import ReceptionIntake from "../../screens/App/Home/TodayVisits/ReceptionIntake";
+import RecentResults from "../../screens/App/Home/TodayVisits/RecentResults";
+import RefillRequest from "../../screens/App/Home/TodayVisits/RefillRequest";
+import PriorAuthorization from "../../screens/App/Home/TodayVisits/PriorAuthorization";
+import OrderHub from "../../screens/App/Home/TodayVisits/OrderHub";
+import RecentConsults from "../../screens/App/Home/TodayVisits/RecentConsults";
+import Messages from "../../screens/App/Home/TodayVisits/Messages";
+import PreventiveCare from "../../screens/App/Home/TodayVisits/PreventiveCare";
+import ClinicalSummary from "../../screens/App/Home/TodayVisits/ClinicalSummary";
 import LabsDashboard from "../../screens/App/Home/Labs/LabsDashboard";
 import LabAlertDecision from "../../screens/App/Home/Labs/LabAlertDecision";
 import LabsDetail from "../../screens/App/Home/Labs/LabsDetail";
@@ -79,6 +90,65 @@ const AppStack = () => {
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name={navigationStrings.TODAY_VISITS}
+        component={TodayVisits}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.VISIT_HUB}
+        component={VisitHub}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.CLINICAL_SUMMARY}
+        component={ClinicalSummary}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_INTAKE}
+        component={ReceptionIntake}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PREVENTIVE_CARE}
+        component={PreventiveCare}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECENT_RESULTS}
+        component={RecentResults}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.VISIT_MESSAGES}
+        component={Messages}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILL_REQUESTS}
+        component={RefillRequest}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECENT_CONSULTS}
+        component={RecentConsults}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PRIOR_AUTHORIZATION}
+        component={PriorAuthorization}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ORDER_HUB}
+        component={OrderHub}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name={navigationStrings.STAFF_CONSOLE}

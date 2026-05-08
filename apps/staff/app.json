@@ -2,6 +2,7 @@
   "expo": {
     "name": "doctor-twin-staff",
     "slug": "doctor-twin-staff",
+    "owner": "solimancare-1",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/image/appIcon.png",
@@ -25,6 +26,13 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.solimancare.staff"
     },
-    "plugins": ["expo-secure-store"]
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5b53e873-544a-4e0b-aa76-e308fdb3ccb6"
+      }
+    }
   }
 }
