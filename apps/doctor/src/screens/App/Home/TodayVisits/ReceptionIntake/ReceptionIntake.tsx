@@ -37,11 +37,36 @@ const INTAKE_TILES: IntakeTile[] = [
     icon: <TickIcon width={18} height={18} />,
     routeName: navigationStrings.RECEPTION_CHECK_IN,
   },
-  { id: "insurance", title: "Insurance", icon: <CardIcon width={18} height={18} /> },
-  { id: "demographics", title: "Demograp...", icon: <LabReportIcon width={18} height={18} /> },
-  { id: "patient-info", title: "Patient Info", icon: <PatientIcon width={18} height={18} /> },
-  { id: "emergency", title: "Emergency", icon: <WarningIcon width={18} height={18} /> },
-  { id: "forms", title: "Forms", icon: <ReportIcon width={18} height={18} /> },
+  {
+    id: "insurance",
+    title: "Insurance",
+    icon: <CardIcon width={18} height={18} />,
+    routeName: navigationStrings.RECEPTION_INSURANCE,
+  },
+  {
+    id: "demographics",
+    title: "Demographics",
+    icon: <LabReportIcon width={18} height={18} />,
+    routeName: navigationStrings.RECEPTION_DEMOGRAPHICS,
+  },
+  {
+    id: "patient-info",
+    title: "Patient Info",
+    icon: <PatientIcon width={18} height={18} />,
+    routeName: navigationStrings.RECEPTION_PATIENT_SUMMARY,
+  },
+  {
+    id: "emergency",
+    title: "Emergency",
+    icon: <WarningIcon width={18} height={18} />,
+    routeName: navigationStrings.RECEPTION_EMERGENCY_INTAKE,
+  },
+  {
+    id: "forms",
+    title: "Forms",
+    icon: <ReportIcon width={18} height={18} />,
+    routeName: navigationStrings.RECEPTION_FORMS,
+  },
 ];
 
 const ReceptionIntake = () => {

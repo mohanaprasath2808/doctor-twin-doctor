@@ -11,6 +11,13 @@ import TodayVisits from "../../screens/App/Home/TodayVisits/TodayVisits";
 import VisitHub from "../../screens/App/Home/TodayVisits/VisitHub";
 import ReceptionIntake from "../../screens/App/Home/TodayVisits/ReceptionIntake/ReceptionIntake";
 import CheckIn from "../../screens/App/Home/TodayVisits/ReceptionIntake/CheckIn";
+import Insurance from "../../screens/App/Home/TodayVisits/ReceptionIntake/Insurance";
+import EditInsurance from "../../screens/App/Home/TodayVisits/ReceptionIntake/EditInsurance";
+import Demographics from "../../screens/App/Home/TodayVisits/ReceptionIntake/Demographics";
+import EditDemographics from "../../screens/App/Home/TodayVisits/ReceptionIntake/EditDemographics";
+import PatientSummary from "../../screens/App/Home/TodayVisits/ReceptionIntake/PatientSummary";
+import Forms from "../../screens/App/Home/TodayVisits/ReceptionIntake/Forms";
+import EmergencyIntake from "../../screens/App/Home/TodayVisits/ReceptionIntake/EmergencyIntake";
 import ReceptionIntakeCompleted from "../../screens/App/Home/TodayVisits/ReceptionIntake/ReceptionIntakeCompleted";
 import RecentResults from "../../screens/App/Home/TodayVisits/RecentResults";
 import PriorAuthorization from "../../screens/App/Home/TodayVisits/PriorAuthorization";
@@ -121,6 +128,41 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.RECEPTION_CHECK_IN}
         component={CheckIn}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_INSURANCE}
+        component={Insurance}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_EDIT_INSURANCE}
+        component={EditInsurance}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_DEMOGRAPHICS}
+        component={Demographics}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_EDIT_DEMOGRAPHICS}
+        component={EditDemographics}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_PATIENT_SUMMARY}
+        component={PatientSummary}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_FORMS}
+        component={Forms}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_EMERGENCY_INTAKE}
+        component={EmergencyIntake}
         options={{ headerShown: false }}
       />
       <Stack.Screen
