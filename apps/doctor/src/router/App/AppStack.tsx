@@ -9,9 +9,10 @@ import Patients from "../../screens/App/Home/Patient/Patients";
 import PatientSnapshot from "../../screens/App/Home/Patient/PatientSnapshot";
 import TodayVisits from "../../screens/App/Home/TodayVisits/TodayVisits";
 import VisitHub from "../../screens/App/Home/TodayVisits/VisitHub";
-import ReceptionIntake from "../../screens/App/Home/TodayVisits/ReceptionIntake";
+import ReceptionIntake from "../../screens/App/Home/TodayVisits/ReceptionIntake/ReceptionIntake";
+import CheckIn from "../../screens/App/Home/TodayVisits/ReceptionIntake/CheckIn";
+import ReceptionIntakeCompleted from "../../screens/App/Home/TodayVisits/ReceptionIntake/ReceptionIntakeCompleted";
 import RecentResults from "../../screens/App/Home/TodayVisits/RecentResults";
-import RefillRequest from "../../screens/App/Home/TodayVisits/RefillRequest";
 import PriorAuthorization from "../../screens/App/Home/TodayVisits/PriorAuthorization";
 import OrderHub from "../../screens/App/Home/TodayVisits/OrderHub";
 import RecentConsults from "../../screens/App/Home/TodayVisits/RecentConsults";
@@ -116,6 +117,16 @@ const AppStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={navigationStrings.RECEPTION_CHECK_IN}
+        component={CheckIn}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.RECEPTION_INTAKE_COMPLETED}
+        component={ReceptionIntakeCompleted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={navigationStrings.PREVENTIVE_CARE}
         component={PreventiveCare}
         options={{ headerShown: false }}
@@ -128,11 +139,6 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.VISIT_MESSAGES}
         component={Messages}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={navigationStrings.REFILL_REQUESTS}
-        component={RefillRequest}
         options={{ headerShown: false }}
       />
       <Stack.Screen
