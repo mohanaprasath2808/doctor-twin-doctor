@@ -11,7 +11,7 @@ import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import NeumorphicInnerShadowCard from "../../../../neomorphism/NeumorphicInnerShadowCard";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import SearchIcon from "../../../../assets/icon/searchIcon.svg";
-import WarningIcon from "../../../../assets/icon/warningIcon.svg";
+import WarningIcon from "../../../../assets/icon/yellowWarningIcon.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
 import { getInitials } from "../../../../constants/contant";
 
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     color: COLORS.PRIMARY,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
   },
   flagRow: {
     flexDirection: "row",
@@ -311,7 +311,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   flagOuter: {
-    maxWidth: "50%",
+    width: "auto",
+    maxWidth: "80%",
   },
   flagInner: {
     flexDirection: "row",
@@ -322,8 +323,8 @@ const styles = StyleSheet.create({
   },
   flagText: {
     fontSize: 12,
-    color: COLORS.TEXT_80,
-    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Display-Semibold",
     flexShrink: 1,
   },
 });

@@ -9,7 +9,7 @@ import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import WarningIcon from "../../../../assets/icon/warningIcon.svg";
+import WarningIcon from "../../../../assets/icon/yellowWarningIcon.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrow.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
@@ -136,7 +136,7 @@ const VisitHub = () => {
         {patient.room ? patient.room : "Room 3"} • {patient.status ? patient.status : "Waiting"}
       </Text>
 
-      {!!patient.flagText && (
+      {patient.flagText && (
         <NeumorphicCard
           outerStyle={styles.alertOuter}
           innerStyle={styles.alertInner}
@@ -147,7 +147,7 @@ const VisitHub = () => {
             <InnerShadowIcon icon={<WarningIcon width={14} height={14} />} size={34} />
             <Text style={styles.alertText}>
               <Text style={styles.alertPrefix}>PPO</Text>
-              <Text style={styles.alertSpacer}> </Text>
+              {/* <Text style={styles.alertSpacer}> </Text> */}{" "}
               {patient.flagText}
             </Text>
           </View>
@@ -169,16 +169,19 @@ const VisitHub = () => {
           <Text style={styles.tileText} numberOfLines={2}>
             {item.title}
           </Text>
+
         </View>
 
         <View style={styles.tileRight}>
-          {!!item.badgeCount && (
+          {item.badgeCount && (
             <View style={styles.badgeDot}>
               <Text style={styles.badgeText}>{item.badgeCount}</Text>
             </View>
           )}
-          <RightArrowIcon width={16} height={16} />
+          <RightArrowIcon width={10} height={10} />
         </View>
+
+
       </NeumorphicCard>
     </View>
   );
@@ -205,7 +208,7 @@ const VisitHub = () => {
               <InnerShadowIcon icon={<ReportIcon width={18} height={18} />} size={40} />
               <Text style={styles.ordersText}>Orders & Referrals</Text>
             </View>
-            <RightArrowIcon width={16} height={16} />
+            <RightArrowIcon width={10} height={10} />
           </NeumorphicCard>
         }
       />
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Text-Bold",
   },
   headerSpacer: {
     width: 40,
@@ -262,16 +265,16 @@ const styles = StyleSheet.create({
     borderRadius: 60,
   },
   patientName: {
-    paddingTop: 10,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   patientMeta: {
     paddingTop: 4,
-    fontSize: 12,
-    color: COLORS.TEXT_60,
+    fontSize: 14,
+    color: COLORS.TEXT_70,
+    fontWeight: "400",
     fontFamily: "SF-Pro-Text-Regular",
   },
   alertOuter: {
@@ -289,21 +292,18 @@ const styles = StyleSheet.create({
   },
   alertText: {
     flex: 1,
-    fontSize: 13,
+    fontSize: 14,
     color: COLORS.TEXT_80,
     fontFamily: "SF-Pro-Text-Regular",
   },
   alertPrefix: {
     color: COLORS.TEXT_DARK,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
-  },
-  alertSpacer: {
-    color: COLORS.TEXT_80,
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   gridRow: {
-    gap: 14,
-    marginBottom: 14,
+    gap: 8,
+    marginBottom: 10,
   },
   tileCell: {
     flex: 1,
@@ -318,26 +318,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 10,
-    minHeight: 70,
   },
   tileLeft: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    flex: 1,
-    minWidth: 0,
+    maxWidth: "56%",
   },
   tileText: {
-    fontSize: 13,
+    fontSize: 14,
     color: COLORS.PRIMARY,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   tileRight: {
-    alignItems: "flex-end",
-    justifyContent: "space-between",
-    gap: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
   },
   badgeDot: {
     alignSelf: "flex-end",
@@ -372,9 +369,9 @@ const styles = StyleSheet.create({
   },
   ordersText: {
     fontSize: 14,
-    fontWeight: "600",
     color: COLORS.PRIMARY,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
 });
 
