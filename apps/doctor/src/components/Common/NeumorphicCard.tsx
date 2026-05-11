@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Platform,
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Platform, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { COLORS } from "../../constants/theme";
 
@@ -39,27 +32,15 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
     <View style={[styles.outer, { borderRadius }, outerStyle]}>
       <View
         pointerEvents="none"
-        style={[
-          styles.shadowLayer,
-          styles.shadowDark,
-          { borderRadius, backgroundColor },
-        ]}
+        style={[styles.shadowLayer, styles.shadowDark, { borderRadius, backgroundColor }]}
       />
       <View
         pointerEvents="none"
-        style={[
-          styles.shadowLayer,
-          styles.shadowLight,
-          { borderRadius, backgroundColor },
-        ]}
+        style={[styles.shadowLayer, styles.shadowLight, { borderRadius, backgroundColor }]}
       />
       <View
         pointerEvents="none"
-        style={[
-          styles.shadowLayer,
-          styles.shadowSoft,
-          { borderRadius, backgroundColor },
-        ]}
+        style={[styles.shadowLayer, styles.shadowSoft, { borderRadius, backgroundColor }]}
       />
       <View style={[styles.border, { borderRadius }]}>
         <LinearGradient
@@ -78,11 +59,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         />
         <Surface
           {...(surfaceProps as any)}
-          style={[
-            styles.inner,
-            { borderRadius: innerRadius, backgroundColor },
-            innerStyle,
-          ]}
+          style={[styles.inner, { borderRadius: innerRadius, backgroundColor }, innerStyle]}
         >
           {children}
         </Surface>

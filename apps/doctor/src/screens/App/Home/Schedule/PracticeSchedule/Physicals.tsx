@@ -1,13 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
-import {
-  FlatList,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal as BSModal } from "@gorhom/bottom-sheet";
@@ -28,6 +20,7 @@ import DateRangeBottomSheetModal, {
 } from "../../../../../components/BottomSheets/DateRangeBottomSheetModal";
 import BulbIcon from "../../../../../assets/icon/bulbIcon.svg";
 import DeltaBadge from "../../../../../components/Common/DeltaBadge";
+import navigationStrings from "../../../../../constants/navigationStrings";
 
 type FilterKey = "all" | "waiting" | "inProgress" | "completed";
 const FILTER_WIDTHS: Record<FilterKey, number> = {
@@ -85,9 +78,7 @@ const Physicals = () => {
   const [selectedFilter, setSelectedFilter] = useState<FilterKey>("all");
 
   const todayLabel = useMemo(
-    () =>
-      DATE_RANGE_OPTIONS.find((option) => option.key === selectedRange)
-        ?.label ?? "Today",
+    () => DATE_RANGE_OPTIONS.find((option) => option.key === selectedRange)?.label ?? "Today",
     [selectedRange],
   );
 
@@ -134,12 +125,12 @@ const Physicals = () => {
   const renderCard = ({ item }: { item: (typeof PHYSICALS_DATA)[number] }) => {
     const isExpanded = item.variant === "expanded";
 
+    const handleStartVisit = () => {
+      navigation.navigate(navigationStrings.PRE_VISIT_SUMMARY);
+    };
+
     return (
-      <NeumorphicCard
-        outerStyle={styles.itemOuter}
-        innerStyle={styles.itemInner}
-        borderRadius={12}
-      >
+      <NeumorphicCard outerStyle={styles.itemOuter} innerStyle={styles.itemInner} borderRadius={12}>
         <View style={styles.topRow}>
           <View style={styles.topLeft}>
             <Image source={DoctorTempImage} style={styles.avatar} />
@@ -187,6 +178,7 @@ const Physicals = () => {
                 height={40}
                 borderRadius={20}
                 textStyle={styles.reusableBtnText}
+                onPress={() => handleStartVisit()}
               />
             </View>
           </>
@@ -251,10 +243,7 @@ const Physicals = () => {
               ].map((filter) => (
                 <Pressable
                   key={filter.key}
-                  style={[
-                    styles.filterPress,
-                    { width: FILTER_WIDTHS[filter.key as FilterKey] },
-                  ]}
+                  style={[styles.filterPress, { width: FILTER_WIDTHS[filter.key as FilterKey] }]}
                   onPress={() => setSelectedFilter(filter.key as FilterKey)}
                 >
                   {selectedFilter === filter.key ? (

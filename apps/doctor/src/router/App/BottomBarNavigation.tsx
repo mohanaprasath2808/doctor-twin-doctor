@@ -22,7 +22,12 @@ const Tab = createBottomTabNavigator();
  * Add route names here when a specific flow should hide bottom tabs.
  * Example: full-screen forms, media capture, or other focused experiences.
  */
-const HIDE_TABS_ON_ROUTES = [navigationStrings.ADD_EVENT, navigationStrings.EVENT_DETAILS] as const;
+const HIDE_TABS_ON_ROUTES = [
+  navigationStrings.ADD_EVENT,
+  navigationStrings.EVENT_DETAILS,
+  navigationStrings.PRE_VISIT_SUMMARY,
+  navigationStrings.END_ENCOUNTER,
+] as const;
 
 const isTabHiddenForRoute = (route: RouteProp<Record<string, object | undefined>, string>) => {
   const nestedRouteName = getFocusedRouteNameFromRoute(route);

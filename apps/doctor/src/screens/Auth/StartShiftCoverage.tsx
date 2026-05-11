@@ -1,34 +1,34 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { BottomSheetModal as BSModal, BottomSheetView } from '@gorhom/bottom-sheet';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../constants/theme';
-import IconComponent from '../../neomorphism/IconComponent';
-import BackIcon from '../../assets/icon/backArrow.svg';
-import ProfileAvatar from '../../components/Auth/ProfileAvatar';
-import OverlayImage from '../../assets/image/imageBgShadow.png';
-import DoctorTempImage from '../../assets/image/tempImage/doctorTempImage.png';
-import NeumorphicCard from '../../components/Common/NeumorphicCard';
-import InnerShadowIcon from '../../neomorphism/InnerShadowIcon';
-import PrimaryDoctorIcon from '../../assets/icon/primaryDocIcon.svg';
-import LabLocationIcon from '../../assets/icon/labLocationIcon.svg';
-import DownArrowIcon from '../../assets/icon/downArrow.svg';
-import SelectedIcon from '../../assets/icon/selectedIcon.svg';
-import BottomSheetModal from '../../components/BottomSheets/BottomSheetModal';
-import DeltaBadge from '../../components/Common/DeltaBadge';
-import AppButton from '../../components/Common/AppButton';
-import ReusableButton from '../../neomorphism/ReusableButton';
-import navigationStrings from '../../constants/navigationStrings';
-import { useAuthStore } from '../../store/useAuthStore';
-import { setCompletedOnboarding } from '../../utils/authStorage';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { FlatList, Image, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { BottomSheetModal as BSModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../../constants/theme";
+import IconComponent from "../../neomorphism/IconComponent";
+import BackIcon from "../../assets/icon/backArrow.svg";
+import ProfileAvatar from "../../components/Auth/ProfileAvatar";
+import OverlayImage from "../../assets/image/imageBgShadow.png";
+import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
+import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
+import PrimaryDoctorIcon from "../../assets/icon/primaryDocIcon.svg";
+import LabLocationIcon from "../../assets/icon/labLocationIcon.svg";
+import DownArrowIcon from "../../assets/icon/downArrow.svg";
+import SelectedIcon from "../../assets/icon/selectedIcon.svg";
+import BottomSheetModal from "../../components/BottomSheets/BottomSheetModal";
+import DeltaBadge from "../../components/Common/DeltaBadge";
+import AppButton from "../../components/Common/AppButton";
+import ReusableButton from "../../neomorphism/ReusableButton";
+import navigationStrings from "../../constants/navigationStrings";
+import { useAuthStore } from "../../store/useAuthStore";
+import { setCompletedOnboarding } from "../../utils/authStorage";
 
-type SelectType = 'role' | 'location' | null;
+type SelectType = "role" | "location" | null;
 
-const ROLE_OPTIONS = ['Primary Doctor', 'Covering MD'];
-const LOCATION_OPTIONS = ['Soliman Clinic', 'Downtown Medical Center', 'City Specialty Care'];
+const ROLE_OPTIONS = ["Primary Doctor", "Covering MD"];
+const LOCATION_OPTIONS = ["Soliman Clinic", "Downtown Medical Center", "City Specialty Care"];
 
-type StaffStatus = 'online' | 'offline';
+type StaffStatus = "online" | "offline";
 
 type CoverageStaffItem = {
   id: string;
@@ -38,9 +38,9 @@ type CoverageStaffItem = {
 };
 
 const COVERAGE_STAFF: CoverageStaffItem[] = [
-  { id: 'emma', name: 'Emma Garcia', status: 'online' },
-  { id: 'anna-online', name: 'Anna Anson', status: 'online' },
-  { id: 'anna-time', name: 'Anna Anson', status: 'online', countdownSeconds: 202 },
+  { id: "emma", name: "Emma Garcia", status: "online" },
+  { id: "anna-online", name: "Anna Anson", status: "online" },
+  { id: "anna-time", name: "Anna Anson", status: "online", countdownSeconds: 202 },
 ];
 
 const formatCountdown = (totalSeconds: number) => {
@@ -48,9 +48,9 @@ const formatCountdown = (totalSeconds: number) => {
   const hours = Math.floor(safeSeconds / 3600);
   const minutes = Math.floor((safeSeconds % 3600) / 60);
   const seconds = safeSeconds % 60;
-  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(
     seconds,
-  ).padStart(2, '0')}`;
+  ).padStart(2, "0")}`;
 };
 
 const StartShiftCoverage = () => {
@@ -65,19 +65,19 @@ const StartShiftCoverage = () => {
 
   useEffect(() => {
     const hasCountdown = coverageStaff.some(
-      (item) => typeof item.countdownSeconds === 'number' && item.countdownSeconds > 0,
+      (item) => typeof item.countdownSeconds === "number" && item.countdownSeconds > 0,
     );
     if (!hasCountdown) return;
 
     const interval = setInterval(() => {
       setCoverageStaff((prev) =>
         prev.map((item) => {
-          if (typeof item.countdownSeconds !== 'number') return item;
+          if (typeof item.countdownSeconds !== "number") return item;
           if (item.countdownSeconds <= 1) {
             return {
               ...item,
               countdownSeconds: 0,
-              status: 'offline',
+              status: "offline",
             };
           }
           return {
@@ -93,18 +93,18 @@ const StartShiftCoverage = () => {
 
   const openPicker = (type: Exclude<SelectType, null>) => {
     setActiveSelectType(type);
-    setDraftValue(type === 'role' ? selectedRole : selectedLocation);
+    setDraftValue(type === "role" ? selectedRole : selectedLocation);
     pickerRef.current?.present();
   };
 
-  const pickerTitle = activeSelectType === 'role' ? 'Today is Role' : 'Location';
-  const pickerOptions = activeSelectType === 'role' ? ROLE_OPTIONS : LOCATION_OPTIONS;
+  const pickerTitle = activeSelectType === "role" ? "Today is Role" : "Location";
+  const pickerOptions = activeSelectType === "role" ? ROLE_OPTIONS : LOCATION_OPTIONS;
 
-  const snapPoints = useMemo(() => ['38%'], []);
+  const snapPoints = useMemo(() => ["28%"], []);
 
   const handleDone = () => {
-    if (activeSelectType === 'role') setSelectedRole(draftValue);
-    if (activeSelectType === 'location') setSelectedLocation(draftValue);
+    if (activeSelectType === "role") setSelectedRole(draftValue);
+    if (activeSelectType === "location") setSelectedLocation(draftValue);
     pickerRef.current?.dismiss();
   };
 
@@ -133,7 +133,7 @@ const StartShiftCoverage = () => {
 
       <Text style={styles.greeting}>Good Morning, Dr.Twin</Text>
 
-      <Pressable onPress={() => openPicker('role')}>
+      <Pressable onPress={() => openPicker("role")}>
         <NeumorphicCard
           outerStyle={styles.dropdownOuter}
           innerStyle={styles.dropdownInner}
@@ -141,10 +141,7 @@ const StartShiftCoverage = () => {
         >
           <View style={styles.dropdownRow}>
             <View style={styles.dropdownLeft}>
-              <InnerShadowIcon
-                size={40}
-                icon={<PrimaryDoctorIcon width={20} height={20} />}
-              />
+              <InnerShadowIcon size={40} icon={<PrimaryDoctorIcon width={20} height={20} />} />
               <Text style={styles.dropdownLabel}>Today is Role</Text>
             </View>
             <View style={styles.dropdownRight}>
@@ -155,7 +152,7 @@ const StartShiftCoverage = () => {
         </NeumorphicCard>
       </Pressable>
 
-      <Pressable onPress={() => openPicker('location')}>
+      <Pressable onPress={() => openPicker("location")}>
         <NeumorphicCard
           outerStyle={styles.dropdownOuter}
           innerStyle={styles.dropdownInner}
@@ -190,9 +187,9 @@ const StartShiftCoverage = () => {
                 <Image source={DoctorTempImage} style={styles.staffAvatar} />
                 <Text style={styles.staffName}>{item.name}</Text>
               </View>
-              {typeof item.countdownSeconds === 'number' && item.countdownSeconds > 0 ? (
+              {typeof item.countdownSeconds === "number" && item.countdownSeconds > 0 ? (
                 <Text style={styles.timeText}>{formatCountdown(item.countdownSeconds)}</Text>
-              ) : item.status === 'online' ? (
+              ) : item.status === "online" ? (
                 <DeltaBadge
                   value="Online"
                   bgColor={"#D3FFF1"}
@@ -302,20 +299,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.SURFACE,
     paddingHorizontal: 16,
-    paddingBottom: Platform.OS === 'android' ? 20 : 0,
+    paddingBottom: Platform.OS === "android" ? 20 : 0,
   },
   header: {
     marginTop: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   headerTitle: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
     color: COLORS.TEXT_DARK,
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   headerSpacer: {
     width: 40,
@@ -337,10 +334,10 @@ const styles = StyleSheet.create({
   },
   greeting: {
     marginTop: 16,
-    textAlign: 'center',
+    textAlign: "center",
     color: COLORS.PRIMARY_DARK,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   dropdownOuter: {
     marginTop: 20,
@@ -350,29 +347,29 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   dropdownRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   dropdownLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   dropdownLabel: {
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   dropdownRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   dropdownValue: {
     color: COLORS.TEXT_80,
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   staffOuter: {
     marginTop: 20,
@@ -387,13 +384,13 @@ const styles = StyleSheet.create({
     marginVertical: 14,
   },
   staffRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   staffLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   staffAvatar: {
@@ -404,20 +401,20 @@ const styles = StyleSheet.create({
   staffName: {
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   badgeText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   timeText: {
     color: COLORS.TEXT_80,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   footerRow: {
     marginTop: 28,
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   endCoverageBtn: {
@@ -428,7 +425,7 @@ const styles = StyleSheet.create({
   endCoverageText: {
     color: COLORS.PRIMARY_DARK,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   startShiftBtn: {
     flex: 1,
@@ -448,12 +445,12 @@ const styles = StyleSheet.create({
   sheetTitle: {
     color: COLORS.TEXT_DARK,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 6,
   },
   sheetOptionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 14,
     gap: 14,
   },
@@ -464,14 +461,14 @@ const styles = StyleSheet.create({
   sheetOptionText: {
     color: COLORS.TEXT_DARK,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   emptyDot: {
     width: 1,
     height: 1,
   },
   sheetFooter: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
     marginTop: 14,
   },
@@ -483,7 +480,7 @@ const styles = StyleSheet.create({
   sheetCancelText: {
     color: COLORS.PRIMARY_DARK,
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   sheetDoneBtn: {
     flex: 1,

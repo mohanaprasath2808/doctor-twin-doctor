@@ -17,7 +17,7 @@ export type {
   SetUserDataValue,
 } from "../types/auth";
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   isLogin: false,
   setIsLogin: (value) =>
     set((state) => ({
@@ -50,11 +50,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoadingUser: true, userError: null });
     try {
       const data = (await handleGetUser()) as ApiSessionUser;
-      console.log(data, "data in getUser");
-      set({ userData: data, isLoadingUser: false });
-      return data;
+      const hasApiEmail = Boolean(data?.email?.trim());
+      const nextUser = hasApiEmail ? data : null;
+      console.log(nextUser, "data in getUser");
+      set({
+        userData: nextUser,
+        isLoadingUser: false,
+        userError: null,
+      });
+      return nextUser;
     } catch (e: any) {
       set({
+        userData: null,
         isLoadingUser: false,
         userError: e?.message ?? "Failed to fetch user",
       });

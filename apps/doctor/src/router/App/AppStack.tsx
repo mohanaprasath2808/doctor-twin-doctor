@@ -64,6 +64,8 @@ import EscalationTask from "../../screens/App/Home/Delegation/EscalationTask";
 import ReassignTask from "../../screens/App/Home/Delegation/ReassignTask";
 import CompletionTask from "../../screens/App/Home/Delegation/CompletionTask";
 import AuditTrail from "../../screens/App/Home/Delegation/AuditTrail";
+import EndEncounter from "../../screens/App/Home/PreVisitSummary/EndEncounter";
+import PreVisitSummary from "../../screens/App/Home/PreVisitSummary/PreVisitSummary";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -495,6 +497,20 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.PHYSICALS}
         component={Physicals}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PRE_VISIT_SUMMARY}
+        component={PreVisitSummary}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.END_ENCOUNTER}
+        component={EndEncounter}
         options={{
           headerShown: false,
         }}
