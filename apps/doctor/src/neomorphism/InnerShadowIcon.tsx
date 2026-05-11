@@ -19,7 +19,29 @@ interface InnerShadowIconProps {
   radius?: number;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
+  backgroundColor?: string;
+  /**
+   * Inner shadow colors. `darkShadowColor` / `lightShadowColor` are kept as
+   * aliases to match the naming used by other neumorphic components.
+   */
+  innerShadowColor?: string;
+  innerLightShadowColor?: string;
+  darkShadowColor?: string;
+  lightShadowColor?: string;
+  /** Outside drop-shadow colors. */
+  shadowColor?: string;
+  outerShadowColor?: string;
+  outerDarkShadowColor?: string;
+  outerLightShadowColor?: string;
+  outerSoftShadowColor?: string;
 }
+
+const DEFAULT_SURFACE_COLOR = COLORS.SURFACE;
+const DEFAULT_INNER_DARK_SHADOW_COLOR = "#C8CBCC99";
+const DEFAULT_INNER_LIGHT_SHADOW_COLOR = "#FFFFFFCC";
+const DEFAULT_OUTER_DARK_SHADOW_COLOR = "#C8CBCC";
+const DEFAULT_OUTER_LIGHT_SHADOW_COLOR = "#FFFFFF";
+const DEFAULT_OUTER_SOFT_SHADOW_COLOR = "#728EAB";
 
 const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
   icon,
@@ -28,9 +50,29 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
   radius,
   disabled = false,
   style,
+  backgroundColor = DEFAULT_SURFACE_COLOR,
+  innerShadowColor,
+  innerLightShadowColor,
+  darkShadowColor,
+  lightShadowColor,
+  shadowColor,
+  outerShadowColor,
+  outerDarkShadowColor,
+  outerLightShadowColor,
+  outerSoftShadowColor,
 }) => {
   const borderRadius = radius ?? size / 2;
   const innerRadius = Math.max(0, borderRadius - 1);
+  const resolvedInnerDarkShadowColor =
+    darkShadowColor ?? innerShadowColor ?? DEFAULT_INNER_DARK_SHADOW_COLOR;
+  const resolvedInnerLightShadowColor =
+    lightShadowColor ?? innerLightShadowColor ?? DEFAULT_INNER_LIGHT_SHADOW_COLOR;
+  const resolvedOuterDarkShadowColor =
+    outerDarkShadowColor ?? outerShadowColor ?? shadowColor ?? DEFAULT_OUTER_DARK_SHADOW_COLOR;
+  const resolvedOuterLightShadowColor =
+    outerLightShadowColor ?? DEFAULT_OUTER_LIGHT_SHADOW_COLOR;
+  const resolvedOuterSoftShadowColor =
+    outerSoftShadowColor ?? DEFAULT_OUTER_SOFT_SHADOW_COLOR;
 
   return (
     <View
@@ -43,7 +85,11 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
           styles.shadowLayer,
           styles.shadowDark,
           styles.shadowDarkFocused,
-          { borderRadius },
+          {
+            borderRadius,
+            backgroundColor,
+            shadowColor: resolvedOuterDarkShadowColor,
+          },
         ]}
       />
       <View
@@ -52,12 +98,24 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
           styles.shadowLayer,
           styles.shadowLight,
           styles.shadowLightFocused,
-          { borderRadius },
+          {
+            borderRadius,
+            backgroundColor,
+            shadowColor: resolvedOuterLightShadowColor,
+          },
         ]}
       />
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowSoft, { borderRadius }]}
+        style={[
+          styles.shadowLayer,
+          styles.shadowSoft,
+          {
+            borderRadius,
+            backgroundColor,
+            shadowColor: resolvedOuterSoftShadowColor,
+          },
+        ]}
       />
 
       <View style={[styles.border, { borderRadius }]}>
@@ -87,7 +145,9 @@ const InnerShadowIcon: React.FC<InnerShadowIconProps> = ({
               width={size}
               height={size}
               borderRadius={borderRadius}
-              color={COLORS.SURFACE}
+              color={backgroundColor}
+              darkShadowColor={resolvedInnerDarkShadowColor}
+              lightShadowColor={resolvedInnerLightShadowColor}
             />
           </View>
           {onPress ? (

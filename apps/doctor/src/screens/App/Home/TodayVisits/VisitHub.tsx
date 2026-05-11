@@ -91,7 +91,7 @@ const VisitHub = () => {
         title: "Refill\nRequests",
         icon: <RefillsIcon width={18} height={18} />,
         badgeCount: 2,
-        onPress: () => navigation.navigate(navigationStrings.REFILL_REQUESTS, patientParams),
+        onPress: () => navigation.navigate(navigationStrings.REFILL_REQUEST_DETAILS),
       },
       {
         id: "consults",
