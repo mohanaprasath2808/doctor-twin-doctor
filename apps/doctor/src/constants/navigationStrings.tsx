@@ -84,6 +84,8 @@ const navigationStrings = {
   FOLLOW_UPS: "FollowUps",
   PRE_OPS: "PreOps",
   PHYSICALS: "Physicals",
+  PRE_VISIT_SUMMARY: "PreVisitSummary",
+  END_ENCOUNTER: "EndEncounter",
 };
 
 export default navigationStrings;

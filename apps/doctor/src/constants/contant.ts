@@ -41,3 +41,14 @@ export const LOCAL_STORAGE_KEYS = {
 
 //EMAIL REGEX
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const padTwo = (n: number): string => `${Math.floor(n)}`.padStart(2, "0");
+
+/** Formats elapsed encounter seconds as `HH:MM:SS` for header timer UI. */
+export function formatEncounterElapsed(totalSeconds: number): string {
+  const s = Math.max(0, Math.floor(Number.isFinite(totalSeconds) ? totalSeconds : 0));
+  const hours = Math.floor(s / 3600);
+  const minutes = Math.floor((s % 3600) / 60);
+  const seconds = s % 60;
+  return `${padTwo(hours)}:${padTwo(minutes)}:${padTwo(seconds)}`;
+}

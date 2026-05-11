@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -12,24 +12,21 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import * as LocalAuthentication from "expo-local-authentication";
-import { getStoredSessionUser, hasAuthSession, hasCompletedOnboarding } from "../../utils/authStorage";
+import { hasAuthSession, hasCompletedOnboarding } from "../../utils/authStorage";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useAppStore } from "../../store/useAppStore";
 import { handleResendOtp as requestResendOtp } from "../../service/authService";
-import IconComponent from "../../neomorphism/IconComponent";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
-import BackIcon from "../../assets/icon/backArrow.svg";
 import RightArrowIcon from "../../assets/icon/rightArrow.svg";
 import FaceScanIcon from "../../assets/icon/faceScanIcon.svg";
 import PasswordIcon from "../../assets/icon/lockIcon.svg";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
 import { useToast } from "react-native-toast-notifications";
-import { ApiSessionUser } from "../../types/session";
 const FACE_ID_LABEL = Platform.OS === "ios" ? "Face ID" : "Face unlock";
 
 const FACE_PROMPT = Platform.OS === "ios" ? "Unlock with Face ID" : "Unlock with face unlock";
@@ -61,6 +58,14 @@ const SecureLogin = () => {
   const toast = useToast();
   const setIsLogin = useAuthStore((s) => s.setIsLogin);
   const userData = useAuthStore((s) => s.userData);
+  const localStorageUserData = useAuthStore((s) => s.localStorageUserData);
+  const hydrateFromStorage = useAuthStore((s) => s.hydrateFromStorage);
+  /** Prefer `userData` from getUser (/me); when API did not return a user, use `localStorageUserData` (hydrateFromStorage). */
+  const profile = useMemo(() => {
+    if (userData?.email?.trim()) return userData;
+    if (localStorageUserData?.email?.trim()) return localStorageUserData;
+    return undefined;
+  }, [userData, localStorageUserData]);
   const getUser = useAuthStore((s) => s.getUser);
   const logout = useAuthStore((s) => s.logout);
   const loading = useAppStore((s) => s.loading);
@@ -83,8 +88,15 @@ const SecureLogin = () => {
   }, []);
   useFocusEffect(
     useCallback(() => {
-      void getUser();
-    }, [getUser]),
+      let cancelled = false;
+      void (async () => {
+        await hydrateFromStorage();
+        if (!cancelled) void getUser();
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [hydrateFromStorage, getUser]),
   );
   const continueOnboarding = useCallback(() => {
     navigation.navigate(navigationStrings.SET_USER_PIN);
@@ -167,12 +179,12 @@ const SecureLogin = () => {
           return;
         }
         void (async () => {
-          const email = userData?.email?.trim();
+          const email = profile?.email?.trim();
           if (!email) {
             toast.show("No saved email. Sign in with Login first.", { type: "warning" });
             return;
           }
-          if (userData?.face_id_set !== true) {
+          if (profile?.face_id_set !== true) {
             setLoading(true);
             try {
               const result: any = await requestResendOtp(email, "faceId");
@@ -195,22 +207,22 @@ const SecureLogin = () => {
         })();
         return;
       case "sso-login": {
-        const email = userData?.email?.trim();
+        const email = profile?.email?.trim();
         if (!email) {
           toast.show("No saved email. Sign in with Login first.", { type: "warning" });
           return;
         }
-        navigation.navigate(navigationStrings.SSO_SIGN_IN, { email: userData?.email });
+        navigation.navigate(navigationStrings.SSO_SIGN_IN, { email });
         return;
       }
       case "user-pin": {
         void (async () => {
-          const email = userData?.email?.trim();
+          const email = profile?.email?.trim();
           if (!email) {
             toast.show("No saved email. Sign in with Login first.", { type: "warning" });
             return;
           }
-          const hasUserPin = Boolean(userData?.user_pin_set);
+          const hasUserPin = Boolean(profile?.user_pin_set);
           if (hasUserPin) {
             navigation.navigate(navigationStrings.SET_USER_PIN, {
               mode: "verify",
@@ -317,7 +329,7 @@ const SecureLogin = () => {
         imageStyle={styles.image}
       />
 
-      <Text style={styles.welcomeText}>Welcome Back {userData?.name}</Text>
+      <Text style={styles.welcomeText}>Welcome Back {profile?.name}</Text>
 
       {biometricBusy || loading ? (
         <View style={styles.busyWrap}>
