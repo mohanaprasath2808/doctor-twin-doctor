@@ -93,6 +93,10 @@ const Home = () => {
     navigation.navigate(navigationStrings.LABS as never);
   }, [navigation]);
 
+  const openEligibilityPriorAuth = useCallback(() => {
+    navigation.navigate(navigationStrings.ELIGIBILITY_PRIOR_AUTH as never);
+  }, [navigation]);
+
   const openStaff = useCallback(() => {
     const parent = navigation.getParent();
     parent?.navigate(navigationStrings.STAFF as never);
@@ -140,7 +144,7 @@ const Home = () => {
         iconGreen: <EligibilityGreenIcon width={32} height={32} />,
         iconRed: <EligibilityRedIcon width={32} height={32} />,
         dataCount: "0",
-        onPress: noop,
+        onPress: openEligibilityPriorAuth,
       },
       {
         label: "Document",
@@ -171,7 +175,7 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-    [noop, openLabs, openScheduling, openTaskInbox, openStaff],
+    [noop, openEligibilityPriorAuth, openLabs, openScheduling, openTaskInbox, openStaff],
   );
 
   const listHeader = useMemo(

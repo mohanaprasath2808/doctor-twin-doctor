@@ -36,6 +36,12 @@ interface ReusableButtonProps {
   width?: DimensionValue;
   gradientColors?: [string, string];
   gradientPositions?: [number, number];
+  /** Default vertical fill gradient; set true for left→right (e.g. primary CTAs). */
+  fillGradientHorizontal?: boolean;
+  /** Extra outer green-ish glow under the fill (Skia); use on primary CTAs only. */
+  ctaGlow?: boolean;
+  /** Softer fill shading (less saturated green halos); e.g. eligibility Submit crop. */
+  softFillShade?: boolean;
   backgroundColor?: string;
   /** Ring thickness (outer gradient minus inner face). Default 3 for clear visibility. */
   borderWidth?: number;
@@ -57,6 +63,9 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
   width = "100%",
   gradientColors = ["#CFEFDC", "#429761"],
   gradientPositions = [0.125, 1],
+  fillGradientHorizontal = false,
+  ctaGlow = false,
+  softFillShade = false,
   backgroundColor,
   borderWidth = 1.5,
   borderGradientColors = DEFAULT_BORDER_GRADIENT_COLORS,
@@ -129,15 +138,47 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
           )}
           <RoundedRect x={fx} y={fy} width={fw} height={fh} r={fillRadius} color={fillBaseColor}>
             <LinearGradient
-              start={vec(fx, fy)}
-              end={vec(fx, fy + fh)}
+              start={
+                fillGradientHorizontal
+                  ? vec(fx + fw * 0.02, fy + fh * 0.5)
+                  : vec(fx, fy)
+              }
+              end={
+                fillGradientHorizontal
+                  ? vec(fx + fw * 0.98, fy + fh * 0.5)
+                  : vec(fx, fy + fh)
+              }
               colors={gradientColors}
               positions={gradientPositions}
             />
-            <Shadow dx={1} dy={1} blur={2} color="rgba(114,142,171,0.1)" />
-            <Shadow dx={-3} dy={-3} blur={10} color="rgba(255,255,255,0.9)" />
-            <Shadow dx={2} dy={2} blur={10} color="rgba(101,179,130,0.6)" />
-            <Shadow dx={2} dy={2} blur={7} color="#B5F4CC" inner />
+            {softFillShade ? (
+              <>
+                <Shadow dx={0.5} dy={1} blur={2} color="rgba(100, 116, 139, 0.08)" />
+                <Shadow dx={-2} dy={-2} blur={8} color="rgba(255, 255, 255, 0.75)" />
+                <Shadow dx={1} dy={2} blur={8} color="rgba(21, 128, 61, 0.22)" />
+                <Shadow dx={1} dy={1} blur={5} color="rgba(255,255,255,0.55)" inner />
+              </>
+            ) : (
+              <>
+                <Shadow dx={1} dy={1} blur={2} color="rgba(114,142,171,0.1)" />
+                <Shadow dx={-3} dy={-3} blur={10} color="rgba(255,255,255,0.9)" />
+                <Shadow dx={2} dy={2} blur={10} color="rgba(101,179,130,0.6)" />
+                <Shadow dx={2} dy={2} blur={7} color="#B5F4CC" inner />
+              </>
+            )}
+            {ctaGlow ? (
+              softFillShade ? (
+                <>
+                  <Shadow dx={0} dy={4} blur={14} color="rgba(22, 163, 74, 0.26)" />
+                  <Shadow dx={0} dy={2} blur={8} color="rgba(187, 247, 208, 0.4)" />
+                </>
+              ) : (
+                <>
+                  <Shadow dx={0} dy={5} blur={18} color="rgba(34, 197, 94, 0.38)" />
+                  <Shadow dx={0} dy={2} blur={10} color="rgba(167, 243, 208, 0.55)" />
+                </>
+              )
+            ) : null}
           </RoundedRect>
         </Canvas>
       )}

@@ -24,6 +24,7 @@ import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
 import LabsNotifyPatient from "../../screens/App/Labs/NotifyPatient";
 import ScheduleVisit from "../../screens/App/Labs/ScheduleVisit";
 import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
+import EligibilityPriorAuth from "../../screens/App/Eligibility/EligibilityPriorAuth";
 import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
@@ -82,6 +83,7 @@ export type AppStackParamList = {
   LabsNotifyPatient: undefined;
   LabsScheduleVisit: undefined;
   LabsActionCompleted: LabsActionCompletedParams | undefined;
+  EligibilityPriorAuth: undefined;
   Staff: undefined;
   StaffForm: StaffFormParams | undefined;
   EndShiftSummary: undefined;
@@ -202,6 +204,11 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.LABS_ACTION_COMPLETED}
         component={ActionCompleted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ELIGIBILITY_PRIOR_AUTH}
+        component={EligibilityPriorAuth}
         options={{ headerShown: false }}
       />
       <Stack.Screen

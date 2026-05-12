@@ -33,7 +33,7 @@ interface AuthContextProps {
 
 const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [isHydrated, setIsHydrated] = useState(false);
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userToken, setUserToken] = useState<string | null>(null);
   const toast = useToast();

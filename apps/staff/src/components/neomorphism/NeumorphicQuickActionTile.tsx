@@ -44,6 +44,13 @@ export type NeumorphicQuickActionTileProps = {
   badgeTextStyle?: StyleProp<TextStyle>;
   /** Max lines for the label when there is no `subtitle` (default 2). */
   labelNumberOfLines?: number;
+  /**
+   * When `subtitle` is set, max lines for the title above the subtitle (default 1).
+   * Screens like Eligibility use 2 so long titles match design without truncating.
+   */
+  labelNumberOfLinesWithSubtitle?: number;
+  /** Circle only (no label/subtitle under orb) — e.g. Eligibility summary builds footer externally for alignment. */
+  hideFooter?: boolean;
 };
 
 /** Same border math as `StatusDot`: inner diameter + 2×borderWidth = outer; `padding` on `LinearGradient` = ring thickness. */
@@ -114,6 +121,8 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
   badgeStyle,
   badgeTextStyle,
   labelNumberOfLines = 2,
+  labelNumberOfLinesWithSubtitle,
+  hideFooter = false,
 }) => {
   const outerRadius = outerDiameter / 2;
   const innerRadius = innerShadowBorderRadius ?? Math.max(0, innerShadowDiameter / 2);
@@ -144,13 +153,14 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.root, containerStyle]}
+      style={[styles.root, hideFooter ? styles.rootCircleOnly : null, containerStyle]}
       activeOpacity={activeOpacity}
       onPress={onPress}
     >
       <View
         style={[
           styles.tileHost,
+          hideFooter ? styles.tileHostCircleOnly : null,
           {
             width: outerDiameter,
             height: outerDiameter,
@@ -306,9 +316,12 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
           </View>
         ) : null}
       </View>
-      {subtitle ? (
+      {hideFooter ? null : subtitle ? (
         <View style={styles.labelBlock}>
-          <Text style={[styles.tileTitle, labelStyle]} numberOfLines={1}>
+          <Text
+            style={[styles.tileTitle, labelStyle]}
+            numberOfLines={labelNumberOfLinesWithSubtitle ?? 1}
+          >
             {label}
           </Text>
           <Text style={styles.tileSubtitle} numberOfLines={2}>
@@ -334,6 +347,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingTop: 2,
   },
+  rootCircleOnly: {
+    marginBottom: 0,
+    paddingHorizontal: 0,
+    paddingTop: 0,
+  },
   /** Matches `IconComponent` outer shell: shadows + raised face. */
   tileHost: {
     justifyContent: "center",
@@ -341,6 +359,9 @@ const styles = StyleSheet.create({
     overflow: "visible",
     backgroundColor: "transparent",
     marginBottom: 10,
+  },
+  tileHostCircleOnly: {
+    marginBottom: 0,
   },
   shadowLayer: {
     ...StyleSheet.absoluteFillObject,
