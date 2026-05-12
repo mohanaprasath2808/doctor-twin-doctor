@@ -19,6 +19,7 @@ interface IconComponentProps {
   radius?: number;
   style?: StyleProp<ViewStyle>;
   disabled?: boolean;
+  backgroundColor?: string;
 }
 
 const IconComponent: React.FC<IconComponentProps> = ({
@@ -29,6 +30,7 @@ const IconComponent: React.FC<IconComponentProps> = ({
   radius = 20,
   style,
   disabled = false,
+  backgroundColor = COLORS.SURFACE,
 }) => {
   const innerRadius = Math.max(0, radius - 1);
 
@@ -45,7 +47,7 @@ const IconComponent: React.FC<IconComponentProps> = ({
         style={[
           styles.shadowLayer,
           styles.shadowDark,
-          { borderRadius: radius },
+          { borderRadius: radius, backgroundColor },
         ]}
       />
       <View
@@ -53,7 +55,7 @@ const IconComponent: React.FC<IconComponentProps> = ({
         style={[
           styles.shadowLayer,
           styles.shadowLight,
-          { borderRadius: radius },
+          { borderRadius: radius, backgroundColor },
         ]}
       />
       <View
@@ -61,7 +63,7 @@ const IconComponent: React.FC<IconComponentProps> = ({
         style={[
           styles.shadowLayer,
           styles.shadowSoft,
-          { borderRadius: radius },
+          { borderRadius: radius, backgroundColor },
         ]}
       />
       <TouchableOpacity
@@ -81,6 +83,7 @@ const IconComponent: React.FC<IconComponentProps> = ({
               styles.surface,
               {
                 borderRadius: innerRadius,
+                backgroundColor,
                 opacity: disabled ? 0.6 : 1,
               },
             ]}
@@ -102,7 +105,6 @@ const styles = StyleSheet.create({
   },
   shadowLayer: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: COLORS.SURFACE,
   },
   // Slightly smaller vertical offset than horizontal so the glow does not read as “extra height” under the button (especially on iOS).
   shadowDark: {
@@ -158,7 +160,6 @@ const styles = StyleSheet.create({
   },
   surface: {
     flex: 1,
-    backgroundColor: COLORS.SURFACE,
     justifyContent: "center",
     alignItems: "center",
   },

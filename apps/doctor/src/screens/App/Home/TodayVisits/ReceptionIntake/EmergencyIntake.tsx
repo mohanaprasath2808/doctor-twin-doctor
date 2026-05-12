@@ -6,6 +6,7 @@ import { COLORS } from "../../../../../constants/theme";
 import IconComponent from "../../../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../../../neomorphism/InnerShadowIcon";
 import NeumorphicInnerShadowCard from "../../../../../neomorphism/NeumorphicInnerShadowCard";
+import InputField from "../../../../../neomorphism/InputField";
 import NeumorphicCard from "../../../../../components/Common/NeumorphicCard";
 import ProfileAvatar from "../../../../../components/Auth/ProfileAvatar";
 import DeltaBadge from "../../../../../components/Common/DeltaBadge";
@@ -13,12 +14,19 @@ import NeumorphicSwitch from "../../../../../components/Common/NeumorphicSwitch"
 import AppButton from "../../../../../components/Common/AppButton";
 import ReusableButton from "../../../../../neomorphism/ReusableButton";
 import BackIcon from "../../../../../assets/icon/backArrow.svg";
-import TimerIcon from "../../../../../assets/icon/timerIcon.svg";
 import WarningIcon from "../../../../../assets/icon/redWarningIcon.svg";
-import EcgPadIcon from "../../../../../assets/icon/ecgPadIcon.svg";
+import BleedingIcon from "../../../../../assets/icon/bleedingIcon.svg";
+import HeartIcon from "../../../../../assets/icon/heartIcon.svg";
 import PlusIcon from "../../../../../assets/icon/plusIcon.svg";
-import TimerClockIcon from "../../../../../assets/icon/timerClock.svg";
-import ClockIcon from "../../../../../assets/icon/clock.svg";
+import SneezeIcon from "../../../../../assets/icon/sneezeIcon.svg";
+import BoyIcon from "../../../../../assets/icon/boyIcon.svg";
+import TraumaIcon from "../../../../../assets/icon/traumaIcon.svg";
+import O2Icon from "../../../../../assets/icon/o2Icon.svg";
+import BpIcon from "../../../../../assets/icon/bpIcon.svg";
+import HeartRateIcon from "../../../../../assets/icon/heartRateIcon.svg";
+import ThermometerIcon from "../../../../../assets/icon/thermometerIcon.svg";
+import MentalStatusIcon from "../../../../../assets/icon/mentalStatusIcon.svg";
+import TempIncreaseIcon from "../../../../../assets/icon/tempIncreaseIcon.svg";
 import OverlayImage from "../../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../../assets/image/tempImage/doctorTempImage.png";
 
@@ -42,28 +50,28 @@ type RedFlag = {
 };
 
 const CHIEF_COMPLAINTS: Complaint[] = [
-  { id: "chest-pain", title: "Chest Pain", icon: <EcgPadIcon width={16} height={16} /> },
-  { id: "shortness", title: "Shortness of\nBreath", icon: <TimerClockIcon width={16} height={16} /> },
-  { id: "bleeding", title: "Bleeding", icon: <WarningIcon width={16} height={16} /> },
-  { id: "syncope", title: "Syncope", icon: <ClockIcon width={16} height={16} /> },
-  { id: "trauma", title: "Trauma", icon: <WarningIcon width={16} height={16} /> },
+  { id: "chest-pain", title: "Chest Pain", icon: <HeartIcon width={16} height={16} /> },
+  { id: "shortness", title: "Shortness of\nBreath", icon: <SneezeIcon width={16} height={16} /> },
+  { id: "bleeding", title: "Bleeding", icon: <BleedingIcon width={16} height={16} /> },
+  { id: "syncope", title: "Syncope", icon: <BoyIcon width={16} height={16} /> },
+  { id: "trauma", title: "Trauma", icon: <TraumaIcon width={16} height={16} /> },
   { id: "other", title: "Other", icon: <PlusIcon width={16} height={16} /> },
 ];
 
 const QUICK_VITALS: Vital[] = [
-  { id: "bp", label: "BP", value: "120 /80 mg", icon: <EcgPadIcon width={14} height={14} /> },
-  { id: "hr", label: "HR", value: "90 bpm", icon: <TimerClockIcon width={14} height={14} /> },
-  { id: "temp", label: "Temp", value: "98.6°F", icon: <TimerIcon width={14} height={14} /> },
-  { id: "o2", label: "O2 Sat", value: "92%", icon: <ClockIcon width={14} height={14} /> },
+  { id: "bp", label: "BP", value: "120 /80 mg", icon: <BpIcon width={18} height={18} /> },
+  { id: "hr", label: "HR", value: "90 bpm", icon: <HeartRateIcon width={18} height={18} /> },
+  { id: "temp", label: "Temp", value: "98.6°F", icon: <ThermometerIcon width={18} height={18} /> },
+  { id: "o2", label: "O2 Sat", value: "92%", icon: <O2Icon width={18} height={18} /> },
 ];
 
 const RED_FLAGS: RedFlag[] = [
-  { id: "chest-pain", title: "Chest Pain", icon: <EcgPadIcon width={16} height={16} /> },
-  { id: "shortness", title: "Shortness of Breath", icon: <TimerClockIcon width={16} height={16} /> },
-  { id: "bleeding", title: "Active Bleeding", icon: <WarningIcon width={16} height={16} /> },
-  { id: "mental-status", title: "Altered Mental Status", icon: <WarningIcon width={16} height={16} /> },
-  { id: "fever", title: "High Fever", icon: <TimerIcon width={16} height={16} /> },
-  { id: "trauma", title: "Trauma", icon: <WarningIcon width={16} height={16} /> },
+  { id: "chest-pain", title: "Chest Pain", icon: <HeartIcon width={18} height={18} /> },
+  { id: "shortness", title: "Shortness of Breath", icon: <SneezeIcon width={18} height={18} /> },
+  { id: "bleeding", title: "Active Bleeding", icon: <BleedingIcon width={18} height={18} /> },
+  { id: "mental-status", title: "Altered Mental Status", icon: <MentalStatusIcon width={18} height={18} /> },
+  { id: "fever", title: "High Fever", icon: <TempIncreaseIcon width={18} height={18} /> },
+  { id: "trauma", title: "Trauma", icon: <TraumaIcon width={18} height={18} /> },
 ];
 
 const INITIAL_RED_FLAGS: Record<string, boolean> = {
@@ -78,6 +86,7 @@ const INITIAL_RED_FLAGS: Record<string, boolean> = {
 const EmergencyIntake = () => {
   const navigation = useNavigation<any>();
   const [selectedComplaint, setSelectedComplaint] = useState("other");
+  const [otherComplaint, setOtherComplaint] = useState("");
   const [redFlags, setRedFlags] = useState(INITIAL_RED_FLAGS);
 
   const updateRedFlag = (id: string, value: boolean) => {
@@ -85,16 +94,16 @@ const EmergencyIntake = () => {
   };
 
   const renderTimerBadge = () => (
-    <NeumorphicInnerShadowCard
-      borderRadius={14}
-      backgroundColor="#FFE9E9"
+    <DeltaBadge
+      value="08:02:04"
+      height={28}
+      radius={14}
+      bgColor="#FFE9E9"
       darkShadowColor="#F0C7C7"
       lightShadowColor="#FFFFFFCC"
-      containerStyle={styles.timerBadgeOuter}
-      contentStyle={styles.timerBadgeInner}
-    >
-      <Text style={styles.timerText}>08:02 1A</Text>
-    </NeumorphicInnerShadowCard>
+      textColor="#F06A72"
+      textStyle={styles.timerText}
+    />
   );
 
   const renderComplaint = (item: Complaint) => {
@@ -106,7 +115,7 @@ const EmergencyIntake = () => {
             icon={item.icon}
             width={32}
             height={32}
-            radius={16}
+            radius={114}
             onPress={() => setSelectedComplaint(item.id)}
           />
         ) : (
@@ -146,7 +155,7 @@ const EmergencyIntake = () => {
   const renderVital = (item: Vital) => (
     <View key={item.id} style={styles.vitalCell}>
       <Text style={styles.vitalLabel}>{item.label}</Text>
-      <NeumorphicCard outerStyle={styles.vitalOuter} innerStyle={styles.vitalInner} borderRadius={12}>
+      <NeumorphicCard outerStyle={styles.vitalOuter} innerStyle={styles.vitalInner} borderRadius={64}>
         {item.icon}
         <Text style={styles.vitalValue}>{item.value}</Text>
       </NeumorphicCard>
@@ -165,7 +174,7 @@ const EmergencyIntake = () => {
             icon={<BackIcon width={16} height={16} />}
             width={40}
             height={40}
-            radius={20}
+            radius={62}
             onPress={() => navigation.goBack()}
           />
           <Text style={styles.headerTitle}>Emergency Intake</Text>
@@ -182,18 +191,17 @@ const EmergencyIntake = () => {
             imageStyle={styles.avatarImage}
           />
           <IconComponent
-            icon={<WarningIcon width={18} height={18} />}
-            width={44}
-            height={44}
-            radius={22}
+            icon={<WarningIcon width={22} height={22} />}
+            width={48}
+            height={48}
+            radius={62}
             style={styles.hazardIcon}
-            onPress={() => {}}
-            disabled
+            backgroundColor="#FDECEC"
+            onPress={() => { }}
           />
         </View>
 
-        <Text style={styles.warningTitle}>This may be critical.</Text>
-        <Text style={styles.warningSubtitle}>Send to provider now?</Text>
+        <Text style={styles.warningTitle}>{"This may be critical.\nSend to provider now?"}</Text>
 
         <NeumorphicCard outerStyle={styles.patientOuter} innerStyle={styles.patientInner} borderRadius={12}>
           <View style={styles.patientRow}>
@@ -215,31 +223,39 @@ const EmergencyIntake = () => {
           </View>
         </NeumorphicCard>
 
-        <Text style={styles.sectionHeading}>Chief Complaint</Text>
+
         <NeumorphicCard outerStyle={styles.sectionOuter} innerStyle={styles.complaintsSectionInner} borderRadius={12}>
+          <Text style={styles.sectionHeading}>Chief Complaint</Text>
           <View style={styles.complaintsGrid}>{CHIEF_COMPLAINTS.map(renderComplaint)}</View>
-          <Text style={styles.otherLabel}>Other Complaint</Text>
-          <NeumorphicInnerShadowCard
-            borderRadius={23}
-            containerStyle={styles.otherInputOuter}
-            contentStyle={styles.otherInputInner}
-          >
-            <Text style={styles.otherPlaceholder}>Enter other complaint...</Text>
-          </NeumorphicInnerShadowCard>
+          {selectedComplaint === "other" && (
+            <>
+              <Text style={styles.otherLabel}>Other Complaint</Text>
+              <InputField
+                value={otherComplaint}
+                onChangeText={setOtherComplaint}
+                placeholder="Enter other complaint..."
+                borderRadius={23}
+                minHeight={46}
+                containerStyle={styles.otherInput}
+              />
+            </>
+          )}
         </NeumorphicCard>
 
-        <Text style={styles.sectionHeading}>Quick Vitals <Text style={styles.optionalText}>(Optional)</Text></Text>
+
         <NeumorphicCard outerStyle={styles.sectionOuter} innerStyle={styles.vitalsSectionInner} borderRadius={12}>
+          <Text style={styles.sectionHeading}>Quick Vitals <Text style={styles.optionalText}>(Optional)</Text></Text>
           <View style={styles.vitalsGrid}>{QUICK_VITALS.map(renderVital)}</View>
         </NeumorphicCard>
 
-        <Text style={styles.sectionHeading}>Red Flags</Text>
+
         <NeumorphicCard outerStyle={styles.sectionOuter} innerStyle={styles.flagsInner} borderRadius={12}>
+          <Text style={styles.sectionHeading}>Red Flags</Text>
           {RED_FLAGS.map((flag, index) => (
             <View key={flag.id}>
               <View style={styles.flagRow}>
                 <View style={styles.flagLeft}>
-                  <InnerShadowIcon icon={flag.icon} size={34} />
+                  <InnerShadowIcon icon={flag.icon} size={40} />
                   <Text style={styles.flagTitle}>{flag.title}</Text>
                 </View>
                 <NeumorphicSwitch
@@ -305,26 +321,20 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   headerRow: {
+    position: "relative",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingBottom: 8,
   },
   headerTitle: {
-    flex: 1,
+    width: "100%",
+    position: "absolute",
     textAlign: "center",
+    zIndex: 1,
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
     fontFamily: "SF-Pro-Text-Bold",
-  },
-  timerBadgeOuter: {
-    width: 76,
-  },
-  timerBadgeInner: {
-    height: 28,
-    alignItems: "center",
-    justifyContent: "center",
   },
   timerText: {
     fontSize: 11,
@@ -358,22 +368,14 @@ const styles = StyleSheet.create({
   warningTitle: {
     marginTop: 8,
     textAlign: "center",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
     fontFamily: "SF-Pro-Display-Semibold",
-  },
-  warningSubtitle: {
-    textAlign: "center",
-    fontSize: 13,
-    fontWeight: "600",
-    color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Semibold",
-    marginBottom: 14,
   },
   patientOuter: {
     width: "100%",
-    marginBottom: 18,
+    marginVertical: 20,
   },
   patientInner: {
     paddingHorizontal: 12,
@@ -410,8 +412,8 @@ const styles = StyleSheet.create({
     fontFamily: "SF-Pro-Display-Semibold",
   },
   sectionHeading: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: COLORS.TEXT_DARK,
     fontFamily: "SF-Pro-Display-Semibold",
     marginBottom: 10,
@@ -450,30 +452,19 @@ const styles = StyleSheet.create({
   },
   complaintText: {
     textAlign: "center",
-    fontSize: 11,
-    lineHeight: 14,
-    color: COLORS.PRIMARY,
+    fontSize: 14,
+    fontWeight: "400",
+    color: COLORS.TEXT_80,
     fontFamily: "SF-Pro-Display-Regular",
   },
   otherLabel: {
     marginTop: 14,
-    marginBottom: 8,
     fontSize: 12,
     color: COLORS.TEXT_60,
     fontFamily: "SF-Pro-Display-Regular",
   },
-  otherInputOuter: {
-    width: "100%",
-  },
-  otherInputInner: {
-    height: 46,
-    paddingHorizontal: 16,
-    justifyContent: "center",
-  },
-  otherPlaceholder: {
-    fontSize: 12,
-    color: COLORS.TEXT_40,
-    fontFamily: "SF-Pro-Display-Regular",
+  otherInput: {
+    marginTop: 8,
   },
   vitalsSectionInner: {
     paddingHorizontal: 12,
@@ -502,21 +493,20 @@ const styles = StyleSheet.create({
     height: 42,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    paddingHorizontal: 10,
+    gap: 10,
+    paddingHorizontal: 16,
   },
   vitalValue: {
-    fontSize: 12,
+    fontSize: 14,
+    fontWeight: "400",
     color: COLORS.TEXT_DARK,
     fontFamily: "SF-Pro-Display-Regular",
   },
   flagsInner: {
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingVertical: 10,
   },
   flagRow: {
-    minHeight: 58,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -536,6 +526,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: StyleSheet.hairlineWidth,
+    marginVertical: 12,
     backgroundColor: COLORS.TEXT_20,
   },
   outlineActions: {
