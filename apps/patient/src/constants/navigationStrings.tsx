@@ -67,6 +67,11 @@ const navigationStrings = {
   TICKET_SUBMISSION: "TicketSubmission",
   EMERGENCY_SAFETY: "EmergencySafety",
   MED_REFILLS: "MedRefills",
+  REFERRALS: "Referrals",
+  REQUEST_NEW_REFERRAL: "RequestNewReferral",
+  CONSULT_REPORTS_INBOX: "ConsultReportsInbox",
+  CONSULT_REPORT_DETAIL: "ConsultReportDetail",
+  SHARE_CONSULT_REPORT: "ShareConsultReport",
 };
 
 export default navigationStrings;

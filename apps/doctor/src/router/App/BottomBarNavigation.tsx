@@ -27,6 +27,14 @@ const HIDE_TABS_ON_ROUTES = [
   navigationStrings.EVENT_DETAILS,
   navigationStrings.PRE_VISIT_SUMMARY,
   navigationStrings.END_ENCOUNTER,
+  navigationStrings.ENCOUNTER_ORDER_LABS,
+  navigationStrings.ADD_PRESCRIPTION,
+  navigationStrings.ADD_ENCOUNTER_NOTE,
+  navigationStrings.ADD_DIAGNOSIS,
+  navigationStrings.ENCOUNTER_SUMMARY,
+  navigationStrings.PREVENTIVE_CARE,
+  navigationStrings.ORDER_ENGINE,
+  navigationStrings.ORDER_SUCCESSFULLY_PLACED,
 ] as const;
 
 const isTabHiddenForRoute = (route: RouteProp<Record<string, object | undefined>, string>) => {
