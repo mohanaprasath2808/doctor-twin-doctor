@@ -12,7 +12,8 @@ import ProfileAvatar from "../../../../../components/Auth/ProfileAvatar";
 import NeumorphicToggleSwitch from "../../../../../components/Common/NeumorphicSwitch";
 import BackIcon from "../../../../../assets/icon/backArrow.svg";
 import TimerIcon from "../../../../../assets/icon/timerIcon.svg";
-import TickIcon from "../../../../../assets/icon/tickIcon.svg";
+import TimerClock from "../../../../../assets/icon/timerClock.svg";
+import ClockIcon from "../../../../../assets/icon/clock.svg";
 import OverlayImage from "../../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../../assets/image/tempImage/doctorTempImage.png";
 
@@ -81,7 +82,7 @@ const CheckIn = () => {
           <Text style={styles.sectionTitle}>Status</Text>
           <View style={styles.row}>
             <View style={styles.rowLeft}>
-              <InnerShadowIcon icon={<TickIcon width={18} height={18} />} size={40} />
+              <InnerShadowIcon icon={<TimerClock width={18} height={18} />} size={40} />
               <Text style={styles.rowTitle}>Mark as Arrived</Text>
             </View>
             <NeumorphicToggleSwitch value={arrived} onValueChange={setArrived} />
@@ -91,7 +92,7 @@ const CheckIn = () => {
         <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner} borderRadius={12}>
           <Text style={styles.sectionTitle}>Arrival Time</Text>
           <View style={styles.row}>
-            <InnerShadowIcon icon={<TimerIcon width={18} height={18} />} size={40} />
+            <InnerShadowIcon icon={<ClockIcon width={18} height={18} />} size={40} />
             <View style={styles.itemTextWrap}>
               <Text style={styles.rowTitle}>10:22 AM</Text>
               <Text style={styles.rowSubtitle}>Time</Text>

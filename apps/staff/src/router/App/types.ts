@@ -1,6 +1,8 @@
 import navigationStrings from "../../constants/navigationStrings";
 import type {
   AssignTaskParams,
+  DelegationActionCompletedParams,
+  DelegationAssignmentParams,
   PatientTaskDetailParams,
   StaffFormParams,
 } from "./AppStack";
@@ -31,4 +33,9 @@ export type AppStackParamList = {
   [navigationStrings.SCHEDULING_FILL_SLOT]: undefined;
   [navigationStrings.SCHEDULING_ASSIGN_TASK]: undefined;
   [navigationStrings.SCHEDULING_RESCHEDULE]: undefined;
+  [navigationStrings.DELEGATION]: undefined;
+  [navigationStrings.DELEGATION_ASSIGN_TASK]: DelegationAssignmentParams | undefined;
+  [navigationStrings.DELEGATION_REASSIGN_TASK]: DelegationAssignmentParams | undefined;
+  [navigationStrings.DELEGATION_ESCALATE_MESSAGE]: undefined;
+  [navigationStrings.DELEGATION_ACTION_COMPLETED]: DelegationActionCompletedParams | undefined;
 };
