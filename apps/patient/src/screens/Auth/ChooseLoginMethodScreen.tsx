@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { ActivityIndicator, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,7 +14,7 @@ import PinIcon from "../../assets/icons/pin.svg";
 import MessageIcon from "../../assets/icons/message.svg";
 import RightArrowIcon from "../../assets/icons/rightArrowIcon.svg";
 import type { OtpVerificationFlow } from "../../types/authRoute";
-import { StackActions, useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useToast } from "react-native-toast-notifications";
 import { AuthContext } from "../../context/AuthContext";
 import { Pressable } from "react-native";
@@ -31,9 +31,24 @@ const ChooseLoginMethodScreen = () => {
   if (!authContext) {
     throw new Error("ChooseLoginMethodScreen must be used within AuthContextProvider");
   }
-  const { setLoading, loading, handleResendOtp, localUserData, logout, setIsLogin, handleGetUser } =
-    authContext;
-  console.log(localUserData, "localUserData in ChooseLoginMethodScreen");
+  const {
+    setLoading,
+    loading,
+    handleResendOtp,
+    localUserData,
+    logout,
+    setIsLogin,
+    handleGetUser,
+    userData,
+  } = authContext;
+
+  const profile = useMemo(() => {
+    const apiPhone = userData?.phone != null ? String(userData.phone).trim() : "";
+    if (apiPhone) return userData;
+    const localPhone = localUserData?.phone != null ? String(localUserData.phone).trim() : "";
+    if (localPhone) return localUserData;
+    return userData ?? localUserData ?? undefined;
+  }, [userData, localUserData]);
 
   const onFaceIdPress = useCallback(async () => {
     try {
@@ -79,18 +94,14 @@ const ChooseLoginMethodScreen = () => {
   //handle press
   const handlePress = async (otpType: OtpVerificationFlow) => {
     toast.hideAll();
-    const phone = localUserData?.phone;
+    const phone = profile?.phone;
     if (!phone) {
       toast.show("Please enter phone number", { type: "warning" });
       return;
     }
 
-    const hasFaceId = Boolean(
-      (localUserData as any)?.face_id_set ?? (localUserData as any)?.faceIdSet,
-    );
-    const hasUserPin = Boolean(
-      (localUserData as any)?.user_pin_set ?? (localUserData as any)?.userPinSet,
-    );
+    const hasFaceId = Boolean((profile as any)?.face_id_set ?? (profile as any)?.faceIdSet);
+    const hasUserPin = Boolean((profile as any)?.user_pin_set ?? (profile as any)?.userPinSet);
 
     if (otpType === "faceId" && hasFaceId) {
       await onFaceIdPress();
@@ -167,7 +178,7 @@ const ChooseLoginMethodScreen = () => {
           imageStyle={styles.avatarImage}
         />
 
-        <Text style={styles.title}>Welcome Back, {localUserData?.name}</Text>
+        <Text style={styles.title}>Welcome Back, {profile?.name}</Text>
         <Text style={styles.subtitle}>Please sign in to your account.</Text>
 
         {loading && <ActivityIndicator size="large" color={COLORS.PRIMARY} />}

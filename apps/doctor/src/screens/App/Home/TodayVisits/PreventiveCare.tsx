@@ -10,4 +10,3 @@ const PreventiveCare = () => {
 };
 
 export default PreventiveCare;
-

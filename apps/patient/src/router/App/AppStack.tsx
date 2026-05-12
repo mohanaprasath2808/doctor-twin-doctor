@@ -48,6 +48,11 @@ import ProblemList from "../../screens/App/MyRecords/ProblemList";
 import ProblemDetail from "../../screens/App/MyRecords/ProblemDetail";
 import Allergies from "../../screens/App/MyRecords/Allergies";
 import AllergyDetail from "../../screens/App/MyRecords/AllergyDetail";
+import Referrals from "../../screens/App/Referrals/Referrals";
+import RequestNewReferral from "../../screens/App/Referrals/RequestNewReferral";
+import ConsultReportsInbox from "../../screens/App/ConsultReports/ConsultReportsInbox";
+import ConsultReportDetail from "../../screens/App/ConsultReports/ConsultReportDetail";
+import ShareConsultReport from "../../screens/App/ConsultReports/ShareConsultReport";
 
 const Stack = createStackNavigator();
 
@@ -55,18 +60,9 @@ const AppStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={navigationStrings.BOTTOM_NAVIGATION} component={BottomNavigation} />
-      <Stack.Screen
-        name={navigationStrings.APPOINTMENTS}
-        component={Appointments}
-      />
-      <Stack.Screen
-        name={navigationStrings.APPOINTMENT_DETAIL}
-        component={AppointmentDetail}
-      />
-      <Stack.Screen
-        name={navigationStrings.APPOINTMENT_CONFIRM}
-        component={AppointmentConfirm}
-      />
+      <Stack.Screen name={navigationStrings.APPOINTMENTS} component={Appointments} />
+      <Stack.Screen name={navigationStrings.APPOINTMENT_DETAIL} component={AppointmentDetail} />
+      <Stack.Screen name={navigationStrings.APPOINTMENT_CONFIRM} component={AppointmentConfirm} />
       <Stack.Screen
         name={navigationStrings.APPOINTMENT_SCHEDULED}
         component={AppointmentScheduled}
@@ -80,23 +76,11 @@ const AppStack = () => {
         name={navigationStrings.COMPLETE_SUBSCRIPTION}
         component={CompleteSubscription}
       />
-      <Stack.Screen
-        name={navigationStrings.SUBSCRIPTION_COMPLETED}
-        component={WellnessSuccess}
-      />
-      <Stack.Screen
-        name={navigationStrings.BEFORE_AFTER_GALLERY}
-        component={BeforeAfterGallery}
-      />
+      <Stack.Screen name={navigationStrings.SUBSCRIPTION_COMPLETED} component={WellnessSuccess} />
+      <Stack.Screen name={navigationStrings.BEFORE_AFTER_GALLERY} component={BeforeAfterGallery} />
       <Stack.Screen name={navigationStrings.TREATMENT_RESULT} component={TreatmentResult} />
-      <Stack.Screen
-        name={navigationStrings.SCHEDULE_STEP_1}
-        component={ScheduleStep1}
-      />
-      <Stack.Screen
-        name={navigationStrings.SCHEDULE_STEP_2}
-        component={ScheduleStep2}
-      />
+      <Stack.Screen name={navigationStrings.SCHEDULE_STEP_1} component={ScheduleStep1} />
+      <Stack.Screen name={navigationStrings.SCHEDULE_STEP_2} component={ScheduleStep2} />
       <Stack.Screen name={navigationStrings.LABS} component={Labs} />
       <Stack.Screen name={navigationStrings.IMAGING} component={Imaging} />
       <Stack.Screen name={navigationStrings.IMAGING_REQUEST} component={ImagingRequest} />
@@ -111,10 +95,7 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.STATEMENT_DETAIL} component={StatementDetail} />
       <Stack.Screen name={navigationStrings.PAYMENT_SUCCESSFUL} component={PaymentSuccessful} />
       <Stack.Screen name={navigationStrings.MY_RECORDS} component={MyRecords} />
-      <Stack.Screen
-        name={navigationStrings.IMMUNIZATION_RECORD}
-        component={ImmunizationRecord}
-      />
+      <Stack.Screen name={navigationStrings.IMMUNIZATION_RECORD} component={ImmunizationRecord} />
       <Stack.Screen name={navigationStrings.FORMS_LIBRARY} component={FormsLibrary} />
       <Stack.Screen name={navigationStrings.PRACTICE_DOCUMENTS} component={PracticeDocuments} />
       <Stack.Screen name={navigationStrings.UPLOAD_CENTER} component={UploadCenter} />
@@ -123,12 +104,14 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.PROBLEM_DETAIL} component={ProblemDetail} />
       <Stack.Screen name={navigationStrings.ALLERGIES} component={Allergies} />
       <Stack.Screen name={navigationStrings.ALLERGY_DETAIL} component={AllergyDetail} />
+      <Stack.Screen name={navigationStrings.REFERRALS} component={Referrals} />
+      <Stack.Screen name={navigationStrings.REQUEST_NEW_REFERRAL} component={RequestNewReferral} />
+      <Stack.Screen name={navigationStrings.CONSULT_REPORTS_INBOX} component={ConsultReportsInbox} />
+      <Stack.Screen name={navigationStrings.CONSULT_REPORT_DETAIL} component={ConsultReportDetail} />
+      <Stack.Screen name={navigationStrings.SHARE_CONSULT_REPORT} component={ShareConsultReport} />
       <Stack.Screen name={navigationStrings.LAB_REQUEST} component={LabRequest} />
       <Stack.Screen name={navigationStrings.LAB_RESULTS} component={LabResults} />
-      <Stack.Screen
-        name={navigationStrings.LAB_RESULT_DETAIL}
-        component={LabResultDetail}
-      />
+      <Stack.Screen name={navigationStrings.LAB_RESULT_DETAIL} component={LabResultDetail} />
       <Stack.Screen name={navigationStrings.MY_PROFILE} component={MyProfile} />
       <Stack.Screen name={navigationStrings.EDIT_PROFILE} component={EditProfile} />
       <Stack.Screen name={navigationStrings.COMMUNICATION} component={Communication} />

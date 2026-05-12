@@ -24,7 +24,7 @@ import PriorAuthorization from "../../screens/App/Home/TodayVisits/PriorAuthoriz
 import OrderHub from "../../screens/App/Home/TodayVisits/OrderHub";
 import RecentConsults from "../../screens/App/Home/TodayVisits/RecentConsults";
 import Messages from "../../screens/App/Home/TodayVisits/Messages";
-import PreventiveCare from "../../screens/App/Home/TodayVisits/PreventiveCare";
+import PreventiveCare from "../../screens/App/Home/PreventiveCare/PreventiveCare";
 import ClinicalSummary from "../../screens/App/Home/TodayVisits/ClinicalSummary";
 import LabsDashboard from "../../screens/App/Home/Labs/LabsDashboard";
 import LabAlertDecision from "../../screens/App/Home/Labs/LabAlertDecision";
@@ -73,6 +73,14 @@ import CompletionTask from "../../screens/App/Home/Delegation/CompletionTask";
 import AuditTrail from "../../screens/App/Home/Delegation/AuditTrail";
 import EndEncounter from "../../screens/App/Home/PreVisitSummary/EndEncounter";
 import PreVisitSummary from "../../screens/App/Home/PreVisitSummary/PreVisitSummary";
+import EncounterOrderLabs from "../../screens/App/Home/PreVisitSummary/EncounterOrderLabs";
+import AddPrescription from "../../screens/App/Home/PreVisitSummary/AddPrescription";
+import AddEncounterNote from "../../screens/App/Home/PreVisitSummary/AddEncounterNote";
+import AddDiagnosis from "../../screens/App/Home/PreVisitSummary/AddDiagnosis";
+import EncounterSummary from "../../screens/App/Home/PreVisitSummary/EncounterSummary";
+import EncounterCompleted from "../../screens/App/Home/PreVisitSummary/EncounterCompleted";
+import OrderEngine from "../../screens/App/Home/OrderEngine/OrderEngine";
+import OrderSuccessfullyPlaced from "../../screens/App/Home/OrderEngine/OrderSuccessfullyPlaced";
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
@@ -553,6 +561,62 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.END_ENCOUNTER}
         component={EndEncounter}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ENCOUNTER_ORDER_LABS}
+        component={EncounterOrderLabs}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ADD_PRESCRIPTION}
+        component={AddPrescription}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ADD_ENCOUNTER_NOTE}
+        component={AddEncounterNote}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ADD_DIAGNOSIS}
+        component={AddDiagnosis}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ENCOUNTER_SUMMARY}
+        component={EncounterSummary}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ENCOUNTER_COMPLETED}
+        component={EncounterCompleted}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ORDER_ENGINE}
+        component={OrderEngine}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ORDER_SUCCESSFULLY_PLACED}
+        component={OrderSuccessfullyPlaced}
         options={{
           headerShown: false,
         }}

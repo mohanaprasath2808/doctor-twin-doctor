@@ -91,6 +91,9 @@ const Home = () => {
         if (item.id === "wellness") {
           navigation.navigate(navigationStrings.WELLNESS_MEDSPA);
         }
+        if (item.id === "referral") {
+          navigation.navigate(navigationStrings.REFERRALS);
+        }
       }}
       icon={item.icon}
       label={item.label}

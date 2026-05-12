@@ -513,6 +513,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
+    fontFamily: "SF-Pro-Text-Medium",
   },
   tileSubtitle: {
     marginTop: 4,
@@ -521,6 +522,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: COLORS.TEXT_70,
     textAlign: "center",
+    fontFamily: "SF-Pro-Text-Regular",
   },
 });
 
