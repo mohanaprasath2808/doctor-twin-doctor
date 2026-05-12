@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 22,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Text-Bold",
     letterSpacing: 0.18,
     color: COLORS.TEXT_DARK,
     textAlign: "center",
@@ -141,6 +142,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 22,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
     color: COLORS.TEXT_DARK,
   },
   subtitle: {
@@ -148,6 +150,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
     color: COLORS.TEXT_70,
     lineHeight: 21,
   },
@@ -165,6 +168,7 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontSize: 15,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
     letterSpacing: 1,
   },
   footer: {

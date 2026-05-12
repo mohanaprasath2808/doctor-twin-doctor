@@ -22,6 +22,12 @@ import DelegationEscalateMessage from "../../screens/App/Delegation/DelegationEs
 import DelegationTaskAssignment from "../../screens/App/Delegation/DelegationTaskAssignment";
 import Staff from "../../screens/App/Staff/Staff";
 import CreateEditStaff from "../../screens/App/Staff/CreateEditStaff";
+import DoctorReview from "../../screens/App/Refills/DoctorReview";
+import MessagePatient from "../../screens/App/Refills/MessagePatient";
+import Refills from "../../screens/App/Refills/Refills";
+import RefillsAssignNurse from "../../screens/App/Refills/AssignNurse";
+import RefillsConfirm from "../../screens/App/Refills/RefillsConfirm";
+import RequestLabs from "../../screens/App/Refills/RequestLabs";
 import Labs from "../../screens/App/Labs/Labs";
 import AssignNurse from "../../screens/App/Labs/AssignNurse";
 import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
@@ -96,6 +102,12 @@ export type AppStackParamList = {
   DelegationReassignTask: DelegationAssignmentParams | undefined;
   DelegationEscalateMessage: undefined;
   DelegationActionCompleted: DelegationActionCompletedParams | undefined;
+  Refills: undefined;
+  RefillsConfirm: undefined;
+  RefillsDoctorReview: undefined;
+  RefillsMessagePatient: undefined;
+  RefillsAssignNurse: undefined;
+  RefillsRequestLabs: undefined;
   Labs: undefined;
   LabsAssignNurse: undefined;
   LabsEscalateMessage: undefined;
@@ -217,6 +229,36 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.DELEGATION_ACTION_COMPLETED}
         component={DelegationActionCompleted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS}
+        component={Refills}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_CONFIRM}
+        component={RefillsConfirm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_DOCTOR_REVIEW}
+        component={DoctorReview}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_MESSAGE_PATIENT}
+        component={MessagePatient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_ASSIGN_NURSE}
+        component={RefillsAssignNurse}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_REQUEST_LABS}
+        component={RequestLabs}
         options={{ headerShown: false }}
       />
       <Stack.Screen

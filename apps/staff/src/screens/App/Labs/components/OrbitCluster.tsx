@@ -51,14 +51,14 @@ const OrbitCluster = <T extends OrbitClusterNode>({
 
   const docSize = Math.round(170 * sx);
   const docLeft = Math.round(122 * sx);
-  const docTop = Math.round(80 * sy);
+  const docTop = Math.round(90 * sy);
   const btnSize = Math.round(80 * sx);
 
   const imgSize = Math.round(docSize * 0.62);
   const overlayRadius = Math.round(docSize / 2);
 
   return (
-    <View style={{ height: orbitH, position: "relative", overflow: "hidden" }}>
+    <View style={{ height: orbitH, position: "relative" }}>
       {RING_DIAMS.map((d, i) => {
         const sd = Math.round(d * sx);
         return (

@@ -97,6 +97,10 @@ const Home = () => {
     navigation.navigate(navigationStrings.LABS as never);
   }, [navigation]);
 
+  const openRefills = useCallback(() => {
+    navigation.navigate(navigationStrings.REFILLS as never);
+  }, [navigation]);
+
   const openStaff = useCallback(() => {
     const parent = navigation.getParent();
     parent?.navigate(navigationStrings.STAFF as never);
@@ -109,7 +113,7 @@ const Home = () => {
         iconGreen: <RefillsGreenIcon width={32} height={32} />,
         iconRed: <RefillRedIcon width={32} height={32} />,
         dataCount: "1",
-        onPress: noop,
+        onPress: openRefills,
       },
       {
         label: "Messages",
@@ -175,7 +179,7 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-    [noop, openDelegation, openLabs, openScheduling, openTaskInbox, openStaff],
+    [noop, openDelegation, openLabs, openRefills, openScheduling, openTaskInbox, openStaff],
   );
 
   const listHeader = useMemo(
