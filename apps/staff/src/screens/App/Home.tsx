@@ -89,6 +89,10 @@ const Home = () => {
     navigation.navigate(navigationStrings.SCHEDULING);
   }, [navigation]);
 
+  const openDelegation = useCallback(() => {
+    navigation.navigate(navigationStrings.DELEGATION as never);
+  }, [navigation]);
+
   const openLabs = useCallback(() => {
     navigation.navigate(navigationStrings.LABS as never);
   }, [navigation]);
@@ -133,7 +137,7 @@ const Home = () => {
         iconGreen: <DelegationGreenIcon width={32} height={32} />,
         iconRed: <DelegationRedIcon width={32} height={32} />,
         dataCount: "0",
-        onPress: noop,
+        onPress: openDelegation,
       },
       {
         label: "Eligibility",
@@ -171,7 +175,7 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-    [noop, openLabs, openScheduling, openTaskInbox, openStaff],
+    [noop, openDelegation, openLabs, openScheduling, openTaskInbox, openStaff],
   );
 
   const listHeader = useMemo(
