@@ -16,6 +16,10 @@ import UrgentOpening from "../../screens/App/Scheduling/UrgentOpening";
 import NotifyPatient from "../../screens/App/Scheduling/NotifyPatient";
 import Reschedule from "../../screens/App/Scheduling/Reschedule";
 import { Scheduling } from "../../screens/App/Scheduling/Scheduling";
+import Delegation from "../../screens/App/Delegation/Delegation";
+import DelegationActionCompleted from "../../screens/App/Delegation/DelegationActionCompleted";
+import DelegationEscalateMessage from "../../screens/App/Delegation/DelegationEscalateMessage";
+import DelegationTaskAssignment from "../../screens/App/Delegation/DelegationTaskAssignment";
 import Staff from "../../screens/App/Staff/Staff";
 import CreateEditStaff from "../../screens/App/Staff/CreateEditStaff";
 import Labs from "../../screens/App/Labs/Labs";
@@ -52,6 +56,17 @@ export type LabsActionCompletedParams = {
   buttonText?: string;
 };
 
+export type DelegationAssignmentParams = {
+  mode?: "assign" | "reassign";
+};
+
+export type DelegationActionCompletedParams = {
+  title?: string;
+  description?: string;
+  buttonText?: string;
+  showTimer?: boolean;
+};
+
 export type StaffFormParams = {
   isEdit?: boolean;
   initial?: StaffMember;
@@ -76,6 +91,11 @@ export type AppStackParamList = {
   SchedulingFillSlot: undefined;
   SchedulingAssignTask: undefined;
   SchedulingReschedule: undefined;
+  Delegation: undefined;
+  DelegationAssignTask: DelegationAssignmentParams | undefined;
+  DelegationReassignTask: DelegationAssignmentParams | undefined;
+  DelegationEscalateMessage: undefined;
+  DelegationActionCompleted: DelegationActionCompletedParams | undefined;
   Labs: undefined;
   LabsAssignNurse: undefined;
   LabsEscalateMessage: undefined;
@@ -172,6 +192,31 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.SCHEDULING_RESCHEDULE}
         component={Reschedule}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATION}
+        component={Delegation}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATION_ASSIGN_TASK}
+        component={DelegationTaskAssignment}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATION_REASSIGN_TASK}
+        component={DelegationTaskAssignment}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATION_ESCALATE_MESSAGE}
+        component={DelegationEscalateMessage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DELEGATION_ACTION_COMPLETED}
+        component={DelegationActionCompleted}
         options={{ headerShown: false }}
       />
       <Stack.Screen
