@@ -1,5 +1,13 @@
 import React from "react";
-import { FlatList, Platform, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import {
+  FlatList,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
@@ -93,6 +101,14 @@ const Home = () => {
         }
         if (item.id === "referral") {
           navigation.navigate(navigationStrings.REFERRALS);
+        }
+        if (item.id === "insurance") {
+          navigation.navigate(navigationStrings.INSURANCE_ELIGIBILITY);
+        }
+        if (item.id === "settings") {
+          navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
+            screen: navigationStrings.SETTINGS,
+          });
         }
       }}
       icon={item.icon}

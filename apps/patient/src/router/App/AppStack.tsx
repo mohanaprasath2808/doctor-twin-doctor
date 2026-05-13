@@ -38,6 +38,10 @@ import ViewDocument from "../../screens/App/Imaging/ViewDocument";
 import Billing from "../../screens/App/Billing/Billing";
 import StatementDetail from "../../screens/App/Billing/StatementDetail";
 import PaymentSuccessful from "../../screens/App/Billing/PaymentSuccessful";
+import InsuranceEligibility from "../../screens/App/Insurance/InsuranceEligibility";
+import AddNewInsurance from "../../screens/App/Insurance/AddNewInsurance";
+import InsuranceVerifiedDetail from "../../screens/App/Insurance/InsuranceVerifiedDetail";
+import InsuranceNeedUpdateDetail from "../../screens/App/Insurance/InsuranceNeedUpdateDetail";
 import MyRecords from "../../screens/App/MyRecords/MyRecords";
 import ImmunizationRecord from "../../screens/App/MyRecords/ImmunizationRecord";
 import FormsLibrary from "../../screens/App/MyRecords/FormsLibrary";
@@ -49,7 +53,9 @@ import ProblemDetail from "../../screens/App/MyRecords/ProblemDetail";
 import Allergies from "../../screens/App/MyRecords/Allergies";
 import AllergyDetail from "../../screens/App/MyRecords/AllergyDetail";
 import Referrals from "../../screens/App/Referrals/Referrals";
+import ReferralDetail from "../../screens/App/Referrals/ReferralDetail";
 import RequestNewReferral from "../../screens/App/Referrals/RequestNewReferral";
+import ReferralStatus from "../../screens/App/Referrals/ReferralStatus";
 import ConsultReportsInbox from "../../screens/App/ConsultReports/ConsultReportsInbox";
 import ConsultReportDetail from "../../screens/App/ConsultReports/ConsultReportDetail";
 import ShareConsultReport from "../../screens/App/ConsultReports/ShareConsultReport";
@@ -92,6 +98,16 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.VIEW_REPORT} component={ViewReport} />
       <Stack.Screen name={navigationStrings.VIEW_PDF} component={ViewDocument} />
       <Stack.Screen name={navigationStrings.BILLING} component={Billing} />
+      <Stack.Screen name={navigationStrings.INSURANCE_ELIGIBILITY} component={InsuranceEligibility} />
+      <Stack.Screen name={navigationStrings.ADD_NEW_INSURANCE} component={AddNewInsurance} />
+      <Stack.Screen
+        name={navigationStrings.INSURANCE_VERIFIED_DETAIL}
+        component={InsuranceVerifiedDetail}
+      />
+      <Stack.Screen
+        name={navigationStrings.INSURANCE_NEED_UPDATE_DETAIL}
+        component={InsuranceNeedUpdateDetail}
+      />
       <Stack.Screen name={navigationStrings.STATEMENT_DETAIL} component={StatementDetail} />
       <Stack.Screen name={navigationStrings.PAYMENT_SUCCESSFUL} component={PaymentSuccessful} />
       <Stack.Screen name={navigationStrings.MY_RECORDS} component={MyRecords} />
@@ -105,6 +121,8 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.ALLERGIES} component={Allergies} />
       <Stack.Screen name={navigationStrings.ALLERGY_DETAIL} component={AllergyDetail} />
       <Stack.Screen name={navigationStrings.REFERRALS} component={Referrals} />
+      <Stack.Screen name={navigationStrings.REFERRAL_STATUS} component={ReferralStatus} />
+      <Stack.Screen name={navigationStrings.REFERRAL_DETAIL} component={ReferralDetail} />
       <Stack.Screen name={navigationStrings.REQUEST_NEW_REFERRAL} component={RequestNewReferral} />
       <Stack.Screen name={navigationStrings.CONSULT_REPORTS_INBOX} component={ConsultReportsInbox} />
       <Stack.Screen name={navigationStrings.CONSULT_REPORT_DETAIL} component={ConsultReportDetail} />

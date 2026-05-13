@@ -68,10 +68,16 @@ const navigationStrings = {
   EMERGENCY_SAFETY: "EmergencySafety",
   MED_REFILLS: "MedRefills",
   REFERRALS: "Referrals",
+  REFERRAL_DETAIL: "ReferralDetail",
   REQUEST_NEW_REFERRAL: "RequestNewReferral",
+  REFERRAL_STATUS: "ReferralStatus",
   CONSULT_REPORTS_INBOX: "ConsultReportsInbox",
   CONSULT_REPORT_DETAIL: "ConsultReportDetail",
   SHARE_CONSULT_REPORT: "ShareConsultReport",
+  INSURANCE_ELIGIBILITY: "InsuranceEligibility",
+  ADD_NEW_INSURANCE: "AddNewInsurance",
+  INSURANCE_VERIFIED_DETAIL: "InsuranceVerifiedDetail",
+  INSURANCE_NEED_UPDATE_DETAIL: "InsuranceNeedUpdateDetail",
 };
 
 export default navigationStrings;

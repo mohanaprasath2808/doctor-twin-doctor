@@ -23,7 +23,7 @@ import { getOnboardingCompleted } from "../../utils/authStorage";
 
 const ICON_SIZE = 18;
 
-const ChooseLoginMethodScreen = () => {
+const ChooseLoginMethod = () => {
   const toast = useToast();
   const navigation = useNavigation<any>();
   //CONTEXT
@@ -224,7 +224,7 @@ const LoginMethodRow: React.FC<RowProps> = ({ label, icon, onPress }) => (
   </NeumorphicCard>
 );
 
-export default ChooseLoginMethodScreen;
+export default ChooseLoginMethod;
 
 const styles = StyleSheet.create({
   safe: {
