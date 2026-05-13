@@ -20,7 +20,7 @@ import LocationBottomSheetModal from "../../../components/BottomSheets/App/Locat
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import NotificationIcon from "../../../assets/icons/notificationIcon.svg";
 import DropDownIcon from "../../../assets/icons/dropDown.svg";
-import PharmacyIcon from "../../../assets/icons/preferredLocationIcon.svg";
+import PharmacyIcon from "../../../assets/icons/cvsPharmacyIcon.svg";
 
 const RequestNewReferral = () => {
   const insets = useSafeAreaInsets();
@@ -159,10 +159,9 @@ const RequestNewReferral = () => {
                 borderWidth={1}
                 borderColor={COLORS.PRIMARY}
                 bgColor={COLORS.SURFACE}
-                width={76}
+                width={65}
                 height={26}
                 borderRadius={60}
-                elevated
                 textStyle={styles.changeBtnText}
                 style={styles.changeBtn}
                 onPress={() => locationSheetRef.current?.present()}
@@ -174,8 +173,8 @@ const RequestNewReferral = () => {
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
           <ReusableButton
             title="Submit Referral Request"
-            height={52}
-            borderRadius={28}
+            height={48}
+            borderRadius={64}
             width="100%"
             onPress={() => undefined}
             textStyle={styles.submitBtnText}
@@ -219,6 +218,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
     flex: 1,
     textAlign: "center",
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   notifWrap: {
     width: 40,
@@ -255,7 +255,6 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    lineHeight: 20,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
     fontFamily: "SF-Pro-Text-Medium",
@@ -263,7 +262,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     marginTop: 20,
     fontSize: 12,
-    lineHeight: 18,
+    lineHeight: 14,
     fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_60,
     fontFamily: "SF-Pro-Text-Regular",
@@ -291,9 +290,9 @@ const styles = StyleSheet.create({
   locationText: {
     flex: 1,
     fontSize: 14,
-    fontWeight: "400",
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
-    lineHeight: 20,
+    lineHeight: 18,
     fontFamily: "SF-Pro-Text-Medium",
   },
   changeBtn: {

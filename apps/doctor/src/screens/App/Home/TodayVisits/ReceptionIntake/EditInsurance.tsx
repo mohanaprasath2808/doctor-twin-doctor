@@ -29,7 +29,11 @@ const EditInsurance = () => {
   const renderUploadCard = (label: string) => (
     <View style={styles.uploadSection}>
       <Text style={styles.label}>{label}</Text>
-      <NeumorphicCard outerStyle={styles.uploadOuter} innerStyle={styles.uploadInner} borderRadius={10}>
+      <NeumorphicCard
+        outerStyle={styles.uploadOuter}
+        innerStyle={styles.uploadInner}
+        borderRadius={10}
+      >
         <UploadIcon width={22} height={22} />
         <Text style={styles.uploadText}>Upload document</Text>
         <AppButton
@@ -192,8 +196,7 @@ const styles = StyleSheet.create({
   input: {
     marginTop: 6,
   },
-  uploadSection: {
-  },
+  uploadSection: {},
   uploadOuter: {
     width: "100%",
     marginTop: 8,

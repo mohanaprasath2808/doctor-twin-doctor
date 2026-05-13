@@ -27,7 +27,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const navigation = useNavigation<any>();
   const toast = useToast();
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);

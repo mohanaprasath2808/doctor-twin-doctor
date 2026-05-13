@@ -190,9 +190,10 @@ const SpecialtyBottomSheetModal = forwardRef<BSModalType, SpecialtyBottomSheetMo
                 <ReusableButton
                   title="Done"
                   containerStyle={styles.doneBtn}
-                  height={52}
-                  borderRadius={26}
+                  height={48}
+                  borderRadius={64}
                   onPress={() => undefined}
+                  textStyle={styles.footerDoneText}
                 />
               </View>
             </View>
@@ -506,6 +507,12 @@ const styles = StyleSheet.create({
   },
   footerCancelText: {
     color: COLORS.PRIMARY,
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+  },
+  footerDoneText: {
+    color: COLORS.WHITE,
     fontSize: 16,
     fontWeight: "500",
     fontFamily: "SF-Pro-Text-Medium",
