@@ -47,6 +47,8 @@ const navigationStrings = {
   LABS_NOTIFY_PATIENT: "LabsNotifyPatient",
   LABS_SCHEDULE_VISIT: "LabsScheduleVisit",
   LABS_ACTION_COMPLETED: "LabsActionCompleted",
+  BILLING_DASHBOARD: "BillingDashboard",
+  BILLING_DETAIL: "BillingDetail",
 } as const;
 
 export default navigationStrings;

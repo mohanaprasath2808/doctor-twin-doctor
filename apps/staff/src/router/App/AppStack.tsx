@@ -37,7 +37,10 @@ import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
 import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
+import BillingDashboard from "../../screens/App/BillingDashboard/BillingDashboard";
 import type { StaffMember } from "../../screens/App/Staff/staffTypes";
+import type { BillingItem } from "../../screens/utills/billingStatus";
+import BillingDetail from "../../screens/App/BillingDashboard/BillingDetail";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -76,6 +79,10 @@ export type DelegationActionCompletedParams = {
 export type StaffFormParams = {
   isEdit?: boolean;
   initial?: StaffMember;
+};
+
+export type BillingDetailParams = {
+  item: BillingItem;
 };
 
 /** Must match `navigationStrings` + screen `name` props below. */
@@ -119,6 +126,8 @@ export type AppStackParamList = {
   EndShiftSummary: undefined;
   GeneralSettings: undefined;
   HelpTraining: undefined;
+  BillingDashboard: undefined;
+  BillingDetail: BillingDetailParams;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -314,6 +323,16 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.HELP_TRAINING}
         component={HelpTraining}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_DASHBOARD}
+        component={BillingDashboard}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_DETAIL}
+        component={BillingDetail}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

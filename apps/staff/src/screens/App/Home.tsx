@@ -101,6 +101,10 @@ const Home = () => {
     navigation.navigate(navigationStrings.REFILLS as never);
   }, [navigation]);
 
+  const openBilling = useCallback(() => {
+    navigation.navigate(navigationStrings.BILLING_DASHBOARD as never);
+  }, [navigation]);
+
   const openStaff = useCallback(() => {
     const parent = navigation.getParent();
     parent?.navigate(navigationStrings.STAFF as never);
@@ -169,7 +173,7 @@ const Home = () => {
         iconGreen: <BillingGreenIcon width={32} height={32} />,
         iconRed: <BillingRedIcon width={32} height={32} />,
         dataCount: "1",
-        onPress: noop,
+        onPress: openBilling,
       },
       {
         label: "Staff",
@@ -179,7 +183,7 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-    [noop, openDelegation, openLabs, openRefills, openScheduling, openTaskInbox, openStaff],
+    [noop, openDelegation, openBilling, openLabs, openRefills, openScheduling, openTaskInbox, openStaff],
   );
 
   const listHeader = useMemo(
