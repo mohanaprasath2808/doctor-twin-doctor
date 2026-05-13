@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -27,6 +27,8 @@ interface Props {
 
 const HEIGHT = 46;
 const RADIUS = 64;
+/** Raw `contentSize.height` above this → multi-line padded layout (`textAlignVertical: top`). */
+const MULTILINE_EXPAND_RAW_H = 38;
 
 /** Stronger vertical inner shadow (Skia dy/blur), without changing input row height. */
 const INNER_SHADOW_DY = 4;
@@ -54,12 +56,23 @@ const InputField: React.FC<Props & TextInputProps> = ({
   const [focused, setFocused] = useState(false);
   const [surfaceWidth, setSurfaceWidth] = useState(0);
   const [inputHeight, setInputHeight] = useState(fieldHeight);
+  const [multilineContentH, setMultilineContentH] = useState<number | undefined>(undefined);
+  const [multilineRawH, setMultilineRawH] = useState(0);
   const valueText = String(props.value ?? props.defaultValue ?? "");
   const hasText = valueText.trim().length > 0;
   const isFocusControlled = typeof isFocused === "boolean";
   const showFocusedState = isFocusControlled ? isFocused : focused || hasText;
 
+  useEffect(() => {
+    if (!props.multiline || hasText) return;
+    setMultilineContentH(undefined);
+    setMultilineRawH(0);
+  }, [props.multiline, hasText]);
+
   const resolvedShadowHeight = Math.max(fieldHeight, inputHeight);
+  const minMultilineInnerH = props.multiline ? Math.max(40, fieldHeight - 24) : 0;
+  const expandedMultiline =
+    Boolean(props.multiline) && multilineRawH > MULTILINE_EXPAND_RAW_H;
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -149,6 +162,7 @@ const InputField: React.FC<Props & TextInputProps> = ({
                     height: props.multiline ? undefined : fieldHeight,
                     alignItems: props.multiline ? "flex-start" : "center",
                     paddingTop: props.multiline ? 12 : 0,
+                    paddingBottom: props.multiline ? 12 : 0,
                   },
                 ]}
                 onLayout={(event) => {
@@ -163,12 +177,29 @@ const InputField: React.FC<Props & TextInputProps> = ({
 
                 <TextInput
                   {...props}
+                  onContentSizeChange={(e) => {
+                    props.onContentSizeChange?.(e);
+                    if (!props.multiline) return;
+                    const h = e.nativeEvent.contentSize.height;
+                    if (h <= 0) return;
+                    const raw = Math.ceil(h);
+                    setMultilineRawH(raw);
+                    if (raw > MULTILINE_EXPAND_RAW_H) {
+                      setMultilineContentH(Math.max(minMultilineInnerH, raw));
+                    } else {
+                      setMultilineContentH(undefined);
+                    }
+                  }}
                   style={[
                     styles.input,
+                    !props.multiline ? styles.inputSingleLineStretch : undefined,
                     hasText ? styles.inputTyped : styles.inputPlaceholder,
                     props.multiline && {
-                      minHeight: Math.max(40, fieldHeight - 24),
                       textAlignVertical: "top",
+                      minHeight: minMultilineInnerH,
+                      ...(expandedMultiline && multilineContentH != null
+                        ? { height: multilineContentH }
+                        : {}),
                     },
                     style,
                   ]}
@@ -302,7 +333,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS,
   },
   inputWrapper: {
-    height: HEIGHT,
+    minHeight: HEIGHT,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
@@ -311,11 +342,14 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: "100%",
     color: COLORS.TEXT_DARK,
     fontSize: 14,
     lineHeight: 20,
     includeFontPadding: false,
+  },
+  /** Single-line row: stretch to the wrapper’s fixed height (~46px). */
+  inputSingleLineStretch: {
+    height: "100%",
   },
   inputPlaceholder: {
     fontWeight: "400",

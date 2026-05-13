@@ -28,6 +28,9 @@ const ConsultReportDetail = () => {
 
   const goShare = () => navigation.navigate(navigationStrings.SHARE_CONSULT_REPORT);
 
+  const reportSummary = "No serious condition detected";
+  const reportSummaryMultiline = reportSummary.length > 30;
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <ScrollView
@@ -67,10 +70,14 @@ const ConsultReportDetail = () => {
 
         <Text style={styles.summaryIntro}>Here's your latest consult report summary.</Text>
 
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.reportCardInner} borderRadius={10}>
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.reportCardInner}
+          borderRadius={10}
+        >
           <View style={styles.reportTop}>
             <InnerShadowIcon
-              icon={<CheckedListPadIcon width={18} height={18} />}
+              icon={<CheckedListPadIcon width={20} height={20} />}
               size={40}
               radius={20}
               surfaceColor={COLORS.INNER_SURFACE}
@@ -86,7 +93,7 @@ const ConsultReportDetail = () => {
           <Text style={styles.previewLabel}>Report Preview</Text>
           <View style={styles.previewRow}>
             <InnerShadowIcon
-              icon={<ImagingResultsIcon width={18} height={18} />}
+              icon={<ImagingResultsIcon width={20} height={20} />}
               size={40}
               radius={20}
               surfaceColor={COLORS.INNER_SURFACE}
@@ -103,21 +110,26 @@ const ConsultReportDetail = () => {
               bgColor={COLORS.INNER_SURFACE}
               textStyle={styles.viewBtnText}
               style={styles.viewBtn}
-              height={28}
-              borderRadius={17}
+              height={24}
+              borderRadius={64}
               onPress={goShare}
             />
           </View>
         </NeumorphicCard>
 
-        <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.summaryCardInner} borderRadius={10}>
+        <NeumorphicCard
+          outerStyle={[styles.cardOuter, styles.cardGap]}
+          innerStyle={styles.summaryCardInner}
+          borderRadius={10}
+        >
           <Text style={styles.sectionTitle}>Report Summary</Text>
           <InputField
-            value="No serious condition detected"
+            value={reportSummary}
             editable={false}
-            multiline
-            numberOfLines={4}
-            minHeight={100}
+            multiline={reportSummaryMultiline}
+            numberOfLines={reportSummaryMultiline ? 5 : 1}
+            minHeight={reportSummaryMultiline ? 120 : undefined}
+            scrollEnabled={!reportSummaryMultiline}
             borderRadius={14}
             containerStyle={styles.summaryInput}
           />
@@ -152,6 +164,9 @@ const ConsultReportDetail = () => {
           title="Download PDF"
           containerStyle={styles.downloadBtn}
           onPress={() => undefined}
+          textStyle={styles.downloadBtnText}
+          height={48}
+          borderRadius={64}
         />
       </ScrollView>
     </SafeAreaView>
@@ -177,7 +192,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
     flex: 1,
     textAlign: "center",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   notifWrap: {
     width: 40,
@@ -222,14 +237,13 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   summaryIntro: {
-    marginTop: 14,
-    marginBottom: 16,
+    marginBottom: 20,
     textAlign: "center",
-    fontSize: 14,
-    fontWeight: "400",
+    fontSize: 16,
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
     paddingHorizontal: 12,
-    fontFamily: "SF-Pro-Text-Regular",
+    fontFamily: "SF-Pro-Text-Medium",
   },
   cardOuter: { width: "100%" },
   cardGap: { marginTop: 16 },
@@ -251,14 +265,14 @@ const styles = StyleSheet.create({
   },
   reportTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
     fontFamily: "SF-Pro-Text-Medium",
   },
   reportMeta: {
     fontSize: 12,
     fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_60,
+    color: COLORS.TEXT_PRIMARY_70,
     fontFamily: "SF-Pro-Text-Regular",
   },
   divider: {
@@ -267,9 +281,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   previewLabel: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: COLORS.TEXT_DARK,
+    fontSize: 14,
+    fontWeight: "500",
+    color: COLORS.TEXT_PRIMARY,
     fontFamily: "SF-Pro-Text-Medium",
   },
   previewRow: {
@@ -284,14 +298,14 @@ const styles = StyleSheet.create({
   },
   fileName: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
     fontFamily: "SF-Pro-Text-Medium",
   },
   fileSize: {
     fontSize: 12,
     fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_60,
+    color: COLORS.TEXT_PRIMARY_70,
     fontFamily: "SF-Pro-Text-Regular",
   },
   viewBtn: {
@@ -312,8 +326,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
     fontFamily: "SF-Pro-Text-Medium",
   },
@@ -335,11 +349,17 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: COLORS.PRIMARY,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "500",
     fontFamily: "SF-Pro-Text-Medium",
   },
   downloadBtn: {
-    marginTop: 14,
+    marginTop: 20,
+  },
+  downloadBtnText: {
+    color: COLORS.WHITE,
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
   },
 });

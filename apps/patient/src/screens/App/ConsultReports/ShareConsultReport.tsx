@@ -16,7 +16,7 @@ import RightArrowIcon from "../../../assets/icons/rightArrowIcon.svg";
 import ZoomIn from "../../../assets/icons/zoomIn.svg";
 import DownloadIcon from "../../../assets/icons/downloadIcon.svg";
 import ShareIcon from "../../../assets/icons/shareIcon.svg";
-import DesktopIcon from "../../../assets/icons/desktopIcon.svg";
+import SendIcon from "../../../assets/icons/sendIcon.svg";
 import ConsultSharePreviewImage from "../../../assets/images/tempImage/dummyReport.png";
 
 const ShareConsultReport = () => {
@@ -82,13 +82,17 @@ const ShareConsultReport = () => {
           borderRadius={10}
           onPress={() => undefined}
         >
-          <InnerShadowIcon
-            icon={<DownloadIcon width={18} height={18} />}
-            size={40}
-            radius={20}
-            surfaceColor={COLORS.INNER_SURFACE}
-          />
-          <Text style={styles.actionTitle}>Download PDF</Text>
+          <View style={styles.actionLeft}>
+            <InnerShadowIcon
+              icon={<DownloadIcon width={20} height={20} />}
+              size={40}
+              radius={20}
+              surfaceColor={COLORS.INNER_SURFACE}
+            />
+            <Text style={styles.actionTitle} numberOfLines={1}>
+              Download PDF
+            </Text>
+          </View>
           <RightArrowIcon width={10} height={10} />
         </NeumorphicCard>
 
@@ -98,13 +102,17 @@ const ShareConsultReport = () => {
           borderRadius={10}
           onPress={() => undefined}
         >
-          <InnerShadowIcon
-            icon={<ShareIcon width={18} height={18} />}
-            size={40}
-            radius={20}
-            surfaceColor={COLORS.INNER_SURFACE}
-          />
-          <Text style={styles.actionTitle}>Share to Family</Text>
+          <View style={styles.actionLeft}>
+            <InnerShadowIcon
+              icon={<ShareIcon width={20} height={20} />}
+              size={40}
+              radius={20}
+              surfaceColor={COLORS.INNER_SURFACE}
+            />
+            <Text style={styles.actionTitle} numberOfLines={1}>
+              Share to Family
+            </Text>
+          </View>
           <RightArrowIcon width={10} height={10} />
         </NeumorphicCard>
 
@@ -114,13 +122,17 @@ const ShareConsultReport = () => {
           borderRadius={10}
           onPress={() => undefined}
         >
-          <InnerShadowIcon
-            icon={<DesktopIcon width={18} height={18} />}
-            size={40}
-            radius={20}
-            surfaceColor={COLORS.INNER_SURFACE}
-          />
-          <Text style={styles.actionTitle}>Send to Portal</Text>
+          <View style={styles.actionLeft}>
+            <InnerShadowIcon
+              icon={<SendIcon width={20} height={20} />}
+              size={40}
+              radius={20}
+              surfaceColor={COLORS.INNER_SURFACE}
+            />
+            <Text style={styles.actionTitle} numberOfLines={1}>
+              Send to Portal
+            </Text>
+          </View>
           <RightArrowIcon width={10} height={10} />
         </NeumorphicCard>
       </ScrollView>
@@ -142,6 +154,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: 10,
   },
   headerTitle: {
     fontSize: 18,
@@ -149,7 +162,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
     flex: 1,
     textAlign: "center",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   notifWrap: {
     width: 40,
@@ -171,13 +184,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     marginTop: 16,
-    color: COLORS.TEXT_DARK,
+    color: COLORS.TEXT_PRIMARY,
     fontSize: 16,
     fontWeight: "500",
     fontFamily: "SF-Pro-Text-Medium",
   },
   previewOuter: {
-    marginTop: 12,
+    marginTop: 16,
     position: "relative",
   },
   previewInner: {
@@ -212,16 +225,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 12,
     paddingVertical: 10,
     gap: 12,
   },
+  actionLeft: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
   actionTitle: {
     flex: 1,
-    fontSize: 14,
+    minWidth: 0,
+    fontSize: 16,
     color: COLORS.TEXT_PRIMARY,
     fontWeight: "500",
-    textAlign: "center",
+    textAlign: "left",
     fontFamily: "SF-Pro-Text-Medium",
   },
 });

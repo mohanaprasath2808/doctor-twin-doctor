@@ -68,7 +68,7 @@ const ConsultReportsInbox = () => {
       />
       <View style={styles.cardTextCol}>
         <View style={styles.titleRow}>
-          <Text style={styles.itemTitle} numberOfLines={2}>
+          <Text style={styles.itemTitle} numberOfLines={1}>
             {item.title}
           </Text>
           <Text style={styles.itemDate}>{item.date}</Text>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_PRIMARY,
     flex: 1,
     textAlign: "center",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   notifWrap: {
     width: 40,

@@ -22,7 +22,7 @@ import IconComponent from "../../../neomorphism/IconComponent";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import AppointmentDummy from "../../../assets/images/tempImage/appointmentDummy.png";
-
+import WhitePlusIcon from "../../../assets/icons/whitePlusIcon.svg";
 type TabKey = "upcoming" | "past";
 
 type UpcomingAppointment = {
@@ -225,9 +225,10 @@ const Appointments = () => {
 
       <View style={styles.footer}>
         <ReusableButton
-          title="+ Schedule New Appointment"
+          title="Schedule New Appointment"
           gradientColors={REUSABLE_GRADIENT}
           height={HEIGHT_SCHEDULE_FOOTER}
+          leadingIcon={<WhitePlusIcon width={16} height={16} />}
           onPress={() => navigation.navigate(navigationStrings.SCHEDULE_STEP_1)}
           containerStyle={styles.scheduleCta}
         />

@@ -27,7 +27,7 @@ import NotificationIcon from "../../../assets/icons/notificationIcon.svg";
 import LabResultsIcon from "../../../assets/icons/labResults.svg";
 import ReferralIcon from "../../../assets/icons/referral.svg";
 import CheckedListPadIcon from "../../../assets/icons/checkedListPadIcon.svg";
-import PharmacyIcon from "../../../assets/icons/pharmacyIcon.svg";
+import PharmacyIcon from "../../../assets/icons/cvsPharmacyIcon.svg";
 import RightArrowIcon from "../../../assets/icons/rightArrowIcon.svg";
 import TrackReferralsIcon from "../../../assets/icons/trackReferralIcon.svg";
 import OverlayImage from "../../../assets/images/imageBgShadow.png";
@@ -84,7 +84,9 @@ const Referrals = () => {
           if (item.id === "new-referral") {
             navigation.navigate(navigationStrings.REQUEST_NEW_REFERRAL);
           }
-          /** Extend: track referrals stack when wired */
+          if (item.id === "track") {
+            navigation.navigate(navigationStrings.REFERRAL_STATUS);
+          }
         },
       })),
     [navigation],
@@ -179,7 +181,9 @@ const Referrals = () => {
               surfaceColor={COLORS.INNER_SURFACE}
             />
             <Text style={styles.consultTitle}>Consult Reports Inbox</Text>
-            <RightArrowIcon width={10} height={10} />
+            <View style={{ marginRight: 5 }}>
+              <RightArrowIcon width={10} height={10} />
+            </View>
           </NeumorphicCard>
         </TouchableOpacity>
 
@@ -242,6 +246,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.TEXT_PRIMARY,
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   notifWrap: {
     width: 40,
@@ -386,7 +391,7 @@ const styles = StyleSheet.create({
     fontFamily: "SF-Pro-Text-Regular",
   },
   changeBtn: {
-    width: 72,
+    width: 65,
     height: 28,
     borderRadius: 17,
     flexShrink: 0,
@@ -395,5 +400,6 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontSize: 12,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
   },
 });
