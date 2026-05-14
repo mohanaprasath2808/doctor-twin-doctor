@@ -38,9 +38,25 @@ import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
 import BillingDashboard from "../../screens/App/BillingDashboard/BillingDashboard";
+import type { BillingCategoryKey } from "../../screens/App/BillingDashboard/billingCategoryTypes";
 import type { StaffMember } from "../../screens/App/Staff/staffTypes";
 import type { BillingItem } from "../../screens/utills/billingStatus";
 import BillingDetail from "../../screens/App/BillingDashboard/BillingDetail";
+import BillingAnswer from "../../screens/App/BillingDashboard/BillingAnswer";
+import BillingForward from "../../screens/App/BillingDashboard/BillingForward";
+import BillingCreateTicket from "../../screens/App/BillingDashboard/BillingCreateTicket";
+import BillingActionCompleted from "../../screens/App/BillingDashboard/BillingActionCompleted";
+import BillingCategoryList from "../../screens/App/BillingDashboard/BillingCategoryList";
+import DocumentsDashboard from "../../screens/App/DocumentsDashboard/DocumentsDashboard";
+import DocumentsCategoryList from "../../screens/App/DocumentsDashboard/DocumentsCategoryList";
+import DocumentsDetail from "../../screens/App/DocumentsDashboard/DocumentsDetail";
+import DocumentsSendDocument from "../../screens/App/DocumentsDashboard/DocumentsSendDocument";
+import DocumentsViewDocument from "../../screens/App/DocumentsDashboard/DocumentsViewDocument";
+import DocumentsUploadDocument from "../../screens/App/DocumentsDashboard/DocumentsUploadDocument";
+import DocumentsRequestInfo from "../../screens/App/DocumentsDashboard/DocumentsRequestInfo";
+import DocumentsAssign from "../../screens/App/DocumentsDashboard/DocumentsAssign";
+import type { DocumentsDetailParams } from "../../screens/App/DocumentsDashboard/documentDashboardTypes";
+import type { DocumentsCategoryListParams } from "../../screens/App/DocumentsDashboard/documentsCategoryTypes";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -85,6 +101,10 @@ export type BillingDetailParams = {
   item: BillingItem;
 };
 
+export type BillingCategoryListParams = {
+  categoryKey: BillingCategoryKey;
+};
+
 /** Must match `navigationStrings` + screen `name` props below. */
 export type AppStackParamList = {
   Login: undefined;
@@ -127,7 +147,32 @@ export type AppStackParamList = {
   GeneralSettings: undefined;
   HelpTraining: undefined;
   BillingDashboard: undefined;
+  BillingCategoryList: BillingCategoryListParams;
   BillingDetail: BillingDetailParams;
+  BillingAnswer: BillingDetailParams;
+  BillingForward: BillingDetailParams;
+  BillingCreateTicket: BillingDetailParams;
+  BillingActionCompleted: BillingActionCompletedParams | undefined;
+  DocumentsDashboard: undefined;
+  DocumentsCategoryList: DocumentsCategoryListParams;
+  DocumentsDetail: DocumentsDetailParams;
+  DocumentsSend: DocumentsDetailParams;
+  DocumentsViewDocument: undefined;
+  DocumentsUpload: DocumentsDetailParams;
+  DocumentsRequestInfo: DocumentsDetailParams;
+  DocumentsAssign: DocumentsDetailParams;
+};
+
+export type BillingActionCompletedParams = {
+  title?: string;
+  description?: string;
+  buttonText?: string;
+  /** Header line above the success hero; defaults to legacy billing copy. */
+  headerTitle?: string;
+  /** Used when `completionNavigateTo` is not set. Defaults to `3` for billing flows. */
+  popCount?: number;
+  /** When set, primary button navigates here instead of popping (e.g. documents dashboard). */
+  completionNavigateTo?: keyof AppStackParamList;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -331,8 +376,73 @@ const AppStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={navigationStrings.BILLING_CATEGORY_LIST}
+        component={BillingCategoryList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={navigationStrings.BILLING_DETAIL}
         component={BillingDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_ANSWER}
+        component={BillingAnswer}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_FORWARD}
+        component={BillingForward}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_CREATE_TICKET}
+        component={BillingCreateTicket}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_ACTION_COMPLETED}
+        component={BillingActionCompleted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_DASHBOARD}
+        component={DocumentsDashboard}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_CATEGORY_LIST}
+        component={DocumentsCategoryList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_DETAIL}
+        component={DocumentsDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_SEND}
+        component={DocumentsSendDocument}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_VIEW_DOCUMENT}
+        component={DocumentsViewDocument}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_UPLOAD}
+        component={DocumentsUploadDocument}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_REQUEST_INFO}
+        component={DocumentsRequestInfo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_ASSIGN}
+        component={DocumentsAssign}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

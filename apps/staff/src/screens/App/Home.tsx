@@ -105,6 +105,10 @@ const Home = () => {
     navigation.navigate(navigationStrings.BILLING_DASHBOARD as never);
   }, [navigation]);
 
+  const openDocumentsDashboard = useCallback(() => {
+    navigation.navigate(navigationStrings.DOCUMENTS_DASHBOARD as never);
+  }, [navigation]);
+
   const openStaff = useCallback(() => {
     const parent = navigation.getParent();
     parent?.navigate(navigationStrings.STAFF as never);
@@ -159,7 +163,7 @@ const Home = () => {
         iconGreen: <DocumentGreenIcon width={32} height={32} />,
         iconRed: <DocumentRedIcon width={32} height={32} />,
         dataCount: "0",
-        onPress: noop,
+        onPress: openDocumentsDashboard,
       },
       {
         label: "Tasks",
@@ -183,7 +187,7 @@ const Home = () => {
         onPress: openStaff,
       },
     ],
-    [noop, openDelegation, openBilling, openLabs, openRefills, openScheduling, openTaskInbox, openStaff],
+    [noop, openDelegation, openBilling, openLabs, openRefills, openScheduling, openTaskInbox, openStaff, openDocumentsDashboard],
   );
 
   const listHeader = useMemo(

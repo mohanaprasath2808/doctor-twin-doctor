@@ -1,36 +1,33 @@
-import React, { useMemo } from "react";
-import { FlatList, Image, Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import React from "react";
+import { Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
-import BillingGreenIcon from "../../../assets/icon/billingIcon.svg";
-import ClaimIssueIcon from "../../../assets/icon/redWarningIcon.svg";
-import CodingQuestionIcon from "../../../assets/icon/bookWithQuestionMark.svg";
+import BillingGreenIcon from "../../../assets/icon/formBillingIcon.svg";
+import ClaimIssueIcon from "../../../assets/icon/greenHazardIcon.svg";
+import CodingQuestionIcon from "../../../assets/icon/formWithQuestion.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
 import IconComponent from "../../../components/neomorphism/IconComponent";
-import NeumorphicCard from "../../../components/neomorphism/NeumorphicCard";
 import NeumorphicQuickActionTile from "../../../components/neomorphism/NeumorphicQuickActionTile";
-import RightArrowIcon from "../../../assets/icon/rightArrowIcon.svg";
+import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
 import OrbitCluster, { OrbitClusterNode } from "../Labs/components/OrbitCluster";
+import type { BillingCategoryKey } from "./billingCategoryTypes";
 import BillingDashboardItemCard from "./components/BillingDashboardItemCard";
 import type { BillingItem } from "../../utills/billingStatus";
-import navigationStrings from "../../../constants/navigationStrings";
 
 const HEADER_H = 52;
 const BG = COLORS.INNER_SURFACE;
 
-type BillingNodeKey = "coding-question" | "patient-billing" | "claim-issue";
-
 type BillingNode = OrbitClusterNode & {
   label: string;
   subLabel: string;
-  key: BillingNodeKey;
+  key: BillingCategoryKey;
   badge?: string;
 };
 
@@ -64,24 +61,35 @@ const BILLING_NODES: BillingNode[] = [
   },
 ];
 
-const MOCK_BILLING_ITEMS: BillingItem[] = [
+/** Short preview of list-style cards (same component as category list). */
+const DASHBOARD_PREVIEW_ITEMS: BillingItem[] = [
   {
-    id: "1",
+    id: "dash-1",
     patientName: "Brian Carter",
     patientMeta: "Female • Age 45",
     payerName: "Blue Cross Blue",
     memberId: "BHHGJSJ9833",
     status: "Pending",
-    issue: "Claim denied due to missing code",
+    issue: "Prior auth issue",
   },
   {
-    id: "2",
+    id: "dash-2",
     patientName: "Brian Carter",
     patientMeta: "Female • Age 45",
     payerName: "Blue Cross Blue",
     memberId: "BHHGJSJ9833",
     status: "Pending",
-    issue: "Claim denied due to missing code",
+    issue: "Refund request",
+  },
+  {
+    id: "dash-3",
+    patientName: "Brian Carter",
+    patientMeta: "Female • Age 45",
+    payerName: "Blue Cross Blue",
+    memberId: "BHHGJSJ9833",
+    status: "Pending",
+    issue: "Copay",
+    assigneeName: "Brian Carter",
   },
 ];
 
@@ -120,7 +128,9 @@ const BillingDashboard = () => {
         return (
           <>
             <NeumorphicQuickActionTile
-              onPress={() => { }}
+              onPress={() =>
+                navigation.navigate(navigationStrings.BILLING_CATEGORY_LIST, { categoryKey: node.key })
+              }
               icon={renderOrbitIcon(node, iconSize)}
               label={node.label}
               badge={node.badge}
@@ -145,15 +155,6 @@ const BillingDashboard = () => {
       }}
     />
   );
-
-  const renderBillingItem = ({ item }: { item: BillingItem }) => {
-    return (
-      <BillingDashboardItemCard
-        item={item}
-        onPress={() => navigation.navigate(navigationStrings.BILLING_DETAIL, { item })}
-      />
-    );
-  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "left", "right", "bottom"]}>
@@ -183,14 +184,18 @@ const BillingDashboard = () => {
           </View>
         </View>
         {renderTopCluster()}
-        <FlatList
-          data={MOCK_BILLING_ITEMS}
-          keyExtractor={(item) => item.id}
-          renderItem={renderBillingItem}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={false}
-        />
+
+        <View style={styles.previewSection}>
+          <Text style={styles.previewTitle}>Recents</Text>
+          {DASHBOARD_PREVIEW_ITEMS.map((item, index) => (
+            <BillingDashboardItemCard
+              key={item.id}
+              item={item}
+              outerStyle={index === 0 ? styles.previewFirstCard : undefined}
+              onPress={() => navigation.navigate(navigationStrings.BILLING_DETAIL, { item })}
+            />
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -205,7 +210,7 @@ const styles = StyleSheet.create({
   },
   scroll: { flex: 1 },
   scrollContent: {
-
+    paddingBottom: 24,
   },
   header: {
     flexDirection: "row",
@@ -241,10 +246,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: COLORS.ALERT,
   },
-  listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
-  },
   drTwinLabel: {
     marginTop: 5,
     fontWeight: "500",
@@ -264,9 +265,18 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_60,
     textAlign: "center",
   },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: COLORS.TEXT_10,
+  previewSection: {
+    paddingHorizontal: 16,
+  },
+  previewTitle: {
+    marginBottom: 8,
+    fontSize: 15,
+    fontWeight: "600",
+    color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Display-Semibold",
+  },
+  previewFirstCard: {
+    marginTop: 0,
   },
 });
 

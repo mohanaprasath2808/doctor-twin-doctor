@@ -48,7 +48,20 @@ const navigationStrings = {
   LABS_SCHEDULE_VISIT: "LabsScheduleVisit",
   LABS_ACTION_COMPLETED: "LabsActionCompleted",
   BILLING_DASHBOARD: "BillingDashboard",
+  BILLING_CATEGORY_LIST: "BillingCategoryList",
   BILLING_DETAIL: "BillingDetail",
+  BILLING_ANSWER: "BillingAnswer",
+  BILLING_FORWARD: "BillingForward",
+  BILLING_CREATE_TICKET: "BillingCreateTicket",
+  BILLING_ACTION_COMPLETED: "BillingActionCompleted",
+  DOCUMENTS_DASHBOARD: "DocumentsDashboard",
+  DOCUMENTS_CATEGORY_LIST: "DocumentsCategoryList",
+  DOCUMENTS_DETAIL: "DocumentsDetail",
+  DOCUMENTS_SEND: "DocumentsSend",
+  DOCUMENTS_VIEW_DOCUMENT: "DocumentsViewDocument",
+  DOCUMENTS_UPLOAD: "DocumentsUpload",
+  DOCUMENTS_REQUEST_INFO: "DocumentsRequestInfo",
+  DOCUMENTS_ASSIGN: "DocumentsAssign",
 } as const;
 
 export default navigationStrings;

@@ -1,11 +1,10 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
 
-import BillingIcon from "../../../../assets/icon/billingIcon.svg";
+import ShieldIcon from "../../../../assets/icon/sheildIcon.svg";
 import ClaimIssueIcon from "../../../../assets/icon/redWarningIcon.svg";
 import RightArrowIcon from "../../../../assets/icon/rightArrowIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
-import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
 import InnerShadowIcon from "../../../../components/neomorphism/InnerShadowIcon";
 import NeumorphicCard from "../../../../components/neomorphism/NeumorphicCard";
 import NeumorphicInnerShadowCard from "../../../../components/neomorphism/NeumorphicInnerShadowCard";
@@ -15,20 +14,22 @@ import { BillingStatusBadge, type BillingItem } from "../../../utills/billingSta
 export default function BillingDashboardItemCard({
   item,
   onPress,
+  outerStyle,
 }: {
   item: BillingItem;
   onPress?: () => void;
+  outerStyle?: StyleProp<ViewStyle>;
 }) {
   return (
     <NeumorphicCard
-      borderRadius={14}
+      borderRadius={10}
       backgroundColor={COLORS.INNER_SURFACE}
-      outerStyle={styles.itemOuter}
+      outerStyle={[styles.itemOuter, outerStyle]}
       innerStyle={styles.itemInner}
       onPress={onPress}
     >
       <View style={styles.patientRow}>
-        <DoctorAvatar source={DoctorTempImage} imageSize={40} containerSize={46} />
+        <Image source={DoctorTempImage} style={styles.avatar} />
         <View style={styles.patientText}>
           <Text style={styles.patientName} numberOfLines={1}>
             {item.patientName}
@@ -42,7 +43,7 @@ export default function BillingDashboardItemCard({
 
       <View style={styles.payerRow}>
         <View style={styles.payerLeft}>
-          <InnerShadowIcon icon={<BillingIcon width={18} height={18} />} size={44} radius={22} />
+          <InnerShadowIcon icon={<ShieldIcon width={18} height={18} />} size={44} radius={22} />
           <View style={styles.payerText}>
             <Text style={styles.payerName} numberOfLines={1}>
               {item.payerName}
@@ -58,8 +59,8 @@ export default function BillingDashboardItemCard({
       <View style={styles.divider} />
 
       <NeumorphicInnerShadowCard
-        borderRadius={12}
-        backgroundColor={COLORS.SURFACE}
+        borderRadius={10}
+        backgroundColor={COLORS.INNER_SURFACE}
         containerStyle={styles.issueOuter}
         contentStyle={styles.issueInner}
         fullWidth
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
+  avatar: { width: 40, height: 40, borderRadius: 20 },
   patientText: {
     flex: 1,
     gap: 3,
@@ -162,13 +164,35 @@ const styles = StyleSheet.create({
   },
   issueLabel: {
     fontSize: 12,
-    color: COLORS.TEXT_60,
-    fontFamily: "SF-Pro-Display-Regular",
+    fontWeight: "500",
+    color: COLORS.TEXT_70,
+    fontFamily: "SF-Pro-Display-Medium",
   },
   issueText: {
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: "400",
     color: COLORS.TEXT_DARK,
-    fontFamily: "SF-Pro-Display-Regular",
+    fontFamily: "SF-Pro-Display-Medium",
+  },
+  assignRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    flexWrap: "wrap",
+  },
+  assignLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Display-Semibold",
+  },
+  assignName: {
+    flex: 1,
+    minWidth: 0,
+    fontSize: 13,
+    fontWeight: "500",
+    color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Display-Medium",
   },
 });
 

@@ -4,7 +4,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
-import BillingIcon from "../../../assets/icon/billingIcon.svg";
+import ShieldIcon from "../../../assets/icon/sheildIcon.svg";
 import ClaimIssueIcon from "../../../assets/icon/redWarningIcon.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import AppButton from "../../../components/Common/AppButton";
@@ -17,7 +17,7 @@ import ReusableButton from "../../../components/neomorphism/ReusableButton";
 import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
-import { BillingStatusBadge } from "../../utills/billingStatus";
+import PatientDetailCard from "../../../components/Common/PatientDetailCard";
 
 type Props = NativeStackScreenProps<AppStackParamList, typeof navigationStrings.BILLING_DETAIL>;
 
@@ -48,23 +48,7 @@ const BillingDetail = ({ route, navigation }: Props) => {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {header}
 
-        <NeumorphicCard
-          borderRadius={14}
-          backgroundColor={BG}
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.cardInner}
-        >
-          <View style={styles.patientRow}>
-            <Image source={DoctorTempImage} style={styles.assignAvatar} />
-            <View style={styles.patientText}>
-              <Text style={styles.patientName} numberOfLines={1}>
-                {item.patientName}
-              </Text>
-              <Text style={styles.patientMeta}>{item.patientMeta}</Text>
-            </View>
-            <BillingStatusBadge status={item.status} textStyle={styles.badgeText} height={26} radius={13} />
-          </View>
-        </NeumorphicCard>
+        <PatientDetailCard item={item} outerStyle={styles.cardOuter} innerStyle={styles.cardInner} />
 
         <NeumorphicCard borderRadius={14} backgroundColor={BG} outerStyle={styles.cardOuter} innerStyle={styles.blockInner}>
           <Text style={styles.sectionTitle}>Issue</Text>
@@ -77,7 +61,7 @@ const BillingDetail = ({ route, navigation }: Props) => {
         <NeumorphicCard borderRadius={14} backgroundColor={BG} outerStyle={styles.cardOuter} innerStyle={styles.blockInner}>
           <Text style={styles.sectionTitle}>Insurance</Text>
           <View style={styles.row}>
-            <InnerShadowIcon icon={<BillingIcon width={18} height={18} />} size={44} radius={22} />
+            <InnerShadowIcon icon={<ShieldIcon width={18} height={18} />} size={44} radius={22} />
             <View style={styles.rowTextWrap}>
               <Text style={styles.rowTextStrong}>{item.payerName}</Text>
               <Text style={styles.rowSubText}>Member ID: {item.memberId}</Text>
@@ -115,6 +99,7 @@ const BillingDetail = ({ route, navigation }: Props) => {
             borderColor={COLORS.PRIMARY}
             bgColor={COLORS.INNER_SURFACE}
             textStyle={styles.outlineBtnText}
+            onPress={() => navigation.navigate(navigationStrings.BILLING_FORWARD, { item })}
           />
           <AppButton
             text="Create Ticket"
@@ -125,6 +110,7 @@ const BillingDetail = ({ route, navigation }: Props) => {
             borderColor={COLORS.PRIMARY}
             bgColor={COLORS.INNER_SURFACE}
             textStyle={styles.outlineBtnText}
+            onPress={() => navigation.navigate(navigationStrings.BILLING_CREATE_TICKET, { item })}
           />
         </View>
 
@@ -134,6 +120,7 @@ const BillingDetail = ({ route, navigation }: Props) => {
           borderRadius={26}
           containerStyle={styles.answerBtn}
           textStyle={styles.answerText}
+          onPress={() => navigation.navigate(navigationStrings.BILLING_ANSWER, { item })}
         />
       </ScrollView>
     </SafeAreaView>
@@ -167,16 +154,6 @@ const styles = StyleSheet.create({
   headerSpacer: { width: 40, height: 40 },
   cardOuter: { width: "100%", marginTop: 14 },
   cardInner: { paddingHorizontal: 12, paddingVertical: 12 },
-  patientRow: { flexDirection: "row", alignItems: "center", gap: 10 },
-  patientText: { flex: 1, gap: 3, minWidth: 0 },
-  patientName: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: COLORS.TEXT_DARK,
-    fontFamily: "SF-Pro-Display-Semibold",
-  },
-  patientMeta: { fontSize: 12, color: COLORS.TEXT_60, fontFamily: "SF-Pro-Display-Regular" },
-  badgeText: { fontSize: 12, fontWeight: "600", fontFamily: "SF-Pro-Display-Semibold" },
   blockInner: { paddingHorizontal: 12, paddingVertical: 14 },
   sectionTitle: {
     marginBottom: 10,

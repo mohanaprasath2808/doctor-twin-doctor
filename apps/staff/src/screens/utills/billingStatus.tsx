@@ -21,6 +21,8 @@ export type BillingItem = {
   memberId: string;
   status: BillingStatus;
   issue: string;
+  /** Shown on dashboard list cards when set (e.g. Patient Billing). */
+  assigneeName?: string;
 };
 
 export type BillingStatusStyle = { bg: string; text: string; dark: string; light?: string };
@@ -41,11 +43,14 @@ export function getBillingStatusStyle(status: BillingStatus): BillingStatusStyle
 
 export function BillingStatusBadge({
   status,
+  /** When set, shown in the badge instead of `status` (colors still follow `status`). */
+  label,
   textStyle,
   height = 26,
   radius = 13,
 }: {
   status: BillingStatus;
+  label?: string;
   textStyle?: StyleProp<TextStyle>;
   height?: number;
   radius?: number;
@@ -53,7 +58,7 @@ export function BillingStatusBadge({
   const s = getBillingStatusStyle(status);
   return (
     <DeltaBadge
-      value={status}
+      value={label ?? status}
       height={height}
       radius={radius}
       bgColor={s.bg}
