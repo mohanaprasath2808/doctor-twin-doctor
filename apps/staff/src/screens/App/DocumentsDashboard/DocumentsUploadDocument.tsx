@@ -14,7 +14,7 @@ import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
 import PatientDetailCard from "../../../components/Common/PatientDetailCard";
-import { navigateDocumentsActionCompleted } from "./documentsFlowNavigation";
+import { navigateDocumentsActionCompleted } from "./types/documentsFlowNavigation";
 
 const BG = COLORS.INNER_SURFACE;
 

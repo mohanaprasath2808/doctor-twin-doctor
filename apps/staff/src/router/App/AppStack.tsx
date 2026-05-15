@@ -55,8 +55,8 @@ import DocumentsViewDocument from "../../screens/App/DocumentsDashboard/Document
 import DocumentsUploadDocument from "../../screens/App/DocumentsDashboard/DocumentsUploadDocument";
 import DocumentsRequestInfo from "../../screens/App/DocumentsDashboard/DocumentsRequestInfo";
 import DocumentsAssign from "../../screens/App/DocumentsDashboard/DocumentsAssign";
-import type { DocumentsDetailParams } from "../../screens/App/DocumentsDashboard/documentDashboardTypes";
-import type { DocumentsCategoryListParams } from "../../screens/App/DocumentsDashboard/documentsCategoryTypes";
+import type { DocumentsDetailParams } from "../../screens/App/DocumentsDashboard/types/documentDashboardTypes";
+import type { DocumentsCategoryListParams } from "../../screens/App/DocumentsDashboard/types/documentsCategoryTypes";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 

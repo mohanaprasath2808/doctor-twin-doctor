@@ -13,7 +13,7 @@ import ReusableButton from "../../../components/neomorphism/ReusableButton";
 import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
-import { navigateDocumentsActionCompleted } from "./documentsFlowNavigation";
+import { navigateDocumentsActionCompleted } from "./types/documentsFlowNavigation";
 
 const BG = COLORS.INNER_SURFACE;
 

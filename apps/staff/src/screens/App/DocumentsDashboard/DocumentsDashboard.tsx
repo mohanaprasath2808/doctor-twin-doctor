@@ -15,8 +15,8 @@ import NeumorphicQuickActionTile from "../../../components/neomorphism/Neumorphi
 import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
-import type { DocumentsDashboardListItemData } from "./documentDashboardTypes";
-import type { DocumentsCategoryKey } from "./documentsCategoryTypes";
+import type { DocumentsDashboardListItemData } from "./types/documentDashboardTypes";
+import type { DocumentsCategoryKey } from "./types/documentsCategoryTypes";
 import DocumentsDashboardListItem from "./components/DocumentsDashboardListItem";
 
 const BG = COLORS.INNER_SURFACE;

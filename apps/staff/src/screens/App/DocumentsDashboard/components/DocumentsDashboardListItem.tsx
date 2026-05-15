@@ -9,7 +9,7 @@ import InnerShadowIcon from "../../../../components/neomorphism/InnerShadowIcon"
 import NeumorphicCard from "../../../../components/neomorphism/NeumorphicCard";
 import { COLORS } from "../../../../constants/theme";
 import { BillingStatusBadge, type BillingStatus } from "../../../utills/billingStatus";
-import type { DocumentsDashboardListItemData } from "../documentDashboardTypes";
+import type { DocumentsDashboardListItemData } from "../types/documentDashboardTypes";
 
 function billingStatusForDocumentLabel(statusLabel: string): BillingStatus {
   const key = statusLabel.trim().toLowerCase();

@@ -9,11 +9,11 @@ import IconComponent from "../../../components/neomorphism/IconComponent";
 import navigationStrings from "../../../constants/navigationStrings";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
-import type { DocumentsDashboardListItemData, DocumentFlowFilter } from "./documentDashboardTypes";
+import type { DocumentsDashboardListItemData, DocumentFlowFilter } from "./types/documentDashboardTypes";
 import {
   DOCUMENTS_CATEGORY_SCREEN_TITLE,
   type DocumentsCategoryKey,
-} from "./documentsCategoryTypes";
+} from "./types/documentsCategoryTypes";
 import DocumentsDashboardListItem from "./components/DocumentsDashboardListItem";
 
 const BG = COLORS.INNER_SURFACE;

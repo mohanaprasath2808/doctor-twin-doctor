@@ -1,7 +1,7 @@
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import navigationStrings from "../../../constants/navigationStrings";
-import type { AppStackParamList } from "../../../router/App/AppStack";
+import navigationStrings from "../../../../constants/navigationStrings";
+import type { AppStackParamList } from "../../../../router/App/AppStack";
 
 export function navigateDocumentsActionCompleted(
   navigation: NativeStackNavigationProp<AppStackParamList>,
