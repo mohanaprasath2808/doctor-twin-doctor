@@ -168,7 +168,7 @@ const SendRefill = () => {
           />
         </NeumorphicCard>
 
-        <NeumorphicCard outerStyle={styles.alertOuter} innerStyle={styles.alertInner} borderRadius={10} backgroundColor="#FFF6E5">
+        <NeumorphicCard outerStyle={styles.alertOuter} innerStyle={styles.alertInner} borderRadius={10} backgroundColor="#FFF6E5" onPress={() => { navigation.navigate(navigationStrings.DELEGATION_CREATE_TASK) }}>
           <View style={styles.alertRow}>
             <InnerShadowIcon icon={<WarningIcon width={14} height={14} />} size={28} />
             <Text style={styles.alertText}>

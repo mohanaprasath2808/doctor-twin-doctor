@@ -61,11 +61,12 @@ const PracticeIntelligence = () => {
         <Text style={styles.title}>Dr. Twin delivering practice insights</Text>
 
         <View style={styles.messageRow}>
-          <DoctorAvatar
+          {/* Temporary disabled */}
+          {/* <DoctorAvatar
             source={DoctorTempImage}
             imageSize={38}
             containerSize={44}
-          />
+          /> */}
           <InsightMessageCard
             title="Here is your daily practice performance analysis"
             subTitle="Would you like to review the key metrics"

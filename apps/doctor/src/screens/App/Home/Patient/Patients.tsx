@@ -75,6 +75,33 @@ const FOLLOW_UP: PatientItem[] = [
   },
 ];
 
+const RECENT_PATIENTS: PatientItem[] = [
+  {
+    id: "rp-1",
+    name: "Emily Johnson",
+    ageGender: "32F",
+    note: "Follow-up visit",
+    time: "Yesterday",
+    hasUnread: false,
+  },
+  {
+    id: "rp-2",
+    name: "David Chen",
+    ageGender: "58M",
+    note: "Lab review",
+    time: "Mar 22",
+    hasUnread: true,
+  },
+  {
+    id: "rp-3",
+    name: "Maria Lopez",
+    ageGender: "41F",
+    note: "Medication refill",
+    time: "Mar 20",
+    hasUnread: false,
+  },
+];
+
 const Patients = () => {
   const navigation = useNavigation<any>();
   const [search, setSearch] = useState("");
@@ -83,6 +110,7 @@ const Patients = () => {
   const showToday = selectedFilter === "all" || selectedFilter === "today";
   const showFollowUp =
     selectedFilter === "all" || selectedFilter === "followUp";
+  const showRecent = selectedFilter === "all";
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
@@ -90,6 +118,7 @@ const Patients = () => {
         style={styles.scroll}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
       >
         <View style={styles.header}>
           <IconComponent
@@ -99,7 +128,7 @@ const Patients = () => {
             radius={20}
             onPress={() => navigation.goBack()}
           />
-          <Text style={styles.headerTitle}>Patient</Text>
+          <Text style={styles.headerTitle}>Today’s Patients</Text>
           <View style={styles.headerSpacer} />
         </View>
 
@@ -115,7 +144,13 @@ const Patients = () => {
           />
         </View>
 
-        <View style={styles.filtersRow}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled
+          style={styles.filtersScroll}
+          contentContainerStyle={styles.filtersRow}
+        >
           <FilterChip
             title="All"
             chipWidth={FILTER_WIDTHS.all}
@@ -134,7 +169,7 @@ const Patients = () => {
             selected={selectedFilter === "followUp"}
             onPress={() => setSelectedFilter("followUp")}
           />
-        </View>
+        </ScrollView>
 
         {showToday && (
           <PatientSection
@@ -149,6 +184,15 @@ const Patients = () => {
           <PatientSection
             title="Needs Follow-Up"
             data={FOLLOW_UP}
+            onPressPatient={() =>
+              navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)
+            }
+          />
+        )}
+        {showRecent && (
+          <PatientSection
+            title="Recent Patient"
+            data={RECENT_PATIENTS}
             onPressPatient={() =>
               navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)
             }
@@ -277,10 +321,15 @@ const styles = StyleSheet.create({
   },
   headerSpacer: { width: 40, height: 40 },
   searchInput: { marginTop: 18 },
+  filtersScroll: {
+    // marginTop: 20,
+    paddingVertical: 15,
+  },
   filtersRow: {
-    marginTop: 20,
     flexDirection: "row",
+    alignItems: "center",
     gap: 8,
+    paddingRight: 8,
   },
   filterPress: { flexShrink: 0 },
   filterOuter: {},
@@ -293,7 +342,9 @@ const styles = StyleSheet.create({
   },
   filterText: { color: COLORS.TEXT_70, fontSize: 14, fontWeight: "500" },
   selectedFilterText: { fontSize: 14, fontWeight: "500" },
-  section: { marginTop: 30 },
+  section: {
+    marginTop: 24,
+  },
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",

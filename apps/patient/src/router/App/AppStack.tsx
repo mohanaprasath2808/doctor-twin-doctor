@@ -59,6 +59,11 @@ import ReferralStatus from "../../screens/App/Referrals/ReferralStatus";
 import ConsultReportsInbox from "../../screens/App/ConsultReports/ConsultReportsInbox";
 import ConsultReportDetail from "../../screens/App/ConsultReports/ConsultReportDetail";
 import ShareConsultReport from "../../screens/App/ConsultReports/ShareConsultReport";
+import HealthJournal from "../../screens/App/HealthJournal/HealthJournal";
+import HealthJournalEntry from "../../screens/App/HealthJournal/HealthJournalEntry";
+import HealthJournalReadingSaved from "../../screens/App/HealthJournal/HealthJournalReadingSaved";
+import WeeklySummary from "../../screens/App/HealthJournal/WeeklySummary";
+import HealthJournalTrends from "../../screens/App/HealthJournal/HealthJournalTrends";
 
 const Stack = createStackNavigator();
 
@@ -139,6 +144,17 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.SUPPORT_TICKET} component={SupportTicket} />
       <Stack.Screen name={navigationStrings.TICKET_SUBMISSION} component={TicketSubmission} />
       <Stack.Screen name={navigationStrings.EMERGENCY_SAFETY} component={EmergencySafety} />
+      <Stack.Screen name={navigationStrings.HEALTH_JOURNAL} component={HealthJournal} />
+      <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_ENTRY} component={HealthJournalEntry} />
+      <Stack.Screen
+        name={navigationStrings.HEALTH_JOURNAL_READING_SAVED}
+        component={HealthJournalReadingSaved}
+      />
+      <Stack.Screen
+        name={navigationStrings.HEALTH_JOURNAL_WEEKLY_SUMMARY}
+        component={WeeklySummary}
+      />
+      <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_TRENDS} component={HealthJournalTrends} />
     </Stack.Navigator>
   );
 };
