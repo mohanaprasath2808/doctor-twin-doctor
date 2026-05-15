@@ -37,6 +37,8 @@ const navigationStrings = {
   LABS_SCHEDULE_VISIT: "LabsScheduleVisit",
   LABS_ACTION_COMPLETED: "LabsActionCompleted",
   ELIGIBILITY_PRIOR_AUTH: "EligibilityPriorAuth",
+  AUTHORIZATION_DETAIL: "AuthorizationDetail",
+  REQUEST_DOCUMENTS: "RequestDocuments",
 } as const;
 
 export default navigationStrings;

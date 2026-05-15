@@ -13,6 +13,8 @@ type NeumorphicCardProps = {
   backgroundColor?: string;
   onPress?: () => void;
   activeOpacity?: number;
+  /** When true, the three inset neumorphic shadow layers are off (use `outerStyle` for a single drop shadow). */
+  suppressInsetShadows?: boolean;
 };
 
 const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
@@ -24,6 +26,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
   backgroundColor = COLORS.INNER_SURFACE,
   onPress,
   activeOpacity = 0.85,
+  suppressInsetShadows = false,
 }) => {
   const innerRadius = Math.max(0, borderRadius - 1);
 
@@ -39,7 +42,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         pointerEvents="none"
         style={[
           styles.shadowLayer,
-          styles.shadowDark,
+          suppressInsetShadows ? styles.shadowInsetOff : styles.shadowDark,
           { borderRadius, backgroundColor: COLORS.SURFACE },
         ]}
       />
@@ -47,7 +50,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         pointerEvents="none"
         style={[
           styles.shadowLayer,
-          styles.shadowLight,
+          suppressInsetShadows ? styles.shadowInsetOff : styles.shadowLight,
           { borderRadius, backgroundColor: COLORS.SURFACE },
         ]}
       />
@@ -55,7 +58,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         pointerEvents="none"
         style={[
           styles.shadowLayer,
-          styles.shadowSoft,
+          suppressInsetShadows ? styles.shadowInsetOff : styles.shadowSoft,
           { borderRadius, backgroundColor: COLORS.SURFACE },
         ]}
       />
@@ -147,6 +150,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 4,
       },
+    }),
+  },
+  /** Turns off the three inset shadow layers (see `suppressInsetShadows`). */
+  shadowInsetOff: {
+    ...Platform.select({
+      ios: {
+        shadowColor: "transparent",
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0,
+        shadowRadius: 0,
+      },
+      android: { elevation: 0 },
     }),
   },
   inner: {

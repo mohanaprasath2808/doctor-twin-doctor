@@ -24,7 +24,9 @@ import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
 import LabsNotifyPatient from "../../screens/App/Labs/NotifyPatient";
 import ScheduleVisit from "../../screens/App/Labs/ScheduleVisit";
 import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
+import AuthorizationDetail from "../../screens/App/Eligibility/AuthorizationDetail";
 import EligibilityPriorAuth from "../../screens/App/Eligibility/EligibilityPriorAuth";
+import RequestDocuments from "../../screens/App/Eligibility/RequestDocuments";
 import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
@@ -84,6 +86,8 @@ export type AppStackParamList = {
   LabsScheduleVisit: undefined;
   LabsActionCompleted: LabsActionCompletedParams | undefined;
   EligibilityPriorAuth: undefined;
+  AuthorizationDetail: undefined;
+  RequestDocuments: undefined;
   Staff: undefined;
   StaffForm: StaffFormParams | undefined;
   EndShiftSummary: undefined;
@@ -209,6 +213,16 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.ELIGIBILITY_PRIOR_AUTH}
         component={EligibilityPriorAuth}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.AUTHORIZATION_DETAIL}
+        component={AuthorizationDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REQUEST_DOCUMENTS}
+        component={RequestDocuments}
         options={{ headerShown: false }}
       />
       <Stack.Screen
