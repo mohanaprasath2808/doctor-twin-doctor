@@ -83,6 +83,7 @@ const navigationStrings = {
   HEALTH_JOURNAL_READING_SAVED: "HealthJournalReadingSaved",
   HEALTH_JOURNAL_WEEKLY_SUMMARY: "HealthJournalWeeklySummary",
   HEALTH_JOURNAL_TRENDS: "HealthJournalTrends",
+  MEDICATIONS: "Medications",
 };
 
 export default navigationStrings;

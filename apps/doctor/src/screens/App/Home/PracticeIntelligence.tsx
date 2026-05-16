@@ -62,11 +62,11 @@ const PracticeIntelligence = () => {
 
         <View style={styles.messageRow}>
           {/* Temporary disabled */}
-          {/* <DoctorAvatar
+          <DoctorAvatar
             source={DoctorTempImage}
             imageSize={38}
             containerSize={44}
-          /> */}
+          />
           <InsightMessageCard
             title="Here is your daily practice performance analysis"
             subTitle="Would you like to review the key metrics"

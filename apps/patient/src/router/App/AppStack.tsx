@@ -64,6 +64,7 @@ import HealthJournalEntry from "../../screens/App/HealthJournal/HealthJournalEnt
 import HealthJournalReadingSaved from "../../screens/App/HealthJournal/HealthJournalReadingSaved";
 import WeeklySummary from "../../screens/App/HealthJournal/WeeklySummary";
 import HealthJournalTrends from "../../screens/App/HealthJournal/HealthJournalTrends";
+import Medications from "../../screens/App/Medications/Medications";
 
 const Stack = createStackNavigator();
 
@@ -155,6 +156,7 @@ const AppStack = () => {
         component={WeeklySummary}
       />
       <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_TRENDS} component={HealthJournalTrends} />
+      <Stack.Screen name={navigationStrings.MEDICATIONS} component={Medications} />
     </Stack.Navigator>
   );
 };

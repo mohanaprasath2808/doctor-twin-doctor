@@ -117,6 +117,9 @@ const Home = () => {
         if (item.id === "healthjournal") {
           navigation.navigate(navigationStrings.HEALTH_JOURNAL);
         }
+        if (item.id === "medications") {
+          navigation.navigate(navigationStrings.MEDICATIONS);
+        }
       }}
       icon={item.icon}
       label={item.label}

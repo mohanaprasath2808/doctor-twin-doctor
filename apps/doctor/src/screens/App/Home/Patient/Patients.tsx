@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   filterText: { color: COLORS.TEXT_70, fontSize: 14, fontWeight: "500" },
   selectedFilterText: { fontSize: 14, fontWeight: "500" },
   section: {
-    marginTop: 24,
+    // marginTop: 24,
   },
   sectionHeader: {
     flexDirection: "row",
