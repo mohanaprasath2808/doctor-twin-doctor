@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   ListRenderItem,
   Platform,
@@ -22,18 +23,16 @@ import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import NotificationIcon from "../../../assets/icons/notificationIcon.svg";
 import MedicationsIcon from "../../../assets/icons/medications.svg";
-import PharmacyIcon from "../../../assets/icons/pharmacyIcon.svg";
-import RightArrowIcon from "../../../assets/icons/rightArrowIcon.svg";
 import DropDownIcon from "../../../assets/icons/dropDown.svg";
 import OverlayImage from "../../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../../assets/images/tempImage/doctorTempImage.png";
+import MedicationListCard from "./components/MedicationListCard";
+import PharmacyListCard from "./components/PharmacyListCard";
 import {
-  MedicationFilter,
-  MedicationListRow,
-  PAST_MEDICATIONS,
-  STOPPED_MEDS,
-  UPCOMING_MEDICATIONS,
-} from "./medicationsData";
+  fetchMedicationListRows,
+  fetchStoppedMedications,
+} from "./data/medications.repository";
+import type { MedicationFilter, MedicationListRow, StoppedMedItem } from "./types/medications.types";
 
 const HORIZONTAL = 16;
 const TABS_GAP = 10;
@@ -45,59 +44,67 @@ const Medications = () => {
   const { width: windowWidth } = useWindowDimensions();
   const [filter, setFilter] = useState<MedicationFilter>("upcoming");
   const [stoppedExpanded, setStoppedExpanded] = useState(true);
+  const [listRows, setListRows] = useState<MedicationListRow[]>([]);
+  const [stoppedMeds, setStoppedMeds] = useState<StoppedMedItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const tabChipWidth = useMemo(
     () => Math.max(120, Math.floor((windowWidth - HORIZONTAL * 2 - TABS_GAP) / 2)),
     [windowWidth],
   );
 
-  const listData = useMemo(
-    () => (filter === "upcoming" ? UPCOMING_MEDICATIONS : PAST_MEDICATIONS),
-    [filter],
-  );
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    const [rows, stopped] = await Promise.all([
+      fetchMedicationListRows(filter),
+      fetchStoppedMedications(),
+    ]);
+    setListRows(rows);
+    setStoppedMeds(stopped);
+    setLoading(false);
+  }, [filter]);
 
-  const renderMedicationCard = (item: Extract<MedicationListRow, { type: "medication" }>) => (
-    <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
-      <InnerShadowIcon
-        icon={<MedicationsIcon width={18} height={18} />}
-        size={40}
-        radius={20}
-        surfaceColor={COLORS.INNER_SURFACE}
-      />
-      <View style={styles.cardTextWrap}>
-        <Text style={styles.cardTitle}>{item.name}</Text>
-        <Text style={styles.cardSubtitle}>{item.instructions}</Text>
-        <Text style={styles.cardSubtitle}>{item.schedule}</Text>
-      </View>
-      <RightArrowIcon width={10} height={10} />
-    </NeumorphicCard>
-  );
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
-  const renderPharmacyCard = (item: Extract<MedicationListRow, { type: "pharmacy" }>) => (
-    <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
-      <InnerShadowIcon
-        icon={<PharmacyIcon width={18} height={18} />}
-        size={40}
-        radius={20}
-        surfaceColor={COLORS.INNER_SURFACE}
-      />
-      <View style={styles.cardTextWrap}>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <Text style={styles.cardSubtitle}>{item.address}</Text>
-      </View>
-      <RightArrowIcon width={10} height={10} />
-    </NeumorphicCard>
+  const onMedicationPress = useCallback(
+    (medicationId: string) => {
+      navigation.navigate(navigationStrings.MEDICATION_DETAIL, { medicationId });
+    },
+    [navigation],
   );
 
   const renderItem: ListRenderItem<MedicationListRow> = ({ item }) => {
     if (item.type === "pharmacy") {
-      return renderPharmacyCard(item);
+      return <PharmacyListCard item={item} />;
     }
-    return renderMedicationCard(item);
+    return <MedicationListCard item={item} onPress={onMedicationPress} />;
   };
 
   const listHeader = (
     <>
+      <View style={styles.header}>
+        <IconComponent
+          icon={<LeftArrowIcon width={18} height={18} />}
+          width={40}
+          height={40}
+          radius={20}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.headerTitle}>Medications</Text>
+        <View style={styles.notifWrap}>
+          <IconComponent
+            icon={<NotificationIcon width={18} height={18} />}
+            width={40}
+            height={40}
+            radius={20}
+            onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
+          />
+          <View style={styles.notifDot} />
+        </View>
+      </View>
+
       <ProfileAvatar
         overlaySource={OverlayImage}
         imageSource={DoctorTempImage}
@@ -134,7 +141,7 @@ const Medications = () => {
   );
 
   const stoppedMedsSection =
-    filter === "upcoming" ? (
+    filter === "upcoming" && stoppedMeds.length > 0 ? (
       <NeumorphicCard
         outerStyle={styles.stoppedOuter}
         innerStyle={styles.stoppedInner}
@@ -145,18 +152,13 @@ const Medications = () => {
           onPress={() => setStoppedExpanded((prev) => !prev)}
         >
           <Text style={styles.stoppedTitle}>Stopped Meds</Text>
-          <View
-            style={[
-              styles.chevronWrap,
-              stoppedExpanded && styles.chevronWrapExpanded,
-            ]}
-          >
+          <View style={[styles.chevronWrap, stoppedExpanded && styles.chevronWrapExpanded]}>
             <DropDownIcon width={12} height={12} />
           </View>
         </Pressable>
 
         {stoppedExpanded
-          ? STOPPED_MEDS.map((med, index) => (
+          ? stoppedMeds.map((med, index) => (
               <View key={med.id}>
                 {index > 0 ? <View style={styles.stoppedDivider} /> : null}
                 <View style={styles.stoppedRow}>
@@ -176,41 +178,24 @@ const Medications = () => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-      <View style={styles.header}>
-        <IconComponent
-          icon={<LeftArrowIcon width={18} height={18} />}
-          width={40}
-          height={40}
-          radius={20}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headerTitle}>Medications</Text>
-        <View style={styles.notifWrap}>
-          <IconComponent
-            icon={<NotificationIcon width={18} height={18} />}
-            width={40}
-            height={40}
-            radius={20}
-            onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
-          />
-          <View style={styles.notifDot} />
+      {loading ? (
+        <View style={styles.loadingWrap}>
+          <ActivityIndicator color={COLORS.PRIMARY} />
         </View>
-      </View>
-
-      <FlatList
-        style={styles.list}
-        data={listData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        ListHeaderComponent={listHeader}
-        ListFooterComponent={stoppedMedsSection}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>No medications found.</Text>
-        }
-      />
+      ) : (
+        <FlatList
+          style={styles.list}
+          data={listRows}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          ListHeaderComponent={listHeader}
+          ListFooterComponent={stoppedMedsSection}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
+          ListEmptyComponent={<Text style={styles.emptyText}>No medications found.</Text>}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -222,9 +207,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.SURFACE,
   },
+  loadingWrap: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   header: {
     marginTop: Platform.OS === "ios" ? 6 : 8,
-    paddingHorizontal: HORIZONTAL,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -308,32 +297,6 @@ const styles = StyleSheet.create({
   },
   filterChip: {
     flex: 1,
-  },
-  cardOuter: {
-    width: "100%",
-  },
-  cardInner: {
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  cardTextWrap: {
-    flex: 1,
-    minWidth: 0,
-  },
-  cardTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: COLORS.TEXT_PRIMARY,
-  },
-  cardSubtitle: {
-    marginTop: 4,
-    fontSize: 12,
-    fontWeight: "400",
-    color: COLORS.TEXT_PRIMARY_60,
   },
   stoppedOuter: {
     marginTop: 18,

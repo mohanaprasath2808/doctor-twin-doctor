@@ -65,6 +65,10 @@ import HealthJournalReadingSaved from "../../screens/App/HealthJournal/HealthJou
 import WeeklySummary from "../../screens/App/HealthJournal/WeeklySummary";
 import HealthJournalTrends from "../../screens/App/HealthJournal/HealthJournalTrends";
 import Medications from "../../screens/App/Medications/Medications";
+import MedicationDetail from "../../screens/App/Medications/MedicationDetail";
+import RequestRefill from "../../screens/App/Medications/RequestRefill";
+import RefillStatus from "../../screens/App/Medications/RefillStatus";
+import NextSteps from "../../screens/App/Medications/NextSteps";
 
 const Stack = createStackNavigator();
 
@@ -157,6 +161,10 @@ const AppStack = () => {
       />
       <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_TRENDS} component={HealthJournalTrends} />
       <Stack.Screen name={navigationStrings.MEDICATIONS} component={Medications} />
+      <Stack.Screen name={navigationStrings.MEDICATION_DETAIL} component={MedicationDetail} />
+      <Stack.Screen name={navigationStrings.REQUEST_REFILL} component={RequestRefill} />
+      <Stack.Screen name={navigationStrings.REFILL_STATUS} component={RefillStatus} />
+      <Stack.Screen name={navigationStrings.REFILL_NEXT_STEPS} component={NextSteps} />
     </Stack.Navigator>
   );
 };

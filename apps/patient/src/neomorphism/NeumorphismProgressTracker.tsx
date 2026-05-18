@@ -6,6 +6,7 @@ import InnerShadowIcon from "./InnerShadowIcon";
 import { COLORS } from "../constants/theme";
 
 import TickIcon from "../assets/icons/tick.svg";
+import SelectedIcon from "../assets/icons/selectedIcon.svg";
 
 export type ProgressTrackerStep = {
   id: string;
@@ -51,8 +52,6 @@ const TRACK_STYLES = {
   stepIndicatorLabelCurrentColor: "transparent",
   stepIndicatorLabelFontSize: 0,
   currentStepIndicatorLabelFontSize: 0,
-  /** `stretch` so each label row uses full labels-column width — avoids clipping dates (`flex-start` shrinks cells to content width). */
-  labelAlign: "stretch" as const,
   labelColor: COLORS.TEXT_PRIMARY,
   labelSize: 14,
   currentStepLabelColor: COLORS.TEXT_PRIMARY,
@@ -74,11 +73,7 @@ const NeumorphismProgressTracker: React.FC<NeumorphismProgressTrackerProps> = ({
 
     if (completed) {
       return (
-        <View style={styles.tickWrap}>
-          <View style={styles.doneNode}>
-            <TickIcon width={13} height={11} />
-          </View>
-        </View>
+        <SelectedIcon width={30} height={30} />
       );
     }
     return (
@@ -172,34 +167,25 @@ const styles = StyleSheet.create({
   },
   labelRowOuter: {
     flex: 1,
-    alignSelf: "stretch",
     width: "100%",
-    minWidth: 0,
-    justifyContent: "center",
     paddingVertical: 18,
   },
   labelRow: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     gap: 10,
-    width: "100%",
-    minWidth: 0,
+    borderWidth: 1,
   },
   labelText: {
-    flex: 1,
-    flexShrink: 1,
-    minWidth: 0,
     fontSize: 14,
-    lineHeight: 24,
     fontWeight: "500",
     color: COLORS.TEXT_PRIMARY,
     fontFamily: "SF-Pro-Text-Medium",
   },
   dateText: {
-    flexShrink: 0,
     fontSize: 12,
-    lineHeight: 20,
     fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_60,
     fontFamily: "SF-Pro-Text-Regular",

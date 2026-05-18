@@ -84,6 +84,10 @@ const navigationStrings = {
   HEALTH_JOURNAL_WEEKLY_SUMMARY: "HealthJournalWeeklySummary",
   HEALTH_JOURNAL_TRENDS: "HealthJournalTrends",
   MEDICATIONS: "Medications",
+  MEDICATION_DETAIL: "MedicationDetail",
+  REQUEST_REFILL: "RequestRefill",
+  REFILL_STATUS: "RefillStatus",
+  REFILL_NEXT_STEPS: "RefillNextSteps",
 };
 
 export default navigationStrings;
