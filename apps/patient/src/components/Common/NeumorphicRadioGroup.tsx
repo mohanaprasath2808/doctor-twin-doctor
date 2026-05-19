@@ -4,6 +4,7 @@ import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-n
 import NeumorphicCard from "./NeumorphicCard";
 import NeumorphicRadioMark from "../../neomorphism/NeumorphicRadioMark";
 import { COLORS } from "../../constants/theme";
+import { TEXT } from "../../constants/typography";
 
 export type NeumorphicRadioOption<T extends string> = {
   value: T;
@@ -63,12 +64,12 @@ function NeumorphicRadioGroup<T extends string>({
 const styles = StyleSheet.create({
   sectionTitle: {
     marginBottom: 10,
-    fontSize: 16,
-    fontWeight: "600",
+    ...TEXT.sectionTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   optional: {
-    fontWeight: "400",
+    ...TEXT.caption,
+    fontSize: 16,
     color: COLORS.TEXT_PRIMARY_70,
   },
   cardOuter: {
@@ -90,8 +91,7 @@ const styles = StyleSheet.create({
   },
   optionLabel: {
     flex: 1,
-    fontSize: 14,
-    fontWeight: "500",
+    ...TEXT.body,
     color: COLORS.TEXT_PRIMARY,
   },
   divider: {

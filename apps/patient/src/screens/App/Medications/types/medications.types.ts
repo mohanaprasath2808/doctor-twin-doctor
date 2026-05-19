@@ -1,25 +1,8 @@
-export type MedicationFilter = "upcoming" | "past";
-
 export type MedicationListItem = {
   id: string;
   name: string;
   instructions: string;
   schedule: string;
-};
-
-export type PharmacyListItem = {
-  id: string;
-  title: string;
-  address: string;
-};
-
-export type MedicationListRow =
-  | ({ type: "medication" } & MedicationListItem)
-  | ({ type: "pharmacy" } & PharmacyListItem);
-
-export type StoppedMedItem = {
-  id: string;
-  name: string;
 };
 
 export type PharmacyInfo = {
@@ -33,6 +16,8 @@ export type PharmacyInfo = {
 
 export type MedicationDetail = MedicationListItem & {
   lastFilled: string;
+  lastRefillDate: string;
+  remainingRefills: number;
   prescriber: string;
   pharmacy: PharmacyInfo;
 };
@@ -40,6 +25,10 @@ export type MedicationDetail = MedicationListItem & {
 export type RefillReason = "routine" | "ran_out" | "traveling" | "other";
 
 export type MedicationDetailParams = {
+  medicationId: string;
+};
+
+export type PriorAuthorizationParams = {
   medicationId: string;
 };
 

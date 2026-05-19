@@ -6,41 +6,37 @@ import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../../../constants/theme";
 import { TEXT } from "../../../../constants/typography";
-import PharmacyIcon from "../../../../assets/icons/pharmacyIcon.svg";
-import type { PharmacyInfo } from "../types/medications.types";
+import DownloadIcon from "../../../../assets/icons/downloadIcon.svg";
 
-type PharmacyChangeRowProps = {
-  pharmacy: Pick<PharmacyInfo, "name" | "address">;
-  onChangePress: () => void;
+type NextStepUploadRowProps = {
+  title: string;
+  onUploadPress: () => void;
   outerStyle?: object;
 };
 
-const PharmacyChangeRow = ({ pharmacy, onChangePress, outerStyle }: PharmacyChangeRowProps) => (
+const NextStepUploadRow = ({ title, onUploadPress, outerStyle }: NextStepUploadRowProps) => (
   <NeumorphicCard
     outerStyle={[styles.cardOuter, outerStyle]}
     innerStyle={styles.cardInner}
     borderRadius={10}
   >
     <InnerShadowIcon
-      icon={<PharmacyIcon width={18} height={18} />}
+      icon={<DownloadIcon width={18} height={18} transform={[{ rotate: "-180deg" }]} />}
       size={40}
       radius={20}
       surfaceColor={COLORS.INNER_SURFACE}
     />
-    <View style={styles.textWrap}>
-      <Text style={styles.title}>{pharmacy.name}</Text>
-      <Text style={styles.subtitle}>{pharmacy.address}</Text>
-    </View>
+    <Text style={styles.title}>{title}</Text>
     <AppButton
-      text="Change"
+      text="Upload"
       borderWidth={1}
       borderColor={COLORS.PRIMARY}
       bgColor={COLORS.SURFACE}
       width={72}
       height={32}
       borderRadius={60}
-      textStyle={styles.changeText}
-      onPress={onChangePress}
+      textStyle={styles.uploadBtnText}
+      onPress={onUploadPress}
     />
   </NeumorphicCard>
 );
@@ -57,23 +53,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  textWrap: {
-    flex: 1,
-    minWidth: 0,
-  },
   title: {
+    flex: 1,
     ...TEXT.cardTitle,
     color: COLORS.TEXT_PRIMARY,
   },
-  subtitle: {
-    marginTop: 4,
-    ...TEXT.caption,
-    color: COLORS.TEXT_PRIMARY_60,
-  },
-  changeText: {
+  uploadBtnText: {
     ...TEXT.captionSemibold,
     color: COLORS.PRIMARY,
   },
 });
 
-export default PharmacyChangeRow;
+export default NextStepUploadRow;

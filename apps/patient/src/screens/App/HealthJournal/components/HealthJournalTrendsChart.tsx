@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { LineChart } from "react-native-gifted-charts";
 
+import { TEXT } from "../../../../constants/typography";
 import {
   HEALTH_JOURNAL_TREND_MONTH_LABELS,
   HealthJournalTrendsConfig,
@@ -127,14 +128,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   xAxisLabel: {
-    fontSize: 7,
+    ...TEXT.chartLegend,
     color: "#959595",
-    fontWeight: "500",
   },
   yAxisLabel: {
-    fontSize: 10,
+    ...TEXT.chartAxis,
     color: "#959595",
-    fontWeight: "500",
   },
 });
 

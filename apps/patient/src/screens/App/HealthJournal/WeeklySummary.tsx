@@ -9,6 +9,7 @@ import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import IconComponent from "../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../../constants/theme";
+import { TEXT } from "../../../constants/typography";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import AppointmentsRemindersIcon from "../../../assets/icons/calendarWithClockIcon.svg";
 import DoctorIcon from "../../../assets/icons/doctorBlueIcon.svg";
@@ -165,8 +166,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "600",
+    ...TEXT.screenTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   headerSpacer: {
@@ -208,8 +208,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
+    ...TEXT.sectionTitle,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: 4,
   },
@@ -224,14 +223,12 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   rowPrimary: {
-    fontSize: 14,
-    fontWeight: "500",
+    ...TEXT.body,
     color: COLORS.TEXT_PRIMARY,
   },
   rowSecondary: {
     marginTop: 4,
-    fontSize: 12,
-    fontWeight: "400",
+    ...TEXT.caption,
     color: COLORS.TEXT_PRIMARY_60,
   },
   divider: {
@@ -246,8 +243,7 @@ const styles = StyleSheet.create({
   },
   shareButtonText: {
     color: COLORS.PRIMARY,
-    fontSize: 16,
-    fontWeight: "500",
+    ...TEXT.sectionTitleMedium,
   },
 });
 

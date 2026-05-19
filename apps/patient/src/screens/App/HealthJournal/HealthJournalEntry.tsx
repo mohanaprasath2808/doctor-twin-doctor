@@ -16,6 +16,7 @@ import IconComponent from "../../../neomorphism/IconComponent";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import TimePickerField from "../../../neomorphism/TimePickerField";
 import { COLORS } from "../../../constants/theme";
+import { TEXT } from "../../../constants/typography";
 import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import ClockIcon from "../../../assets/icons/clockIcon.svg";
@@ -182,8 +183,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "600",
+    ...TEXT.screenTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   headerSpacer: {
@@ -214,8 +214,7 @@ const styles = StyleSheet.create({
   instruction: {
     marginTop: 6,
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "500",
+    ...TEXT.sectionTitleMedium,
     lineHeight: 22,
     color: COLORS.TEXT_PRIMARY,
     paddingHorizontal: 8,
@@ -225,8 +224,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   sectionTitle: {
-    fontSize: 15,
-    fontWeight: "600",
+    ...TEXT.subsectionTitle,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: 2,
   },
@@ -244,8 +242,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   timeSectionLabel: {
-    fontSize: 14,
-    fontWeight: "500",
+    ...TEXT.body,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: 10,
   },

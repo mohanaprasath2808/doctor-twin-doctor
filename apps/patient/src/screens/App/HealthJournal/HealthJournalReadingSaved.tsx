@@ -9,6 +9,7 @@ import AppButton from "../../../components/Common/AppButton";
 import IconComponent from "../../../neomorphism/IconComponent";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import { COLORS } from "../../../constants/theme";
+import { TEXT } from "../../../constants/typography";
 import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import GreenTickImage from "../../../assets/images/greenTick.png";
@@ -137,8 +138,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "600",
+    ...TEXT.screenTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   headerSpacer: {
@@ -175,15 +175,15 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    fontSize: 20,
-    fontWeight: "600",
+    ...TEXT.hero,
     color: COLORS.TEXT_PRIMARY,
   },
   subtitle: {
     marginTop: 8,
     textAlign: "center",
-    fontSize: 16,
+    ...TEXT.sectionTitleMedium,
     fontWeight: "400",
+    fontFamily: TEXT.caption.fontFamily,
     color: COLORS.TEXT_PRIMARY_70,
   },
   footer: {
@@ -202,8 +202,7 @@ const styles = StyleSheet.create({
   },
   outlineBtnText: {
     color: COLORS.PRIMARY,
-    fontSize: 16,
-    fontWeight: "500",
+    ...TEXT.sectionTitleMedium,
   },
 });
 

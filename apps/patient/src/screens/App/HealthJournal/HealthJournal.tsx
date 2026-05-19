@@ -10,6 +10,7 @@ import NeumorphicQuickActionTile from "../../../components/Common/NeumorphicQuic
 import IconComponent from "../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../../constants/theme";
+import { TEXT } from "../../../constants/typography";
 import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import NotificationIcon from "../../../assets/icons/notificationIcon.svg";
@@ -161,8 +162,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    ...TEXT.screenTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   notifWrap: {
@@ -207,8 +207,7 @@ const styles = StyleSheet.create({
   heading: {
     marginTop: 8,
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "500",
+    ...TEXT.sectionTitleMedium,
     color: COLORS.TEXT_PRIMARY,
     paddingHorizontal: 8,
   },
@@ -225,8 +224,7 @@ const styles = StyleSheet.create({
   },
   moreButtonText: {
     color: COLORS.PRIMARY,
-    fontSize: 16,
-    fontWeight: "500",
+    ...TEXT.sectionTitleMedium,
   },
   weeklySummaryOuter: {
     width: "100%",
@@ -241,8 +239,7 @@ const styles = StyleSheet.create({
   },
   weeklySummaryText: {
     flex: 1,
-    fontSize: 15,
-    fontWeight: "500",
+    ...TEXT.label,
     color: COLORS.TEXT_PRIMARY,
   },
   summarySection: {

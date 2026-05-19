@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../../../constants/theme";
+import { TEXT } from "../../../../constants/typography";
 import RightArrowIcon from "../../../../assets/icons/rightArrowIcon.svg";
 import type { NextStepItem } from "../types/medications.types";
 
@@ -53,14 +54,12 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   title: {
-    fontSize: 14,
-    fontWeight: "600",
+    ...TEXT.cardTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   subtitle: {
     marginTop: 4,
-    fontSize: 12,
-    fontWeight: "400",
+    ...TEXT.caption,
     color: COLORS.TEXT_PRIMARY_60,
   },
 });

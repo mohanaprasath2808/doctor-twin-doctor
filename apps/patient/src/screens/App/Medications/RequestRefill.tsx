@@ -21,6 +21,7 @@ import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import InputField from "../../../neomorphism/InputField";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import { COLORS } from "../../../constants/theme";
+import { TEXT } from "../../../constants/typography";
 import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import MedicationsIcon from "../../../assets/icons/medications.svg";
@@ -30,9 +31,7 @@ import {
   DEFAULT_PHARMACY,
   fetchMedicationDetail,
   getPharmacyPickerItems,
-  getRefillMedicationOptions,
-  REFILL_REASON_OPTIONS,
-} from "./data/medications.repository";
+} from "./MedicationDetail";
 import type {
   MedicationDetail,
   RefillReason,
@@ -40,6 +39,20 @@ import type {
 } from "./types/medications.types";
 
 const HORIZONTAL = 16;
+
+/** Replace with API when integrated. */
+const REFILL_MEDICATION_OPTIONS = [
+  { id: "med-1", label: "Lisinopril 20 mg" },
+  { id: "med-2", label: "Lexapro 30 mg" },
+  { id: "med-3", label: "Lisinopril 20 mg" },
+];
+
+const REFILL_REASON_OPTIONS: { value: RefillReason; label: string }[] = [
+  { value: "routine", label: "Routine refill" },
+  { value: "ran_out", label: "Ran out" },
+  { value: "traveling", label: "Traveling" },
+  { value: "other", label: "Other" },
+];
 const REUSABLE_GRADIENT: [string, string] = ["#22D3EE", "#0F766E"];
 
 const RequestRefill = () => {
@@ -59,7 +72,7 @@ const RequestRefill = () => {
   const [pharmacyAddress, setPharmacyAddress] = useState(DEFAULT_PHARMACY.address);
   const [reason, setReason] = useState<RefillReason>("routine");
 
-  const medicationOptions = getRefillMedicationOptions();
+  const medicationOptions = REFILL_MEDICATION_OPTIONS;
 
   const loadDetail = useCallback(async () => {
     setLoading(true);
@@ -241,8 +254,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    ...TEXT.screenTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   headerSpacer: {
@@ -273,21 +285,18 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   heroTitle: {
-    fontSize: 14,
-    fontWeight: "600",
+    ...TEXT.cardTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   heroSubtitle: {
     marginTop: 4,
-    fontSize: 12,
-    fontWeight: "400",
+    ...TEXT.caption,
     color: COLORS.TEXT_PRIMARY_60,
   },
   sectionTitle: {
     marginTop: 18,
     marginBottom: 10,
-    fontSize: 16,
-    fontWeight: "600",
+    ...TEXT.sectionTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   sectionGap: {
@@ -300,8 +309,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     marginBottom: 8,
-    fontSize: 12,
-    fontWeight: "400",
+    ...TEXT.caption,
     color: COLORS.TEXT_PRIMARY_60,
   },
   dropdownPress: {

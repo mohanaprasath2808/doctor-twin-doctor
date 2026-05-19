@@ -85,9 +85,14 @@ const navigationStrings = {
   HEALTH_JOURNAL_TRENDS: "HealthJournalTrends",
   MEDICATIONS: "Medications",
   MEDICATION_DETAIL: "MedicationDetail",
+  PRIOR_AUTHORIZATION: "PriorAuthorization",
+  PRIOR_AUTH_QUESTIONNAIRE: "PriorAuthQuestionnaire",
   REQUEST_REFILL: "RequestRefill",
   REFILL_STATUS: "RefillStatus",
   REFILL_NEXT_STEPS: "RefillNextSteps",
+  MEDICATION_UPLOAD_FILE: "MedicationUploadFile",
+  REMINDERS: "Reminders",
+  MEDICATION_REMINDER: "MedicationReminder",
 };
 
 export default navigationStrings;

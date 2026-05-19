@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 
 import NeumorphicInnerShadowCard from "../../../../neomorphism/NeumorphicInnerShadowCard";
 import { COLORS } from "../../../../constants/theme";
+import { TEXT } from "../../../../constants/typography";
 import { HealthJournalFieldConfig } from "../types/healthJournalEntryConfig";
 
 type HealthJournalMetricFieldProps = {
@@ -50,8 +51,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     marginBottom: 8,
-    fontSize: 14,
-    fontWeight: "500",
+    ...TEXT.body,
     color: COLORS.TEXT_PRIMARY,
   },
   insetOuter: {
@@ -66,8 +66,7 @@ const styles = StyleSheet.create({
   },
   fieldInput: {
     width: "100%",
-    fontSize: 18,
-    fontWeight: "500",
+    ...TEXT.input,
     color: COLORS.TEXT_PRIMARY,
     textAlign: "center",
     padding: 0,

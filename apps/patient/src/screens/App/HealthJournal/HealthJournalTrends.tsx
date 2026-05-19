@@ -11,6 +11,7 @@ import IconComponent from "../../../neomorphism/IconComponent";
 import NeumorphicInnerShadowCard from "../../../neomorphism/NeumorphicInnerShadowCard";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import { COLORS } from "../../../constants/theme";
+import { TEXT } from "../../../constants/typography";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import OverlayImage from "../../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../../assets/images/tempImage/doctorTempImage.png";
@@ -169,8 +170,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 18,
-    fontWeight: "600",
+    ...TEXT.screenTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   headerSpacer: {
@@ -201,8 +201,7 @@ const styles = StyleSheet.create({
   statusMessage: {
     marginTop: 8,
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "500",
+    ...TEXT.sectionTitleMedium,
     lineHeight: 22,
     color: COLORS.TEXT_PRIMARY,
     paddingHorizontal: 8,
@@ -227,8 +226,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
+    ...TEXT.sectionTitle,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: 4,
   },
@@ -246,8 +244,9 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   legendLabel: {
-    fontSize: 12,
+    ...TEXT.caption,
     fontWeight: "500",
+    fontFamily: TEXT.body.fontFamily,
     color: COLORS.TEXT_PRIMARY_70,
   },
   summaryInsetOuter: {
@@ -263,13 +262,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   summaryLabel: {
+    ...TEXT.caption,
     fontSize: 14,
-    fontWeight: "400",
     color: COLORS.TEXT_PRIMARY_70,
   },
   summaryValue: {
-    fontSize: 16,
-    fontWeight: "600",
+    ...TEXT.sectionTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   midActionsRow: {
@@ -284,8 +282,7 @@ const styles = StyleSheet.create({
   },
   outlineBtnText: {
     color: COLORS.PRIMARY,
-    fontSize: 15,
-    fontWeight: "500",
+    ...TEXT.label,
   },
   footer: {
     paddingHorizontal: 16,

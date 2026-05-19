@@ -66,9 +66,14 @@ import WeeklySummary from "../../screens/App/HealthJournal/WeeklySummary";
 import HealthJournalTrends from "../../screens/App/HealthJournal/HealthJournalTrends";
 import Medications from "../../screens/App/Medications/Medications";
 import MedicationDetail from "../../screens/App/Medications/MedicationDetail";
+import PriorAuthorization from "../../screens/App/Medications/PriorAuthorization";
+import CompleteQuestionnaire from "../../screens/App/Medications/CompleteQuestionnaire";
 import RequestRefill from "../../screens/App/Medications/RequestRefill";
 import RefillStatus from "../../screens/App/Medications/RefillStatus";
 import NextSteps from "../../screens/App/Medications/NextSteps";
+import UploadFile from "../../screens/App/Medications/UploadFile";
+import Reminders from "../../screens/App/Reminders/Reminders";
+import MedicationReminder from "../../screens/App/Reminders/MedicationReminder";
 
 const Stack = createStackNavigator();
 
@@ -162,9 +167,17 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_TRENDS} component={HealthJournalTrends} />
       <Stack.Screen name={navigationStrings.MEDICATIONS} component={Medications} />
       <Stack.Screen name={navigationStrings.MEDICATION_DETAIL} component={MedicationDetail} />
+      <Stack.Screen name={navigationStrings.PRIOR_AUTHORIZATION} component={PriorAuthorization} />
+      <Stack.Screen
+        name={navigationStrings.PRIOR_AUTH_QUESTIONNAIRE}
+        component={CompleteQuestionnaire}
+      />
       <Stack.Screen name={navigationStrings.REQUEST_REFILL} component={RequestRefill} />
       <Stack.Screen name={navigationStrings.REFILL_STATUS} component={RefillStatus} />
       <Stack.Screen name={navigationStrings.REFILL_NEXT_STEPS} component={NextSteps} />
+      <Stack.Screen name={navigationStrings.MEDICATION_UPLOAD_FILE} component={UploadFile} />
+      <Stack.Screen name={navigationStrings.REMINDERS} component={Reminders} />
+      <Stack.Screen name={navigationStrings.MEDICATION_REMINDER} component={MedicationReminder} />
     </Stack.Navigator>
   );
 };

@@ -120,6 +120,9 @@ const Home = () => {
         if (item.id === "medications") {
           navigation.navigate(navigationStrings.MEDICATIONS);
         }
+        if (item.id === "reminders") {
+          navigation.navigate(navigationStrings.REMINDERS);
+        }
       }}
       icon={item.icon}
       label={item.label}

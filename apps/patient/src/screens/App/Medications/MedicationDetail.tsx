@@ -13,11 +13,14 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 import NeumorphicCard from "../../../components/Common/NeumorphicCard";
+import StatusDot from "../../../components/Common/StatusDot";
 import SelectPharmacySheet from "../../../components/BottomSheets/SelectPharmacySheet";
 import IconComponent from "../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
+import NeumorphicInnerShadowCard from "../../../neomorphism/NeumorphicInnerShadowCard";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import { COLORS } from "../../../constants/theme";
+import { TEXT } from "../../../constants/typography";
 import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import MedicationsIcon from "../../../assets/icons/medications.svg";
@@ -27,15 +30,102 @@ import PharmacyIcon from "../../../assets/icons/pharmacyIcon.svg";
 import BellIcon from "../../../assets/icons/bell.svg";
 import RightArrowIcon from "../../../assets/icons/rightArrowIcon.svg";
 import PharmacyChangeRow from "./components/PharmacyChangeRow";
-import {
-  DEFAULT_PHARMACY,
-  fetchMedicationDetail,
-  getPharmacyPickerItems,
-} from "./data/medications.repository";
-import type { MedicationDetail as MedicationDetailModel, MedicationDetailParams } from "./types/medications.types";
+import type {
+  MedicationDetail as MedicationDetailModel,
+  MedicationDetailParams,
+  PharmacyInfo,
+} from "./types/medications.types";
 
 const HORIZONTAL = 16;
+
+/** Replace with API when integrated. */
+export const DEFAULT_PHARMACY: PharmacyInfo = {
+  id: "pharmacy-1",
+  name: "CVS Pharmacy",
+  address: "Torrance Crossroads",
+  phone: "440-784527",
+  contactLine: "Torrance Crossroads tel.us.us: 440-784527",
+};
+
+const PHARMACY_PICKER_ITEMS = [
+  { id: DEFAULT_PHARMACY.id, label: `${DEFAULT_PHARMACY.name} - ${DEFAULT_PHARMACY.address}` },
+  { id: "pharmacy-2", label: "CVS Pharmacy - Redondo Beach" },
+  { id: "pharmacy-3", label: "Walgreens - Manhattan Beach" },
+];
+
+const MEDICATION_DETAILS: Record<string, MedicationDetailModel> = {
+  "med-1": {
+    id: "med-1",
+    name: "Lisinopril 20 mg",
+    instructions: "Take 1 tablet daily",
+    schedule: "17th Schedule",
+    lastFilled: "24 Mar 2026",
+    lastRefillDate: "21 Jun 2026",
+    remainingRefills: 4,
+    prescriber: "Dr. Shahinaz Soliman",
+    pharmacy: {
+      ...DEFAULT_PHARMACY,
+      contactLine: "Torrance Crossroads tel.us.us: 440-784527",
+    },
+  },
+  "med-2": {
+    id: "med-2",
+    name: "Lexapro 30 mg",
+    instructions: "Take 1 tablet daily",
+    schedule: "17th Schedule",
+    lastFilled: "10 Mar 2026",
+    lastRefillDate: "21 Jun 2026",
+    remainingRefills: 4,
+    prescriber: "Dr. Shahinaz Soliman",
+    pharmacy: DEFAULT_PHARMACY,
+  },
+  "med-3": {
+    id: "med-3",
+    name: "Lisinopril 20 mg",
+    instructions: "Take 1 tablet daily",
+    schedule: "17th Schedule",
+    lastFilled: "24 Mar 2026",
+    lastRefillDate: "21 Jun 2026",
+    remainingRefills: 4,
+    prescriber: "Dr. Shahinaz Soliman",
+    pharmacy: DEFAULT_PHARMACY,
+  },
+  "stopped-1": {
+    id: "stopped-1",
+    name: "Lisinopril 20 mg",
+    instructions: "Take 1 tablet daily",
+    schedule: "Stopped",
+    lastFilled: "24 Mar 2026",
+    lastRefillDate: "21 Jun 2026",
+    remainingRefills: 0,
+    prescriber: "Dr. Shahinaz Soliman",
+    pharmacy: DEFAULT_PHARMACY,
+  },
+  "stopped-2": {
+    id: "stopped-2",
+    name: "Lexapro 30 mg",
+    instructions: "Take 1 tablet daily",
+    schedule: "Stopped",
+    lastFilled: "24 Mar 2026",
+    lastRefillDate: "21 Jun 2026",
+    remainingRefills: 0,
+    prescriber: "Dr. Shahinaz Soliman",
+    pharmacy: DEFAULT_PHARMACY,
+  },
+};
+
+export function getPharmacyPickerItems() {
+  return PHARMACY_PICKER_ITEMS;
+}
+
+/** Replace with API fetch when integrated. */
+export async function fetchMedicationDetail(
+  medicationId: string,
+): Promise<MedicationDetailModel | null> {
+  return MEDICATION_DETAILS[medicationId] ?? null;
+}
 const REUSABLE_GRADIENT: [string, string] = ["#22D3EE", "#0F766E"];
+const INSTRUCTION_DOT_COLOR = "#9CA3AF";
 
 const MedicationDetail = () => {
   const navigation = useNavigation<any>();
@@ -87,7 +177,7 @@ const MedicationDetail = () => {
   if (!detail) {
     return (
       <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-        <View style={styles.header}>
+        <View style={[styles.header, styles.headerPadded]}>
           <IconComponent
             icon={<LeftArrowIcon width={18} height={18} />}
             width={40}
@@ -103,11 +193,13 @@ const MedicationDetail = () => {
     );
   }
 
+  const pharmacySubtitle = `${detail.pharmacy.name} ${detail.pharmacy.address}`;
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -131,8 +223,7 @@ const MedicationDetail = () => {
           />
           <View style={styles.heroTextWrap}>
             <Text style={styles.heroTitle}>{detail.name}</Text>
-            <Text style={styles.heroSubtitle}>{detail.instructions}</Text>
-            <Text style={styles.heroSubtitle}>{detail.schedule}</Text>
+            <Text style={styles.heroSubtitle}>Last refill date: {detail.lastRefillDate}</Text>
           </View>
         </NeumorphicCard>
 
@@ -148,6 +239,12 @@ const MedicationDetail = () => {
           />
           <View style={styles.divider} />
           <InfoRow
+            icon={<MedicationsIcon width={18} height={18} />}
+            title={String(detail.remainingRefills)}
+            subtitle="Number of remaining refills"
+          />
+          <View style={styles.divider} />
+          <InfoRow
             icon={<DoctorBlueIcon width={18} height={18} />}
             title={detail.prescriber}
             subtitle="Prescriber"
@@ -156,21 +253,23 @@ const MedicationDetail = () => {
           <InfoRow
             icon={<PharmacyIcon width={18} height={18} />}
             title={detail.pharmacy.contactLine}
-            subtitle={`${detail.pharmacy.name} ${detail.pharmacy.address}`}
+            subtitle={pharmacySubtitle}
           />
         </NeumorphicCard>
 
-        <ReusableButton
-          title="Request Refill"
-          gradientColors={REUSABLE_GRADIENT}
-          height={48}
-          borderRadius={24}
-          width="100%"
-          containerStyle={[styles.refillBtn, styles.cardGap]}
-          onPress={() =>
-            navigation.navigate(navigationStrings.REQUEST_REFILL, { medicationId: detail.id })
-          }
-        />
+        <View style={styles.instructionsSection}>
+          <Text style={styles.sectionTitle}>Instructions</Text>
+          <NeumorphicInnerShadowCard
+            borderRadius={12}
+            containerStyle={styles.instructionsInsetOuter}
+            contentStyle={styles.instructionsInsetInner}
+            darkShadowColor={COLORS.DARK_SHADOW}
+            lightShadowColor={COLORS.LIGHT_SHADOW}
+          >
+            <StatusDot color={INSTRUCTION_DOT_COLOR} size={8} />
+            <Text style={styles.instructionText}>{detail.instructions}</Text>
+          </NeumorphicInnerShadowCard>
+        </View>
 
         <PharmacyChangeRow
           pharmacy={{ name: pharmacyName, address: pharmacyAddress }}
@@ -195,6 +294,20 @@ const MedicationDetail = () => {
           </NeumorphicCard>
         </Pressable>
       </ScrollView>
+
+      <View style={styles.footer}>
+        <ReusableButton
+          title="Request Refill"
+          gradientColors={REUSABLE_GRADIENT}
+          height={48}
+          borderRadius={24}
+          width="100%"
+          containerStyle={styles.refillBtn}
+          onPress={() =>
+            navigation.navigate(navigationStrings.PRIOR_AUTHORIZATION, { medicationId: detail.id })
+          }
+        />
+      </View>
 
       <SelectPharmacySheet
         ref={pharmacySheetRef}
@@ -240,9 +353,9 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
   },
-  content: {
+  scrollContent: {
     paddingHorizontal: HORIZONTAL,
-    paddingBottom: 32,
+    paddingBottom: 16,
   },
   loadingWrap: {
     flex: 1,
@@ -251,14 +364,18 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: Platform.OS === "ios" ? 6 : 8,
-    marginBottom: 20,
+    marginBottom: 14,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
+  headerPadded: {
+    paddingHorizontal: HORIZONTAL,
+  },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    flex: 1,
+    textAlign: "center",
+    ...TEXT.screenTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   headerSpacer: {
@@ -268,8 +385,9 @@ const styles = StyleSheet.create({
   errorText: {
     marginTop: 24,
     textAlign: "center",
-    fontSize: 14,
+    ...TEXT.body,
     color: COLORS.TEXT_PRIMARY_70,
+    paddingHorizontal: HORIZONTAL,
   },
   cardOuter: {
     width: "100%",
@@ -290,14 +408,12 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   heroTitle: {
-    fontSize: 14,
-    fontWeight: "600",
+    ...TEXT.cardTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   heroSubtitle: {
     marginTop: 4,
-    fontSize: 12,
-    fontWeight: "400",
+    ...TEXT.caption,
     color: COLORS.TEXT_PRIMARY_60,
   },
   infoCardInner: {
@@ -316,22 +432,42 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   infoTitle: {
-    fontSize: 14,
-    fontWeight: "600",
+    ...TEXT.cardTitle,
     color: COLORS.TEXT_PRIMARY,
   },
   infoSubtitle: {
     marginTop: 4,
-    fontSize: 12,
-    fontWeight: "400",
+    ...TEXT.caption,
     color: COLORS.TEXT_PRIMARY_60,
   },
   divider: {
     height: 1,
     backgroundColor: COLORS.TEXT_PRIMARY_10,
   },
-  refillBtn: {
-    alignSelf: "stretch",
+  instructionsSection: {
+    marginTop: 14,
+    width: "100%",
+  },
+  sectionTitle: {
+    ...TEXT.sectionTitle,
+    color: COLORS.TEXT_PRIMARY,
+    marginBottom: 10,
+  },
+  instructionsInsetOuter: {
+    width: "100%",
+  },
+  instructionsInsetInner: {
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  instructionText: {
+    flex: 1,
+    ...TEXT.body,
+    color: COLORS.TEXT_PRIMARY,
   },
   reminderInner: {
     borderRadius: 10,
@@ -343,8 +479,16 @@ const styles = StyleSheet.create({
   },
   reminderTitle: {
     flex: 1,
-    fontSize: 14,
-    fontWeight: "600",
+    ...TEXT.cardTitle,
     color: COLORS.TEXT_PRIMARY,
+  },
+  footer: {
+    paddingHorizontal: HORIZONTAL,
+    paddingTop: 8,
+    paddingBottom: Platform.OS === "android" ? 12 : 8,
+    backgroundColor: COLORS.SURFACE,
+  },
+  refillBtn: {
+    alignSelf: "stretch",
   },
 });
