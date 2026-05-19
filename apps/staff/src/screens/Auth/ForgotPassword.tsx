@@ -28,6 +28,7 @@ const ForgotPassword = () => {
   const toast = useToast();
 
   const handleForgotPassword = async () => {
+    toast.hideAll();
     try {
       const { isValid, email } = handleValidate();
       if (!isValid) {

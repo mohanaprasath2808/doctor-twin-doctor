@@ -23,6 +23,8 @@ import EligibilityGreenIcon from "../../assets/icon/eligibilityIcon.svg";
 import DocumentGreenIcon from "../../assets/icon/documentIcon.svg";
 import TasksGreenIcon from "../../assets/icon/tasksIcon.svg";
 import DelegationGreenIcon from "../../assets/icon/delegationIcon.svg";
+import CommunicationIcon from "../../assets/icon/communicationIcon.svg";
+import CommunicationRedIcon from "../../assets/icon/communicationRedIcon.svg";
 import RefillRedIcon from "../../assets/icon/refillRedIcon.svg";
 import MessageRedIcon from "../../assets/icon/messageRedIcon.svg";
 import LabRedIcon from "../../assets/icon/conicalRedIcon.svg";
@@ -74,12 +76,9 @@ const Home = () => {
 
   /** Same scaling as patient Home: circle fits column width, inner well tracks outer. */
   const outerDiameter = useMemo(() => Math.min(88, tileWidth), [tileWidth]);
-  const innerShadowDiameter = useMemo(
-    () => Math.max(56, outerDiameter - 16),
-    [outerDiameter],
-  );
+  const innerShadowDiameter = useMemo(() => Math.max(56, outerDiameter - 16), [outerDiameter]);
 
-  const noop = useCallback(() => { }, []);
+  const noop = useCallback(() => {}, []);
 
   const openTaskInbox = useCallback(() => {
     navigation.navigate(navigationStrings.TASK_INBOX);
@@ -100,6 +99,10 @@ const Home = () => {
   const openStaff = useCallback(() => {
     const parent = navigation.getParent();
     parent?.navigate(navigationStrings.STAFF as never);
+  }, [navigation]);
+
+  const openCommunication = useCallback(() => {
+    navigation.navigate(navigationStrings.COMMUNICATION as never);
   }, [navigation]);
 
   const tiles = useMemo<TileItem[]>(
@@ -174,8 +177,15 @@ const Home = () => {
         dataCount: "1",
         onPress: openStaff,
       },
+      {
+        label: "Communication",
+        iconGreen: <CommunicationIcon width={32} height={32} />,
+        iconRed: <CommunicationRedIcon width={32} height={32} />,
+        dataCount: "1",
+        onPress: openCommunication,
+      },
     ],
-    [noop, openDelegation, openLabs, openScheduling, openTaskInbox, openStaff],
+    [noop, openCommunication, openDelegation, openLabs, openScheduling, openTaskInbox, openStaff],
   );
 
   const listHeader = useMemo(

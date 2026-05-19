@@ -31,6 +31,15 @@ import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
 import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
+import Communication from "../../screens/App/Communication/Communication";
+import StaffDoctorChannel from "../../screens/App/Communication/StaffDoctorChannel";
+import StaffDoctorMessageDetail from "../../screens/App/Communication/StaffDoctorMessageDetail";
+import CallPatient from "../../screens/App/Communication/CallPatient";
+import CallPatientAutoNote from "../../screens/App/Communication/CallPatientAutoNote";
+import StaffDoctorReply from "../../screens/App/Communication/StaffDoctorReply";
+import StaffDoctorConvertToTask from "../../screens/App/Communication/StaffDoctorConvertToTask";
+import StaffDoctorEscalate from "../../screens/App/Communication/StaffDoctorEscalate";
+import VoiceHandsFree from "../../screens/App/Communication/VoiceHandsFree";
 import type { StaffMember } from "../../screens/App/Staff/staffTypes";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
@@ -107,6 +116,15 @@ export type AppStackParamList = {
   EndShiftSummary: undefined;
   GeneralSettings: undefined;
   HelpTraining: undefined;
+  Communication: undefined;
+  StaffDoctorChannel: undefined;
+  StaffDoctorMessageDetail: undefined;
+  StaffDoctorReply: undefined;
+  StaffDoctorConvertToTask: undefined;
+  StaffDoctorEscalate: undefined;
+  CallPatient: undefined;
+  CallPatientAutoNote: undefined;
+  VoiceHandsFree: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -272,6 +290,51 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.HELP_TRAINING}
         component={HelpTraining}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.COMMUNICATION}
+        component={Communication}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_CHANNEL}
+        component={StaffDoctorChannel}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_MESSAGE_DETAIL}
+        component={StaffDoctorMessageDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_REPLY}
+        component={StaffDoctorReply}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_CONVERT_TO_TASK}
+        component={StaffDoctorConvertToTask}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_ESCALATE}
+        component={StaffDoctorEscalate}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.CALL_PATIENT}
+        component={CallPatient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.CALL_PATIENT_AUTO_NOTE}
+        component={CallPatientAutoNote}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.VOICE_HANDS_FREE}
+        component={VoiceHandsFree}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -42,6 +42,8 @@ interface ReusableButtonProps {
   borderGradientColors?: readonly string[];
   borderGradientPositions?: readonly number[];
   textColor?: string;
+  leftIcon?: React.ReactNode;
+  iconSize?: number;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
 }
@@ -62,9 +64,18 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
   borderGradientColors = DEFAULT_BORDER_GRADIENT_COLORS,
   borderGradientPositions = DEFAULT_BORDER_GRADIENT_POSITIONS,
   textColor = "#FFFFFF",
+  leftIcon,
+  iconSize = 20,
   containerStyle,
   textStyle,
 }) => {
+  const renderedIcon =
+    leftIcon && React.isValidElement(leftIcon)
+      ? React.cloneElement(leftIcon as React.ReactElement<{ width?: number; height?: number }>, {
+          width: iconSize,
+          height: iconSize,
+        })
+      : leftIcon;
   const [measuredWidth, setMeasuredWidth] = useState(0);
   const numericWidth = useMemo(
     () => (typeof width === "number" ? width : measuredWidth),
@@ -158,13 +169,26 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
           },
         ]}
       >
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={[styles.text, { color: textColor }, textStyle]}
-        >
-          {title}
-        </Text>
+        {renderedIcon ? (
+          <View style={styles.contentRow}>
+            {renderedIcon}
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={[styles.text, styles.textWithIcon, { color: textColor }, textStyle]}
+            >
+              {title}
+            </Text>
+          </View>
+        ) : (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[styles.text, { color: textColor }, textStyle]}
+          >
+            {title}
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -186,6 +210,19 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     paddingHorizontal: 12,
     color: COLORS.WHITE,
+  },
+  contentRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingHorizontal: 12,
+  },
+  textWithIcon: {
+    width: undefined,
+    flexShrink: 1,
+    paddingHorizontal: 0,
+    textAlign: "left",
   },
 });
 

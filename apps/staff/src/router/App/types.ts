@@ -38,4 +38,13 @@ export type AppStackParamList = {
   [navigationStrings.DELEGATION_REASSIGN_TASK]: DelegationAssignmentParams | undefined;
   [navigationStrings.DELEGATION_ESCALATE_MESSAGE]: undefined;
   [navigationStrings.DELEGATION_ACTION_COMPLETED]: DelegationActionCompletedParams | undefined;
+  [navigationStrings.COMMUNICATION]: undefined;
+  [navigationStrings.STAFF_DOCTOR_CHANNEL]: undefined;
+  [navigationStrings.STAFF_DOCTOR_MESSAGE_DETAIL]: undefined;
+  [navigationStrings.STAFF_DOCTOR_REPLY]: undefined;
+  [navigationStrings.STAFF_DOCTOR_CONVERT_TO_TASK]: undefined;
+  [navigationStrings.STAFF_DOCTOR_ESCALATE]: undefined;
+  [navigationStrings.CALL_PATIENT]: undefined;
+  [navigationStrings.CALL_PATIENT_AUTO_NOTE]: undefined;
+  [navigationStrings.VOICE_HANDS_FREE]: undefined;
 };
