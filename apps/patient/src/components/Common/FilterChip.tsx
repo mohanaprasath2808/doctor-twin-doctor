@@ -8,7 +8,7 @@ type FilterChipProps = {
   title: string;
   selected: boolean;
   onPress: () => void;
-  width?: number;
+  width?: number | string;
   height?: number;
   borderRadius?: number;
   style?: StyleProp<ViewStyle>;
@@ -38,7 +38,7 @@ const FilterChip = ({
           {
             height,
             borderRadius,
-            minWidth: width ?? 72,
+            minWidth: typeof width === "number" ? width : 72,
             paddingHorizontal: width ? 0 : 16,
           },
         ]}
@@ -47,7 +47,7 @@ const FilterChip = ({
       </LinearGradient>
     ) : (
       <NeumorphicCard
-        outerStyle={[styles.filterOuter, width ? { width } : null]}
+        outerStyle={[styles.filterOuter, typeof width === "number" ? { width } : null]}
         innerStyle={[
           styles.filterInner,
           {

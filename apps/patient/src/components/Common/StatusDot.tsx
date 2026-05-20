@@ -1,5 +1,13 @@
 import React from "react";
-import { Platform, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import {
+  Platform,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { COLORS } from "../../constants/theme";
@@ -7,8 +15,13 @@ import { COLORS } from "../../constants/theme";
 type StatusDotProps = {
   color: string;
   size?: number;
+  /** Centered label (e.g. count). Ignored when `icon` is set. */
   text?: string | number;
   textStyle?: StyleProp<TextStyle>;
+  /** Centered custom content (e.g. SVG). Takes precedence over `text`. */
+  icon?: React.ReactNode;
+  /** Max width/height for `icon` area; defaults to ~55% of inner `size`. */
+  iconSize?: number;
   outerGradientColors?: [string, string];
   style?: StyleProp<ViewStyle>;
 };
@@ -19,12 +32,15 @@ const StatusDot: React.FC<StatusDotProps> = ({
   size = 8,
   text,
   textStyle,
+  icon,
+  iconSize,
   outerGradientColors = ["#D6E3F3", "#FFFFFF"],
   style,
 }) => {
   const outerSize = size + 2;
   const innerRadius = Math.max(0, size / 2);
   const outerRadius = Math.max(0, outerSize / 2);
+  const resolvedIconSize = iconSize ?? Math.max(8, Math.floor(size * 0.55));
 
   return (
     <View
@@ -74,7 +90,19 @@ const StatusDot: React.FC<StatusDotProps> = ({
             },
           ]}
         >
-          {text != null ? <Text style={[styles.innerText, textStyle]}>{text}</Text> : null}
+          {icon != null ? (
+            <View
+              style={[
+                styles.iconSlot,
+                { width: resolvedIconSize, height: resolvedIconSize },
+              ]}
+              pointerEvents="none"
+            >
+              {icon}
+            </View>
+          ) : text != null ? (
+            <Text style={[styles.innerText, textStyle]}>{text}</Text>
+          ) : null}
         </View>
       </LinearGradient>
     </View>
@@ -130,6 +158,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inner: {
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  iconSlot: {
     justifyContent: "center",
     alignItems: "center",
   },

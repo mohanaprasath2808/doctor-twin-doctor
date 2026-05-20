@@ -74,6 +74,9 @@ import NextSteps from "../../screens/App/Medications/NextSteps";
 import UploadFile from "../../screens/App/Medications/UploadFile";
 import Reminders from "../../screens/App/Reminders/Reminders";
 import MedicationReminder from "../../screens/App/Reminders/MedicationReminder";
+import ActiveReminderStatus from "../../screens/App/Reminders/ActiveReminderStatus";
+import AppointmentReminder from "../../screens/App/Reminders/AppointmentReminder";
+import CustomReminder from "../../screens/App/Reminders/CustomReminder";
 
 const Stack = createStackNavigator();
 
@@ -178,6 +181,9 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.MEDICATION_UPLOAD_FILE} component={UploadFile} />
       <Stack.Screen name={navigationStrings.REMINDERS} component={Reminders} />
       <Stack.Screen name={navigationStrings.MEDICATION_REMINDER} component={MedicationReminder} />
+      <Stack.Screen name={navigationStrings.ACTIVE_REMINDER_STATUS} component={ActiveReminderStatus} />
+      <Stack.Screen name={navigationStrings.APPOINTMENT_REMINDER} component={AppointmentReminder} />
+      <Stack.Screen name={navigationStrings.CUSTOM_REMINDER} component={CustomReminder} />
     </Stack.Navigator>
   );
 };

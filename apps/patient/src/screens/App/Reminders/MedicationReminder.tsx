@@ -21,17 +21,20 @@ import type { SelectSearchSheetItem } from "../../../components/BottomSheets/Sel
 import IconComponent from "../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import InputField from "../../../neomorphism/InputField";
-import NeumorphicInnerShadowCard from "../../../neomorphism/NeumorphicInnerShadowCard";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import StatusDot from "../../../components/Common/StatusDot";
 import TimePickerField from "../../../neomorphism/TimePickerField";
 import { COLORS } from "../../../constants/theme";
 import { TEXT } from "../../../constants/typography";
+import navigationStrings from "../../../constants/navigationStrings";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import BellIcon from "../../../assets/icons/bell.svg";
-import ClockIcon from "../../../assets/icons/clockIcon.svg";
+import ClockIcon from "../../../assets/icons/greyClockIcon.svg";
+import BlueLoundSpeakerIcon from "../../../assets/icons/blueLoundSpeakerIcon.svg";
+import GreyLoudSpeakerIcon from "../../../assets/icons/greyLoudSpeakerIcon.svg";
+import GreyPillIcon from "../../../assets/icons/greyPillIcon.svg";
 import DropDownIcon from "../../../assets/icons/dropDown.svg";
-import MedicationsIcon from "../../../assets/icons/medications.svg";
+import PlayIcon from "../../../assets/icons/playIcon.svg";
 import OverlayImage from "../../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../../assets/images/tempImage/doctorTempImage.png";
 import ReminderVoiceSection, { VOICE_OPTIONS } from "./components/ReminderVoiceSection";
@@ -85,11 +88,6 @@ const MedicationReminder = () => {
     return Math.max(72, Math.floor((windowWidth - HORIZONTAL * 2 - 24 - 10 * (count - 1)) / count));
   }, [windowWidth]);
 
-  const dayChipWidth = useMemo(() => {
-    const gap = 8;
-    const cardPadding = 24;
-    return Math.max(88, Math.floor((windowWidth - HORIZONTAL * 2 - cardPadding - gap * 2) / 3));
-  }, [windowWidth]);
 
   const snoozeChipWidth = useMemo(() => {
     const gap = 10;
@@ -111,17 +109,7 @@ const MedicationReminder = () => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-      <View style={styles.header}>
-        <IconComponent
-          icon={<LeftArrowIcon width={18} height={18} />}
-          width={40}
-          height={40}
-          radius={20}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headerTitle}>Medication Reminder</Text>
-        <View style={styles.headerSpacer} />
-      </View>
+
 
       <ScrollView
         style={styles.scroll}
@@ -129,6 +117,17 @@ const MedicationReminder = () => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        <View style={styles.header}>
+          <IconComponent
+            icon={<LeftArrowIcon width={18} height={18} />}
+            width={40}
+            height={40}
+            radius={20}
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.headerTitle}>Medication Reminder</Text>
+          <View style={styles.headerSpacer} />
+        </View>
         <ProfileAvatar
           overlaySource={OverlayImage}
           imageSource={DoctorTempImage}
@@ -138,7 +137,7 @@ const MedicationReminder = () => {
           imageStyle={styles.avatar}
         />
 
-        <Text style={styles.heroText}>Let&apos;s set a reminder for your medication.</Text>
+        <Text style={styles.heroText}>Let's set a reminder for your medication.</Text>
 
         <ReminderVoiceSection
           variant="medication"
@@ -156,47 +155,50 @@ const MedicationReminder = () => {
             borderRadius={10}
           >
             <InnerShadowIcon
-              icon={<BellIcon width={18} height={18} />}
+              icon={<BlueLoundSpeakerIcon width={18} height={18} />}
               size={40}
               radius={20}
               surfaceColor={COLORS.INNER_SURFACE}
             />
             <Text style={styles.previewText}>{VOICE_PREVIEW}</Text>
             <Pressable onPress={() => undefined} style={styles.playBtnWrap}>
-              <StatusDot color={COLORS.PRIMARY} size={32} text="▶" textStyle={styles.playIcon} />
+              <StatusDot
+                color={COLORS.PRIMARY}
+                size={32}
+                icon={<PlayIcon width={14} height={14} />}
+                iconSize={16}
+              />
             </Pressable>
           </NeumorphicCard>
         ) : null}
 
-        <Text style={[styles.sectionLabel, styles.cardGap]}>Medication</Text>
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.fieldCardInner} borderRadius={10}>
-          <Text style={styles.fieldLabel}>Medication</Text>
+
+        <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.fieldCardInner} borderRadius={10}>
+          <Text style={[styles.sectionLabel]}>Medication</Text>
           <Pressable
             onPress={() => medicationSheetRef.current?.present()}
             style={({ pressed }) => [styles.dropdownPress, pressed && styles.dropdownPressPressed]}
           >
             <View pointerEvents="none" style={styles.medicationRow}>
-              <InnerShadowIcon
-                icon={<MedicationsIcon width={18} height={18} />}
-                size={40}
-                radius={20}
-                surfaceColor={COLORS.INNER_SURFACE}
-              />
+
               <InputField
                 value={medicationLabel}
                 editable={false}
                 placeholder="Select Medication"
+                leftIcon={<GreyPillIcon width={18} height={18} />}
                 rightIcon={<DropDownIcon width={10} height={10} />}
                 containerStyle={styles.medicationField}
                 borderRadius={64}
                 height={38}
+                isFocused={false}
               />
             </View>
           </Pressable>
         </NeumorphicCard>
 
-        <Text style={[styles.sectionLabel, styles.cardGap]}>Frequency</Text>
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.frequencyInner} borderRadius={10}>
+
+        <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.frequencyInner} borderRadius={10}>
+          <Text style={[styles.sectionLabel]}>Frequency</Text>
           <View style={styles.frequencyRow}>
             {FREQUENCY_OPTIONS.map((option) => (
               <FilterChip
@@ -218,9 +220,8 @@ const MedicationReminder = () => {
                   title={day}
                   selected={selectedDays.includes(day)}
                   onPress={() => toggleDay(day)}
-                  width={dayChipWidth}
                   height={36}
-                  borderRadius={18}
+                  borderRadius={6}
                   style={styles.dayChip}
                 />
               ))}
@@ -228,59 +229,50 @@ const MedicationReminder = () => {
           ) : null}
         </NeumorphicCard>
 
-        <Text style={[styles.sectionLabel, styles.cardGap]}>Reminder Time</Text>
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.fieldCardInner} borderRadius={10}>
-          <Text style={styles.fieldLabel}>Reminder Time</Text>
-          <NeumorphicInnerShadowCard
-            borderRadius={64}
-            containerStyle={styles.timeInsetOuter}
-            contentStyle={styles.timeInsetInner}
-          >
-            <TimePickerField
-              value={reminderTime}
-              onChange={setReminderTime}
-              placeholder="09:00 AM"
-              leftIcon={<ClockIcon width={18} height={18} />}
-              rightIcon={<DropDownIcon width={10} height={10} />}
-              containerStyle={styles.timeField}
-            />
-          </NeumorphicInnerShadowCard>
+
+        <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.fieldCardInner} borderRadius={10}>
+          <Text style={[styles.sectionLabel]}>Reminder Time</Text>
+          <TimePickerField
+            value={reminderTime}
+            onChange={setReminderTime}
+            placeholder="09:00 AM"
+            leftIcon={<ClockIcon width={18} height={18} />}
+            rightIcon={<DropDownIcon width={10} height={10} />}
+            containerStyle={styles.timeField}
+            isFocused={false}
+          />
         </NeumorphicCard>
 
-        <Text style={[styles.sectionLabel, styles.cardGap]}>Volume tone</Text>
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.fieldCardInner} borderRadius={10}>
-          <Text style={styles.fieldLabel}>Volume tone</Text>
+
+        <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.fieldCardInner} borderRadius={10}>
+          <Text style={styles.sectionLabel}>Volume tone</Text>
           <Pressable
             onPress={() => volumeToneSheetRef.current?.present()}
             style={({ pressed }) => [styles.dropdownPress, pressed && styles.dropdownPressPressed]}
           >
-            <View pointerEvents="none" style={styles.medicationRow}>
-              <InnerShadowIcon
-                icon={<BellIcon width={18} height={18} />}
-                size={40}
-                radius={20}
-                surfaceColor={COLORS.INNER_SURFACE}
-              />
-              <InputField
-                value={volumeToneLabel}
-                editable={false}
-                placeholder="Select tone"
-                rightIcon={<DropDownIcon width={10} height={10} />}
-                containerStyle={styles.medicationField}
-                borderRadius={64}
-                height={38}
-              />
-            </View>
+            <InputField
+              value={volumeToneLabel}
+              editable={false}
+              placeholder="Select tone"
+              rightIcon={<DropDownIcon width={10} height={10} />}
+              containerStyle={styles.medicationField}
+              leftIcon={<GreyLoudSpeakerIcon width={18} height={18} />}
+              isFocused={false}
+              borderRadius={64}
+              height={38}
+            />
           </Pressable>
         </NeumorphicCard>
 
-        <Text style={[styles.sectionLabel, styles.cardGap]}>Volume Level</Text>
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.volumeInner} borderRadius={10}>
+
+        <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.volumeInner} borderRadius={10}>
+          <Text style={[styles.sectionLabel, { marginBottom: 10 }]}>Volume Level</Text>
           <NeumorphicVolumeSlider value={volumeLevel} onChange={setVolumeLevel} />
         </NeumorphicCard>
 
-        <Text style={[styles.sectionLabel, styles.cardGap]}>Snooze Time</Text>
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.snoozeInner} borderRadius={10}>
+
+        <NeumorphicCard outerStyle={[styles.cardOuter, styles.cardGap]} innerStyle={styles.snoozeInner} borderRadius={10}>
+          <Text style={[styles.sectionLabel, { marginBottom: 10 }]}>Snooze Time</Text>
           <View style={styles.snoozeRow}>
             {SNOOZE_OPTIONS.map((option) => (
               <FilterChip
@@ -305,7 +297,16 @@ const MedicationReminder = () => {
           borderRadius={24}
           width="100%"
           containerStyle={styles.footerBtn}
-          onPress={() => navigation.goBack()}
+          onPress={() =>
+            navigation.navigate(navigationStrings.ACTIVE_REMINDER_STATUS, {
+              medication: medicationLabel,
+              timeLabel: reminderTime
+                ? reminderTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                : "09:00 AM",
+              frequency,
+              voice: selectedVoiceLabel,
+            })
+          }
         />
       </View>
 
@@ -347,7 +348,6 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: Platform.OS === "ios" ? 6 : 8,
-    paddingHorizontal: HORIZONTAL,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -425,14 +425,9 @@ const styles = StyleSheet.create({
   playBtnWrap: {
     padding: 2,
   },
-  playIcon: {
-    fontSize: 12,
-    marginLeft: 2,
-  },
   sectionLabel: {
     ...TEXT.sectionTitle,
     color: COLORS.TEXT_PRIMARY,
-    marginBottom: 10,
   },
   fieldCardInner: {
     borderRadius: 10,
