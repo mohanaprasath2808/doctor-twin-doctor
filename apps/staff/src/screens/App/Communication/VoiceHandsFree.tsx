@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
@@ -6,6 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
+import VoiceImage from "../../../assets/image/voiceImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
 import AppButton from "../../../components/Common/AppButton";
 import DoctorAvatar from "../../../components/Common/DoctorAvatar";
@@ -15,20 +16,20 @@ import ProfileAvatar from "../../../components/neomorphism/ProfileAvatar";
 import ReusableButton from "../../../components/neomorphism/ReusableButton";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
+import { VoiceController } from "../../../components/Common/VoiceController";
 
-const VOICE_COMMANDS = [
-  { id: "1", text: "Call Mrs. Lee" },
-  { id: "2", text: "Check lab results for Ganesh" },
-  { id: "3", text: "Dictate follow-up note" },
-] as const;
-
-type VoiceCommand = (typeof VOICE_COMMANDS)[number];
+type VoiceMessage = {
+  id: string;
+  text: string;
+};
 
 const VoiceHandsFree = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const insets = useSafeAreaInsets();
   const bottomPad = Math.max(insets.bottom, 12) + 12;
+  const listRef = useRef<FlatList<VoiceMessage>>(null);
   const [isListening, setIsListening] = useState(false);
+  const [voiceMessages, setVoiceMessages] = useState<VoiceMessage[]>([]);
 
   const handleStart = useCallback(() => {
     setIsListening(true);
@@ -68,10 +69,10 @@ const VoiceHandsFree = () => {
     </>
   );
 
-  const renderCommand = useCallback(
-    ({ item }: { item: VoiceCommand }) => (
+  const renderMessage = useCallback(
+    ({ item }: { item: VoiceMessage }) => (
       <View style={styles.commandRow}>
-        <DoctorAvatar source={DoctorTempImage} imageSize={31} containerSize={40} />
+        <DoctorAvatar source={VoiceImage} imageSize={20} containerSize={40} />
         <InsightMessageCard
           subTitle={item.text}
           bgColor={COLORS.WHITE}
@@ -82,21 +83,51 @@ const VoiceHandsFree = () => {
     [],
   );
 
+  const handleCancelVoice = useCallback(() => {
+    setIsListening(false);
+  }, []);
+
+  const handleSendVoice = useCallback((text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      setIsListening(false);
+      return;
+    }
+
+    setVoiceMessages((prev) => [
+      ...prev,
+      { id: `${Date.now()}-${prev.length}`, text: trimmed },
+    ]);
+    setIsListening(false);
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <View style={styles.body}>
         <FlatList
-          data={[...VOICE_COMMANDS]}
+          ref={listRef}
+          data={voiceMessages}
           keyExtractor={(item) => item.id}
-          renderItem={renderCommand}
+          renderItem={renderMessage}
           ListHeaderComponent={listHeader}
           contentContainerStyle={styles.listContent}
           style={styles.list}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           ItemSeparatorComponent={() => <View style={styles.separator} />}
+          onContentSizeChange={() => {
+            if (voiceMessages.length > 0) {
+              listRef.current?.scrollToEnd({ animated: true });
+            }
+          }}
         />
-
+        <VoiceController
+          active={isListening}
+          onStart={() => setIsListening(true)}
+          onStop={() => setIsListening(false)}
+          onCancel={handleCancelVoice}
+          onSend={handleSendVoice}
+        />
         <View style={[styles.footer, { paddingBottom: bottomPad }]}>
           {isListening ? (
             <AppButton
