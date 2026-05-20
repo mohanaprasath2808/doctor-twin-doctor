@@ -12,9 +12,9 @@ import InnerShadowIcon from "../../components/neomorphism/InnerShadowIcon";
 import { QueueMicButton } from "../../components/navigation/QueueMicTabButton";
 import navigationStrings from "../../constants/navigationStrings";
 import { COLORS } from "../../constants/theme";
-import Calendar from "../../screens/App/Calendar";
+import HomeScreen from "../../screens/App/Home";
 import Profile from "../../screens/App/Profile/Profile";
-import Home from "../../screens/App/Home";
+import Queue from "../../screens/App/Queue";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,19 +31,19 @@ const isTabHiddenForRoute = (route: RouteProp<Record<string, object | undefined>
 };
 
 type TabName =
-  | typeof navigationStrings.CALENDAR
   | typeof navigationStrings.HOME
+  | typeof navigationStrings.QUEUE
   | typeof navigationStrings.PROFILE;
 
 const TAB_SCREENS: Array<{ name: TabName; label: string; component: React.ComponentType<any> }> = [
-  { name: navigationStrings.CALENDAR, label: "Calendar", component: Calendar },
-  { name: navigationStrings.HOME, label: "Queue", component: Home },
+  { name: navigationStrings.HOME, label: "Home", component: HomeScreen },
+  { name: navigationStrings.QUEUE, label: "Queue", component: Queue },
   { name: navigationStrings.PROFILE, label: "Profile", component: Profile },
 ];
 
 const TAB_ICON: Record<TabName, React.ComponentType<{ width?: number; height?: number }>> = {
-  [navigationStrings.CALENDAR]: CalendarIcon,
-  [navigationStrings.HOME]: MicIcon,
+  [navigationStrings.HOME]: CalendarIcon,
+  [navigationStrings.QUEUE]: MicIcon,
   [navigationStrings.PROFILE]: ProfileIcon,
 };
 
@@ -73,7 +73,7 @@ function StaffTabBar({ state, navigation }: BottomTabBarProps) {
             {TAB_SCREENS.map((tab) => {
               const Icon = TAB_ICON[tab.name];
               const selected = active === tab.name;
-              const isCenter = tab.name === navigationStrings.HOME;
+              const isCenter = tab.name === navigationStrings.QUEUE;
               return (
                 <Pressable
                   key={tab.name}
@@ -108,20 +108,18 @@ function StaffTabBar({ state, navigation }: BottomTabBarProps) {
 
         <Pressable
           style={styles.queueOverlayPress}
-          onPress={() => navigation.navigate(navigationStrings.HOME)}
+          onPress={() => navigation.navigate(navigationStrings.QUEUE)}
           accessibilityRole="button"
           accessibilityLabel="Queue"
-          accessibilityState={{ selected: active === navigationStrings.HOME }}
+          accessibilityState={{ selected: active === navigationStrings.QUEUE }}
         >
           <View style={styles.queueActiveOuter}>
             <QueueMicButton />
           </View>
         </Pressable>
-
       </View>
     </View>
   );
-
 }
 
 const BottomNavigation = () => {

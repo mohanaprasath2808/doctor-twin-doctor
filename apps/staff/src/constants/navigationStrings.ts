@@ -20,7 +20,7 @@ const navigationStrings = {
   ESCALATE_TASK: "EscalateTask",
   TASK_COMPLETED: "TaskCompleted",
   BOTTOM_NAVIGATION: "BottomNavigation",
-  CALENDAR: "Calendar",
+  QUEUE: "Queue",
   PROFILE: "Profile",
   END_SHIFT_SUMMARY: "EndShiftSummary",
   GENERAL_SETTINGS: "GeneralSettings",
@@ -62,6 +62,15 @@ const navigationStrings = {
   DOCUMENTS_UPLOAD: "DocumentsUpload",
   DOCUMENTS_REQUEST_INFO: "DocumentsRequestInfo",
   DOCUMENTS_ASSIGN: "DocumentsAssign",
+  COMMUNICATION: "Communication",
+  STAFF_DOCTOR_CHANNEL: "StaffDoctorChannel",
+  STAFF_DOCTOR_MESSAGE_DETAIL: "StaffDoctorMessageDetail",
+  STAFF_DOCTOR_REPLY: "StaffDoctorReply",
+  STAFF_DOCTOR_CONVERT_TO_TASK: "StaffDoctorConvertToTask",
+  STAFF_DOCTOR_ESCALATE: "StaffDoctorEscalate",
+  CALL_PATIENT: "CallPatient",
+  CALL_PATIENT_AUTO_NOTE: "CallPatientAutoNote",
+  VOICE_HANDS_FREE: "VoiceHandsFree",
 } as const;
 
 export default navigationStrings;

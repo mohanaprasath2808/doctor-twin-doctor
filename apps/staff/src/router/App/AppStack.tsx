@@ -39,6 +39,15 @@ import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
 import BillingDashboard from "../../screens/App/BillingDashboard/BillingDashboard";
 import type { BillingCategoryKey } from "../../screens/App/BillingDashboard/billingCategoryTypes";
+import Communication from "../../screens/App/Communication/Communication";
+import StaffDoctorChannel from "../../screens/App/Communication/StaffDoctorChannel";
+import StaffDoctorMessageDetail from "../../screens/App/Communication/StaffDoctorMessageDetail";
+import CallPatient from "../../screens/App/Communication/CallPatient";
+import CallPatientAutoNote from "../../screens/App/Communication/CallPatientAutoNote";
+import StaffDoctorReply from "../../screens/App/Communication/StaffDoctorReply";
+import StaffDoctorConvertToTask from "../../screens/App/Communication/StaffDoctorConvertToTask";
+import StaffDoctorEscalate from "../../screens/App/Communication/StaffDoctorEscalate";
+import VoiceHandsFree from "../../screens/App/Communication/VoiceHandsFree";
 import type { StaffMember } from "../../screens/App/Staff/staffTypes";
 import type { BillingItem } from "../../screens/utills/billingStatus";
 import BillingDetail from "../../screens/App/BillingDashboard/BillingDetail";
@@ -173,6 +182,15 @@ export type BillingActionCompletedParams = {
   popCount?: number;
   /** When set, primary button navigates here instead of popping (e.g. documents dashboard). */
   completionNavigateTo?: keyof AppStackParamList;
+  Communication: undefined;
+  StaffDoctorChannel: undefined;
+  StaffDoctorMessageDetail: undefined;
+  StaffDoctorReply: undefined;
+  StaffDoctorConvertToTask: undefined;
+  StaffDoctorEscalate: undefined;
+  CallPatient: undefined;
+  CallPatientAutoNote: undefined;
+  VoiceHandsFree: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -443,6 +461,48 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.DOCUMENTS_ASSIGN}
         component={DocumentsAssign}
+        name={navigationStrings.COMMUNICATION}
+        component={Communication}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_CHANNEL}
+        component={StaffDoctorChannel}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_MESSAGE_DETAIL}
+        component={StaffDoctorMessageDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_REPLY}
+        component={StaffDoctorReply}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_CONVERT_TO_TASK}
+        component={StaffDoctorConvertToTask}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.STAFF_DOCTOR_ESCALATE}
+        component={StaffDoctorEscalate}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.CALL_PATIENT}
+        component={CallPatient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.CALL_PATIENT_AUTO_NOTE}
+        component={CallPatientAutoNote}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.VOICE_HANDS_FREE}
+        component={VoiceHandsFree}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

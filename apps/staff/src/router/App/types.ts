@@ -12,11 +12,11 @@ export type { StaffFormParams };
 export type AppStackParamList = {
   [navigationStrings.SHIFT_START]: undefined;
   [navigationStrings.BOTTOM_NAVIGATION]:
-    | undefined
-    | {
-        screen?: string;
-        params?: Record<string, unknown>;
-      };
+  | undefined
+  | {
+    screen?: string;
+    params?: Record<string, unknown>;
+  };
   [navigationStrings.STAFF]: undefined;
   [navigationStrings.STAFF_FORM]: StaffFormParams | undefined;
   [navigationStrings.TASK_INBOX]: undefined;
@@ -44,4 +44,13 @@ export type AppStackParamList = {
   [navigationStrings.REFILLS_MESSAGE_PATIENT]: undefined;
   [navigationStrings.REFILLS_ASSIGN_NURSE]: undefined;
   [navigationStrings.REFILLS_REQUEST_LABS]: undefined;
+  [navigationStrings.COMMUNICATION]: undefined;
+  [navigationStrings.STAFF_DOCTOR_CHANNEL]: undefined;
+  [navigationStrings.STAFF_DOCTOR_MESSAGE_DETAIL]: undefined;
+  [navigationStrings.STAFF_DOCTOR_REPLY]: undefined;
+  [navigationStrings.STAFF_DOCTOR_CONVERT_TO_TASK]: undefined;
+  [navigationStrings.STAFF_DOCTOR_ESCALATE]: undefined;
+  [navigationStrings.CALL_PATIENT]: undefined;
+  [navigationStrings.CALL_PATIENT_AUTO_NOTE]: undefined;
+  [navigationStrings.VOICE_HANDS_FREE]: undefined;
 };
