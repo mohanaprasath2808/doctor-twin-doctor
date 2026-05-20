@@ -78,6 +78,21 @@ const navigationStrings = {
   ADD_NEW_INSURANCE: "AddNewInsurance",
   INSURANCE_VERIFIED_DETAIL: "InsuranceVerifiedDetail",
   INSURANCE_NEED_UPDATE_DETAIL: "InsuranceNeedUpdateDetail",
+  HEALTH_JOURNAL: "HealthJournal",
+  HEALTH_JOURNAL_ENTRY: "HealthJournalEntry",
+  HEALTH_JOURNAL_READING_SAVED: "HealthJournalReadingSaved",
+  HEALTH_JOURNAL_WEEKLY_SUMMARY: "HealthJournalWeeklySummary",
+  HEALTH_JOURNAL_TRENDS: "HealthJournalTrends",
+  MEDICATIONS: "Medications",
+  MEDICATION_DETAIL: "MedicationDetail",
+  PRIOR_AUTHORIZATION: "PriorAuthorization",
+  PRIOR_AUTH_QUESTIONNAIRE: "PriorAuthQuestionnaire",
+  REQUEST_REFILL: "RequestRefill",
+  REFILL_STATUS: "RefillStatus",
+  REFILL_NEXT_STEPS: "RefillNextSteps",
+  MEDICATION_UPLOAD_FILE: "MedicationUploadFile",
+  REMINDERS: "Reminders",
+  MEDICATION_REMINDER: "MedicationReminder",
 };
 
 export default navigationStrings;

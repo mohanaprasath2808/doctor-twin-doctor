@@ -1,14 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { FlatList, Image, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
-import AppButton from "../../../components/Common/AppButton";
 import DeltaBadge from "../../../components/Common/DeltaBadge";
-import NeumorphicRadioMark from "../../../components/Common/NeumorphicRadioMark";
+import StaffRadioListInCard, { type StaffRadioListRowModel } from "../../../components/Common/StaffRadioListInCard";
 import IconComponent from "../../../components/neomorphism/IconComponent";
 import InputField from "../../../components/neomorphism/InputField";
 import NeumorphicCard from "../../../components/neomorphism/NeumorphicCard";
@@ -37,6 +36,26 @@ const SchedulingAssignTask = () => {
   const insets = useSafeAreaInsets();
   const [selectedId, setSelectedId] = useState(STAFF[0].id);
   const [notes, setNotes] = useState("");
+
+  const staffRows = useMemo<StaffRadioListRowModel[]>(
+    () =>
+      STAFF.map((s) => ({
+        id: s.id,
+        name: s.name,
+        avatarSource: DoctorTempImage,
+        subtitle: s.badge ? undefined : s.subtitle,
+        badge: s.badge
+          ? {
+              value: s.badge,
+              bgColor: "#FDECEC",
+              darkShadowColor: "#F2CACA",
+              lightShadowColor: "#F2CACA",
+              textColor: "#FF6B6B",
+            }
+          : undefined,
+      })),
+    [],
+  );
 
   const selectedStaff = useMemo(
     () => STAFF.find((s) => s.id === selectedId) ?? STAFF[0],
@@ -87,38 +106,7 @@ const SchedulingAssignTask = () => {
             </View>
           </NeumorphicCard>
 
-          <NeumorphicCard borderRadius={12} backgroundColor={COLORS.INNER_SURFACE} outerStyle={styles.sectionOuter} innerStyle={styles.listInner}>
-            <FlatList
-              data={STAFF}
-              keyExtractor={(item) => item.id}
-              scrollEnabled={false}
-              ItemSeparatorComponent={() => <View style={styles.divider} />}
-              renderItem={({ item }) => (
-                <Pressable style={styles.staffRow} onPress={() => setSelectedId(item.id)}>
-                  <NeumorphicRadioMark selected={selectedId === item.id} />
-                  <Image source={DoctorTempImage} style={styles.staffAvatar} />
-                  <View style={styles.staffText}>
-                    <Text style={styles.staffName}>{item.name}</Text>
-                    {item.badge ? (
-                      <DeltaBadge
-                        value={item.badge}
-                        height={28}
-
-                        radius={14}
-                        bgColor="#FDECEC"
-                        darkShadowColor={"#F2CACA"}
-                        lightShadowColor="#F2CACA"
-                        textColor="#FF6B6B"
-                        textStyle={styles.badgeText}
-                      />
-                    ) : (
-                      <Text style={styles.staffSub}>{item.subtitle}</Text>
-                    )}
-                  </View>
-                </Pressable>
-              )}
-            />
-          </NeumorphicCard>
+          <StaffRadioListInCard staffList={staffRows} selectedId={selectedId} onSelectId={setSelectedId} outerStyle={styles.sectionOuter} />
 
           <NeumorphicCard borderRadius={12} backgroundColor={COLORS.INNER_SURFACE} outerStyle={styles.sectionOuter} innerStyle={styles.sectionInner}>
             <Text style={styles.notesTitle}>Your Notes</Text>
@@ -172,9 +160,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   headerSpacer: { width: 40, height: 40 },
-  sectionOuter: { marginBottom: 20 },
+  sectionOuter: { marginBottom: 20, width: "100%" },
   sectionInner: { paddingHorizontal: 12, paddingVertical: 12 },
-  listInner: { paddingHorizontal: 12, paddingVertical: 6 },
   patientRow: { flexDirection: "row", alignItems: "flex-start", gap: 10, height: "100%" },
   patientAvatar: { width: 60, height: 60, borderRadius: 29 },
   patientText: { flex: 1, height: "100%", flexDirection: "column", justifyContent: "center" },
@@ -182,13 +169,6 @@ const styles = StyleSheet.create({
   meta: { marginTop: 2, fontSize: 12, fontWeight: "400", color: COLORS.TEXT_70 },
   due: { marginTop: 2, fontSize: 12, fontWeight: "400", color: COLORS.TEXT_60 },
   badgeText: { fontSize: 11, fontWeight: "600" },
-  divider: { height: StyleSheet.hairlineWidth, backgroundColor: COLORS.TEXT_20 },
-  staffRow: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10 },
-  staffAvatar: { width: 40, height: 40, borderRadius: 20 },
-  staffText: { flex: 1, minWidth: 0 },
-  staffName: { fontSize: 14, fontWeight: "500", color: COLORS.TEXT_DARK },
-  staffSub: { marginTop: 2, fontSize: 12, fontWeight: "400", color: COLORS.TEXT_70 },
-  urgentBadgeText: { fontSize: 12, fontWeight: "600" },
   notesTitle: { fontSize: 16, fontWeight: "500", color: COLORS.TEXT_DARK },
   notesInput: { marginTop: 8 },
   footer: { paddingHorizontal: 16, paddingTop: 8, backgroundColor: COLORS.INNER_SURFACE },

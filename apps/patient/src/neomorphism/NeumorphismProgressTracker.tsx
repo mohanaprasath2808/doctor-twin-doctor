@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { LayoutChangeEvent, StyleSheet, Text, View } from "react-native";
 import StepIndicator from "react-native-step-indicator";
 
 import InnerShadowIcon from "./InnerShadowIcon";
 import { COLORS } from "../constants/theme";
-
-import TickIcon from "../assets/icons/tick.svg";
+import { TEXT } from "../constants/typography";
+import SelectedIcon from "../assets/icons/selectedIcon.svg";
 
 export type ProgressTrackerStep = {
   id: string;
@@ -14,8 +14,10 @@ export type ProgressTrackerStep = {
   dateLabel?: string;
 };
 
-const NODE = 28;
+const NODE = 30;
 const TEAL = COLORS.PRIMARY;
+const INDICATOR_COLUMN_WIDTH = NODE;
+const LABELS_CONTAINER_PADDING_H = 8;
 
 export const MOCK_REFERRAL_PROGRESS_STEPS: ProgressTrackerStep[] = [
   { id: "requested", label: "Requested", completed: true, dateLabel: "24 March 2026" },
@@ -51,8 +53,8 @@ const TRACK_STYLES = {
   stepIndicatorLabelCurrentColor: "transparent",
   stepIndicatorLabelFontSize: 0,
   currentStepIndicatorLabelFontSize: 0,
-  /** `stretch` so each label row uses full labels-column width — avoids clipping dates (`flex-start` shrinks cells to content width). */
-  labelAlign: "stretch" as const,
+  /** Left-align label cells so shrink-wrapped rows are not centered in a wide column. */
+  labelAlign: "flex-start" as const,
   labelColor: COLORS.TEXT_PRIMARY,
   labelSize: 14,
   currentStepLabelColor: COLORS.TEXT_PRIMARY,
@@ -65,22 +67,26 @@ type NeumorphismProgressTrackerProps = {
 const NeumorphismProgressTracker: React.FC<NeumorphismProgressTrackerProps> = ({
   steps = MOCK_REFERRAL_PROGRESS_STEPS,
 }) => {
+  const [maxLabelWidth, setMaxLabelWidth] = useState<number | undefined>(undefined);
+
   const labels = useMemo(() => steps.map((s) => s.label), [steps]);
   const currentPosition = useMemo(() => currentPositionFromSteps(steps), [steps]);
   const stepCount = steps.length;
 
-  const renderStepIndicator = ({ position }: { position: number; stepStatus: string }) => {
+  const handleRootLayout = useCallback((event: LayoutChangeEvent) => {
+    const totalWidth = event.nativeEvent.layout.width;
+    const available =
+      totalWidth - INDICATOR_COLUMN_WIDTH - LABELS_CONTAINER_PADDING_H;
+    setMaxLabelWidth(available > 0 ? available : undefined);
+  }, []);
+
+  const renderStepIndicator = ({ position }: { position: number }) => {
     const completed = Boolean(steps[position]?.completed);
 
     if (completed) {
-      return (
-        <View style={styles.tickWrap}>
-          <View style={styles.doneNode}>
-            <TickIcon width={13} height={11} />
-          </View>
-        </View>
-      );
+      return <SelectedIcon width={NODE} height={NODE} />;
     }
+
     return (
       <View style={styles.pendingWrap}>
         <InnerShadowIcon
@@ -104,9 +110,14 @@ const NeumorphismProgressTracker: React.FC<NeumorphismProgressTrackerProps> = ({
   }) => {
     const row = steps[position];
     const showDate = Boolean(row?.completed && row.dateLabel?.trim());
+
     return (
-      /** `StepIndicator` wraps each label in a cell with `alignItems: 'center'`, which shrinks width — stretch fills the labels column so dates are not clipped. */
-      <View style={styles.labelRowOuter}>
+      <View
+        style={[
+          styles.labelRowOuter,
+          // maxLabelWidth != null ? { maxWidth: maxLabelWidth } : null,
+        ]}
+      >
         <View style={styles.labelRow}>
           <Text style={styles.labelText} numberOfLines={2} ellipsizeMode="tail">
             {label}
@@ -122,7 +133,7 @@ const NeumorphismProgressTracker: React.FC<NeumorphismProgressTrackerProps> = ({
   };
 
   return (
-    <View style={styles.root}>
+    <View style={styles.root} onLayout={handleRootLayout}>
       <StepIndicator
         direction="vertical"
         customStyles={TRACK_STYLES}
@@ -143,66 +154,44 @@ const styles = StyleSheet.create({
     marginTop: 14,
     width: "100%",
     alignSelf: "stretch",
-    minWidth: 0,
-    flexShrink: 1,
-  },
-  tickWrap: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  doneNode: {
-    width: NODE,
-    height: NODE,
-    borderRadius: NODE / 2,
-    backgroundColor: TEAL,
-    justifyContent: "center",
-    alignItems: "center",
+    overflow: "visible",
   },
   pendingWrap: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  /** Invisible filler — recessed look comes from InnerShadowIcon. */
   pendingIconHole: {
     width: 1,
     height: 1,
     opacity: 0,
   },
+  /** Shrink-wrap to label + date content; capped by maxWidth so rows do not overflow the card. */
   labelRowOuter: {
-    flex: 1,
-    alignSelf: "stretch",
+    alignSelf: "flex-start",
+    paddingVertical: 14,
     width: "100%",
-    minWidth: 0,
-    justifyContent: "center",
-    paddingVertical: 18,
   },
   labelRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    gap: 10,
+    alignSelf: "flex-start",
     width: "100%",
-    minWidth: 0,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: COLORS.TEXT_PRIMARY_10,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
   },
   labelText: {
-    flex: 1,
-    flexShrink: 1,
-    minWidth: 0,
-    fontSize: 14,
-    lineHeight: 24,
-    fontWeight: "500",
+    ...TEXT.body,
+    lineHeight: 20,
     color: COLORS.TEXT_PRIMARY,
-    fontFamily: "SF-Pro-Text-Medium",
   },
   dateText: {
-    flexShrink: 0,
-    fontSize: 12,
-    lineHeight: 20,
-    fontWeight: "400",
+    ...TEXT.caption,
+    lineHeight: 16,
     color: COLORS.TEXT_PRIMARY_60,
-    fontFamily: "SF-Pro-Text-Regular",
     textAlign: "right",
   },
 });

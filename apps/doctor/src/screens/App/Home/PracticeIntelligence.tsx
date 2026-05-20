@@ -61,6 +61,7 @@ const PracticeIntelligence = () => {
         <Text style={styles.title}>Dr. Twin delivering practice insights</Text>
 
         <View style={styles.messageRow}>
+          {/* Temporary disabled */}
           <DoctorAvatar
             source={DoctorTempImage}
             imageSize={38}

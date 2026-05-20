@@ -32,6 +32,8 @@ import InsuranceIcon from "../../assets/icons/insurance.svg";
 import WellnessIcon from "../../assets/icons/wellness.svg";
 import RemindersIcon from "../../assets/icons/reminders.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
+import PadMedIcon from "../../assets/icons/padMedIcon.svg";
+import WalletIcon from "../../assets/icons/walletIcon.svg";
 
 const QUICK_ACTIONS = [
   { id: "message", label: "Message", icon: <MessageIcon width={32} height={32} />, badge: "3" },
@@ -46,6 +48,8 @@ const QUICK_ACTIONS = [
   { id: "insurance", label: "Insurance", icon: <InsuranceIcon width={32} height={32} /> },
   { id: "wellness", label: "Wellness", icon: <WellnessIcon width={32} height={32} /> },
   { id: "reminders", label: "Reminders", icon: <RemindersIcon width={32} height={32} /> },
+  { id: "healthjournal", label: "Health Journal", icon: <PadMedIcon width={34} height={34} /> },
+  { id: "checkin", label: "Check-In", icon: <WalletIcon width={34} height={34} /> },
   { id: "settings", label: "Settings", icon: <SettingsIcon width={34} height={34} /> },
 ];
 
@@ -109,6 +113,15 @@ const Home = () => {
           navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
             screen: navigationStrings.SETTINGS,
           });
+        }
+        if (item.id === "healthjournal") {
+          navigation.navigate(navigationStrings.HEALTH_JOURNAL);
+        }
+        if (item.id === "medications") {
+          navigation.navigate(navigationStrings.MEDICATIONS);
+        }
+        if (item.id === "reminders") {
+          navigation.navigate(navigationStrings.REMINDERS);
         }
       }}
       icon={item.icon}

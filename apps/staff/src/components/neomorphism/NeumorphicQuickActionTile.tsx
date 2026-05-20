@@ -28,6 +28,11 @@ export type NeumorphicQuickActionTileProps = {
   badge?: string;
   /** Custom overlay at top-right of the circle (e.g. premium crown) */
   topRightAccessory?: ReactNode;
+  /**
+   * Small pill overlapping the bottom of the circle (e.g. “Due in 2 days”).
+   * Shown in addition to numeric `badge` when both are set.
+   */
+  captionBubble?: string;
   activeOpacity?: number;
   /** Inner recessed Skia surface color */
   innerShadowColor?: string;
@@ -104,6 +109,7 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
   subtitle,
   badge,
   topRightAccessory,
+  captionBubble,
   activeOpacity = 0.85,
   innerShadowColor = COLORS.INNER_SURFACE,
   outerDiameter = 88,
@@ -305,6 +311,15 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
             </LinearGradient>
           </View>
         ) : null}
+        {captionBubble ? (
+          <View style={styles.captionBubbleWrap} pointerEvents="none">
+            <View style={styles.captionBubbleInner}>
+              <Text style={styles.captionBubbleText} numberOfLines={1}>
+                {captionBubble}
+              </Text>
+            </View>
+          </View>
+        ) : null}
       </View>
       {subtitle ? (
         <View style={styles.labelBlock}>
@@ -427,6 +442,38 @@ const styles = StyleSheet.create({
     right: -2,
     top: -2,
     zIndex: 4,
+  },
+  captionBubbleWrap: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: -4,
+    alignItems: "center",
+    zIndex: 5,
+  },
+  captionBubbleInner: {
+    maxWidth: 112,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    backgroundColor: COLORS.INNER_SURFACE,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#C8CBCC",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.35,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  captionBubbleText: {
+    fontSize: 9,
+    fontWeight: "600",
+    color: COLORS.TEXT_60,
+    textAlign: "center",
   },
   /** Matches `StatusDot` outer shell (shadows + gradient ring + inner face). */
   badgeOuter: {

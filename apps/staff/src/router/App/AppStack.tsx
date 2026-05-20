@@ -22,6 +22,12 @@ import DelegationEscalateMessage from "../../screens/App/Delegation/DelegationEs
 import DelegationTaskAssignment from "../../screens/App/Delegation/DelegationTaskAssignment";
 import Staff from "../../screens/App/Staff/Staff";
 import CreateEditStaff from "../../screens/App/Staff/CreateEditStaff";
+import DoctorReview from "../../screens/App/Refills/DoctorReview";
+import MessagePatient from "../../screens/App/Refills/MessagePatient";
+import Refills from "../../screens/App/Refills/Refills";
+import RefillsAssignNurse from "../../screens/App/Refills/AssignNurse";
+import RefillsConfirm from "../../screens/App/Refills/RefillsConfirm";
+import RequestLabs from "../../screens/App/Refills/RequestLabs";
 import Labs from "../../screens/App/Labs/Labs";
 import AssignNurse from "../../screens/App/Labs/AssignNurse";
 import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
@@ -31,6 +37,8 @@ import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
 import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
+import BillingDashboard from "../../screens/App/BillingDashboard/BillingDashboard";
+import type { BillingCategoryKey } from "../../screens/App/BillingDashboard/billingCategoryTypes";
 import Communication from "../../screens/App/Communication/Communication";
 import StaffDoctorChannel from "../../screens/App/Communication/StaffDoctorChannel";
 import StaffDoctorMessageDetail from "../../screens/App/Communication/StaffDoctorMessageDetail";
@@ -41,6 +49,23 @@ import StaffDoctorConvertToTask from "../../screens/App/Communication/StaffDocto
 import StaffDoctorEscalate from "../../screens/App/Communication/StaffDoctorEscalate";
 import VoiceHandsFree from "../../screens/App/Communication/VoiceHandsFree";
 import type { StaffMember } from "../../screens/App/Staff/staffTypes";
+import type { BillingItem } from "../../screens/utills/billingStatus";
+import BillingDetail from "../../screens/App/BillingDashboard/BillingDetail";
+import BillingAnswer from "../../screens/App/BillingDashboard/BillingAnswer";
+import BillingForward from "../../screens/App/BillingDashboard/BillingForward";
+import BillingCreateTicket from "../../screens/App/BillingDashboard/BillingCreateTicket";
+import BillingActionCompleted from "../../screens/App/BillingDashboard/BillingActionCompleted";
+import BillingCategoryList from "../../screens/App/BillingDashboard/BillingCategoryList";
+import DocumentsDashboard from "../../screens/App/DocumentsDashboard/DocumentsDashboard";
+import DocumentsCategoryList from "../../screens/App/DocumentsDashboard/DocumentsCategoryList";
+import DocumentsDetail from "../../screens/App/DocumentsDashboard/DocumentsDetail";
+import DocumentsSendDocument from "../../screens/App/DocumentsDashboard/DocumentsSendDocument";
+import DocumentsViewDocument from "../../screens/App/DocumentsDashboard/DocumentsViewDocument";
+import DocumentsUploadDocument from "../../screens/App/DocumentsDashboard/DocumentsUploadDocument";
+import DocumentsRequestInfo from "../../screens/App/DocumentsDashboard/DocumentsRequestInfo";
+import DocumentsAssign from "../../screens/App/DocumentsDashboard/DocumentsAssign";
+import type { DocumentsDetailParams } from "../../screens/App/DocumentsDashboard/types/documentDashboardTypes";
+import type { DocumentsCategoryListParams } from "../../screens/App/DocumentsDashboard/types/documentsCategoryTypes";
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -81,6 +106,14 @@ export type StaffFormParams = {
   initial?: StaffMember;
 };
 
+export type BillingDetailParams = {
+  item: BillingItem;
+};
+
+export type BillingCategoryListParams = {
+  categoryKey: BillingCategoryKey;
+};
+
 /** Must match `navigationStrings` + screen `name` props below. */
 export type AppStackParamList = {
   Login: undefined;
@@ -105,6 +138,12 @@ export type AppStackParamList = {
   DelegationReassignTask: DelegationAssignmentParams | undefined;
   DelegationEscalateMessage: undefined;
   DelegationActionCompleted: DelegationActionCompletedParams | undefined;
+  Refills: undefined;
+  RefillsConfirm: undefined;
+  RefillsDoctorReview: undefined;
+  RefillsMessagePatient: undefined;
+  RefillsAssignNurse: undefined;
+  RefillsRequestLabs: undefined;
   Labs: undefined;
   LabsAssignNurse: undefined;
   LabsEscalateMessage: undefined;
@@ -116,6 +155,33 @@ export type AppStackParamList = {
   EndShiftSummary: undefined;
   GeneralSettings: undefined;
   HelpTraining: undefined;
+  BillingDashboard: undefined;
+  BillingCategoryList: BillingCategoryListParams;
+  BillingDetail: BillingDetailParams;
+  BillingAnswer: BillingDetailParams;
+  BillingForward: BillingDetailParams;
+  BillingCreateTicket: BillingDetailParams;
+  BillingActionCompleted: BillingActionCompletedParams | undefined;
+  DocumentsDashboard: undefined;
+  DocumentsCategoryList: DocumentsCategoryListParams;
+  DocumentsDetail: DocumentsDetailParams;
+  DocumentsSend: DocumentsDetailParams;
+  DocumentsViewDocument: undefined;
+  DocumentsUpload: DocumentsDetailParams;
+  DocumentsRequestInfo: DocumentsDetailParams;
+  DocumentsAssign: DocumentsDetailParams;
+};
+
+export type BillingActionCompletedParams = {
+  title?: string;
+  description?: string;
+  buttonText?: string;
+  /** Header line above the success hero; defaults to legacy billing copy. */
+  headerTitle?: string;
+  /** Used when `completionNavigateTo` is not set. Defaults to `3` for billing flows. */
+  popCount?: number;
+  /** When set, primary button navigates here instead of popping (e.g. documents dashboard). */
+  completionNavigateTo?: keyof AppStackParamList;
   Communication: undefined;
   StaffDoctorChannel: undefined;
   StaffDoctorMessageDetail: undefined;
@@ -238,6 +304,36 @@ const AppStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={navigationStrings.REFILLS}
+        component={Refills}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_CONFIRM}
+        component={RefillsConfirm}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_DOCTOR_REVIEW}
+        component={DoctorReview}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_MESSAGE_PATIENT}
+        component={MessagePatient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_ASSIGN_NURSE}
+        component={RefillsAssignNurse}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.REFILLS_REQUEST_LABS}
+        component={RequestLabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={navigationStrings.LABS}
         component={Labs}
         options={{ headerShown: false }}
@@ -293,6 +389,78 @@ const AppStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={navigationStrings.BILLING_DASHBOARD}
+        component={BillingDashboard}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_CATEGORY_LIST}
+        component={BillingCategoryList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_DETAIL}
+        component={BillingDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_ANSWER}
+        component={BillingAnswer}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_FORWARD}
+        component={BillingForward}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_CREATE_TICKET}
+        component={BillingCreateTicket}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.BILLING_ACTION_COMPLETED}
+        component={BillingActionCompleted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_DASHBOARD}
+        component={DocumentsDashboard}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_CATEGORY_LIST}
+        component={DocumentsCategoryList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_DETAIL}
+        component={DocumentsDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_SEND}
+        component={DocumentsSendDocument}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_VIEW_DOCUMENT}
+        component={DocumentsViewDocument}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_UPLOAD}
+        component={DocumentsUploadDocument}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_REQUEST_INFO}
+        component={DocumentsRequestInfo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.DOCUMENTS_ASSIGN}
+        component={DocumentsAssign}
         name={navigationStrings.COMMUNICATION}
         component={Communication}
         options={{ headerShown: false }}
