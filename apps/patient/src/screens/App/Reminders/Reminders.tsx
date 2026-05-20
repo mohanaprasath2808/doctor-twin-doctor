@@ -106,7 +106,7 @@ const Reminders = () => {
             labelNumberOfLines={2}
             outerDiameter={outerDiameter}
             innerShadowDiameter={innerShadowDiameter}
-            onPress={() => undefined}
+            onPress={() => navigation.navigate(navigationStrings.APPOINTMENT_REMINDER)}
           />
           <NeumorphicQuickActionTile
             containerStyle={[styles.quickTile, { width: tileWidth }]}
@@ -115,7 +115,7 @@ const Reminders = () => {
             labelNumberOfLines={2}
             outerDiameter={outerDiameter}
             innerShadowDiameter={innerShadowDiameter}
-            onPress={() => undefined}
+            onPress={() => navigation.navigate(navigationStrings.CUSTOM_REMINDER)}
           />
         </View>
 
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   heroText: {
     textAlign: "center",
-    ...TEXT.body,
+    ...TEXT.sectionTitleMedium,
     color: COLORS.TEXT_PRIMARY,
     marginBottom: 20,
     paddingHorizontal: 8,

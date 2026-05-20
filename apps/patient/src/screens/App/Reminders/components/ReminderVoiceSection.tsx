@@ -12,6 +12,7 @@ import { COLORS } from "../../../../constants/theme";
 import { TEXT } from "../../../../constants/typography";
 import BellIcon from "../../../../assets/icons/bell.svg";
 import DropDownIcon from "../../../../assets/icons/dropDown.svg";
+import GreyLoudSpeakerIcon from "../../../../assets/icons/greyLoudSpeakerIcon.svg";
 
 export const VOICE_OPTIONS: SelectSearchSheetItem[] = [
   { id: "dr-shahinaz", label: "Dr. Shahinaz Twin" },
@@ -70,27 +71,24 @@ const ReminderVoiceSection = ({
 
       {voiceEnabled ? (
         <View style={styles.voiceBlock}>
-          <Text style={styles.sectionLabel}>Voice</Text>
+
           <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.voiceCardInner} borderRadius={10}>
+            <Text style={styles.sectionLabel}>Voice</Text>
             <Pressable
               onPress={() => voiceSheetRef.current?.present()}
               style={({ pressed }) => [styles.voicePress, pressed && styles.voicePressPressed]}
             >
               <View pointerEvents="none" style={styles.voiceFieldRow}>
-                <InnerShadowIcon
-                  icon={<BellIcon width={16} height={16} />}
-                  size={32}
-                  radius={16}
-                  surfaceColor={COLORS.INNER_SURFACE}
-                />
                 <InputField
                   value={selectedVoiceLabel}
                   editable={false}
                   placeholder="Select voice"
+                  leftIcon={<GreyLoudSpeakerIcon width={18} height={18} />}
                   rightIcon={<DropDownIcon width={10} height={10} />}
                   containerStyle={styles.voiceField}
                   borderRadius={64}
                   height={38}
+                  isFocused={false}
                 />
               </View>
             </Pressable>
@@ -163,6 +161,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   voiceField: {
+    marginTop: 0,
     flex: 1,
   },
 });

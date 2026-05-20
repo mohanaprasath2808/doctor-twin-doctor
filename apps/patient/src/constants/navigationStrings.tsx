@@ -93,6 +93,9 @@ const navigationStrings = {
   MEDICATION_UPLOAD_FILE: "MedicationUploadFile",
   REMINDERS: "Reminders",
   MEDICATION_REMINDER: "MedicationReminder",
+  ACTIVE_REMINDER_STATUS: "ActiveReminderStatus",
+  APPOINTMENT_REMINDER: "AppointmentReminder",
+  CUSTOM_REMINDER: "CustomReminder",
 };
 
 export default navigationStrings;

@@ -36,6 +36,11 @@ export const TEXT = {
     fontWeight: "500" as const,
     fontFamily: FONT.displayMedium,
   },
+  bodyRegular: {
+    fontSize: 14,
+    fontWeight: "400" as const,
+    fontFamily: FONT.displayRegular,
+  },
   bodySemibold: {
     fontSize: 14,
     fontWeight: "600" as const,

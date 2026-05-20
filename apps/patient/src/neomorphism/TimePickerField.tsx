@@ -27,6 +27,8 @@ type TimePickerFieldProps = {
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   is24Hour?: boolean;
+  /** Controls `InputField` focused styling (see `InputField` `isFocused`). */
+  isFocused?: boolean;
 };
 
 const TimePickerField: React.FC<TimePickerFieldProps> = ({
@@ -38,6 +40,7 @@ const TimePickerField: React.FC<TimePickerFieldProps> = ({
   containerStyle,
   textStyle,
   is24Hour = false,
+  isFocused
 }) => {
   const [showIosPicker, setShowIosPicker] = useState(false);
   const [tempTime, setTempTime] = useState<Date>(value ?? new Date());
@@ -89,6 +92,7 @@ const TimePickerField: React.FC<TimePickerFieldProps> = ({
             rightIcon={rightIcon}
             containerStyle={containerStyle}
             style={textStyle}
+            isFocused={isFocused}
             borderRadius={64}
             height={38}
           />
@@ -101,7 +105,7 @@ const TimePickerField: React.FC<TimePickerFieldProps> = ({
           onRequestClose={() => setShowIosPicker(false)}
         >
           <Pressable style={styles.backdrop} onPress={() => setShowIosPicker(false)}>
-            <Pressable style={styles.sheet} onPress={() => {}}>
+            <Pressable style={styles.sheet} onPress={() => { }}>
               <DateTimePicker
                 mode="time"
                 value={tempTime}
