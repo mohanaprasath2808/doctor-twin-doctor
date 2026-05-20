@@ -26,7 +26,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.solimancare.staff"
     },
-    "plugins": ["expo-secure-store"],
+    "plugins": ["expo-secure-store", "expo-speech-recognition"],
     "extra": {
       "eas": {
         "projectId": "aa2bb4c8-2ff5-4ecd-b5df-1051d96b1a90"
