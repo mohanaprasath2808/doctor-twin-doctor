@@ -200,7 +200,6 @@ const styles = StyleSheet.create({
     opacity: 0.85,
   },
   iconContainer: {
-    ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
   },
