@@ -17,6 +17,7 @@ import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import DeltaBadge from "../../../../components/Common/DeltaBadge";
 import LabTrendCard from "../../../../components/Common/LabTrendCard";
+import Timeline from "../../../../components/Common/Timeline";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import ZoomCallIcon from "../../../../assets/icon/zoomCallIcon.svg";
@@ -48,10 +49,10 @@ const OPEN_TALK_METRICS = [
   { label: "PAP", value: "1" },
   { label: "Messages", value: "3" },
   { label: "Billing", value: "1" },
-  { label: "Lab Gaps", value: "4" },
+  { label: "Care Gaps", value: "4" },
 ];
 const MEDS = [
-  { name: "Lipitor 20 mg", dose: "EID" },
+  { name: "Lipitor 20 mg", dose: "QD" },
   { name: "Metformin 500mg", dose: "Daily" },
 ];
 const LAB_METRICS = [
@@ -84,8 +85,56 @@ const LAB_METRICS = [
     points: [1.4, 1.1, 1.0, 0.9, 0.8, 0.85, 0.7, 0.6, 0.55, 0.4, 0.3],
   },
 ];
+const INSURANCE_COLUMNS = [
+  { label: "Eligibility", value: "Verified", badge: true },
+  { label: "Balance", value: "$120" },
+  { label: "Last statement date", value: "12 June 2025" },
+];
+const CARE_GAPS = [
+  { id: "1", title: "Mammogram due", action: "Order" },
+  { id: "2", title: "Colonoscopy Due", action: "Order" },
+  { id: "3", title: "Vaccination Due", action: "Schedule" },
+];
+const TIMELINE_ITEMS = [
+  { id: "1", title: "Refill approved", time: "05:40 PM", isCompleted: true },
+  { id: "2", title: "Lab reviewed", time: "06:00 PM", isCompleted: true },
+  { id: "3", title: "Patient notified", time: "07:30 PM", isCompleted: true },
+  { id: "4", title: "Follow-up scheduled", time: "07:30 PM", isCompleted: true },
+  { id: "5", title: "AI suggested call", time: "07:40 PM" },
+];
 
 type MedTab = "active" | "safety";
+
+type ActionItem = { label: string; icon: React.ReactNode };
+
+const HorizontalActionButtons = ({
+  actions,
+  buttonStyle,
+}: {
+  actions: ActionItem[];
+  buttonStyle: object;
+}) => (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={styles.topActionList}
+  >
+    {actions.map((item) => (
+      <AppButton
+        key={item.label}
+        text={item.label}
+        leftIcon={item.icon}
+        iconSize={16}
+        borderWidth={1}
+        borderColor={COLORS.PRIMARY}
+        fullWidth={false}
+        bgColor={COLORS.SURFACE}
+        style={[buttonStyle, styles.inlineActionBtn]}
+        textStyle={[styles.smallBtnText, styles.primaryBtnText]}
+      />
+    ))}
+  </ScrollView>
+);
 
 const PatientSnapshot = () => {
   const navigation = useNavigation<any>();
@@ -129,25 +178,9 @@ const PatientSnapshot = () => {
             </View>
           </View>
           <View style={styles.topActionListWrap}>
-            <FlatList
-              data={TOP_ACTIONS}
-              keyExtractor={(item) => item.label}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.topActionList}
-              ItemSeparatorComponent={() => <View style={styles.hSpace8} />}
-              renderItem={({ item }) => (
-                <AppButton
-                  text={item.label}
-                  leftIcon={item.icon}
-                  iconSize={18}
-                  borderWidth={1}
-                  useGradientBorder
-                  bgColor={COLORS.SURFACE}
-                  style={styles.smallActionBtn}
-                  textStyle={[styles.smallBtnText, styles.primaryBtnText]}
-                />
-              )}
+            <HorizontalActionButtons
+              actions={TOP_ACTIONS}
+              buttonStyle={styles.smallActionBtn}
             />
           </View>
         </NeumorphicCard>
@@ -165,7 +198,7 @@ const PatientSnapshot = () => {
               Abnormal Lab:
               <Text style={styles.warnTextBold}>
                 {" "}
-                A1c 9.2% - needs sign-off
+                A1c 9.2% — Review
               </Text>
             </Text>
           </View>
@@ -182,25 +215,9 @@ const PatientSnapshot = () => {
           </Text>
           <View style={styles.separator} />
           <View style={styles.topActionListWrap}>
-            <FlatList
-              data={CLINICAL_ACTIONS}
-              keyExtractor={(item) => item.label}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.topActionList}
-              ItemSeparatorComponent={() => <View style={styles.hSpace8} />}
-              renderItem={({ item }) => (
-                <AppButton
-                  text={item.label}
-                  leftIcon={item.icon}
-                  iconSize={16}
-                  borderWidth={1}
-                  useGradientBorder
-                  bgColor={COLORS.SURFACE}
-                  style={styles.mediumActionBtn}
-                  textStyle={[styles.smallBtnText, styles.primaryBtnText]}
-                />
-              )}
+            <HorizontalActionButtons
+              actions={CLINICAL_ACTIONS}
+              buttonStyle={styles.mediumActionBtn}
             />
           </View>
         </NeumorphicCard>
@@ -278,7 +295,7 @@ const PatientSnapshot = () => {
             <AppButton
               text="Renew"
               borderWidth={1}
-              useGradientBorder
+              borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
               style={styles.medActionBtn}
               textStyle={[styles.smallBtnText, styles.primaryBtnText]}
@@ -286,7 +303,7 @@ const PatientSnapshot = () => {
             <AppButton
               text="Modify"
               borderWidth={1}
-              useGradientBorder
+              borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
               style={styles.medActionBtn}
               textStyle={[styles.smallBtnText, styles.primaryBtnText]}
@@ -324,7 +341,7 @@ const PatientSnapshot = () => {
             <AppButton
               text="Review all labs"
               borderWidth={1}
-              useGradientBorder
+              borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
               style={styles.labsActionBtn}
               textStyle={[styles.smallBtnText, styles.primaryBtnText]}
@@ -332,7 +349,7 @@ const PatientSnapshot = () => {
             <AppButton
               text="Order repeat"
               borderWidth={1}
-              useGradientBorder
+              borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
               style={styles.labsActionBtn}
               textStyle={[styles.smallBtnText, styles.primaryBtnText]}
@@ -361,14 +378,95 @@ const PatientSnapshot = () => {
               <Text style={styles.medName}>Chest X-Ray</Text>
               <Text style={styles.medDose}>Normal</Text>
             </View>
+          </View>
+          <View style={styles.imagingActionRow}>
             <AppButton
               text="View Report"
               borderWidth={1}
-              useGradientBorder
+              borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
-              style={styles.mediumActionBtn}
+              style={styles.imagingActionBtn}
               textStyle={[styles.smallBtnText, styles.primaryBtnText]}
             />
+            <AppButton
+              text="Order Follow-up"
+              borderWidth={1}
+              borderColor={COLORS.PRIMARY}
+              bgColor={COLORS.SURFACE}
+              style={styles.imagingActionBtn}
+              textStyle={[styles.smallBtnText, styles.primaryBtnText]}
+            />
+            <AppButton
+              text="Refer"
+              borderWidth={1}
+              borderColor={COLORS.PRIMARY}
+              bgColor={COLORS.SURFACE}
+              style={styles.imagingActionBtn}
+              textStyle={[styles.smallBtnText, styles.primaryBtnText]}
+            />
+          </View>
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.sectionInner}
+        >
+          <Text style={styles.sectionTitle}>Insurance + Balance Panel</Text>
+          <View style={styles.insuranceRow}>
+            {INSURANCE_COLUMNS.map((col) => (
+              <View key={col.label} style={styles.insuranceCol}>
+                <Text style={styles.insuranceLabel}>{col.label}</Text>
+                {col.badge ? (
+                  <DeltaBadge
+                    value={col.value}
+                    height={26}
+                    bgColor="#DDF7EA"
+                    darkShadowColor="#A9E9D5"
+                    lightShadowColor="#FFFFFF99"
+                    textColor="#17B26A"
+                    textStyle={styles.insuranceBadgeText}
+                  />
+                ) : (
+                  <Text style={styles.insuranceValue}>{col.value}</Text>
+                )}
+              </View>
+            ))}
+          </View>
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.sectionInner}
+        >
+          <Text style={styles.sectionTitle}>Care Gaps Panel</Text>
+          {CARE_GAPS.map((gap, index) => (
+            <View key={gap.id}>
+              <View style={styles.careGapRow}>
+                <Text style={styles.careGapTitle}>{gap.title}</Text>
+                <AppButton
+                  text={gap.action}
+                  borderWidth={1}
+                  borderColor={COLORS.PRIMARY}
+                  fullWidth={false}
+                  bgColor={COLORS.SURFACE}
+                  style={styles.careGapBtn}
+                  textStyle={[styles.smallBtnText, styles.primaryBtnText]}
+                />
+              </View>
+              {index < CARE_GAPS.length - 1 ? (
+                <View style={styles.medSeparator} />
+              ) : null}
+            </View>
+          ))}
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.sectionInner}
+        >
+          <Text style={styles.sectionTitle}>Timeline / Audit Trail</Text>
+          <View style={styles.timelineWrap}>
+            <Timeline data={TIMELINE_ITEMS} rowSpacing={28} />
           </View>
         </NeumorphicCard>
       </ScrollView>
@@ -472,7 +570,7 @@ const styles = StyleSheet.create({
   medActionBtn: { height: 40, borderRadius: 20, flex: 1 },
   primaryBtnText: { color: COLORS.PRIMARY, fontSize: 14, fontWeight: "500" },
   alertBtnText: { color: COLORS.ALERT },
-  hSpace8: { width: 8 },
+  inlineActionBtn: { marginRight: 8 },
   warnInner: { borderRadius: 10, padding: 10 },
   warnRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   warnIcon: { color: COLORS.ALERT, fontSize: 12, fontWeight: "700" },
@@ -597,4 +695,43 @@ const styles = StyleSheet.create({
   },
   imagingThumb: { width: 60, height: 60, borderRadius: 8 },
   imagingInfo: { flex: 1 },
+  imagingActionRow: {
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingBottom: 14,
+    marginTop: 4,
+  },
+  imagingActionBtn: {
+    height: 40,
+    borderRadius: 20,
+    flex: 1,
+  },
+  insuranceRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingBottom: 14,
+    marginTop: 10,
+    gap: 8,
+  },
+  insuranceCol: { flex: 1 },
+  insuranceLabel: { color: COLORS.TEXT_60, fontSize: 12, fontWeight: "400" },
+  insuranceValue: {
+    marginTop: 6,
+    color: COLORS.TEXT_DARK,
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  insuranceBadgeText: { fontSize: 12, fontWeight: "500" },
+  careGapRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  careGapTitle: { color: COLORS.TEXT_DARK, fontSize: 14, fontWeight: "500", flex: 1 },
+  careGapBtn: { height: 36, borderRadius: 18, paddingHorizontal: 16 },
+  timelineWrap: { paddingHorizontal: 12, paddingBottom: 14, marginTop: 8 },
 });

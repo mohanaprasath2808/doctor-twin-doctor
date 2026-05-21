@@ -30,10 +30,9 @@ type AppButtonProps = {
   activeOpacity?: number;
   shadowStyle?: StyleProp<ViewStyle>;
   useGradientBorder?: boolean;
-} & Omit<
-  TouchableOpacityProps,
-  "style" | "onPress" | "disabled" | "activeOpacity"
->;
+  /** When false, button sizes to its content (for horizontal action rows). Default true. */
+  fullWidth?: boolean;
+} & Omit<TouchableOpacityProps, "style" | "onPress" | "disabled" | "activeOpacity">;
 
 const AppButton: React.FC<AppButtonProps> = ({
   borderWidth = 0,
@@ -52,11 +51,11 @@ const AppButton: React.FC<AppButtonProps> = ({
   activeOpacity = 0.8,
   shadowStyle,
   useGradientBorder = false,
+  fullWidth = true,
   ...touchableProps
 }) => {
-  const resolvedBorderWidth = useGradientBorder
-    ? Math.max(1, borderWidth || 1)
-    : borderWidth;
+  const resolvedWidth = fullWidth ? (width ?? "100%") : width;
+  const resolvedBorderWidth = useGradientBorder ? Math.max(1, borderWidth || 1) : borderWidth;
   const resolvedBorderColor = useGradientBorder ? "transparent" : borderColor;
   const renderedIcon =
     leftIcon && React.isValidElement(leftIcon)
@@ -77,7 +76,7 @@ const AppButton: React.FC<AppButtonProps> = ({
         styles.shadow,
         shadowStyle,
         {
-          width,
+          ...(resolvedWidth !== undefined ? { width: resolvedWidth } : {}),
           height,
           borderRadius,
           borderWidth: resolvedBorderWidth,
