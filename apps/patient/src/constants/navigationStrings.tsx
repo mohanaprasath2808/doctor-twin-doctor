@@ -32,6 +32,7 @@ const navigationStrings = {
   SCHEDULE_STEP_1: "ScheduleStep1",
   SCHEDULE_STEP_2: "ScheduleStep2",
   NOTIFICATIONS: "Notifications",
+  MESSAGES: "Messages",
   LABS: "Labs",
   IMAGING: "Imaging",
   IMAGING_REQUEST: "ImagingRequest",

@@ -1,5 +1,9 @@
 const navigationStrings = {
+<<<<<<< Updated upstream
   /** Root tab host inside AppStack (Home · Queue · Patients) */
+=======
+  //BOTTOM BAR NAVIGATION
+>>>>>>> Stashed changes
   BOTTOM_NAVIGATION: "BottomNavigation",
   //AUTH
   AUTH_BOOTSTRAP: "AuthBootstrap",

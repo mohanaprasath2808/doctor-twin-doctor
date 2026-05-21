@@ -32,9 +32,15 @@ import InsuranceIcon from "../../assets/icons/insurance.svg";
 import WellnessIcon from "../../assets/icons/wellness.svg";
 import RemindersIcon from "../../assets/icons/reminders.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
+<<<<<<< Updated upstream
+=======
+import PadMedIcon from "../../assets/icons/padMedIcon.svg";
+import WalletIcon from "../../assets/icons/walletIcon.svg";
+import { useToast } from "react-native-toast-notifications";
+>>>>>>> Stashed changes
 
 const QUICK_ACTIONS = [
-  { id: "message", label: "Message", icon: <MessageIcon width={32} height={32} />, badge: "3" },
+  { id: "message", label: "Message", icon: <MessageIcon width={32} height={32} /> },
   { id: "schedule", label: "Schedule", icon: <ScheduleIcon width={32} height={32} />, badge: "3" },
   { id: "telemedicine", label: "Telemedicine", icon: <TelemedicineIcon width={32} height={32} /> },
   { id: "medications", label: "Medications", icon: <MedicationsIcon width={32} height={32} /> },
@@ -51,6 +57,7 @@ const QUICK_ACTIONS = [
 
 const Home = () => {
   const navigation = useNavigation<any>();
+  const toast = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const numColumns = 4;
   const horizontalPadding = 16;
@@ -78,11 +85,12 @@ const Home = () => {
         },
       ]}
       onPress={() => {
+        toast.hideAll();
         if (item.id === "schedule") {
           navigation.navigate(navigationStrings.APPOINTMENTS);
         }
         if (item.id === "message") {
-          navigation.navigate(navigationStrings.NOTIFICATIONS);
+          navigation.navigate(navigationStrings.MESSAGES);
         }
         if (item.id === "lab") {
           navigation.navigate(navigationStrings.LABS);
@@ -110,6 +118,26 @@ const Home = () => {
             screen: navigationStrings.SETTINGS,
           });
         }
+<<<<<<< Updated upstream
+=======
+        if (item.id === "healthjournal") {
+          navigation.navigate(navigationStrings.HEALTH_JOURNAL);
+        }
+        if (item.id === "medications") {
+          navigation.navigate(navigationStrings.MEDICATIONS);
+        }
+        if (item.id === "reminders") {
+          navigation.navigate(navigationStrings.REMINDERS);
+        }
+        if (item.id === "telemedicine") {
+          // navigation.navigate(navigationStrings.TELEMEDICINE);
+          toast.show("Design not available yet", { type: "warning" });
+        }
+        if (item.id === "checkin") {
+          // navigation.navigate(navigationStrings.CHECKIN);
+          toast.show("Design under progress", { type: "warning" });
+        }
+>>>>>>> Stashed changes
       }}
       icon={item.icon}
       label={item.label}
@@ -160,7 +188,11 @@ const Home = () => {
             height={28}
             borderRadius={14}
             textStyle={styles.viewButtonText}
-            onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
+            onPress={() =>
+              navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
+                screen: navigationStrings.MESSAGES,
+              })
+            }
           />
         </NeumorphicCard>
 

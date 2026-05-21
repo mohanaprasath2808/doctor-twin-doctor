@@ -59,6 +59,26 @@ import ReferralStatus from "../../screens/App/Referrals/ReferralStatus";
 import ConsultReportsInbox from "../../screens/App/ConsultReports/ConsultReportsInbox";
 import ConsultReportDetail from "../../screens/App/ConsultReports/ConsultReportDetail";
 import ShareConsultReport from "../../screens/App/ConsultReports/ShareConsultReport";
+<<<<<<< Updated upstream
+=======
+import HealthJournal from "../../screens/App/HealthJournal/HealthJournal";
+import HealthJournalEntry from "../../screens/App/HealthJournal/HealthJournalEntry";
+import HealthJournalReadingSaved from "../../screens/App/HealthJournal/HealthJournalReadingSaved";
+import WeeklySummary from "../../screens/App/HealthJournal/WeeklySummary";
+import HealthJournalTrends from "../../screens/App/HealthJournal/HealthJournalTrends";
+import Medications from "../../screens/App/Medications/Medications";
+import MedicationDetail from "../../screens/App/Medications/MedicationDetail";
+import PriorAuthorization from "../../screens/App/Medications/PriorAuthorization";
+import CompleteQuestionnaire from "../../screens/App/Medications/CompleteQuestionnaire";
+import RequestRefill from "../../screens/App/Medications/RequestRefill";
+import RefillStatus from "../../screens/App/Medications/RefillStatus";
+import NextSteps from "../../screens/App/Medications/NextSteps";
+import UploadFile from "../../screens/App/Medications/UploadFile";
+import Reminders from "../../screens/App/Reminders/Reminders";
+import MedicationReminder from "../../screens/App/Reminders/MedicationReminder";
+import Messages from "../../screens/App/Messages/Messages";
+import Notifications from "../../screens/App/Notifications/Notifications";
+>>>>>>> Stashed changes
 
 const Stack = createStackNavigator();
 
@@ -139,6 +159,35 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.SUPPORT_TICKET} component={SupportTicket} />
       <Stack.Screen name={navigationStrings.TICKET_SUBMISSION} component={TicketSubmission} />
       <Stack.Screen name={navigationStrings.EMERGENCY_SAFETY} component={EmergencySafety} />
+<<<<<<< Updated upstream
+=======
+      <Stack.Screen name={navigationStrings.HEALTH_JOURNAL} component={HealthJournal} />
+      <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_ENTRY} component={HealthJournalEntry} />
+      <Stack.Screen
+        name={navigationStrings.HEALTH_JOURNAL_READING_SAVED}
+        component={HealthJournalReadingSaved}
+      />
+      <Stack.Screen
+        name={navigationStrings.HEALTH_JOURNAL_WEEKLY_SUMMARY}
+        component={WeeklySummary}
+      />
+      <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_TRENDS} component={HealthJournalTrends} />
+      <Stack.Screen name={navigationStrings.MEDICATIONS} component={Medications} />
+      <Stack.Screen name={navigationStrings.MEDICATION_DETAIL} component={MedicationDetail} />
+      <Stack.Screen name={navigationStrings.PRIOR_AUTHORIZATION} component={PriorAuthorization} />
+      <Stack.Screen
+        name={navigationStrings.PRIOR_AUTH_QUESTIONNAIRE}
+        component={CompleteQuestionnaire}
+      />
+      <Stack.Screen name={navigationStrings.REQUEST_REFILL} component={RequestRefill} />
+      <Stack.Screen name={navigationStrings.REFILL_STATUS} component={RefillStatus} />
+      <Stack.Screen name={navigationStrings.REFILL_NEXT_STEPS} component={NextSteps} />
+      <Stack.Screen name={navigationStrings.MEDICATION_UPLOAD_FILE} component={UploadFile} />
+      <Stack.Screen name={navigationStrings.REMINDERS} component={Reminders} />
+      <Stack.Screen name={navigationStrings.MEDICATION_REMINDER} component={MedicationReminder} />
+      <Stack.Screen name={navigationStrings.MESSAGES} component={Messages} />
+      <Stack.Screen name={navigationStrings.NOTIFICATIONS} component={Notifications} />
+>>>>>>> Stashed changes
     </Stack.Navigator>
   );
 };

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
+import AppButton from "../../components/Common/AppButton";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
+import { AuthContext } from "../../context/AuthContext";
 import IconComponent from "../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import { COLORS } from "../../constants/theme";
@@ -20,9 +22,15 @@ const ICON_INNER = 18;
 
 const MyProfile = () => {
   const navigation = useNavigation<any>();
+  const auth = useContext(AuthContext);
+  if (!auth) {
+    throw new Error("MyProfile must be used within AuthContextProvider");
+  }
+  const { logout } = auth;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <View style={styles.container}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -119,6 +127,21 @@ const MyProfile = () => {
           </View>
         </NeumorphicCard>
       </ScrollView>
+
+      <View style={styles.footer}>
+        <AppButton
+          text="Logout"
+          borderWidth={1}
+          borderColor={COLORS.CRITICAL}
+          bgColor={COLORS.CRITICAL_BG}
+          height={48}
+          borderRadius={24}
+          width="100%"
+          textStyle={styles.logoutText}
+          onPress={() => void logout()}
+        />
+      </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -128,12 +151,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.SURFACE,
   },
+  container: {
+    flex: 1,
+  },
   scroll: {
     flex: 1,
   },
   content: {
     paddingHorizontal: 16,
-    paddingBottom: 120,
+    paddingBottom: 16,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: Platform.OS === "ios" ? 20 : 16,
+  },
+  logoutText: {
+    color: COLORS.CRITICAL,
+    fontSize: 16,
+    fontWeight: "500",
   },
   header: {
     marginTop: Platform.OS === "ios" ? 6 : 8,

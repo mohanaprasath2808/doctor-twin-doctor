@@ -1,6 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import navigationStrings from "../../constants/navigationStrings";
 import BottomBarNavigation from "./BottomBarNavigation";
+<<<<<<< Updated upstream
+=======
+import Home from "../../screens/App/Home";
+>>>>>>> Stashed changes
 import MorningBrief from "../../screens/App/Home/MorningBrief";
 import PracticeIntelligence from "../../screens/App/Home/PracticeIntelligence";
 import ReportHub from "../../screens/App/Home/PractceIntelligence/ReportHub";

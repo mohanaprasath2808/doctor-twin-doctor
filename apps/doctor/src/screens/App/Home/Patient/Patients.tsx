@@ -80,9 +80,23 @@ const Patients = () => {
   const [search, setSearch] = useState("");
   const [selectedFilter, setSelectedFilter] = useState<SectionFilter>("all");
 
+  const openPatientSnapshot = () => {
+    const tabNav = navigation.getParent();
+    if (tabNav) {
+      tabNav.navigate("HomeTab", { screen: navigationStrings.PATIENT_SNAPSHOT });
+      return;
+    }
+    navigation.navigate(navigationStrings.PATIENT_SNAPSHOT);
+  };
+
   const showToday = selectedFilter === "all" || selectedFilter === "today";
+<<<<<<< Updated upstream
   const showFollowUp =
     selectedFilter === "all" || selectedFilter === "followUp";
+=======
+  const showFollowUp = selectedFilter === "all" || selectedFilter === "followUp";
+  const showRecent = selectedFilter === "all";
+>>>>>>> Stashed changes
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
@@ -140,20 +154,26 @@ const Patients = () => {
           <PatientSection
             title="Seeing today"
             data={SEEING_TODAY}
-            onPressPatient={() =>
-              navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)
-            }
+            onPressPatient={openPatientSnapshot}
           />
         )}
         {showFollowUp && (
           <PatientSection
             title="Needs Follow-Up"
             data={FOLLOW_UP}
-            onPressPatient={() =>
-              navigation.navigate(navigationStrings.PATIENT_SNAPSHOT)
-            }
+            onPressPatient={openPatientSnapshot}
           />
         )}
+<<<<<<< Updated upstream
+=======
+        {showRecent && (
+          <PatientSection
+            title="Recent Patient"
+            data={RECENT_PATIENTS}
+            onPressPatient={openPatientSnapshot}
+          />
+        )}
+>>>>>>> Stashed changes
       </ScrollView>
     </SafeAreaView>
   );
@@ -293,7 +313,13 @@ const styles = StyleSheet.create({
   },
   filterText: { color: COLORS.TEXT_70, fontSize: 14, fontWeight: "500" },
   selectedFilterText: { fontSize: 14, fontWeight: "500" },
+<<<<<<< Updated upstream
   section: { marginTop: 30 },
+=======
+  section: {
+    marginTop: 20,
+  },
+>>>>>>> Stashed changes
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
