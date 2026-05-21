@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useMemo, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import {
   BottomSheetModal as BSModal,
   BottomSheetView,
@@ -10,7 +10,7 @@ import AppButton from "../Common/AppButton";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import BottomSheetModal from "./BottomSheetModal";
-import DatePickerField from "../../neomorphism/DatePickerField";
+import NeumorphicDatePickerField from "../../neomorphism/NeumorphicDatePickerField";
 import CalendarIcon from "../../assets/icon/calendarIcon.svg";
 import DownArrowIcon from "../../assets/icon/downArrow.svg";
 
@@ -44,13 +44,31 @@ const DateRangeBottomSheetModal = forwardRef<
   const [draftValue, setDraftValue] = useState<DateRangeKey>(selectedValue);
   const [draftFromDate, setDraftFromDate] = useState<Date | null>(fromDate);
   const [draftToDate, setDraftToDate] = useState<Date | null>(toDate);
-  const snapPoints = useMemo(() => ["55%"], []);
+  const snapPoints = useMemo(
+    () => (draftValue === "custom" ? ["62%"] : ["55%"]),
+    [draftValue],
+  );
 
   useEffect(() => {
     setDraftValue(selectedValue);
     setDraftFromDate(fromDate);
     setDraftToDate(toDate);
   }, [selectedValue, fromDate, toDate]);
+
+  const handleFromDateChange = (date: Date) => {
+    setDraftFromDate(date);
+    if (draftToDate && date > draftToDate) {
+      setDraftToDate(date);
+    }
+  };
+
+  const handleToDateChange = (date: Date) => {
+    if (draftFromDate && date < draftFromDate) {
+      setDraftToDate(draftFromDate);
+      return;
+    }
+    setDraftToDate(date);
+  };
 
   return (
     <BottomSheetModal
@@ -64,53 +82,46 @@ const DateRangeBottomSheetModal = forwardRef<
       <BottomSheetView style={styles.content}>
         <Text style={styles.title}>Select Date range</Text>
 
-        <FlatList
-          data={DATE_RANGE_OPTIONS}
-          keyExtractor={(item) => item.key}
-          scrollEnabled={false}
-          renderItem={({ item, index }) => {
-            const isActive = item.key === draftValue;
-            return (
-              <Pressable
-                style={[
-                  styles.optionRow,
-                  index !== DATE_RANGE_OPTIONS.length - 1 &&
-                    styles.optionSeparator,
-                ]}
-                onPress={() => setDraftValue(item.key)}
-              >
-                {isActive ? (
-                  <SelectedIcon width={30} height={30} />
-                ) : (
-                  <InnerShadowIcon
-                    size={30}
-                    icon={<View style={styles.emptyDot} />}
-                  />
-                )}
-                <Text style={styles.optionText}>{item.label}</Text>
-              </Pressable>
-            );
-          }}
-        />
+        {DATE_RANGE_OPTIONS.map((item, index) => {
+          const isActive = item.key === draftValue;
+          return (
+            <Pressable
+              key={item.key}
+              style={[
+                styles.optionRow,
+                index !== DATE_RANGE_OPTIONS.length - 1 && styles.optionSeparator,
+              ]}
+              onPress={() => setDraftValue(item.key)}
+            >
+              {isActive ? (
+                <SelectedIcon width={30} height={30} />
+              ) : (
+                <InnerShadowIcon size={30} icon={<View style={styles.emptyDot} />} />
+              )}
+              <Text style={styles.optionText}>{item.label}</Text>
+            </Pressable>
+          );
+        })}
 
         {draftValue === "custom" ? (
           <View style={styles.customDateSection}>
             <View style={styles.dateFieldCol}>
-              <Text style={styles.dateLabel}>From</Text>
-              <DatePickerField
+              <Text style={styles.dateLabel}>Start date</Text>
+              <NeumorphicDatePickerField
                 value={draftFromDate}
-                onChange={setDraftFromDate}
+                onChange={handleFromDateChange}
                 placeholder="Select date"
                 leftIcon={<CalendarIcon width={16} height={16} />}
                 rightIcon={<DownArrowIcon width={10} height={10} />}
                 containerStyle={styles.dateField}
+                {...(draftToDate ? { maximumDate: draftToDate } : {})}
               />
             </View>
             <View style={styles.dateFieldCol}>
-              <Text style={styles.dateLabel}>To</Text>
-              <DatePickerField
+              <Text style={styles.dateLabel}>To date</Text>
+              <NeumorphicDatePickerField
                 value={draftToDate}
-                onChange={setDraftToDate}
+                onChange={handleToDateChange}
                 placeholder="Select date"
                 leftIcon={<CalendarIcon width={16} height={16} />}
                 rightIcon={<DownArrowIcon width={10} height={10} />}

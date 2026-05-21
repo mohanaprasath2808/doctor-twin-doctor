@@ -108,11 +108,6 @@ const Patients = () => {
   const [selectedFilter, setSelectedFilter] = useState<SectionFilter>("all");
 
   const openPatientSnapshot = () => {
-    const tabNav = navigation.getParent();
-    if (tabNav) {
-      tabNav.navigate("HomeTab", { screen: navigationStrings.PATIENT_SNAPSHOT });
-      return;
-    }
     navigation.navigate(navigationStrings.PATIENT_SNAPSHOT);
   };
 

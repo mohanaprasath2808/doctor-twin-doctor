@@ -39,6 +39,9 @@ const DATE_RANGE_OPTIONS: { key: DateRangeKey; label: string }[] = [
   { key: "custom", label: "Custom" },
 ];
 
+const formatShortDate = (date: Date) =>
+  date.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+
 const PHYSICALS_DATA = [
   {
     id: "1",
@@ -77,10 +80,15 @@ const Physicals = () => {
   const [toDate, setToDate] = useState<Date | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<FilterKey>("all");
 
-  const todayLabel = useMemo(
-    () => DATE_RANGE_OPTIONS.find((option) => option.key === selectedRange)?.label ?? "Today",
-    [selectedRange],
-  );
+  const rangeLabel = useMemo(() => {
+    if (selectedRange === "custom" && fromDate && toDate) {
+      return `${formatShortDate(fromDate)} - ${formatShortDate(toDate)}`;
+    }
+    return (
+      DATE_RANGE_OPTIONS.find((option) => option.key === selectedRange)?.label ??
+      "Today"
+    );
+  }, [selectedRange, fromDate, toDate]);
 
   const getStatusBadge = (status: string) => {
     if (status === "Waiting") {
@@ -221,11 +229,13 @@ const Physicals = () => {
               <NeumorphicCard
                 outerStyle={styles.todayOuter}
                 innerStyle={styles.todayInner}
-                borderRadius={20}
+                borderRadius={64}
                 onPress={() => dateRangeSheetRef.current?.present()}
               >
                 <CalendarIcon width={18} height={18} />
-                <Text style={styles.todayText}>{todayLabel}</Text>
+                <Text style={styles.todayText} numberOfLines={1}>
+                  {rangeLabel}
+                </Text>
               </NeumorphicCard>
             </View>
 
@@ -313,8 +323,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 6,
+    paddingHorizontal: 6,
   },
-  todayText: { fontSize: 14, color: COLORS.TEXT_80, fontWeight: "400" },
+  todayText: { fontSize: 12, color: COLORS.TEXT_80, fontWeight: "400", flexShrink: 1 },
   filterScroll: { marginTop: 12, marginBottom: 12, marginHorizontal: -16 },
   filterRow: {
     paddingHorizontal: 0,
