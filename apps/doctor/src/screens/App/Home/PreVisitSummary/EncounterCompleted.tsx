@@ -41,7 +41,7 @@ const EncounterCompleted = () => {
   const onBackToDashboard = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: navigationStrings.HOME }],
+      routes: [{ name: navigationStrings.BOTTOM_NAVIGATION }],
     });
   };
 

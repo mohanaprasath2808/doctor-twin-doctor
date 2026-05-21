@@ -4,16 +4,13 @@ import { createBottomTabNavigator, type BottomTabBarProps } from "@react-navigat
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
-import {
-  BottomInnerShadowIcon,
-  type BorderRingGradient,
-} from "../../neomorphism/bottomBar";
+import { BottomInnerShadowIcon, type BorderRingGradient } from "../../neomorphism/bottomBar";
 import navigationStrings from "../../constants/navigationStrings";
 import { COLORS } from "../../constants/theme";
 import Home from "../../screens/App/Home";
-import MedRefills from "../../screens/App/MedRefills";
+import Messages from "../../screens/App/Messages/Messages";
+import Medications from "../../screens/App/Medications/Medications";
 import Settings from "../../screens/App/Settings";
-import Notifications from "../../screens/App/Notifications/Notifications";
 import HomeActiveIcon from "../../assets/icons/homeActive.svg";
 import HomeInactiveIcon from "../../assets/icons/homeInactive.svg";
 import MessageActiveIcon from "../../assets/icons/messageActive.svg";
@@ -38,8 +35,8 @@ const TAB_BAR_INNER_PADDING_V = 10;
 
 const TAB_SCREENS = [
   { name: navigationStrings.HOME, label: "Home", component: Home },
-  { name: navigationStrings.NOTIFICATIONS, label: "Message", component: Notifications },
-  { name: navigationStrings.MED_REFILLS, label: "Med Refills", component: MedRefills },
+  { name: navigationStrings.MESSAGES, label: "Message", component: Messages },
+  { name: navigationStrings.MEDICATIONS, label: "Med Refills", component: Medications },
   { name: navigationStrings.SETTINGS, label: "More", component: Settings },
 ] as const;
 
@@ -79,8 +76,8 @@ const TAB_ICONS: Record<
   { Active: typeof HomeActiveIcon; Inactive: typeof HomeInactiveIcon }
 > = {
   [navigationStrings.HOME]: { Active: HomeActiveIcon, Inactive: HomeInactiveIcon },
-  [navigationStrings.NOTIFICATIONS]: { Active: MessageActiveIcon, Inactive: MessageInactiveIcon },
-  [navigationStrings.MED_REFILLS]: {
+  [navigationStrings.MESSAGES]: { Active: MessageActiveIcon, Inactive: MessageInactiveIcon },
+  [navigationStrings.MEDICATIONS]: {
     Active: MedRefillsActiveIcon,
     Inactive: MedRefillsInactiveIcon,
   },

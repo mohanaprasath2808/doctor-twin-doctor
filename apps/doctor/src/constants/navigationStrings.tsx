@@ -1,4 +1,6 @@
 const navigationStrings = {
+  /** Root tab host inside AppStack (Home · Queue · Patients) */
+  BOTTOM_NAVIGATION: "BottomNavigation",
   //AUTH
   AUTH_BOOTSTRAP: "AuthBootstrap",
   LOGIN: "Login",

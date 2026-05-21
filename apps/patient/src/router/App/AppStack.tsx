@@ -77,6 +77,8 @@ import MedicationReminder from "../../screens/App/Reminders/MedicationReminder";
 import ActiveReminderStatus from "../../screens/App/Reminders/ActiveReminderStatus";
 import AppointmentReminder from "../../screens/App/Reminders/AppointmentReminder";
 import CustomReminder from "../../screens/App/Reminders/CustomReminder";
+import Messages from "../../screens/App/Messages/Messages";
+import Notifications from "../../screens/App/Notifications/Notifications";
 
 const Stack = createStackNavigator();
 
@@ -184,6 +186,8 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.ACTIVE_REMINDER_STATUS} component={ActiveReminderStatus} />
       <Stack.Screen name={navigationStrings.APPOINTMENT_REMINDER} component={AppointmentReminder} />
       <Stack.Screen name={navigationStrings.CUSTOM_REMINDER} component={CustomReminder} />
+      <Stack.Screen name={navigationStrings.MESSAGES} component={Messages} />
+      <Stack.Screen name={navigationStrings.NOTIFICATIONS} component={Notifications} />
     </Stack.Navigator>
   );
 };
