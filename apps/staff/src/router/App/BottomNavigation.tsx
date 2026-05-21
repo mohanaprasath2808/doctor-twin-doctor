@@ -5,8 +5,10 @@ import { getFocusedRouteNameFromRoute, type RouteProp } from "@react-navigation/
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import CalendarIcon from "../../assets/icon/calendarIcon.svg";
+import GreenCalendarIcon from "../../assets/icon/greenCalendarIcon.svg";
 import MicIcon from "../../assets/icon/micIcon.svg";
 import ProfileIcon from "../../assets/icon/profileIcon.svg";
+import GreenProfileIcon from "../../assets/icon/greenProfileIcon.svg";
 import NeumorphicCard from "../../components/neomorphism/NeumorphicCard";
 import InnerShadowIcon from "../../components/neomorphism/InnerShadowIcon";
 import { QueueMicButton } from "../../components/navigation/QueueMicTabButton";
@@ -47,6 +49,12 @@ const TAB_ICON: Record<TabName, React.ComponentType<{ width?: number; height?: n
   [navigationStrings.PROFILE]: ProfileIcon,
 };
 
+const SELECTED_TAB_ICON: Record<TabName, React.ComponentType<{ width?: number; height?: number }>> = {
+  [navigationStrings.HOME]: GreenCalendarIcon,
+  [navigationStrings.QUEUE]: MicIcon,
+  [navigationStrings.PROFILE]: GreenProfileIcon,
+};
+
 const MIN_BOTTOM_INSET = Platform.select({ ios: 14, android: 20, default: 14 });
 const QUEUE_SIZE = 80;
 const QUEUE_RADIUS = QUEUE_SIZE / 2;
@@ -72,6 +80,7 @@ function StaffTabBar({ state, navigation }: BottomTabBarProps) {
           <View style={styles.tabRow}>
             {TAB_SCREENS.map((tab) => {
               const Icon = TAB_ICON[tab.name];
+              const SelectedIcon = SELECTED_TAB_ICON[tab.name];
               const selected = active === tab.name;
               const isCenter = tab.name === navigationStrings.QUEUE;
               return (
@@ -86,7 +95,7 @@ function StaffTabBar({ state, navigation }: BottomTabBarProps) {
                   {isCenter ? (
                     <View style={styles.queuePlaceholder} />
                   ) : selected ? (
-                    <InnerShadowIcon size={50} radius={25} icon={<Icon width={22} height={22} />} />
+                    <InnerShadowIcon size={50} radius={25} icon={<SelectedIcon width={22} height={22} />} />
                   ) : (
                     <View style={styles.inactiveIconWrap}>
                       <Icon width={22} height={22} />
