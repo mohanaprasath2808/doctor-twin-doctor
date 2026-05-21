@@ -7,6 +7,11 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import WarningTriangleIcon from "../../../assets/icon/warningTriangleYellow.svg";
+import CrossCalendarIcon from "../../../assets/icon/crossCalendar.svg";
+import RedClockWithCalendarIcon from "../../../assets/icon/redClockWithCalendarIcon.svg";
+import SchedulingIcon from "../../../assets/icon/schedulingIcon.svg";
+import TimerIcon from "../../../assets/icon/timerIcon.svg";
+import HandHeartIcon from "../../../assets/icon/heartWithHandIcon.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
 import AppButton from "../../../components/Common/AppButton";
@@ -34,14 +39,12 @@ const HEADER_H = 52;
 
 const BG = COLORS.INNER_SURFACE;
 
-type QuickIconKey = "cancellation" | "noShows" | "urgent" | "pending";
-
 /** Same figma positions as former `PATIENTS` entries [0,2,1,3] — orbit layout unchanged. */
 type QuickActionSlot = {
   id: string;
   label: string;
   badge?: string;
-  iconKey: QuickIconKey;
+  icon: React.ReactNode;
 } & OrbitClusterNode;
 
 const QUICK_ACTIONS: QuickActionSlot[] = [
@@ -49,7 +52,7 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     id: "1",
     label: "Cancellation",
     badge: "2",
-    iconKey: "cancellation",
+    icon: <CrossCalendarIcon width={24} height={24} />,
     figmaLeft: 16,
     figmaTop: 50,
     figmaWrapW: 107,
@@ -58,7 +61,7 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     id: "2",
     label: "No Shows",
     badge: "1",
-    iconKey: "noShows",
+    icon: <HandHeartIcon width={24} height={24} />,
     figmaLeft: 304,
     figmaTop: 50,
     figmaWrapW: 85,
@@ -67,7 +70,7 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     id: "3",
     label: "Urgent Openings",
     badge: "1",
-    iconKey: "urgent",
+    icon: <CrossCalendarIcon width={24} height={24} />,
     figmaLeft: 45,
     figmaTop: 240,
     figmaWrapW: 107,
@@ -76,7 +79,7 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
     id: "4",
     label: "Pending Approvals",
     badge: "1",
-    iconKey: "pending",
+    icon: <TimerIcon width={24} height={24} />,
     figmaLeft: 260,
     figmaTop: 240,
     figmaWrapW: 90,
@@ -84,21 +87,6 @@ const QUICK_ACTIONS: QuickActionSlot[] = [
 ];
 
 const SCHEDULE_PATIENT_NAME = "Brian Carter";
-
-function quickActionIcon(key: QuickIconKey, size: number) {
-  switch (key) {
-    case "cancellation":
-      return <MaterialCommunityIcons name="calendar-remove" size={size} color="#E05B6E" />;
-    case "noShows":
-      return <MaterialCommunityIcons name="hand-heart" size={size} color="#1A7A4A" />;
-    case "urgent":
-      return <MaterialCommunityIcons name="calendar-alert" size={size} color="#E05B6E" />;
-    case "pending":
-      return <MaterialCommunityIcons name="clock-outline" size={size} color="#D49A1E" />;
-    default:
-      return <MaterialCommunityIcons name="calendar" size={size} color={COLORS.PRIMARY} />;
-  }
-}
 
 function SchedulingQuickActionNode({
   slot,
@@ -111,13 +99,12 @@ function SchedulingQuickActionNode({
   btnSize: number;
   onPress: () => void;
 }) {
-  const iconSize = Math.round(28 * sx);
   const innerD = Math.round(btnSize * 0.82);
 
   return (
     <NeumorphicQuickActionTile
       onPress={onPress}
-      icon={quickActionIcon(slot.iconKey, iconSize)}
+      icon={slot.icon}
       label={slot.label}
       badge={slot.badge}
       outerDiameter={btnSize}
@@ -385,19 +372,19 @@ export function Scheduling() {
               sx={sx}
               btnSize={btnSize}
               onPress={() => {
-                if (node.iconKey === "cancellation") {
+                if (node.id === "1") {
                   navigation.navigate(navigationStrings.SCHEDULING_CANCELLATION);
                   return;
                 }
-                if (node.iconKey === "noShows") {
+                if (node.id === "2") {
                   navigation.navigate(navigationStrings.SCHEDULING_NO_SHOW);
                   return;
                 }
-                if (node.iconKey === "urgent") {
+                if (node.id === "3") {
                   navigation.navigate(navigationStrings.SCHEDULING_URGENT_OPENING);
                   return;
                 }
-                if (node.iconKey === "pending") {
+                if (node.id === "4") {
                   navigation.navigate(navigationStrings.SCHEDULING_PENDING_APPROVALS);
                   return;
                 }

@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import { FlatList, Image, Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -8,6 +7,10 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import AddIcon from "../../../assets/icon/greenPlusIcon.svg";
+import RedConicalIcon from "../../../assets/icon/redConical.svg";
+import RedShieldIcon from "../../../assets/icon/redShieldIcon.svg";
+import GreenShieldIcon from "../../../assets/icon/greenShieldIcon.svg";
+import GreenPillIcon from "../../../assets/icon/greenPillIcon.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
 import AppButton from "../../../components/Common/AppButton";
@@ -38,8 +41,8 @@ type DelegationStatus = "critical" | "pending" | "completed";
 type DelegationNode = OrbitClusterNode & {
   label: string;
   subLabel: string;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  iconColor: string;
+  icon: React.ReactNode;
+  bg: string;
   badge?: string;
 };
 
@@ -66,8 +69,8 @@ const DELEGATION_NODES: DelegationNode[] = [
     id: "critical-labs",
     label: "Critical Labs",
     subLabel: "Brian Carter\nToday 03:00 PM",
-    icon: "flask-outline",
-    iconColor: COLORS.ALERT,
+    icon: <RedConicalIcon width={24} height={24} />,
+    bg: COLORS.TOAST_ERROR_BG,
     figmaLeft: 20,
     figmaTop: 50,
     figmaWrapW: 110,
@@ -76,8 +79,8 @@ const DELEGATION_NODES: DelegationNode[] = [
     id: "missed-labs",
     label: "Missed Labs",
     subLabel: "Sarah Johnson\nTomorrow",
-    icon: "flask-outline",
-    iconColor: COLORS.ALERT,
+    icon: <RedConicalIcon width={24} height={24} />,
+    bg: COLORS.TOAST_ERROR_BG,
     figmaLeft: 296,
     figmaTop: 50,
     figmaWrapW: 100,
@@ -86,8 +89,8 @@ const DELEGATION_NODES: DelegationNode[] = [
     id: "appeal-left",
     label: "Insurance Appeal",
     subLabel: "Henry Patel\nRoutine 2 Days",
-    icon: "shield-plus-outline",
-    iconColor: COLORS.ALERT,
+    icon: <GreenShieldIcon width={24} height={24} />,
+    bg: COLORS.INNER_SURFACE,
     figmaLeft: 30,
     figmaTop: 215,
     figmaWrapW: 118,
@@ -96,8 +99,8 @@ const DELEGATION_NODES: DelegationNode[] = [
     id: "medication-renewal",
     label: "Medication Renewal",
     subLabel: "Susan Reed\nToday 04:00 PM",
-    icon: "pill",
-    iconColor: COLORS.PRIMARY,
+    icon: <GreenPillIcon width={24} height={24} />,
+    bg: COLORS.INNER_SURFACE,
     figmaLeft: 260,
     figmaTop: 215,
     figmaWrapW: 120,
@@ -106,8 +109,8 @@ const DELEGATION_NODES: DelegationNode[] = [
     id: "appeal-center",
     label: "Insurance Appeal",
     subLabel: "Henry Patel\nRoutine 2 Days",
-    icon: "shield-cross-outline",
-    iconColor: COLORS.PRIMARY,
+    icon: <RedShieldIcon width={24} height={24} />,
+    bg: COLORS.INNER_SURFACE,
     figmaLeft: 150,
     figmaTop: 292,
     figmaWrapW: 112,
@@ -282,7 +285,7 @@ function DelegationTaskCard({
             height={34}
             borderRadius={17}
             borderWidth={1}
-            borderColor={COLORS.ALERT}
+            borderColor={COLORS.TOAST_ERROR_BG}
             bgColor={COLORS.INNER_SURFACE}
             textStyle={styles.escalateText}
             onPress={onEscalate}
@@ -343,17 +346,17 @@ const DelegationHome = () => {
           centerOverlaySource={OverlayImage}
           centerLabelStyle={styles.drTwinLabel}
           renderNode={({ node, sx, btnSize }) => {
-            const iconSize = Math.round(26 * sx);
             const innerD = Math.round(btnSize * 0.82);
 
             return (
               <>
                 <NeumorphicQuickActionTile
                   onPress={() => { }}
-                  icon={<MaterialCommunityIcons name={node.icon} size={iconSize} color={node.iconColor} />}
+                  icon={node.icon}
                   label={node.label}
                   badge={node.badge}
                   outerDiameter={btnSize}
+                  innerShadowColor={node.bg}
                   innerShadowDiameter={innerD}
                   innerShadowBorderRadius={Math.round(innerD / 2)}
                   containerStyle={styles.quickTileContainer}

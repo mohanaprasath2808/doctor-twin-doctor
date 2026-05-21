@@ -307,7 +307,6 @@ const Refills = () => {
           centerOverlaySource={OverlayImage}
           centerLabelStyle={styles.drTwinLabel}
           renderNode={({ node, sx, btnSize }) => {
-            const iconSize = Math.round(26 * sx);
             const innerD = Math.round(btnSize * 0.82);
 
             return (

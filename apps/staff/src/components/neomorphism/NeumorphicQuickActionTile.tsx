@@ -137,15 +137,15 @@ const NeumorphicQuickActionTile: React.FC<NeumorphicQuickActionTileProps> = ({
 
   const alertInnerShadowExtra = isHighAlert
     ? {
-        darkShadowDx: 4,
-        darkShadowDy: 4,
-        darkShadowBlur: 14,
-        darkShadowColor: ALERT_INNER_SHADOW_DARK,
-        lightShadowDx: -4,
-        lightShadowDy: -4,
-        lightShadowBlur: 9,
-        lightShadowColor: ALERT_INNER_SHADOW_LIGHT,
-      }
+      darkShadowDx: 4,
+      darkShadowDy: 4,
+      darkShadowBlur: 14,
+      darkShadowColor: ALERT_INNER_SHADOW_DARK,
+      lightShadowDx: -4,
+      lightShadowDy: -4,
+      lightShadowBlur: 9,
+      lightShadowColor: ALERT_INNER_SHADOW_LIGHT,
+    }
     : {};
 
   return (
