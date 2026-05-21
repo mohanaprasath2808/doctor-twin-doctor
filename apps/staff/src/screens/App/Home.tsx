@@ -214,6 +214,7 @@ const Home = () => {
     ],
     [
       noop,
+      openEligibilityPriorAuth,
       showMessagesInProgress,
       openCommunication,
       openDelegation,
@@ -224,8 +225,7 @@ const Home = () => {
       openTaskInbox,
       openStaff,
       openDocumentsDashboard,
-    ],
-    [noop, openEligibilityPriorAuth, openCommunication, openDelegation, openBilling, openLabs, openRefills, openScheduling, openTaskInbox, openStaff, openDocumentsDashboard],
+    ]
   );
 
   const listHeader = useMemo(
