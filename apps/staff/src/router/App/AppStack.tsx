@@ -34,6 +34,15 @@ import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
 import LabsNotifyPatient from "../../screens/App/Labs/NotifyPatient";
 import ScheduleVisit from "../../screens/App/Labs/ScheduleVisit";
 import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
+import AuthorizationDetail from "../../screens/App/Eligibility/AuthorizationDetail";
+import AuthorizationTracking from "../../screens/App/Eligibility/AuthorizationTracking";
+import AppealSubmission from "../../screens/App/Eligibility/AppealSubmission";
+import DenialAnalysis from "../../screens/App/Eligibility/DenialAnalysis";
+import DenialResolution from "../../screens/App/Eligibility/DenialResolution";
+import EligibilityPriorAuth from "../../screens/App/Eligibility/EligibilityPriorAuth";
+import MissingDocuments from "../../screens/App/Eligibility/MissingDocuments";
+import RequestDocuments from "../../screens/App/Eligibility/RequestDocuments";
+import { SCREEN_BG as ELIGIBILITY_SCREEN_BG } from "../../screens/App/Eligibility/eligibilityPriorAuthConstants";
 import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
@@ -66,6 +75,11 @@ import DocumentsRequestInfo from "../../screens/App/DocumentsDashboard/Documents
 import DocumentsAssign from "../../screens/App/DocumentsDashboard/DocumentsAssign";
 import type { DocumentsDetailParams } from "../../screens/App/DocumentsDashboard/types/documentDashboardTypes";
 import type { DocumentsCategoryListParams } from "../../screens/App/DocumentsDashboard/types/documentsCategoryTypes";
+
+const eligibilityScreenOptions = {
+  headerShown: false,
+  contentStyle: { backgroundColor: ELIGIBILITY_SCREEN_BG },
+} as const;
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -150,6 +164,14 @@ export type AppStackParamList = {
   LabsNotifyPatient: undefined;
   LabsScheduleVisit: undefined;
   LabsActionCompleted: LabsActionCompletedParams | undefined;
+  EligibilityPriorAuth: undefined;
+  AuthorizationDetail: undefined;
+  RequestDocuments: undefined;
+  DenialResolution: undefined;
+  AuthorizationTracking: undefined;
+  MissingDocuments: undefined;
+  DenialAnalysis: undefined;
+  AppealSubmission: undefined;
   Staff: undefined;
   StaffForm: StaffFormParams | undefined;
   EndShiftSummary: undefined;
@@ -362,6 +384,46 @@ const AppStack = () => {
         name={navigationStrings.LABS_ACTION_COMPLETED}
         component={ActionCompleted}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ELIGIBILITY_PRIOR_AUTH}
+        component={EligibilityPriorAuth}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.AUTHORIZATION_DETAIL}
+        component={AuthorizationDetail}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.REQUEST_DOCUMENTS}
+        component={RequestDocuments}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.DENIAL_RESOLUTION}
+        component={DenialResolution}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.AUTHORIZATION_TRACKING}
+        component={AuthorizationTracking}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.MISSING_DOCUMENTS}
+        component={MissingDocuments}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.DENIAL_ANALYSIS}
+        component={DenialAnalysis}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.APPEAL_SUBMISSION}
+        component={AppealSubmission}
+        options={eligibilityScreenOptions}
       />
       <Stack.Screen
         name={navigationStrings.STAFF}

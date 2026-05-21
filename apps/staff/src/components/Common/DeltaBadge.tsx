@@ -28,6 +28,12 @@ interface DeltaBadgeProps {
   borderGradientColors?: [string, string];
   /** Vertical fade overlay; defaults to white → transparent. */
   highlightGradientColors?: [string, string];
+  darkShadowDx?: number;
+  darkShadowDy?: number;
+  darkShadowBlur?: number;
+  lightShadowDx?: number;
+  lightShadowDy?: number;
+  lightShadowBlur?: number;
 }
 
 const HEIGHT = 20;
@@ -47,6 +53,12 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   radius,
   borderGradientColors = DEFAULT_BORDER_GRADIENT_COLORS,
   highlightGradientColors = DEFAULT_HIGHLIGHT_GRADIENT_COLORS,
+  darkShadowDx = 4,
+  darkShadowDy = 2,
+  darkShadowBlur = 8,
+  lightShadowDx = -4,
+  lightShadowDy = -2,
+  lightShadowBlur = 5,
 }) => {
   const [measuredWidth, setMeasuredWidth] = useState(0);
   const renderedWidth = width ?? measuredWidth;
@@ -85,23 +97,33 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
           },
         ]}
       >
-        {innerWidth > 0 ? (
-          <View pointerEvents="none" style={styles.innerShadow} collapsable={false}>
-            <Canvas style={{ width: innerWidth, height: innerHeight }}>
-              <RoundedRect
-                x={0}
-                y={0}
-                width={innerWidth}
-                height={innerHeight}
-                r={innerRadius}
-                color={bgColor}
-              >
-                <Shadow dx={4} dy={2} blur={8} color={darkShadowColor} inner />
-                <Shadow dx={-4} dy={-2} blur={5} color={lightShadowColor} inner />
-              </RoundedRect>
-            </Canvas>
-          </View>
-        ) : null}
+        <View pointerEvents="none" style={styles.innerShadow} collapsable={false}>
+          <Canvas style={{ width: innerWidth, height: innerHeight }}>
+            <RoundedRect
+              x={0}
+              y={0}
+              width={innerWidth}
+              height={innerHeight}
+              r={innerRadius}
+              color={bgColor}
+            >
+              <Shadow
+                dx={darkShadowDx}
+                dy={darkShadowDy}
+                blur={darkShadowBlur}
+                color={darkShadowColor}
+                inner
+              />
+              <Shadow
+                dx={lightShadowDx}
+                dy={lightShadowDy}
+                blur={lightShadowBlur}
+                color={lightShadowColor}
+                inner
+              />
+            </RoundedRect>
+          </Canvas>
+        </View>
         <View style={styles.content}>
           {icon ? icon : null}
           <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, { color: textColor }, textStyle]}>
