@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NeumorphicCalendar } from "../../components/neomorphism/NeumorphicCalendar";
 import NeumorphicCard from "../../components/neomorphism/NeumorphicCard";
 import { COLORS } from "../../constants/theme";
+import { TEXT } from "../../constants/typography";
 
 type AppointmentItem = {
   id: string;
@@ -80,18 +81,16 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "600",
+    ...TEXT.screenTitleLarge,
     color: COLORS.TEXT_DARK,
     marginTop: 8,
     marginBottom: 14,
   },
   sectionTitle: {
+    ...TEXT.sectionTitleMedium,
+    color: COLORS.TEXT_DARK,
     marginTop: 20,
     marginBottom: 10,
-    fontSize: 16,
-    fontWeight: "500",
-    color: COLORS.TEXT_DARK,
   },
   appointmentOuter: {
     width: "100%",
@@ -114,8 +113,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   timeText: {
-    fontSize: 13,
-    fontWeight: "600",
+    ...TEXT.timePill,
     color: COLORS.PRIMARY,
     textAlign: "center",
   },
@@ -123,17 +121,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   patientName: {
-    fontSize: 15,
-    fontWeight: "600",
+    ...TEXT.subsectionTitle,
     color: COLORS.TEXT_DARK,
     marginBottom: 4,
   },
   reasonText: {
-    fontSize: 13,
+    ...TEXT.bodySmall,
     color: COLORS.TEXT_60,
   },
   emptyText: {
-    fontSize: 14,
+    ...TEXT.bodyRegular,
     color: COLORS.TEXT_60,
     textAlign: "center",
     marginTop: 24,

@@ -243,7 +243,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingBottom: 16,
   },
   main: {
     paddingTop: 8,
@@ -256,6 +255,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Display-Semibold",
     marginBottom: 10,
   },
   subtitle: {
@@ -264,6 +264,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_60,
     fontWeight: "400",
     marginBottom: 8,
+    fontFamily: "SF-Pro-Display-Regular",
   },
   otpWrap: {
     marginTop: 16,
@@ -277,12 +278,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.TEXT_60,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
     marginTop: 30,
   },
   otpVerifiedLabel: {
     fontSize: 12,
     color: COLORS.GREEN,
     textAlign: "center",
+    fontFamily: "SF-Pro-Display-Regular",
     fontWeight: "400",
     marginTop: 20,
   },
@@ -298,7 +301,7 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: "center",
     paddingTop: 24,
-    paddingBottom: 12,
+    paddingBottom: 8,
   },
   footerRow: {
     flexDirection: "row",
@@ -310,10 +313,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.TEXT_60,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
   },
   footerLink: {
     fontSize: 14,
     fontWeight: "500",
     color: COLORS.PRIMARY,
+    fontFamily: "SF-Pro-Display-Semibold",
   },
 });

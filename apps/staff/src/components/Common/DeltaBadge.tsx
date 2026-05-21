@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
+import {
+  type DimensionValue,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Canvas, RoundedRect, Shadow } from "@shopify/react-native-skia";
 
@@ -21,7 +28,8 @@ interface DeltaBadgeProps {
   lightShadowColor?: string;
   textColor: string;
   textStyle?: StyleProp<TextStyle>;
-  width?: number;
+  /** e.g. `120` or `"50%"`. Omit to size from content (no `width` style applied). */
+  width?: DimensionValue;
   height?: number;
   radius?: number;
   /** Outer border gradient (under the vertical highlight). */
@@ -61,16 +69,21 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   lightShadowBlur = 5,
 }) => {
   const [measuredWidth, setMeasuredWidth] = useState(0);
-  const renderedWidth = width ?? measuredWidth;
-  const innerWidth = Math.max(0, renderedWidth - BORDER * 2);
+  const layoutWidth = typeof width === "number" ? width : measuredWidth;
+  const innerWidth = Math.max(0, layoutWidth - BORDER * 2);
   const innerHeight = height - BORDER * 2;
   const badgeRadius = radius ?? height / 2;
   const innerRadius = Math.max(0, badgeRadius - BORDER);
+  const hasExplicitWidth = width != null;
 
   return (
     <View
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
-      style={[styles.border, { height, borderRadius: badgeRadius }, width != null ? { width } : null]}
+      style={[
+        styles.border,
+        { height, borderRadius: badgeRadius },
+        hasExplicitWidth ? { width } : styles.shrinkToContent,
+      ]}
     >
       <LinearGradient
         colors={borderGradientColors}
@@ -89,7 +102,7 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
       <View
         style={[
           styles.surface,
-          width != null ? styles.surfaceFullWidth : null,
+          hasExplicitWidth ? styles.surfaceFullWidth : null,
           {
             backgroundColor: bgColor,
             borderRadius: innerRadius,
@@ -139,6 +152,9 @@ const styles = StyleSheet.create({
   border: {
     padding: BORDER,
     overflow: "hidden",
+  },
+  shrinkToContent: {
+    alignSelf: "flex-start",
   },
   surface: {
     height: "100%",

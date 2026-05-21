@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingBottom: 16,
   },
   topBlock: {
     paddingTop: 8,
@@ -151,6 +150,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
     color: COLORS.TEXT_DARK,
     marginBottom: 10,
   },
@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: COLORS.TEXT_60,
     marginBottom: 24,
+    fontFamily: "SF-Pro-Display-Regular",
   },
   label: {
     fontSize: 12,
@@ -187,10 +188,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.TEXT_60,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
   },
   footerLink: {
     fontSize: 14,
     fontWeight: "500",
     color: COLORS.PRIMARY,
+    fontFamily: "SF-Pro-Display-Semibold",
   },
 });

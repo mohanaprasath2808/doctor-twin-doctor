@@ -6,6 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
+import RedConicalIcon from "../../../assets/icon/redConical.svg";
+import GreenConicalIcon from "../../../assets/icon/conicalIcon.svg";
+import YellowConicalIcon from "../../../assets/icon/yellowConicalIcon.svg";
 import WarningTriangleIcon from "../../../assets/icon/warningTriangleYellow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
@@ -35,6 +38,7 @@ type LabsNode = OrbitClusterNode & {
   label: string;
   subLabel: string;
   badge?: string;
+  icon: React.ReactNode;
   iconColor: string;
   key: NodeKey;
 };
@@ -44,7 +48,8 @@ const LABS_NODES: LabsNode[] = [
     id: "1",
     label: "Brian Carter",
     subLabel: "Elevated ALT / AST",
-    iconColor: "#1A7A4A",
+    icon: <GreenConicalIcon width={24} height={24} />,
+    iconColor: COLORS.PRIMARY,
     key: "elevated",
     figmaLeft: 20,
     figmaTop: 50,
@@ -55,7 +60,8 @@ const LABS_NODES: LabsNode[] = [
     label: "Susan Reed",
     subLabel: "Low Potassium",
     badge: "1",
-    iconColor: "#E05B6E",
+    icon: <RedConicalIcon width={24} height={24} />,
+    iconColor: COLORS.ALERT,
     key: "lowPotassium",
     figmaLeft: 296,
     figmaTop: 50,
@@ -66,7 +72,8 @@ const LABS_NODES: LabsNode[] = [
     label: "Henry Patel",
     subLabel: "High HbA1c",
     badge: "1",
-    iconColor: "#E05B6E",
+    icon: <RedConicalIcon width={24} height={24} />,
+    iconColor: COLORS.ALERT,
     key: "hba1c",
     figmaLeft: 50,
     figmaTop: 235,
@@ -76,6 +83,7 @@ const LABS_NODES: LabsNode[] = [
     id: "4",
     label: "Maria Gonzalez",
     subLabel: "Labs Pending",
+    icon: <YellowConicalIcon width={24} height={24} />,
     iconColor: "#D49A1E",
     key: "pending",
     figmaLeft: 266,
@@ -86,7 +94,8 @@ const LABS_NODES: LabsNode[] = [
     id: "5",
     label: "Brian Carter",
     subLabel: "Elevated ALT / AST",
-    iconColor: "#1A7A4A",
+    icon: <GreenConicalIcon width={24} height={24} />,
+    iconColor: COLORS.PRIMARY,
     key: "critical",
     figmaLeft: 167,
     figmaTop: 292,
@@ -308,13 +317,12 @@ const Labs = () => {
           centerOverlaySource={OverlayImage}
           centerLabelStyle={styles.drTwinLabel}
           renderNode={({ node, sx, btnSize }) => {
-            const iconSize = Math.round(26 * sx);
             const innerD = Math.round(btnSize * 0.82);
             return (
               <>
                 <NeumorphicQuickActionTile
                   onPress={() => setShowDetail(true)}
-                  icon={<MaterialCommunityIcons name="flask-outline" size={iconSize} color={node.iconColor} />}
+                  icon={node.icon}
                   label={node.label}
                   badge={node.badge}
                   outerDiameter={btnSize}

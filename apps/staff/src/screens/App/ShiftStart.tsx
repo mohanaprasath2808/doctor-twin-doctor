@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
@@ -23,8 +23,8 @@ import NeumorphicSwitch from "../../components/Common/NeumorphicSwitch";
 import { greetingLabel, hasPositiveBadgeCount } from "../../constants/constant";
 import navigationStrings from "../../constants/navigationStrings";
 import { COLORS } from "../../constants/theme";
-
-const DISPLAY_NAME = "Lorena";
+import { TEXT } from "../../constants/typography";
+import { AuthContext } from "../../context/AuthContext";
 
 const DEMO_OVERDUE_LABS_BADGE = "0";
 const DEMO_URGENT_MESSAGE_BADGE = "1";
@@ -34,6 +34,11 @@ const ShiftStart = () => {
   const navigation = useNavigation<NavigationProp<Record<string, undefined | object>>>();
   const greet = useMemo(() => greetingLabel(), []);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("ShiftStart must be used within AuthContextProvider");
+  }
+  const { userData } = authContext;
 
   const goHome = () => {
     navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
@@ -60,7 +65,7 @@ const ShiftStart = () => {
             imageStyle={styles.avatarImage}
           />
           <Text style={styles.greeting}>
-            {greet} {DISPLAY_NAME}
+            {greet} {userData?.name}
           </Text>
 
           <NeumorphicCard
@@ -82,7 +87,7 @@ const ShiftStart = () => {
 
           <View style={styles.tilesRow}>
             <NeumorphicQuickActionTile
-              onPress={() => {}}
+              onPress={() => { }}
               icon={
                 hasPositiveBadgeCount(DEMO_OVERDUE_LABS_BADGE) ? (
                   <LabRedIcon width={28} height={28} />
@@ -96,7 +101,7 @@ const ShiftStart = () => {
               containerStyle={styles.tileCol}
             />
             <NeumorphicQuickActionTile
-              onPress={() => {}}
+              onPress={() => { }}
               icon={
                 hasPositiveBadgeCount(DEMO_URGENT_MESSAGE_BADGE) ? (
                   <MessageRedIcon width={28} height={28} />
@@ -110,7 +115,7 @@ const ShiftStart = () => {
               containerStyle={styles.tileCol}
             />
             <NeumorphicQuickActionTile
-              onPress={() => {}}
+              onPress={() => { }}
               icon={
                 hasPositiveBadgeCount(DEMO_INSURANCE_BADGE) ? (
                   <InsuranceRedIcon width={28} height={28} />
@@ -206,8 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: 110,
   },
   greeting: {
-    fontSize: 16,
-    fontWeight: "600",
+    ...TEXT.greeting,
     color: COLORS.TEXT_DARK,
     textAlign: "center",
   },
@@ -228,13 +232,13 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     flex: 1,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: "400",
+    ...TEXT.bodyRegular,
     color: COLORS.TEXT_80,
+    lineHeight: 18,
   },
   badgeBold: {
-    fontWeight: "500",
+    ...TEXT.bodySemibold,
+    color: COLORS.TEXT_80,
   },
   tilesRow: {
     flexDirection: "row",
@@ -263,8 +267,7 @@ const styles = StyleSheet.create({
   rowTitle: {
     flex: 1,
     marginLeft: 10,
-    fontSize: 14,
-    fontWeight: "500",
+    ...TEXT.body,
     color: COLORS.TEXT_DARK,
   },
   rowTitleFlex: {
@@ -280,9 +283,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   countText: {
+    ...TEXT.badgeCount,
     color: COLORS.WHITE,
-    fontSize: 10,
-    fontWeight: "500",
   },
   cta: {
     marginBottom: 0,

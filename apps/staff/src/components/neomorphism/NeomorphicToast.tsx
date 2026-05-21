@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { LayoutChangeEvent, Platform, StyleSheet, Text, View } from "react-native";
-import type { ToastProps } from "react-native-toast-notifications/lib/typescript/toast";
-import InnerShadowView from "./InnerShadowView";
-import { COLORS } from "../../constants/theme";
 import { LinearGradient } from "expo-linear-gradient";
+import type { ToastProps } from "react-native-toast-notifications/lib/typescript/toast";
+import { COLORS } from "../../constants/theme";
+import InnerShadowView from "./InnerShadowView";
 
 export type NeomorphicToastVariant = "success" | "warning" | "danger";
 
+/** Variant colors aligned with `apps/patient/src/neomorphism/NeomorphicToast.tsx`. */
 const VARIANT = {
   success: {
     innerBg: COLORS.TOAST_SUCCESS_BG,
@@ -15,15 +16,18 @@ const VARIANT = {
       string,
     ],
     borderGradientBottom: ["#FFFFFF", "rgba(255, 255, 255, 0)"] as [string, string],
-    textColor: "#065F46",
-    innerShadowSurface: "#E8F8EF",
+    textColor: "#065f46",
+    innerShadowSurface: COLORS.SUCCESS,
   },
   warning: {
     innerBg: COLORS.TOAST_WARNING_BG,
-    borderGradientTop: ["rgba(238, 182, 33, 0.65)", "rgba(255, 244, 214, 0.6)"] as [string, string],
+    borderGradientTop: ["rgba(238, 182, 33, 0.65)", "rgba(255, 244, 214, 0.6)"] as [
+      string,
+      string,
+    ],
     borderGradientBottom: ["#FFFFFF", "rgba(255, 255, 255, 0)"] as [string, string],
-    textColor: "#92400E",
-    innerShadowSurface: COLORS.PRIMARY,
+    textColor: "#92400e",
+    innerShadowSurface: COLORS.TOAST_WARNING_BG,
   },
   danger: {
     innerBg: COLORS.TOAST_ERROR_BG,
@@ -32,8 +36,8 @@ const VARIANT = {
       string,
     ],
     borderGradientBottom: ["#FFFFFF", "rgba(255, 255, 255, 0)"] as [string, string],
-    textColor: "#991B1B",
-    innerShadowSurface: COLORS.ALERT,
+    textColor: "#991b1b",
+    innerShadowSurface: COLORS.TOAST_ERROR_BG,
   },
 } as const;
 
@@ -69,27 +73,15 @@ const NeomorphicToast = ({ toast, variant }: Props) => {
       <View style={[styles.outer, { borderRadius }]}>
         <View
           pointerEvents="none"
-          style={[
-            styles.shadowLayer,
-            styles.shadowDark,
-            { borderRadius, backgroundColor: cfg.innerBg },
-          ]}
+          style={[styles.shadowLayer, styles.shadowDark, { borderRadius, backgroundColor: cfg.innerBg }]}
         />
         <View
           pointerEvents="none"
-          style={[
-            styles.shadowLayer,
-            styles.shadowLight,
-            { borderRadius, backgroundColor: cfg.innerBg },
-          ]}
+          style={[styles.shadowLayer, styles.shadowLight, { borderRadius, backgroundColor: cfg.innerBg }]}
         />
         <View
           pointerEvents="none"
-          style={[
-            styles.shadowLayer,
-            styles.shadowSoft,
-            { borderRadius, backgroundColor: cfg.innerBg },
-          ]}
+          style={[styles.shadowLayer, styles.shadowSoft, { borderRadius, backgroundColor: cfg.innerBg }]}
         />
 
         <View style={[styles.border, { borderRadius }]}>
@@ -117,11 +109,7 @@ const NeomorphicToast = ({ toast, variant }: Props) => {
                 pointerEvents="none"
                 style={[
                   styles.innerShadowWrap,
-                  {
-                    width: box.width,
-                    height: box.height,
-                    borderRadius: innerRadius,
-                  },
+                  { width: box.width, height: box.height, borderRadius: innerRadius },
                 ]}
               >
                 <InnerShadowView
