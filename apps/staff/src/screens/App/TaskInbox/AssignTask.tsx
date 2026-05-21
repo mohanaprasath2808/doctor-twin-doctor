@@ -16,7 +16,6 @@ import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import AppButton from "../../../components/Common/AppButton";
 import DeltaBadge from "../../../components/Common/DeltaBadge";
-import DoctorAvatar from "../../../components/Common/DoctorAvatar";
 import NeumorphicRadioMark from "../../../components/Common/NeumorphicRadioMark";
 import IconComponent from "../../../components/neomorphism/IconComponent";
 import NeumorphicCard from "../../../components/neomorphism/NeumorphicCard";

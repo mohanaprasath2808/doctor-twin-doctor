@@ -1,10 +1,11 @@
-import React, { useCallback, useMemo, type ReactNode } from "react";
+import React, { useCallback, useContext, useMemo, type ReactNode } from "react";
 import { FlatList, StyleSheet, Text, useWindowDimensions } from "react-native";
 import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import type { CompositeNavigationProp } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useToast } from "react-native-toast-notifications";
 
 import DoctorTempImage from "../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../assets/image/imageBgShadow.png";
@@ -13,6 +14,7 @@ import ProfileAvatar from "../../components/neomorphism/ProfileAvatar";
 import { hasPositiveBadgeCount } from "../../constants/constant";
 import navigationStrings from "../../constants/navigationStrings";
 import { COLORS } from "../../constants/theme";
+import { TEXT } from "../../constants/typography";
 import RefillsGreenIcon from "../../assets/icon/refillsIcon.svg";
 import MessageGreenIcon from "../../assets/icon/messageIcon.svg";
 import LabGreenIcon from "../../assets/icon/conicalIcon.svg";
@@ -35,8 +37,7 @@ import EligibilityRedIcon from "../../assets/icon/eligibiltyRedIcon.svg";
 import DocumentRedIcon from "../../assets/icon/documentRedIcon.svg";
 import TasksRedIcon from "../../assets/icon/tasksRedIcon.svg";
 import DelegationRedIcon from "../../assets/icon/delegationRedIcon.svg";
-
-const DISPLAY_NAME = "Dr.Twin";
+import { AuthContext } from "../../context/AuthContext";
 
 type TileItem = {
   label: string;
@@ -68,6 +69,12 @@ const Home = () => {
   const { width: windowWidth } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const toast = useToast();
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("ShiftStart must be used within AuthContextProvider");
+  }
+  const { userData } = authContext;
 
   const tileWidth = useMemo(() => {
     const inner = windowWidth - H_PADDING * 2;
@@ -79,6 +86,10 @@ const Home = () => {
   const innerShadowDiameter = useMemo(() => Math.max(56, outerDiameter - 16), [outerDiameter]);
 
   const noop = useCallback(() => { }, []);
+
+  const showMessagesInProgress = useCallback(() => {
+    toast.show("Development under progress", { type: "warning" });
+  }, [toast]);
 
   const openTaskInbox = useCallback(() => {
     navigation.navigate(navigationStrings.TASK_INBOX);
@@ -131,7 +142,7 @@ const Home = () => {
         iconGreen: <MessageGreenIcon width={32} height={32} />,
         iconRed: <MessageRedIcon width={32} height={32} />,
         dataCount: "0",
-        onPress: noop,
+        onPress: showMessagesInProgress,
       },
       {
         label: "Labs",
@@ -197,7 +208,19 @@ const Home = () => {
         onPress: openCommunication,
       },
     ],
-    [noop, openCommunication, openDelegation, openBilling, openLabs, openRefills, openScheduling, openTaskInbox, openStaff, openDocumentsDashboard],
+    [
+      noop,
+      showMessagesInProgress,
+      openCommunication,
+      openDelegation,
+      openBilling,
+      openLabs,
+      openRefills,
+      openScheduling,
+      openTaskInbox,
+      openStaff,
+      openDocumentsDashboard,
+    ],
   );
 
   const listHeader = useMemo(
@@ -213,7 +236,7 @@ const Home = () => {
           overlayStyle={styles.overlayImage}
           imageStyle={styles.avatarImage}
         />
-        <Text style={styles.name}>{DISPLAY_NAME}</Text>
+        <Text style={styles.name} numberOfLines={2}>Hello {userData?.name}, How can I assist you today?</Text>
       </>
     ),
     [],
@@ -271,11 +294,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   screenTitle: {
+    ...TEXT.screenTitle,
+    color: COLORS.TEXT_DARK,
     marginTop: 8,
     marginBottom: 16,
-    fontSize: 18,
-    fontWeight: "600",
-    color: COLORS.TEXT_DARK,
     textAlign: "center",
   },
   imageContainer: {
@@ -300,10 +322,10 @@ const styles = StyleSheet.create({
     borderRadius: 110,
   },
   name: {
-    marginBottom: 40,
-    fontSize: 16,
-    fontWeight: "600",
+    ...TEXT.greeting,
     color: COLORS.TEXT_80,
+    marginBottom: 40,
+    paddingHorizontal: 16,
     textAlign: "center",
   },
   /** Aligns with patient Home grid tiles; margins handle gaps (reliable on Android). */

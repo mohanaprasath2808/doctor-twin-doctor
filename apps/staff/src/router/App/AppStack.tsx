@@ -170,6 +170,15 @@ export type AppStackParamList = {
   DocumentsUpload: DocumentsDetailParams;
   DocumentsRequestInfo: DocumentsDetailParams;
   DocumentsAssign: DocumentsDetailParams;
+  Communication: undefined;
+  StaffDoctorChannel: undefined;
+  StaffDoctorMessageDetail: undefined;
+  StaffDoctorReply: undefined;
+  StaffDoctorConvertToTask: undefined;
+  StaffDoctorEscalate: undefined;
+  CallPatient: undefined;
+  CallPatientAutoNote: undefined;
+  VoiceHandsFree: undefined;
 };
 
 export type BillingActionCompletedParams = {
@@ -182,15 +191,6 @@ export type BillingActionCompletedParams = {
   popCount?: number;
   /** When set, primary button navigates here instead of popping (e.g. documents dashboard). */
   completionNavigateTo?: keyof AppStackParamList;
-  Communication: undefined;
-  StaffDoctorChannel: undefined;
-  StaffDoctorMessageDetail: undefined;
-  StaffDoctorReply: undefined;
-  StaffDoctorConvertToTask: undefined;
-  StaffDoctorEscalate: undefined;
-  CallPatient: undefined;
-  CallPatientAutoNote: undefined;
-  VoiceHandsFree: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -461,6 +461,9 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.DOCUMENTS_ASSIGN}
         component={DocumentsAssign}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={navigationStrings.COMMUNICATION}
         component={Communication}
         options={{ headerShown: false }}

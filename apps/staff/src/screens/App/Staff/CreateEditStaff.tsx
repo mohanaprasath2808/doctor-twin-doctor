@@ -208,11 +208,11 @@ const CreateEditStaff = () => {
                 height={EDIT_FOOTER_ACTION_HEIGHT}
                 borderRadius={EDIT_FOOTER_ACTION_HEIGHT / 2}
                 style={styles.footerHalfBtn}
-                onPress={() => {}}
+                onPress={() => { }}
               />
               <ReusableButton
                 title="Save"
-                onPress={() => {}}
+                onPress={() => { }}
                 height={EDIT_FOOTER_ACTION_HEIGHT}
                 borderRadius={EDIT_FOOTER_ACTION_HEIGHT / 2}
                 containerStyle={styles.footerHalfBtn}
@@ -223,7 +223,7 @@ const CreateEditStaff = () => {
           ) : (
             <ReusableButton
               title="Save"
-              onPress={() => {}}
+              onPress={() => { }}
               gradientColors={["#A7F3D0", "#166534"]}
               backgroundColor={COLORS.PRIMARY}
             />
@@ -253,7 +253,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingBottom: 30,
   },
   headerTitle: {
     fontSize: 18,
@@ -265,7 +264,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 24,
   },
-  deactivateCardOuter: { width: "100%", marginBottom: 8 },
+  deactivateCardOuter: { width: "100%", marginBottom: 8, marginTop: 20 },
   deactivateCardInner: {
     borderRadius: 12,
     paddingHorizontal: 14,
@@ -299,7 +298,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_70,
   },
   labelFirst: {
-    marginTop: 4,
+    marginTop: 15,
   },
   inputTight: {
     marginTop: 0,

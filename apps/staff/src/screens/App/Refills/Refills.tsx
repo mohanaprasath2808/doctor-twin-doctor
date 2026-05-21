@@ -6,6 +6,10 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
+import ClockWithCalendarIcon from "../../../assets/icon/schedulingIcon.svg";
+import YellowConicalIcon from "../../../assets/icon/yellowConicalIcon.svg";
+import RedPillIcon from "../../../assets/icon/redPillIcon.svg";
+import GreenPillIcon from "../../../assets/icon/greenPillIcon.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
 import AppButton from "../../../components/Common/AppButton";
@@ -24,6 +28,7 @@ import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
 import OrbitCluster, { OrbitClusterNode } from "../Labs/components/OrbitCluster";
 
+
 const HEADER_H = 52;
 const BG = COLORS.INNER_SURFACE;
 const REFILL_PATIENT_NAME = "Sarah Williams";
@@ -31,7 +36,7 @@ const REFILL_PATIENT_NAME = "Sarah Williams";
 type RefillNode = OrbitClusterNode & {
   label: string;
   subLabel: string;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
+  icon: React.ReactNode;
   iconColor: string;
   badge?: string;
 };
@@ -41,7 +46,7 @@ const REFILL_NODES: RefillNode[] = [
     id: "john-miller",
     label: "John Miller",
     subLabel: "Hydrochlorothiazide\n1 month ago",
-    icon: "pill",
+    icon: <GreenPillIcon width={24} height={24} />,
     iconColor: COLORS.PRIMARY,
     figmaLeft: 22,
     figmaTop: 50,
@@ -51,7 +56,7 @@ const REFILL_NODES: RefillNode[] = [
     id: "susan-reed",
     label: "Susan Reed",
     subLabel: "Lisinopril 20 mg\n1 week, Low",
-    icon: "pill",
+    icon: <RedPillIcon width={24} height={24} />,
     iconColor: COLORS.ALERT,
     badge: "1",
     figmaLeft: 296,
@@ -62,7 +67,7 @@ const REFILL_NODES: RefillNode[] = [
     id: "david-myers",
     label: "David Myers",
     subLabel: "Levothyroxine\n2 month ago",
-    icon: "pill",
+    icon: <RedPillIcon width={24} height={24} />,
     iconColor: COLORS.ALERT,
     badge: "1",
     figmaLeft: 34,
@@ -73,7 +78,7 @@ const REFILL_NODES: RefillNode[] = [
     id: "scheduling",
     label: "Scheduling",
     subLabel: "New Lab pending\n1 week ago",
-    icon: "calendar-clock-outline",
+    icon: <ClockWithCalendarIcon width={24} height={24} />,
     iconColor: COLORS.PRIMARY,
     figmaLeft: 276,
     figmaTop: 235,
@@ -83,7 +88,7 @@ const REFILL_NODES: RefillNode[] = [
     id: "lisa-thompson",
     label: "Lisa Thompson",
     subLabel: "New Labs pending\n1 week ago",
-    icon: "flask-outline",
+    icon: <YellowConicalIcon width={24} height={24} />,
     iconColor: "#D49A1E",
     figmaLeft: 152,
     figmaTop: 292,
@@ -309,7 +314,7 @@ const Refills = () => {
               <>
                 <NeumorphicQuickActionTile
                   onPress={() => setShowDetail(true)}
-                  icon={<MaterialCommunityIcons name={node.icon} size={iconSize} color={node.iconColor} />}
+                  icon={node.icon}
                   label={node.label}
                   badge={node.badge}
                   outerDiameter={btnSize}

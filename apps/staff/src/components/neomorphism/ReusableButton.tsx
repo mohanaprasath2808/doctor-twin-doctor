@@ -72,9 +72,9 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
   const renderedIcon =
     leftIcon && React.isValidElement(leftIcon)
       ? React.cloneElement(leftIcon as React.ReactElement<{ width?: number; height?: number }>, {
-          width: iconSize,
-          height: iconSize,
-        })
+        width: iconSize,
+        height: iconSize,
+      })
       : leftIcon;
   const [measuredWidth, setMeasuredWidth] = useState(0);
   const numericWidth = useMemo(
@@ -208,6 +208,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
     paddingHorizontal: 12,
     color: COLORS.WHITE,
   },

@@ -21,8 +21,6 @@ import type { AuthStackParamList } from "../../router/Auth/types";
 import { useToast } from "react-native-toast-notifications";
 import { validateEmail } from "../utills/validations";
 
-const DISPLAY_NAME = "Lorena";
-
 const Login = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const authContext = useContext(AuthContext);
@@ -97,7 +95,7 @@ const Login = () => {
           imageStyle={styles.image}
         />
         <Text style={styles.greeting}>
-          {greet} {DISPLAY_NAME}
+          {greet}
         </Text>
 
         <View style={styles.dataContainer}>
@@ -147,11 +145,6 @@ const Login = () => {
               gradientColors={["#A7F3D0", "#166534"]}
               backgroundColor={COLORS.PRIMARY}
             />
-
-            <View style={styles.signupContainer}>
-              <Text style={styles.signupText}>Email: jeevananthan@apzzo.com</Text>
-              <Text style={styles.signupText}>Password: development2@dev</Text>
-            </View>
           </View>
         </View>
       </KeyboardAvoidingWrapper>
@@ -199,6 +192,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
+    fontFamily: "SF-Pro-Text-Bold",
   },
   dataContainer: {
     flex: 1,
@@ -211,6 +205,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Display-Semibold",
     marginBottom: 8,
   },
   label: {
@@ -218,6 +213,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_60,
     marginTop: 4,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
   },
   labelSpaced: {
     marginTop: 18,
@@ -237,6 +233,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.PRIMARY,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   loginBtn: {
     marginTop: 28,
@@ -257,16 +254,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.PRIMARY,
     fontWeight: "500",
-  },
-  signupContainer: {
-    paddingTop: 10,
-    flexDirection: "column",
-    paddingBottom: 24,
-  },
-  signupText: {
-    textAlign: "center",
-    color: COLORS.TEXT_60,
-    fontSize: 14,
-    fontWeight: "400",
-  },
+  }
 });

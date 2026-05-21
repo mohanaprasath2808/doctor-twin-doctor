@@ -46,12 +46,12 @@ const SchedulingAssignTask = () => {
         subtitle: s.badge ? undefined : s.subtitle,
         badge: s.badge
           ? {
-              value: s.badge,
-              bgColor: "#FDECEC",
-              darkShadowColor: "#F2CACA",
-              lightShadowColor: "#F2CACA",
-              textColor: "#FF6B6B",
-            }
+            value: s.badge,
+            bgColor: "#FDECEC",
+            darkShadowColor: "#F2CACA",
+            lightShadowColor: "#F2CACA",
+            textColor: "#FF6B6B",
+          }
           : undefined,
       })),
     [],
