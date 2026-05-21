@@ -12,6 +12,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import InnerShadowView from "./InnerShadowView";
 import { COLORS } from "../constants/theme";
+import { TEXT } from "../constants/typography";
 
 interface Props {
   leftIcon?: React.ReactNode;
@@ -343,8 +344,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: COLORS.TEXT_DARK,
-    fontSize: 14,
-    lineHeight: 20,
+    ...TEXT.bodyRegular,
     includeFontPadding: false,
   },
   /** Single-line row: stretch to the wrapper’s fixed height (~46px). */

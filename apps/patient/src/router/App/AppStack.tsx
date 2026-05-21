@@ -59,8 +59,6 @@ import ReferralStatus from "../../screens/App/Referrals/ReferralStatus";
 import ConsultReportsInbox from "../../screens/App/ConsultReports/ConsultReportsInbox";
 import ConsultReportDetail from "../../screens/App/ConsultReports/ConsultReportDetail";
 import ShareConsultReport from "../../screens/App/ConsultReports/ShareConsultReport";
-<<<<<<< Updated upstream
-=======
 import HealthJournal from "../../screens/App/HealthJournal/HealthJournal";
 import HealthJournalEntry from "../../screens/App/HealthJournal/HealthJournalEntry";
 import HealthJournalReadingSaved from "../../screens/App/HealthJournal/HealthJournalReadingSaved";
@@ -76,9 +74,11 @@ import NextSteps from "../../screens/App/Medications/NextSteps";
 import UploadFile from "../../screens/App/Medications/UploadFile";
 import Reminders from "../../screens/App/Reminders/Reminders";
 import MedicationReminder from "../../screens/App/Reminders/MedicationReminder";
+import ActiveReminderStatus from "../../screens/App/Reminders/ActiveReminderStatus";
+import AppointmentReminder from "../../screens/App/Reminders/AppointmentReminder";
+import CustomReminder from "../../screens/App/Reminders/CustomReminder";
 import Messages from "../../screens/App/Messages/Messages";
 import Notifications from "../../screens/App/Notifications/Notifications";
->>>>>>> Stashed changes
 
 const Stack = createStackNavigator();
 
@@ -159,8 +159,6 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.SUPPORT_TICKET} component={SupportTicket} />
       <Stack.Screen name={navigationStrings.TICKET_SUBMISSION} component={TicketSubmission} />
       <Stack.Screen name={navigationStrings.EMERGENCY_SAFETY} component={EmergencySafety} />
-<<<<<<< Updated upstream
-=======
       <Stack.Screen name={navigationStrings.HEALTH_JOURNAL} component={HealthJournal} />
       <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_ENTRY} component={HealthJournalEntry} />
       <Stack.Screen
@@ -185,9 +183,11 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.MEDICATION_UPLOAD_FILE} component={UploadFile} />
       <Stack.Screen name={navigationStrings.REMINDERS} component={Reminders} />
       <Stack.Screen name={navigationStrings.MEDICATION_REMINDER} component={MedicationReminder} />
+      <Stack.Screen name={navigationStrings.ACTIVE_REMINDER_STATUS} component={ActiveReminderStatus} />
+      <Stack.Screen name={navigationStrings.APPOINTMENT_REMINDER} component={AppointmentReminder} />
+      <Stack.Screen name={navigationStrings.CUSTOM_REMINDER} component={CustomReminder} />
       <Stack.Screen name={navigationStrings.MESSAGES} component={Messages} />
       <Stack.Screen name={navigationStrings.NOTIFICATIONS} component={Notifications} />
->>>>>>> Stashed changes
     </Stack.Navigator>
   );
 };

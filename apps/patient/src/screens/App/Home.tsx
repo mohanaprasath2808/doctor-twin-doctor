@@ -32,12 +32,9 @@ import InsuranceIcon from "../../assets/icons/insurance.svg";
 import WellnessIcon from "../../assets/icons/wellness.svg";
 import RemindersIcon from "../../assets/icons/reminders.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
-<<<<<<< Updated upstream
-=======
 import PadMedIcon from "../../assets/icons/padMedIcon.svg";
 import WalletIcon from "../../assets/icons/walletIcon.svg";
 import { useToast } from "react-native-toast-notifications";
->>>>>>> Stashed changes
 
 const QUICK_ACTIONS = [
   { id: "message", label: "Message", icon: <MessageIcon width={32} height={32} /> },
@@ -52,6 +49,8 @@ const QUICK_ACTIONS = [
   { id: "insurance", label: "Insurance", icon: <InsuranceIcon width={32} height={32} /> },
   { id: "wellness", label: "Wellness", icon: <WellnessIcon width={32} height={32} /> },
   { id: "reminders", label: "Reminders", icon: <RemindersIcon width={32} height={32} /> },
+  { id: "healthjournal", label: "Health Journal", icon: <PadMedIcon width={34} height={34} /> },
+  { id: "checkin", label: "Check-In", icon: <WalletIcon width={34} height={34} /> },
   { id: "settings", label: "Settings", icon: <SettingsIcon width={34} height={34} /> },
 ];
 
@@ -118,8 +117,6 @@ const Home = () => {
             screen: navigationStrings.SETTINGS,
           });
         }
-<<<<<<< Updated upstream
-=======
         if (item.id === "healthjournal") {
           navigation.navigate(navigationStrings.HEALTH_JOURNAL);
         }
@@ -130,14 +127,11 @@ const Home = () => {
           navigation.navigate(navigationStrings.REMINDERS);
         }
         if (item.id === "telemedicine") {
-          // navigation.navigate(navigationStrings.TELEMEDICINE);
           toast.show("Design not available yet", { type: "warning" });
         }
         if (item.id === "checkin") {
-          // navigation.navigate(navigationStrings.CHECKIN);
           toast.show("Design under progress", { type: "warning" });
         }
->>>>>>> Stashed changes
       }}
       icon={item.icon}
       label={item.label}

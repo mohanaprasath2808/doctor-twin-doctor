@@ -66,7 +66,7 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
   const innerRadius = Math.max(0, borderRadius - 1);
 
   return (
-    <View style={[styles.container, containerStyle]} onLayout={onLayout}>
+    <View style={containerStyle} onLayout={onLayout}>
       <View style={[styles.border, { borderRadius }]}>
         <LinearGradient
           colors={["rgba(214, 227, 243, 0.5)", "rgba(255, 255, 255, 0.5)"]}
@@ -139,9 +139,6 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
 export default NeumorphicInnerShadowCard;
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-  },
   border: {
     padding: 1,
     overflow: "hidden",

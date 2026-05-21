@@ -78,7 +78,7 @@ const Home = () => {
   const outerDiameter = useMemo(() => Math.min(88, tileWidth), [tileWidth]);
   const innerShadowDiameter = useMemo(() => Math.max(56, outerDiameter - 16), [outerDiameter]);
 
-  const noop = useCallback(() => {}, []);
+  const noop = useCallback(() => { }, []);
 
   const openTaskInbox = useCallback(() => {
     navigation.navigate(navigationStrings.TASK_INBOX);
@@ -94,6 +94,18 @@ const Home = () => {
 
   const openLabs = useCallback(() => {
     navigation.navigate(navigationStrings.LABS as never);
+  }, [navigation]);
+
+  const openRefills = useCallback(() => {
+    navigation.navigate(navigationStrings.REFILLS as never);
+  }, [navigation]);
+
+  const openBilling = useCallback(() => {
+    navigation.navigate(navigationStrings.BILLING_DASHBOARD as never);
+  }, [navigation]);
+
+  const openDocumentsDashboard = useCallback(() => {
+    navigation.navigate(navigationStrings.DOCUMENTS_DASHBOARD as never);
   }, [navigation]);
 
   const openStaff = useCallback(() => {
@@ -112,7 +124,7 @@ const Home = () => {
         iconGreen: <RefillsGreenIcon width={32} height={32} />,
         iconRed: <RefillRedIcon width={32} height={32} />,
         dataCount: "1",
-        onPress: noop,
+        onPress: openRefills,
       },
       {
         label: "Messages",
@@ -154,7 +166,7 @@ const Home = () => {
         iconGreen: <DocumentGreenIcon width={32} height={32} />,
         iconRed: <DocumentRedIcon width={32} height={32} />,
         dataCount: "0",
-        onPress: noop,
+        onPress: openDocumentsDashboard,
       },
       {
         label: "Tasks",
@@ -168,7 +180,7 @@ const Home = () => {
         iconGreen: <BillingGreenIcon width={32} height={32} />,
         iconRed: <BillingRedIcon width={32} height={32} />,
         dataCount: "1",
-        onPress: noop,
+        onPress: openBilling,
       },
       {
         label: "Staff",
@@ -185,7 +197,7 @@ const Home = () => {
         onPress: openCommunication,
       },
     ],
-    [noop, openCommunication, openDelegation, openLabs, openScheduling, openTaskInbox, openStaff],
+    [noop, openCommunication, openDelegation, openBilling, openLabs, openRefills, openScheduling, openTaskInbox, openStaff, openDocumentsDashboard],
   );
 
   const listHeader = useMemo(

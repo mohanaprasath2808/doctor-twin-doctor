@@ -357,7 +357,11 @@ const DelegationHome = () => {
                   innerShadowDiameter={innerD}
                   innerShadowBorderRadius={Math.round(innerD / 2)}
                   containerStyle={styles.quickTileContainer}
-                  badgeTextStyle={{ fontSize: Math.round(9 * sx), fontWeight: "700" }}
+                  badgeTextStyle={{
+                    fontSize: Math.round(9 * sx),
+                    fontWeight: "700",
+                    fontFamily: "SF-Pro-Display-Semibold",
+                  }}
                 />
                 <Text style={styles.nodeSubLabel} numberOfLines={2}>
                   {node.subLabel}
@@ -470,6 +474,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 22,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Text-Bold",
     letterSpacing: 0.18,
     color: COLORS.TEXT_DARK,
     textAlign: "center",
@@ -477,6 +482,7 @@ const styles = StyleSheet.create({
   drTwinLabel: {
     marginTop: 5,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display-Semibold",
     color: COLORS.TEXT_DARK,
   },
   quickTileContainer: {
@@ -488,6 +494,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 11,
     lineHeight: 14,
+    fontFamily: "SF-Pro-Display-Regular",
     color: COLORS.TEXT_60,
     textAlign: "center",
   },
@@ -504,10 +511,12 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_80,
     fontSize: 14,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
   },
   filterSelectedText: {
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   taskList: {
     paddingHorizontal: 16,
@@ -531,6 +540,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
     fontSize: 16,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
     color: COLORS.TEXT_DARK,
   },
   timerOuter: {
@@ -546,6 +556,7 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontSize: 11,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
     letterSpacing: 0.5,
   },
   patientRow: {
@@ -563,12 +574,14 @@ const styles = StyleSheet.create({
   patientName: {
     fontSize: 13,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display-Semibold",
     color: COLORS.TEXT_DARK,
   },
   patientMeta: {
     marginLeft: 4,
     fontSize: 12,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
     color: COLORS.TEXT_60,
   },
   divider: {
@@ -595,17 +608,20 @@ const styles = StyleSheet.create({
   assigneeName: {
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display-Semibold",
     color: COLORS.TEXT_DARK,
   },
   dueText: {
     marginTop: 2,
     fontSize: 11,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display-Regular",
     color: COLORS.TEXT_60,
   },
   statusText: {
     fontSize: 11,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   actionRow: {
     flexDirection: "row",
@@ -621,16 +637,19 @@ const styles = StyleSheet.create({
   assignText: {
     fontSize: 13,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   reassignText: {
     color: COLORS.PRIMARY,
     fontSize: 13,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   escalateText: {
     color: COLORS.ALERT,
     fontSize: 13,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   viewInboxButton: {
   },
@@ -638,6 +657,7 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontSize: 15,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   viewInboxButtonContainer: {
     marginTop: 16,
