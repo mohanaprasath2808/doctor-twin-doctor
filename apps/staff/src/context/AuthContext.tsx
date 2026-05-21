@@ -93,6 +93,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
 
       const data = response?.data;
 
+
       if (data?.ok === true) {
         const accessToken = data?.data?.access_token;
         const refreshToken = data?.data?.refresh_token;
@@ -103,7 +104,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         await secureStorage.setItem("user", JSON.stringify(user ?? {}));
         setUserToken(accessToken);
         setIsLogin(true);
-        setUserData(JSON.parse(user));
+        setUserData(user);
         toast.show("Login successful", {
           type: "success",
         });
@@ -114,7 +115,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       console.log(response?.data, "response");
 
     } catch (error: any) {
-      const errorData = error?.response?.data;
+      const errorData = error?.response?.data || error;
       console.error(errorData, "error in login");
       toast.show(errorData?.error || "Login failed", { type: "danger" });
     } finally {
