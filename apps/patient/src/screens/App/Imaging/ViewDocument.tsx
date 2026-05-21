@@ -26,8 +26,8 @@ const ViewDocument = () => {
             radius={20}
             onPress={() => navigation.goBack()}
           />
-          <Text style={styles.headerTitle}>View PDF</Text>
-          <View style={styles.headerSpacer} />
+          {/* <Text style={styles.headerTitle}>View PDF</Text>
+          <View style={styles.headerSpacer} /> */}
         </View>
 
         <View style={styles.previewWrap}>

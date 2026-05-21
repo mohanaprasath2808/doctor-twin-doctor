@@ -58,6 +58,9 @@ interface ReusableButtonProps {
   textColor?: string;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  /** Renders before the title (e.g. SVG icon). */
+  leadingIcon?: React.ReactNode;
+  leadingIconGap?: number;
 }
 
 const ReusableButton: React.FC<ReusableButtonProps> = ({
@@ -76,6 +79,8 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
   textColor = "#FFFFFF",
   containerStyle,
   textStyle,
+  leadingIcon,
+  leadingIconGap = 8,
 }) => {
   const [measuredWidth, setMeasuredWidth] = useState(0);
   const numericWidth = useMemo(
@@ -166,13 +171,26 @@ const ReusableButton: React.FC<ReusableButtonProps> = ({
           },
         ]}
       >
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={[styles.text, { color: textColor }, textStyle]}
-        >
-          {title}
-        </Text>
+        {leadingIcon ? (
+          <View style={[styles.labelRow, { gap: leadingIconGap }]}>
+            {leadingIcon}
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={[styles.text, styles.textWithLeadingIcon, { color: textColor }, textStyle]}
+            >
+              {title}
+            </Text>
+          </View>
+        ) : (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[styles.text, { color: textColor }, textStyle]}
+          >
+            {title}
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -198,9 +216,23 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     paddingHorizontal: 12,
     color: COLORS.WHITE,
+    fontFamily: "SF-Pro-Text-Medium",
+  },
+  labelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 12,
+    maxWidth: "100%",
+  },
+  textWithLeadingIcon: {
+    width: undefined,
+    flexShrink: 1,
+    textAlign: "left",
+    paddingHorizontal: 0,
   },
 });
 

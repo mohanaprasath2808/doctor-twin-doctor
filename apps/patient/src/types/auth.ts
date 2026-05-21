@@ -61,6 +61,8 @@ export interface AuthContextType {
   refreshToken: string | null;
   localUserData: any;
   setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
+  userData: any;
+  setUserData: React.Dispatch<React.SetStateAction<any>>;
   setRefreshToken: React.Dispatch<React.SetStateAction<string | null>>;
   setLocalUserData: React.Dispatch<React.SetStateAction<any>>;
   logout: () => Promise<void>;

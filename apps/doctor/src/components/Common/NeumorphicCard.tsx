@@ -13,6 +13,11 @@ type NeumorphicCardProps = {
   backgroundColor?: string;
   onPress?: () => void;
   activeOpacity?: number;
+  /**
+   * When false, border + inner surfaces use overflow visible so nested cards’
+   * outer shadows are not clipped (default true).
+   */
+  clipInner?: boolean;
 };
 
 const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
@@ -23,10 +28,12 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
   backgroundColor = COLORS.SURFACE,
   onPress,
   activeOpacity = 0.85,
+  clipInner = true,
 }) => {
   const Surface: React.ElementType = onPress ? TouchableOpacity : View;
   const surfaceProps = onPress ? { activeOpacity, onPress } : undefined;
   const innerRadius = Math.max(0, borderRadius - 1);
+  const clipStyle = clipInner ? styles.clipHidden : styles.clipVisible;
 
   return (
     <View style={[styles.outer, { borderRadius }, outerStyle]}>
@@ -42,7 +49,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         pointerEvents="none"
         style={[styles.shadowLayer, styles.shadowSoft, { borderRadius, backgroundColor }]}
       />
-      <View style={[styles.border, { borderRadius }]}>
+      <View style={[styles.border, clipStyle, { borderRadius }]}>
         <LinearGradient
           colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
           locations={[0.082, 0.8268]}
@@ -59,7 +66,12 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         />
         <Surface
           {...(surfaceProps as any)}
-          style={[styles.inner, { borderRadius: innerRadius, backgroundColor }, innerStyle]}
+          style={[
+            styles.inner,
+            clipStyle,
+            { borderRadius: innerRadius, backgroundColor },
+            innerStyle,
+          ]}
         >
           {children}
         </Surface>
@@ -79,7 +91,12 @@ const styles = StyleSheet.create({
   border: {
     zIndex: 1,
     padding: 1,
+  },
+  clipHidden: {
     overflow: "hidden",
+  },
+  clipVisible: {
+    overflow: "visible",
   },
   shadowDark: {
     ...Platform.select({
@@ -114,9 +131,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  inner: {
-    overflow: "hidden",
-  },
+  inner: {},
 });
 
 export default NeumorphicCard;

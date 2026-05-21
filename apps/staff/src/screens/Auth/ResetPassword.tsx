@@ -50,6 +50,7 @@ const ResetPassword = () => {
   };
 
   const handleVerifyOtp = async () => {
+    toast.hideAll();
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
       toast.show("Missing email. Go back and try again.", { type: "danger" });
@@ -113,7 +114,6 @@ const ResetPassword = () => {
     } else {
       handleClose();
       setOtpTime(0);
-
     }
   };
 
@@ -149,11 +149,18 @@ const ResetPassword = () => {
             Enter the OTP sent to your email and create a new password
           </Text>
 
-          <View style={[styles.otpWrap, otpVerified && styles.otpDisabled]} pointerEvents={otpVerified ? "none" : "auto"}>
+          <View
+            style={[styles.otpWrap, otpVerified && styles.otpDisabled]}
+            pointerEvents={otpVerified ? "none" : "auto"}
+          >
             <OtpTextInput ref={otpInputRef} otp={otp} setOtp={setOtp} />
           </View>
 
-          {otpVerified ? <Text style={styles.otpVerifiedLabel}>OTP verified successfully</Text> : <OtpTimer initialSeconds={otpTime} onResend={handleResendOtp} />}
+          {otpVerified ? (
+            <Text style={styles.otpVerifiedLabel}>OTP verified successfully</Text>
+          ) : (
+            <OtpTimer initialSeconds={otpTime} onResend={handleResendOtp} />
+          )}
 
           {otpVerified ? (
             <>
@@ -196,13 +203,7 @@ const ResetPassword = () => {
           ) : null}
 
           <ReusableButton
-            title={
-              otpVerified
-                ? "Reset Password"
-                : isLoading
-                  ? "Verifying..."
-                  : "Verify"
-            }
+            title={otpVerified ? "Reset Password" : isLoading ? "Verifying..." : "Verify"}
             onPress={otpVerified ? handleResetPassword : handleVerifyOtp}
             disabled={otpVerified ? isLoading : isLoading || otp.length !== OTP_LENGTH}
             containerStyle={styles.resetBtn}

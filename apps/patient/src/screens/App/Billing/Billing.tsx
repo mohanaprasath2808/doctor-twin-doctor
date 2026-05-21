@@ -86,7 +86,11 @@ const Billing = () => {
           </View>
         </NeumorphicCard>
 
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
+        <NeumorphicCard
+          outerStyle={styles.cardOuter}
+          innerStyle={styles.cardInner}
+          borderRadius={10}
+        >
           <InnerShadowIcon
             icon={<MedicationRefillsIcon width={18} height={18} />}
             size={40}
@@ -109,7 +113,11 @@ const Billing = () => {
         </NeumorphicCard>
 
         <View style={styles.halfRow}>
-          <NeumorphicCard outerStyle={styles.halfOuter} innerStyle={styles.halfInner} borderRadius={10}>
+          <NeumorphicCard
+            outerStyle={styles.halfOuter}
+            innerStyle={styles.halfInner}
+            borderRadius={10}
+          >
             <InnerShadowIcon
               icon={<BillingIcon width={18} height={18} />}
               size={40}
@@ -122,7 +130,11 @@ const Billing = () => {
             <RightArrowIcon width={10} height={10} />
           </NeumorphicCard>
 
-          <NeumorphicCard outerStyle={styles.halfOuter} innerStyle={styles.halfInner} borderRadius={10}>
+          <NeumorphicCard
+            outerStyle={styles.halfOuter}
+            innerStyle={styles.halfInner}
+            borderRadius={10}
+          >
             <InnerShadowIcon
               icon={<InsuranceIcon width={18} height={18} />}
               size={40}

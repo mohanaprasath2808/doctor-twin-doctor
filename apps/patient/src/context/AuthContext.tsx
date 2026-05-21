@@ -32,6 +32,7 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [localUserData, setLocalUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
   console.log(localUserData, "localUserData in AuthContextProvider");
   //INITIAL FETCH
   const initialFetch = async () => {
@@ -243,7 +244,6 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       const response: any = await request.json();
       console.log(response, "response in handleSetUserPin");
       if (response?.ok) {
-        // Refresh user from API so SecureStore has the latest flags (user_pin_set)
         await handleGetUser();
         return { ok: true, data: response?.data };
       }
@@ -302,9 +302,9 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       const response: any = await request.json();
       console.log(response, "response in handleGetUser");
       if (response?.ok) {
-        setLocalUserData(response?.data);
-        await setSecureItem(AUTH_LOCAL_STORAGE_KEYS.USER_DATA, JSON.stringify(response?.data));
-        return { ok: true, data: response?.data };
+        const nextUser = response?.data;
+        setUserData(nextUser);
+        return { ok: true, data: nextUser };
       }
       return { ok: false, error: response?.error };
     } catch (error: any) {
@@ -340,9 +340,11 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         accessToken,
         refreshToken,
         localUserData,
+        userData,
+        setUserData,
+        setLocalUserData,
         setAccessToken,
         setRefreshToken,
-        setLocalUserData,
         logout,
         handleSetUserPin,
         handleVerifyUserPin,

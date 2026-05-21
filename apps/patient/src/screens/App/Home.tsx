@@ -1,5 +1,13 @@
 import React from "react";
-import { FlatList, Platform, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import {
+  FlatList,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
@@ -24,9 +32,12 @@ import InsuranceIcon from "../../assets/icons/insurance.svg";
 import WellnessIcon from "../../assets/icons/wellness.svg";
 import RemindersIcon from "../../assets/icons/reminders.svg";
 import SettingsIcon from "../../assets/icons/settings.svg";
+import PadMedIcon from "../../assets/icons/padMedIcon.svg";
+import WalletIcon from "../../assets/icons/walletIcon.svg";
+import { useToast } from "react-native-toast-notifications";
 
 const QUICK_ACTIONS = [
-  { id: "message", label: "Message", icon: <MessageIcon width={32} height={32} />, badge: "3" },
+  { id: "message", label: "Message", icon: <MessageIcon width={32} height={32} /> },
   { id: "schedule", label: "Schedule", icon: <ScheduleIcon width={32} height={32} />, badge: "3" },
   { id: "telemedicine", label: "Telemedicine", icon: <TelemedicineIcon width={32} height={32} /> },
   { id: "medications", label: "Medications", icon: <MedicationsIcon width={32} height={32} /> },
@@ -38,11 +49,14 @@ const QUICK_ACTIONS = [
   { id: "insurance", label: "Insurance", icon: <InsuranceIcon width={32} height={32} /> },
   { id: "wellness", label: "Wellness", icon: <WellnessIcon width={32} height={32} /> },
   { id: "reminders", label: "Reminders", icon: <RemindersIcon width={32} height={32} /> },
+  { id: "healthjournal", label: "Health Journal", icon: <PadMedIcon width={34} height={34} /> },
+  { id: "checkin", label: "Check-In", icon: <WalletIcon width={34} height={34} /> },
   { id: "settings", label: "Settings", icon: <SettingsIcon width={34} height={34} /> },
 ];
 
 const Home = () => {
   const navigation = useNavigation<any>();
+  const toast = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const numColumns = 4;
   const horizontalPadding = 16;
@@ -70,11 +84,12 @@ const Home = () => {
         },
       ]}
       onPress={() => {
+        toast.hideAll();
         if (item.id === "schedule") {
           navigation.navigate(navigationStrings.APPOINTMENTS);
         }
         if (item.id === "message") {
-          navigation.navigate(navigationStrings.NOTIFICATIONS);
+          navigation.navigate(navigationStrings.MESSAGES);
         }
         if (item.id === "lab") {
           navigation.navigate(navigationStrings.LABS);
@@ -90,6 +105,32 @@ const Home = () => {
         }
         if (item.id === "wellness") {
           navigation.navigate(navigationStrings.WELLNESS_MEDSPA);
+        }
+        if (item.id === "referral") {
+          navigation.navigate(navigationStrings.REFERRALS);
+        }
+        if (item.id === "insurance") {
+          navigation.navigate(navigationStrings.INSURANCE_ELIGIBILITY);
+        }
+        if (item.id === "settings") {
+          navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
+            screen: navigationStrings.SETTINGS,
+          });
+        }
+        if (item.id === "healthjournal") {
+          navigation.navigate(navigationStrings.HEALTH_JOURNAL);
+        }
+        if (item.id === "medications") {
+          navigation.navigate(navigationStrings.MEDICATIONS);
+        }
+        if (item.id === "reminders") {
+          navigation.navigate(navigationStrings.REMINDERS);
+        }
+        if (item.id === "telemedicine") {
+          toast.show("Design not available yet", { type: "warning" });
+        }
+        if (item.id === "checkin") {
+          toast.show("Design under progress", { type: "warning" });
         }
       }}
       icon={item.icon}
@@ -141,7 +182,11 @@ const Home = () => {
             height={28}
             borderRadius={14}
             textStyle={styles.viewButtonText}
-            onPress={() => navigation.navigate(navigationStrings.NOTIFICATIONS)}
+            onPress={() =>
+              navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
+                screen: navigationStrings.MESSAGES,
+              })
+            }
           />
         </NeumorphicCard>
 

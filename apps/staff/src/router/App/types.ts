@@ -1,6 +1,8 @@
 import navigationStrings from "../../constants/navigationStrings";
 import type {
   AssignTaskParams,
+  DelegationActionCompletedParams,
+  DelegationAssignmentParams,
   PatientTaskDetailParams,
   StaffFormParams,
 } from "./AppStack";
@@ -10,11 +12,11 @@ export type { StaffFormParams };
 export type AppStackParamList = {
   [navigationStrings.SHIFT_START]: undefined;
   [navigationStrings.BOTTOM_NAVIGATION]:
-    | undefined
-    | {
-        screen?: string;
-        params?: Record<string, unknown>;
-      };
+  | undefined
+  | {
+    screen?: string;
+    params?: Record<string, unknown>;
+  };
   [navigationStrings.STAFF]: undefined;
   [navigationStrings.STAFF_FORM]: StaffFormParams | undefined;
   [navigationStrings.TASK_INBOX]: undefined;
@@ -31,4 +33,24 @@ export type AppStackParamList = {
   [navigationStrings.SCHEDULING_FILL_SLOT]: undefined;
   [navigationStrings.SCHEDULING_ASSIGN_TASK]: undefined;
   [navigationStrings.SCHEDULING_RESCHEDULE]: undefined;
+  [navigationStrings.DELEGATION]: undefined;
+  [navigationStrings.DELEGATION_ASSIGN_TASK]: DelegationAssignmentParams | undefined;
+  [navigationStrings.DELEGATION_REASSIGN_TASK]: DelegationAssignmentParams | undefined;
+  [navigationStrings.DELEGATION_ESCALATE_MESSAGE]: undefined;
+  [navigationStrings.DELEGATION_ACTION_COMPLETED]: DelegationActionCompletedParams | undefined;
+  [navigationStrings.REFILLS]: undefined;
+  [navigationStrings.REFILLS_CONFIRM]: undefined;
+  [navigationStrings.REFILLS_DOCTOR_REVIEW]: undefined;
+  [navigationStrings.REFILLS_MESSAGE_PATIENT]: undefined;
+  [navigationStrings.REFILLS_ASSIGN_NURSE]: undefined;
+  [navigationStrings.REFILLS_REQUEST_LABS]: undefined;
+  [navigationStrings.COMMUNICATION]: undefined;
+  [navigationStrings.STAFF_DOCTOR_CHANNEL]: undefined;
+  [navigationStrings.STAFF_DOCTOR_MESSAGE_DETAIL]: undefined;
+  [navigationStrings.STAFF_DOCTOR_REPLY]: undefined;
+  [navigationStrings.STAFF_DOCTOR_CONVERT_TO_TASK]: undefined;
+  [navigationStrings.STAFF_DOCTOR_ESCALATE]: undefined;
+  [navigationStrings.CALL_PATIENT]: undefined;
+  [navigationStrings.CALL_PATIENT_AUTO_NOTE]: undefined;
+  [navigationStrings.VOICE_HANDS_FREE]: undefined;
 };

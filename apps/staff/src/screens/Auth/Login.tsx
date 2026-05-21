@@ -47,6 +47,7 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
+    toast.hideAll();
     const { isValid, email, password } = handleValidate();
     if (!isValid) {
       return;

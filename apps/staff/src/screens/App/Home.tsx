@@ -23,6 +23,8 @@ import EligibilityGreenIcon from "../../assets/icon/eligibilityIcon.svg";
 import DocumentGreenIcon from "../../assets/icon/documentIcon.svg";
 import TasksGreenIcon from "../../assets/icon/tasksIcon.svg";
 import DelegationGreenIcon from "../../assets/icon/delegationIcon.svg";
+import CommunicationIcon from "../../assets/icon/communicationIcon.svg";
+import CommunicationRedIcon from "../../assets/icon/communicationRedIcon.svg";
 import RefillRedIcon from "../../assets/icon/refillRedIcon.svg";
 import MessageRedIcon from "../../assets/icon/messageRedIcon.svg";
 import LabRedIcon from "../../assets/icon/conicalRedIcon.svg";
@@ -74,10 +76,7 @@ const Home = () => {
 
   /** Same scaling as patient Home: circle fits column width, inner well tracks outer. */
   const outerDiameter = useMemo(() => Math.min(88, tileWidth), [tileWidth]);
-  const innerShadowDiameter = useMemo(
-    () => Math.max(56, outerDiameter - 16),
-    [outerDiameter],
-  );
+  const innerShadowDiameter = useMemo(() => Math.max(56, outerDiameter - 16), [outerDiameter]);
 
   const noop = useCallback(() => { }, []);
 
@@ -89,208 +88,233 @@ const Home = () => {
     navigation.navigate(navigationStrings.SCHEDULING);
   }, [navigation]);
 
+  const openDelegation = useCallback(() => {
+    navigation.navigate(navigationStrings.DELEGATION as never);
+  }, [navigation]);
+
   const openLabs = useCallback(() => {
     navigation.navigate(navigationStrings.LABS as never);
   }, [navigation]);
 
   const openEligibilityPriorAuth = useCallback(() => {
     navigation.navigate(navigationStrings.ELIGIBILITY_PRIOR_AUTH as never);
-  }, [navigation]);
+    const openRefills = useCallback(() => {
+      navigation.navigate(navigationStrings.REFILLS as never);
+    }, [navigation]);
 
-  const openStaff = useCallback(() => {
-    const parent = navigation.getParent();
-    parent?.navigate(navigationStrings.STAFF as never);
-  }, [navigation]);
+    const openBilling = useCallback(() => {
+      navigation.navigate(navigationStrings.BILLING_DASHBOARD as never);
+    }, [navigation]);
 
-  const tiles = useMemo<TileItem[]>(
-    () => [
-      {
-        label: "Refills",
-        iconGreen: <RefillsGreenIcon width={32} height={32} />,
-        iconRed: <RefillRedIcon width={32} height={32} />,
-        dataCount: "1",
-        onPress: noop,
-      },
-      {
-        label: "Messages",
-        iconGreen: <MessageGreenIcon width={32} height={32} />,
-        iconRed: <MessageRedIcon width={32} height={32} />,
-        dataCount: "0",
-        onPress: noop,
-      },
-      {
-        label: "Labs",
-        iconGreen: <LabGreenIcon width={32} height={32} />,
-        iconRed: <LabRedIcon width={32} height={32} />,
-        dataCount: "3",
-        onPress: openLabs,
-      },
-      {
-        label: "Scheduling",
-        iconGreen: <ScheduleGreenIcon width={32} height={32} />,
-        iconRed: <ScheduleRedIcon width={32} height={32} />,
-        dataCount: "0",
-        onPress: openScheduling,
-      },
-      {
-        label: "Delegation",
-        iconGreen: <DelegationGreenIcon width={32} height={32} />,
-        iconRed: <DelegationRedIcon width={32} height={32} />,
-        dataCount: "0",
-        onPress: noop,
-      },
-      {
-        label: "Eligibility",
-        iconGreen: <EligibilityGreenIcon width={32} height={32} />,
-        iconRed: <EligibilityRedIcon width={32} height={32} />,
-        dataCount: "0",
-        onPress: openEligibilityPriorAuth,
-      },
-      {
-        label: "Document",
-        iconGreen: <DocumentGreenIcon width={32} height={32} />,
-        iconRed: <DocumentRedIcon width={32} height={32} />,
-        dataCount: "0",
-        onPress: noop,
-      },
-      {
-        label: "Tasks",
-        iconGreen: <TasksGreenIcon width={32} height={32} />,
-        iconRed: <TasksRedIcon width={32} height={32} />,
-        dataCount: "1",
-        onPress: openTaskInbox,
-      },
-      {
-        label: "Billing",
-        iconGreen: <BillingGreenIcon width={32} height={32} />,
-        iconRed: <BillingRedIcon width={32} height={32} />,
-        dataCount: "1",
-        onPress: noop,
-      },
-      {
-        label: "Staff",
-        iconGreen: <ProfileGreenIcon width={32} height={32} />,
-        iconRed: <ProfileRedIcon width={32} height={32} />,
-        dataCount: "1",
-        onPress: openStaff,
-      },
-    ],
-    [noop, openEligibilityPriorAuth, openLabs, openScheduling, openTaskInbox, openStaff],
-  );
+    const openDocumentsDashboard = useCallback(() => {
+      navigation.navigate(navigationStrings.DOCUMENTS_DASHBOARD as never);
+    }, [navigation]);
 
-  const listHeader = useMemo(
-    () => (
-      <>
-        <Text style={styles.screenTitle}>Staff Command Center</Text>
+    const openStaff = useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.navigate(navigationStrings.STAFF as never);
+    }, [navigation]);
 
-        <ProfileAvatar
-          overlaySource={OverlayImage}
-          imageSource={DoctorTempImage}
-          containerStyle={styles.imageContainer}
-          wrapperStyle={styles.avatarWrap}
-          overlayStyle={styles.overlayImage}
-          imageStyle={styles.avatarImage}
+    const openCommunication = useCallback(() => {
+      navigation.navigate(navigationStrings.COMMUNICATION as never);
+    }, [navigation]);
+
+    const tiles = useMemo<TileItem[]>(
+      () => [
+        {
+          label: "Refills",
+          iconGreen: <RefillsGreenIcon width={32} height={32} />,
+          iconRed: <RefillRedIcon width={32} height={32} />,
+          dataCount: "1",
+          onPress: openRefills,
+        },
+        {
+          label: "Messages",
+          iconGreen: <MessageGreenIcon width={32} height={32} />,
+          iconRed: <MessageRedIcon width={32} height={32} />,
+          dataCount: "0",
+          onPress: noop,
+        },
+        {
+          label: "Labs",
+          iconGreen: <LabGreenIcon width={32} height={32} />,
+          iconRed: <LabRedIcon width={32} height={32} />,
+          dataCount: "3",
+          onPress: openLabs,
+        },
+        {
+          label: "Scheduling",
+          iconGreen: <ScheduleGreenIcon width={32} height={32} />,
+          iconRed: <ScheduleRedIcon width={32} height={32} />,
+          dataCount: "0",
+          onPress: openScheduling,
+        },
+        {
+          label: "Delegation",
+          iconGreen: <DelegationGreenIcon width={32} height={32} />,
+          iconRed: <DelegationRedIcon width={32} height={32} />,
+          dataCount: "0",
+          onPress: openDelegation,
+        },
+        {
+          label: "Eligibility",
+          iconGreen: <EligibilityGreenIcon width={32} height={32} />,
+          iconRed: <EligibilityRedIcon width={32} height={32} />,
+          dataCount: "0",
+          onPress: openEligibilityPriorAuth,
+        },
+        {
+          label: "Document",
+          iconGreen: <DocumentGreenIcon width={32} height={32} />,
+          iconRed: <DocumentRedIcon width={32} height={32} />,
+          dataCount: "0",
+          onPress: openDocumentsDashboard,
+        },
+        {
+          label: "Tasks",
+          iconGreen: <TasksGreenIcon width={32} height={32} />,
+          iconRed: <TasksRedIcon width={32} height={32} />,
+          dataCount: "1",
+          onPress: openTaskInbox,
+        },
+        {
+          label: "Billing",
+          iconGreen: <BillingGreenIcon width={32} height={32} />,
+          iconRed: <BillingRedIcon width={32} height={32} />,
+          dataCount: "1",
+          onPress: openBilling,
+        },
+        {
+          label: "Staff",
+          iconGreen: <ProfileGreenIcon width={32} height={32} />,
+          iconRed: <ProfileRedIcon width={32} height={32} />,
+          dataCount: "1",
+          onPress: openStaff,
+        },
+        {
+          label: "Communication",
+          iconGreen: <CommunicationIcon width={32} height={32} />,
+          iconRed: <CommunicationRedIcon width={32} height={32} />,
+          dataCount: "1",
+          onPress: openCommunication,
+        },
+      ],
+      [noop, openCommunication, openEligibilityPriorAuth, openDelegation, openBilling, openLabs, openRefills, openScheduling, openTaskInbox, openStaff, openDocumentsDashboard],
+    );
+
+    const listHeader = useMemo(
+      () => (
+        <>
+          <Text style={styles.screenTitle}>Staff Command Center</Text>
+
+          <ProfileAvatar
+            overlaySource={OverlayImage}
+            imageSource={DoctorTempImage}
+            containerStyle={styles.imageContainer}
+            wrapperStyle={styles.avatarWrap}
+            overlayStyle={styles.overlayImage}
+            imageStyle={styles.avatarImage}
+          />
+          <Text style={styles.name}>{DISPLAY_NAME}</Text>
+        </>
+      ),
+      [],
+    );
+
+    const renderTile = useCallback(
+      ({ item, index }: { item: TileItem; index: number }) => (
+        <NeumorphicQuickActionTile
+          onPress={item.onPress ?? noop}
+          icon={hasPositiveBadgeCount(item.dataCount) ? item.iconRed : item.iconGreen}
+          label={item.label}
+          badge={item.dataCount}
+          labelNumberOfLines={1}
+          outerDiameter={outerDiameter}
+          innerShadowDiameter={innerShadowDiameter}
+          containerStyle={[
+            styles.tile,
+            {
+              width: tileWidth,
+              marginRight: (index + 1) % GRID_COLUMNS === 0 ? 0 : GRID_GAP,
+              marginBottom: GRID_GAP,
+            },
+          ]}
         />
-        <Text style={styles.name}>{DISPLAY_NAME}</Text>
-      </>
-    ),
-    [],
-  );
+      ),
+      [innerShadowDiameter, noop, outerDiameter, tileWidth],
+    );
 
-  const renderTile = useCallback(
-    ({ item, index }: { item: TileItem; index: number }) => (
-      <NeumorphicQuickActionTile
-        onPress={item.onPress ?? noop}
-        icon={hasPositiveBadgeCount(item.dataCount) ? item.iconRed : item.iconGreen}
-        label={item.label}
-        badge={item.dataCount}
-        labelNumberOfLines={1}
-        outerDiameter={outerDiameter}
-        innerShadowDiameter={innerShadowDiameter}
-        containerStyle={[
-          styles.tile,
-          {
-            width: tileWidth,
-            marginRight: (index + 1) % GRID_COLUMNS === 0 ? 0 : GRID_GAP,
-            marginBottom: GRID_GAP,
-          },
-        ]}
-      />
-    ),
-    [innerShadowDiameter, noop, outerDiameter, tileWidth],
-  );
+    return (
+      <SafeAreaView style={styles.safe}>
+        <FlatList
+          data={tiles}
+          numColumns={GRID_COLUMNS}
+          keyExtractor={(item) => item.label}
+          renderItem={renderTile}
+          ListHeaderComponent={listHeader}
+          contentContainerStyle={[styles.scroll, { paddingBottom: Math.max(insets.bottom, 10) + 40 }]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          removeClippedSubviews={false}
+          columnWrapperStyle={styles.row}
+        />
+      </SafeAreaView>
+    );
+  };
 
-  return (
-    <SafeAreaView style={styles.safe}>
-      <FlatList
-        data={tiles}
-        numColumns={GRID_COLUMNS}
-        keyExtractor={(item) => item.label}
-        renderItem={renderTile}
-        ListHeaderComponent={listHeader}
-        contentContainerStyle={[styles.scroll, { paddingBottom: Math.max(insets.bottom, 10) + 40 }]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        removeClippedSubviews={false}
-        columnWrapperStyle={styles.row}
-      />
-    </SafeAreaView>
-  );
-};
+  export default Home;
 
-export default Home;
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: COLORS.INNER_SURFACE,
-  },
-  scroll: {
-    paddingHorizontal: 16,
-  },
-  screenTitle: {
-    marginTop: 8,
-    marginBottom: 16,
-    fontSize: 18,
-    fontWeight: "600",
-    color: COLORS.TEXT_DARK,
-    textAlign: "center",
-  },
-  imageContainer: {
-    alignItems: "center",
-    paddingTop: 4,
-  },
-  avatarWrap: {
-    width: 230,
-    height: 230,
-  },
-  overlayImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
-    position: "absolute",
-    borderRadius: 110,
-  },
-  avatarImage: {
-    width: 142,
-    height: 142,
-    resizeMode: "contain",
-    borderRadius: 110,
-  },
-  name: {
-    marginBottom: 40,
-    fontSize: 16,
-    fontWeight: "600",
-    color: COLORS.TEXT_80,
-    textAlign: "center",
-  },
-  /** Aligns with patient Home grid tiles; margins handle gaps (reliable on Android). */
-  tile: {
-    alignItems: "center",
-  },
-  row: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-  },
-});
+  const styles = StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: COLORS.INNER_SURFACE,
+    },
+    scroll: {
+      paddingHorizontal: 16,
+    },
+    screenTitle: {
+      marginTop: 8,
+      marginBottom: 16,
+      fontSize: 18,
+      fontWeight: "600",
+      color: COLORS.TEXT_DARK,
+      textAlign: "center",
+    },
+    imageContainer: {
+      alignItems: "center",
+      paddingTop: 4,
+    },
+    avatarWrap: {
+      width: 230,
+      height: 230,
+    },
+    overlayImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "contain",
+      position: "absolute",
+      borderRadius: 110,
+    },
+    avatarImage: {
+      width: 142,
+      height: 142,
+      resizeMode: "contain",
+      borderRadius: 110,
+    },
+    name: {
+      marginBottom: 40,
+      fontSize: 16,
+      fontWeight: "600",
+      color: COLORS.TEXT_80,
+      textAlign: "center",
+    },
+    /** Aligns with patient Home grid tiles; margins handle gaps (reliable on Android). */
+    tile: {
+      alignItems: "center",
+    },
+    row: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "flex-start",
+    },
+  });

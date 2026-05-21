@@ -14,6 +14,7 @@ import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import InnerShadowView from "../../../../neomorphism/InnerShadowView";
+import navigationStrings from "../../../../constants/navigationStrings";
 
 const ENCOUNTER_HINT = "I'm listening. You can speak naturally.";
 
@@ -29,7 +30,7 @@ const ENCOUNTER_TIMER_PILL_H = 30;
 const ENCOUNTER_TIMER_PILL_R = 10;
 
 const EndEncounter = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const bottomPad = 16 + insets.bottom;
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -155,7 +156,7 @@ const EndEncounter = () => {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.SURFACE}
                   textStyle={[styles.midBtnLabel, styles.midBtnLabelOutlined]}
-                  onPress={() => {}}
+                  onPress={() => navigation.navigate(navigationStrings.ADD_ENCOUNTER_NOTE)}
                 />
               </View>
               <View style={styles.midCell}>
@@ -168,7 +169,7 @@ const EndEncounter = () => {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.SURFACE}
                   textStyle={[styles.midBtnLabel, styles.midBtnLabelOutlined]}
-                  onPress={() => {}}
+                  onPress={() => navigation.navigate(navigationStrings.ADD_DIAGNOSIS)}
                 />
               </View>
             </View>
@@ -183,7 +184,7 @@ const EndEncounter = () => {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.SURFACE}
                   textStyle={[styles.midBtnLabel, styles.midBtnLabelOutlined]}
-                  onPress={() => {}}
+                  onPress={() => navigation.navigate(navigationStrings.ENCOUNTER_ORDER_LABS)}
                 />
               </View>
               <View style={styles.midCell}>
@@ -196,7 +197,7 @@ const EndEncounter = () => {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.SURFACE}
                   textStyle={[styles.midBtnLabel, styles.midBtnLabelOutlined]}
-                  onPress={() => {}}
+                  onPress={() => navigation.navigate(navigationStrings.ADD_PRESCRIPTION)}
                 />
               </View>
             </View>
@@ -229,7 +230,7 @@ const EndEncounter = () => {
               borderColor={COLORS.ALERT}
               bgColor={COLORS.ALERT_LIGHT}
               textStyle={styles.footerEndLabel}
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate(navigationStrings.ENCOUNTER_SUMMARY)}
             />
           </View>
         </View>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Canvas, RoundedRect, Shadow } from "@shopify/react-native-skia";
@@ -36,14 +36,9 @@ interface DeltaBadgeProps {
   lightShadowBlur?: number;
 }
 
-const WIDTH = 56;
 const HEIGHT = 20;
 const BORDER = 1;
 const HORIZONTAL_PADDING = 8;
-const ICON_WIDTH_ESTIMATE = 16;
-const INTER_ITEM_GAP = 3;
-const CHAR_WIDTH_ESTIMATE = 10;
-const INNER_CONTENT_EXTRA = 2;
 
 const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   icon,
@@ -65,23 +60,17 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   lightShadowDy = -2,
   lightShadowBlur = 5,
 }) => {
-  const label = String(value ?? "");
-  const textWidth = Math.ceil(label.length * CHAR_WIDTH_ESTIMATE);
-  const iconWidth = icon ? ICON_WIDTH_ESTIMATE : 0;
-  const contentWidth = textWidth + iconWidth + (icon ? INTER_ITEM_GAP : 0);
-  const autoWidth = Math.max(
-    WIDTH,
-    Math.ceil(contentWidth + HORIZONTAL_PADDING * 2 + INNER_CONTENT_EXTRA + BORDER * 2),
-  );
-  const badgeWidth = width ?? autoWidth;
-  const innerWidth = badgeWidth - BORDER * 2;
+  const [measuredWidth, setMeasuredWidth] = useState(0);
+  const renderedWidth = width ?? measuredWidth;
+  const innerWidth = Math.max(0, renderedWidth - BORDER * 2);
   const innerHeight = height - BORDER * 2;
   const badgeRadius = radius ?? height / 2;
   const innerRadius = Math.max(0, badgeRadius - BORDER);
 
   return (
     <View
-      style={[styles.border, { width: badgeWidth, height, borderRadius: badgeRadius }]}
+      onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
+      style={[styles.border, { height, borderRadius: badgeRadius }, width != null ? { width } : null]}
     >
       <LinearGradient
         colors={borderGradientColors}
@@ -100,6 +89,7 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
       <View
         style={[
           styles.surface,
+          width != null ? styles.surfaceFullWidth : null,
           {
             backgroundColor: bgColor,
             borderRadius: innerRadius,
@@ -151,10 +141,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   surface: {
-    flex: 1,
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
+  },
+  surfaceFullWidth: {
+    width: "100%",
   },
   innerShadow: {
     ...StyleSheet.absoluteFillObject,
@@ -164,7 +157,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 3,
-    width: "100%",
+    paddingHorizontal: 8,
     minWidth: 0,
   },
   text: {

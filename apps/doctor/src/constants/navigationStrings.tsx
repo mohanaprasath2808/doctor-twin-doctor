@@ -1,4 +1,6 @@
 const navigationStrings = {
+  /** Root tab host inside AppStack (Home · Queue · Patients) */
+  BOTTOM_NAVIGATION: "BottomNavigation",
   //AUTH
   AUTH_BOOTSTRAP: "AuthBootstrap",
   LOGIN: "Login",
@@ -93,6 +95,14 @@ const navigationStrings = {
   PHYSICALS: "Physicals",
   PRE_VISIT_SUMMARY: "PreVisitSummary",
   END_ENCOUNTER: "EndEncounter",
+  ENCOUNTER_ORDER_LABS: "EncounterOrderLabs",
+  ADD_PRESCRIPTION: "AddPrescription",
+  ADD_ENCOUNTER_NOTE: "AddEncounterNote",
+  ADD_DIAGNOSIS: "AddDiagnosis",
+  ENCOUNTER_SUMMARY: "EncounterSummary",
+  ENCOUNTER_COMPLETED: "EncounterCompleted",
+  ORDER_ENGINE: "OrderEngine",
+  ORDER_SUCCESSFULLY_PLACED: "OrderSuccessfullyPlaced",
 };
 
 export default navigationStrings;
