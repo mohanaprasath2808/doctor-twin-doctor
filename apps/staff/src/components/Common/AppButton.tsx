@@ -123,7 +123,14 @@ const AppButton: React.FC<AppButtonProps> = ({
       ) : null}
       <View style={styles.contentRow}>
         {renderedIcon ? <View style={styles.iconWrap}>{renderedIcon}</View> : null}
-        <Text style={[styles.text, textStyle]}>{text}</Text>
+        <Text
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.85}
+          style={[styles.text, textStyle]}
+        >
+          {text}
+        </Text>
       </View>
     </TouchableOpacity>
   );

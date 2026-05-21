@@ -1,34 +1,28 @@
 import React from "react";
-import { Pressable, Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image, Pressable, StyleSheet, Text, View, type ImageSourcePropType } from "react-native";
 
-import EligibilityGreenIcon from "../../../../assets/icon/eligibilityIcon.svg";
 import NeumorphicQuickActionTile from "../../../../components/neomorphism/NeumorphicQuickActionTile";
-import { ACCENT_ALERT } from "../eligibilityPriorAuthConstants";
 import { eligibilityPriorAuthStyles as styles } from "../eligibilityPriorAuthStyles";
 import type { SummarySpot } from "../eligibilityPriorAuthTypes";
 
-function summaryTileIcon(spot: SummarySpot, iconSize: number, wellSize: number) {
-  const wellStyle = [styles.summaryIconWellSlot, { width: wellSize, height: wellSize }];
-  if (spot.key === "issue") {
-    return (
-      <View style={wellStyle}>
-        <EligibilityGreenIcon width={iconSize} height={iconSize} />
-      </View>
-    );
-  }
-  if (spot.key === "denial") {
-    return (
-      <View style={wellStyle}>
-        <MaterialCommunityIcons name="alert-outline" size={iconSize} color={ACCENT_ALERT} />
-      </View>
-    );
-  }
+function SummaryGlyph({
+  source,
+  glyphSize,
+  wellSize,
+}: {
+  source: ImageSourcePropType;
+  glyphSize: number;
+  wellSize: number;
+}) {
   return (
-    <View style={wellStyle}>
-      <MaterialCommunityIcons name={spot.icon} size={iconSize} color={spot.iconColor} />
+    <View style={[styles.summaryIconWellSlot, summaryGlyphStyles.well, { width: wellSize, height: wellSize }]}>
+      <Image source={source} style={{ width: glyphSize, height: glyphSize }} resizeMode="contain" />
     </View>
   );
+}
+
+function summaryTileIcon(spot: SummarySpot, iconSize: number, wellSize: number) {
+  return <SummaryGlyph source={spot.iconSource} glyphSize={iconSize} wellSize={wellSize} />;
 }
 
 type Props = {
@@ -85,3 +79,10 @@ export default function EligibilitySummaryTile({
     </Pressable>
   );
 }
+
+const summaryGlyphStyles = StyleSheet.create({
+  well: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

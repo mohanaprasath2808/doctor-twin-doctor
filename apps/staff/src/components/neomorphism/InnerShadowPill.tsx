@@ -2,6 +2,7 @@ import React, { useCallback, useState, type ReactNode } from "react";
 import {
   LayoutChangeEvent,
   Platform,
+  Pressable,
   StyleProp,
   StyleSheet,
   Text,
@@ -13,7 +14,7 @@ import {
 import { COLORS } from "../../constants/theme";
 import InnerShadowView from "./InnerShadowView";
 
-export type InnerShadowPillTone = "default" | "warn" | "danger" | "neutral";
+export type InnerShadowPillTone = "default" | "warn" | "danger" | "neutral" | "success";
 
 type InnerShadowPillProps = {
   label: string;
@@ -27,6 +28,12 @@ type InnerShadowPillProps = {
   tone?: InnerShadowPillTone;
   /** Soft colored outer halo (e.g. eligibility list); keep off for Scheduling chips. */
   subtleOuterGlow?: boolean;
+  /** When set, pill is tappable (e.g. row CTAs). */
+  onPress?: () => void;
+  /** Stretch to parent width; use with `minHeight` for half-row buttons. */
+  fullWidth?: boolean;
+  /** Fixed height for button-style pills (content stays vertically centered). */
+  minHeight?: number;
 };
 
 type ToneSurface = {
@@ -41,12 +48,16 @@ const TONE_SURFACES: Record<Exclude<InnerShadowPillTone, "default">, ToneSurface
     textColor: "#D4A017",
   },
   danger: {
-    gradientColors: ["#FFFBFB", "#FFE4E6"],
-    textColor: "#DC2626",
+    gradientColors: ["#FDECEC", "#FDECEC"],
+    textColor: "#FB7185",
   },
   neutral: {
     gradientColors: ["#F8FAFC", "#EEF2F6"],
     textColor: "#334155",
+  },
+  success: {
+    gradientColors: ["#F0FDF4", "#DCFCE7"],
+    textColor: "#15803D",
   },
 };
 
@@ -81,6 +92,16 @@ const TONE_SUBTLE_OUTER_GLOW: Record<Exclude<InnerShadowPillTone, "default">, Vi
     android: { elevation: 1 },
     default: {},
   }) as ViewStyle,
+  success: Platform.select({
+    ios: {
+      shadowColor: "#22C55E",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 6,
+    },
+    android: { elevation: 2 },
+    default: {},
+  }) as ViewStyle,
 };
 
 /**
@@ -92,26 +113,35 @@ const InnerShadowPill: React.FC<InnerShadowPillProps> = ({
   textStyle,
   tone = "default",
   subtleOuterGlow = false,
+  onPress,
+  fullWidth = false,
+  minHeight,
 }) => {
-  const [size, setSize] = useState({ w: 0, h: 28 });
+  const [size, setSize] = useState({ w: 0, h: minHeight ?? 28 });
 
-  const onLayout = useCallback((e: LayoutChangeEvent) => {
-    const { width, height } = e.nativeEvent.layout;
-    setSize({ w: width, h: height });
-  }, []);
+  const onLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      const { width, height } = e.nativeEvent.layout;
+      setSize({ w: width, h: Math.max(height, minHeight ?? 0) });
+    },
+    [minHeight],
+  );
 
   const surface = tone !== "default" ? TONE_SURFACES[tone] : null;
   const haloStyle =
     subtleOuterGlow && tone !== "default" ? TONE_SUBTLE_OUTER_GLOW[tone] : null;
 
+  const pillHeight = Math.max(size.h, minHeight ?? 0);
+  const pillRadius = pillHeight / 2;
+
   const pill = (
-    <View style={styles.wrap}>
+    <View style={[styles.wrap, fullWidth && styles.wrapFullWidth]}>
       {size.w > 0 && (
         <View style={StyleSheet.absoluteFill} pointerEvents="none">
           <InnerShadowView
             width={size.w}
-            height={size.h}
-            borderRadius={size.h / 2}
+            height={pillHeight}
+            borderRadius={pillRadius}
             color={COLORS.INNER_SURFACE}
             gradientColors={surface?.gradientColors}
             gradientPositions={surface?.gradientPositions}
@@ -133,7 +163,13 @@ const InnerShadowPill: React.FC<InnerShadowPillProps> = ({
       )}
       <View
         onLayout={onLayout}
-        style={[styles.content, icon != null ? styles.contentWithIcon : null, { zIndex: 1 }]}
+        style={[
+          styles.content,
+          icon != null ? styles.contentWithIcon : null,
+          fullWidth && styles.contentFullWidth,
+          minHeight != null && { minHeight, justifyContent: "center" },
+          { zIndex: 1 },
+        ]}
       >
         {icon != null ? <View style={styles.iconSlot}>{icon}</View> : null}
         <Text
@@ -150,13 +186,46 @@ const InnerShadowPill: React.FC<InnerShadowPillProps> = ({
     </View>
   );
 
+  const bordered =
+    onPress != null && tone === "danger" ? (
+      <View
+        style={[
+          fullWidth ? styles.pressableShellFull : styles.pressableShell,
+          {
+            borderRadius: pillRadius,
+            minHeight: minHeight ?? pillHeight,
+          },
+          styles.dangerBorder,
+        ]}
+      >
+        {pill}
+      </View>
+    ) : (
+      pill
+    );
+
+  const pressable =
+    onPress != null ? (
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [
+          fullWidth ? styles.pressableFull : null,
+          pressed && styles.pressablePressed,
+        ]}
+      >
+        {bordered}
+      </Pressable>
+    ) : (
+      bordered
+    );
+
   if (haloStyle == null) {
-    return pill;
+    return pressable;
   }
 
   return (
-    <View style={[styles.pillHaloWrap, haloStyle]}>
-      {pill}
+    <View style={[styles.pillHaloWrap, fullWidth && styles.pillHaloFull, haloStyle]}>
+      {pressable}
     </View>
   );
 };
@@ -168,10 +237,43 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     paddingVertical: 2,
   },
+  pillHaloFull: {
+    alignSelf: "stretch",
+    width: "100%",
+  },
+  pressableFull: {
+    flex: 1,
+    minWidth: 0,
+    alignSelf: "stretch",
+  },
+  pressableShell: {
+    alignSelf: "flex-start",
+    overflow: "hidden",
+  },
+  pressableShellFull: {
+    alignSelf: "stretch",
+    width: "100%",
+    overflow: "hidden",
+  },
+  dangerBorder: {
+    borderWidth: 1,
+    borderColor: "#FB7185",
+  },
+  pressablePressed: {
+    opacity: 0.88,
+  },
   wrap: {
     position: "relative",
     alignSelf: "flex-start",
     flexShrink: 0,
+  },
+  wrapFullWidth: {
+    alignSelf: "stretch",
+    width: "100%",
+  },
+  contentFullWidth: {
+    width: "100%",
+    alignItems: "center",
   },
   content: {
     paddingHorizontal: 12,

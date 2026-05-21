@@ -2,14 +2,14 @@ import React, { useCallback, useMemo } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import { ScrollView, Text, useWindowDimensions, View } from "react-native";
+import { ScrollView, useWindowDimensions, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
-import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import IconComponent from "../../../components/neomorphism/IconComponent";
 import navigationStrings from "../../../constants/navigationStrings";
 import type { AppStackParamList } from "../../../router/App/AppStack";
 import EligibilityAuthCaseCard from "./components/EligibilityAuthCaseCard";
+import EligibilityScreenHeader from "./components/EligibilityScreenHeader";
 import EligibilitySummaryTile from "./components/EligibilitySummaryTile";
 import {
   ACCENT_GREEN,
@@ -43,11 +43,6 @@ export default function EligibilityPriorAuth() {
     };
   }, [windowWidth]);
 
-  const noop = useCallback(() => {}, []);
-
-  /** Figma: header row top ≈ 49px from screen top (safe area already applied). */
-  const headerTopPad = Math.max(0, 49 - insets.top);
-
   const onBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
@@ -60,6 +55,23 @@ export default function EligibilityPriorAuth() {
     navigation.navigate(navigationStrings.REQUEST_DOCUMENTS);
   }, [navigation]);
 
+  const openDenialResolution = useCallback(() => {
+    navigation.navigate(navigationStrings.DENIAL_RESOLUTION);
+  }, [navigation]);
+
+  const openSummaryScreen = useCallback(
+    (key: (typeof SUMMARY_SPOTS)[number]["key"]) => {
+      if (key === "pending") {
+        navigation.navigate(navigationStrings.AUTHORIZATION_TRACKING);
+      } else if (key === "issue") {
+        navigation.navigate(navigationStrings.MISSING_DOCUMENTS);
+      } else {
+        navigation.navigate(navigationStrings.DENIAL_ANALYSIS);
+      }
+    },
+    [navigation],
+  );
+
   return (
     <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
       <ScrollView
@@ -68,25 +80,21 @@ export default function EligibilityPriorAuth() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={[styles.headerBar, { paddingTop: headerTopPad }]}>
-          <IconComponent
-            icon={<BackArrowIcon width={HEADER_ICON_GLYPH} height={HEADER_ICON_GLYPH} />}
-            width={HEADER_ICON_CIRCLE}
-            height={HEADER_ICON_CIRCLE}
-            radius={HEADER_ICON_CIRCLE / 2}
-            onPress={onBack}
-          />
-          <Text style={styles.headerTitle}>Eligibility / Prior Auth</Text>
-          <IconComponent
-            icon={
-              <MaterialCommunityIcons name="plus" size={HEADER_ICON_GLYPH} color={ACCENT_GREEN} />
-            }
-            width={HEADER_ICON_CIRCLE}
-            height={HEADER_ICON_CIRCLE}
-            radius={HEADER_ICON_CIRCLE / 2}
-            onPress={() => {}}
-          />
-        </View>
+        <EligibilityScreenHeader
+          title="Eligibility / Prior Auth"
+          onBack={onBack}
+          rightSlot={
+            <IconComponent
+              icon={
+                <MaterialCommunityIcons name="plus" size={HEADER_ICON_GLYPH} color={ACCENT_GREEN} />
+              }
+              width={HEADER_ICON_CIRCLE}
+              height={HEADER_ICON_CIRCLE}
+              radius={HEADER_ICON_CIRCLE / 2}
+              onPress={() => {}}
+            />
+          }
+        />
 
         <ScrollView
           horizontal
@@ -110,7 +118,7 @@ export default function EligibilityPriorAuth() {
                 innerShadowDiameter={innerShadowDiameter}
                 iconSize={iconSize}
                 slotWidth={slotWidth}
-                onPress={noop}
+                onPress={() => openSummaryScreen(spot.key)}
               />
             </View>
           ))}
@@ -123,6 +131,7 @@ export default function EligibilityPriorAuth() {
                 row={row}
                 onSubmit={openAuthorizationDetail}
                 onRequest={openRequestDocuments}
+                onEscalate={openDenialResolution}
               />
             </View>
           ))}

@@ -39,6 +39,11 @@ const navigationStrings = {
   ELIGIBILITY_PRIOR_AUTH: "EligibilityPriorAuth",
   AUTHORIZATION_DETAIL: "AuthorizationDetail",
   REQUEST_DOCUMENTS: "RequestDocuments",
+  DENIAL_RESOLUTION: "DenialResolution",
+  AUTHORIZATION_TRACKING: "AuthorizationTracking",
+  MISSING_DOCUMENTS: "MissingDocuments",
+  DENIAL_ANALYSIS: "DenialAnalysis",
+  APPEAL_SUBMISSION: "AppealSubmission",
 } as const;
 
 export default navigationStrings;

@@ -1,29 +1,26 @@
 import React, { useCallback } from "react";
-import { Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
-import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import AppButton from "../../../components/Common/AppButton";
-import IconComponent from "../../../components/neomorphism/IconComponent";
 import InnerShadowIcon from "../../../components/neomorphism/InnerShadowIcon";
 import InnerShadowPill from "../../../components/neomorphism/InnerShadowPill";
 import NeumorphicCard from "../../../components/neomorphism/NeumorphicCard";
 import ProfileAvatar from "../../../components/neomorphism/ProfileAvatar";
 import ReusableButton from "../../../components/neomorphism/ReusableButton";
+import navigationStrings from "../../../constants/navigationStrings";
 import { getInitials } from "../../../constants/constant";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
+import EligibilityScreenHeader from "./components/EligibilityScreenHeader";
 import {
   CASE_CARD_INNER,
-  HEADER_ICON_CIRCLE,
-  HEADER_ICON_GLYPH,
-  SCREEN_BG,
-  TEXT_PRIMARY,
-  TEXT_SECONDARY,
+  ELIGIBILITY_CARD_RADIUS,
+  TEXT_TERTIARY,
   SUBMIT_FILL_FALLBACK,
   SUBMIT_GRADIENT,
 } from "./eligibilityPriorAuthConstants";
@@ -32,42 +29,38 @@ import { eligibilityPriorAuthStyles as shared } from "./eligibilityPriorAuthStyl
 const PATIENT_NAME = "Sarah Williams";
 const ACTION_H = 44;
 const ROW_BTN_H = 36;
-const CHAT_BUBBLE_BG = "#E0F2FE";
+const CHAT_BUBBLE_BG = "#CBF0FF";
+const CHAT_AVATAR_SIZE = 52;
+const CHAT_AVATAR_PHOTO = Math.round(CHAT_AVATAR_SIZE * (38 / 56));
 
 export default function RequestDocuments() {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const insets = useSafeAreaInsets();
   const bottomPad = Math.max(insets.bottom, 16) + 12;
-  const headerTopPad = Math.max(0, 49 - insets.top);
 
   const onBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
 
+  const openAppealSubmission = useCallback(() => {
+    navigation.navigate(navigationStrings.APPEAL_SUBMISSION);
+  }, [navigation]);
+
   return (
     <SafeAreaView style={shared.safe} edges={["top", "left", "right"]}>
-      <View style={styles.layout}>
+      <View style={shared.layout}>
         <ScrollView
-          style={styles.scrollFlex}
-          contentContainerStyle={[shared.content, styles.scrollPad, styles.scrollContent]}
+          style={shared.scrollFlex}
+          contentContainerStyle={[shared.content, shared.scrollContent]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={[shared.headerBar, { paddingTop: headerTopPad }]}>
-            <IconComponent
-              icon={<BackArrowIcon width={HEADER_ICON_GLYPH} height={HEADER_ICON_GLYPH} />}
-              width={HEADER_ICON_CIRCLE}
-              height={HEADER_ICON_CIRCLE}
-              radius={HEADER_ICON_CIRCLE / 2}
-              onPress={onBack}
-            />
-            <Text style={shared.headerTitle}>Request Documents</Text>
-            <View style={styles.headerSpacer} />
-          </View>
+          <EligibilityScreenHeader title="Request Documents" onBack={onBack} />
 
+          <View style={shared.screenBody}>
           <View style={styles.section}>
             <NeumorphicCard
-              borderRadius={24}
+              borderRadius={ELIGIBILITY_CARD_RADIUS}
               backgroundColor={CASE_CARD_INNER}
               suppressInsetShadows
               outerStyle={shared.caseCardOuterLift}
@@ -81,16 +74,16 @@ export default function RequestDocuments() {
                     icon={<Text style={styles.initials}>{getInitials(PATIENT_NAME)}</Text>}
                   />
                   <View style={styles.patientTextBlock}>
-                    <Text style={[shared.caseStatusTitle, styles.patientNameBold]} numberOfLines={1}>
+                    <Text style={shared.caseStatusTitle} numberOfLines={1}>
                       {PATIENT_NAME}
                     </Text>
                     <Text style={shared.casePatientLine}>Female • Age 45</Text>
-                    <Text style={styles.expLine}>Exp: 23 April 2024</Text>
+                    <Text style={shared.expLine}>Exp: 23 April 2024</Text>
                   </View>
                 </View>
                 <View style={styles.coverageBlock}>
                   <View style={styles.coverageLabelRow}>
-                    <Text style={shared.infoWellLabelInline} numberOfLines={1}>
+                    <Text style={shared.infoWellCoverageDetailBold} numberOfLines={1}>
                       Coverage:
                     </Text>
                     <InnerShadowPill label="Partial" tone="warn" subtleOuterGlow />
@@ -102,21 +95,21 @@ export default function RequestDocuments() {
 
           <View style={styles.section}>
             <NeumorphicCard
-              borderRadius={24}
+              borderRadius={ELIGIBILITY_CARD_RADIUS}
               backgroundColor={CASE_CARD_INNER}
               suppressInsetShadows
-              outerStyle={shared.caseCardOuterLift}
-              innerStyle={[styles.requestCardInner, shared.caseCardInnerOverflow]}
+              outerStyle={[shared.caseCardOuterLift, shared.caseCardMargin]}
+              innerStyle={[shared.statusCardInner, styles.requestCardInner, shared.caseCardInnerOverflow]}
               activeOpacity={1}
             >
-              <View style={styles.missRequestRow}>
+              <View style={[shared.statusHeaderRow, styles.missRequestHeader]}>
                 <ProfileAvatar
                   overlaySource={OverlayImage}
                   imageSource={DoctorTempImage}
-                  containerStyle={styles.smallAvatarContainer}
-                  wrapperStyle={styles.smallAvatarWrap}
-                  overlayStyle={styles.smallAvatarOverlay}
-                  imageStyle={styles.smallAvatarPhoto}
+                  containerStyle={shared.statusAvatarContainer}
+                  wrapperStyle={shared.statusAvatarWrap}
+                  overlayStyle={shared.statusAvatarOverlay}
+                  imageStyle={shared.statusAvatarPhoto}
                 />
                 <Text style={styles.missRequestTitle} numberOfLines={1}>
                   Miss Request
@@ -125,12 +118,11 @@ export default function RequestDocuments() {
 
               <View style={styles.nestedDocList}>
                 <View style={styles.docRow}>
-                  <Text style={shared.infoWellDetailBold} numberOfLines={1}>
+                  <Text style={styles.infoWellDetailBoldRequest} numberOfLines={1}>
                     Clinical notes
                   </Text>
                   <AppButton
                     activeOpacity={0.85}
-                    width={112}
                     height={ROW_BTN_H}
                     borderRadius={ROW_BTN_H / 2}
                     borderWidth={1}
@@ -139,17 +131,17 @@ export default function RequestDocuments() {
                     text="Pull EMR"
                     textStyle={styles.rowBtnText}
                     shadowStyle={shared.outlineBtnNoShadow}
+                    style={styles.docRowBtnHug}
                     onPress={() => {}}
                   />
                 </View>
                 <View style={styles.docDivider} />
                 <View style={styles.docRow}>
-                  <Text style={shared.infoWellDetailBold} numberOfLines={1}>
+                  <Text style={styles.infoWellDetailBoldRequest} numberOfLines={1}>
                     Labs / Imaging
                   </Text>
                   <AppButton
                     activeOpacity={0.85}
-                    width={112}
                     height={ROW_BTN_H}
                     borderRadius={ROW_BTN_H / 2}
                     borderWidth={1}
@@ -158,6 +150,7 @@ export default function RequestDocuments() {
                     text="Upload"
                     textStyle={styles.rowBtnText}
                     shadowStyle={shared.outlineBtnNoShadow}
+                    style={styles.docRowBtnHug}
                     onPress={() => {}}
                   />
                 </View>
@@ -165,7 +158,7 @@ export default function RequestDocuments() {
             </NeumorphicCard>
           </View>
 
-          <View style={styles.section}>
+          <View style={styles.sectionButton}>
             <View style={styles.threeBtnRow}>
               <View style={shared.actionBtnWrap}>
                 <ReusableButton
@@ -179,7 +172,7 @@ export default function RequestDocuments() {
                   ctaGlow
                   backgroundColor={SUBMIT_FILL_FALLBACK}
                   textStyle={styles.midCtaText}
-                  onPress={() => {}}
+                  onPress={openAppealSubmission}
                 />
               </View>
               <View style={shared.actionBtnWrap}>
@@ -192,7 +185,7 @@ export default function RequestDocuments() {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.WHITE}
                   text="Upload"
-                  textStyle={shared.outlineGreenText}
+                  textStyle={styles.outlineGreenTextRequest}
                   shadowStyle={shared.outlineBtnNoShadow}
                   onPress={() => {}}
                 />
@@ -207,27 +200,35 @@ export default function RequestDocuments() {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.WHITE}
                   text="Add Note"
-                  textStyle={shared.outlineGreenText}
+                  textStyle={styles.outlineGreenTextRequest}
                   shadowStyle={shared.outlineBtnNoShadow}
                   onPress={() => {}}
                 />
               </View>
             </View>
           </View>
-
-          <View style={styles.section}>
-            <View style={styles.chatRow}>
-              <Image source={DoctorTempImage} style={styles.chatAvatar} />
-              <View style={styles.chatBubble}>
-                <Text style={styles.chatText}>
-                  I recommend appealing the demonstrate medical need
-                </Text>
-              </View>
-            </View>
           </View>
         </ScrollView>
 
-        <View style={[styles.footerBar, { paddingBottom: bottomPad }]}>
+        <View style={shared.chatBottom}>
+          <View style={styles.chatRow}>
+            <ProfileAvatar
+              overlaySource={OverlayImage}
+              imageSource={DoctorTempImage}
+              containerStyle={styles.chatAvatarContainer}
+              wrapperStyle={styles.chatAvatarWrap}
+              overlayStyle={styles.chatAvatarOverlay}
+              imageStyle={styles.chatAvatarPhoto}
+            />
+            <View style={styles.chatBubble}>
+              <Text style={styles.chatText}>
+                I recommend appealing the demonstrate medical need
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={[shared.footerBar, { paddingBottom: bottomPad }]}>
           <View style={styles.footerActions}>
             <View style={styles.twoBtnRow}>
               <View style={styles.halfBtn}>
@@ -255,7 +256,7 @@ export default function RequestDocuments() {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.WHITE}
                   text="Modify"
-                  textStyle={shared.outlineGreenText}
+                  textStyle={styles.outlineGreenTextRequest}
                   shadowStyle={shared.outlineBtnNoShadow}
                   onPress={() => {}}
                 />
@@ -270,7 +271,7 @@ export default function RequestDocuments() {
               borderColor={COLORS.PRIMARY}
               bgColor={COLORS.WHITE}
               text="Add Note"
-              textStyle={shared.outlineGreenText}
+              textStyle={styles.outlineGreenTextRequest}
               shadowStyle={shared.outlineBtnNoShadow}
               onPress={() => {}}
             />
@@ -282,15 +283,8 @@ export default function RequestDocuments() {
 }
 
 const styles = StyleSheet.create({
-  layout: { flex: 1 },
-  scrollFlex: { flex: 1 },
-  scrollContent: { flexGrow: 1, paddingBottom: 16 },
-  scrollPad: { paddingHorizontal: 16 },
-  headerSpacer: {
-    width: HEADER_ICON_CIRCLE,
-    height: HEADER_ICON_CIRCLE,
-  },
-  section: { marginTop: 12 },
+  section: { marginTop: 18 },
+  sectionButton: { marginTop: 10 },
   cardInner: {
     paddingVertical: 16,
     paddingHorizontal: 16,
@@ -325,46 +319,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "nowrap",
-    gap: 8,
-  },
-  expLine: {
-    marginTop: 4,
-    fontSize: 13,
-    fontWeight: "400",
-    color: TEXT_SECONDARY,
-    ...Platform.select({
-      ios: { fontFamily: "SF Pro Text" },
-      android: { fontFamily: "sans-serif", includeFontPadding: false },
-    }),
+    gap: 5,
   },
   requestCardInner: {
-    paddingTop: 16,
     paddingBottom: 16,
-    paddingHorizontal: 16,
   },
-  missRequestRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    marginBottom: 14,
-  },
-  smallAvatarContainer: { alignItems: "flex-start", paddingTop: 0 },
-  smallAvatarWrap: { width: 44, height: 44 },
-  smallAvatarOverlay: { borderRadius: 22 },
-  smallAvatarPhoto: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    resizeMode: "cover",
+  missRequestHeader: {
+    marginBottom: 15,
   },
   missRequestTitle: {
     flex: 1,
     fontSize: 16,
-    fontWeight: "700",
-    color: TEXT_PRIMARY,
+    fontWeight: "500",
+    lineHeight: 20,
+    letterSpacing: 0,
+    color: TEXT_TERTIARY,
     ...Platform.select({
       ios: { fontFamily: "SF Pro Text" },
-      android: { fontFamily: "sans-serif", includeFontPadding: false },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
     }),
   },
   nestedDocList: {
@@ -372,7 +344,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#E2E8F0",
-    overflow: "hidden",
+    overflow: "hidden"
   },
   docRow: {
     flexDirection: "row",
@@ -387,53 +359,92 @@ const styles = StyleSheet.create({
     backgroundColor: "#EAEAEA",
     marginHorizontal: 14,
   },
+  docRowBtnHug: {
+    alignSelf: "flex-start",
+    width: "auto",
+    paddingHorizontal: 14,
+  },
   rowBtnText: {
     color: COLORS.PRIMARY,
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "500",
+    lineHeight: 14,
+    letterSpacing: 0,
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
   },
   threeBtnRow: {
     flexDirection: "row",
-    gap: 8,
+    gap: 10,
     alignItems: "stretch",
   },
   midCtaText: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
+    lineHeight: 20,
+    letterSpacing: 0,
+    textAlign: "center",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
   },
   chatRow: {
     flexDirection: "row",
-    alignItems: "flex-end",
-    gap: 10,
+    alignItems: "flex-start",
+    gap: 12,
   },
-  chatAvatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  chatAvatarContainer: {
+    width: CHAT_AVATAR_SIZE,
+    height: CHAT_AVATAR_SIZE,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  chatAvatarWrap: {
+    width: CHAT_AVATAR_SIZE,
+    height: CHAT_AVATAR_SIZE,
+  },
+  chatAvatarOverlay: {
+    borderRadius: CHAT_AVATAR_SIZE / 2,
+  },
+  chatAvatarPhoto: {
+    width: CHAT_AVATAR_PHOTO,
+    height: CHAT_AVATAR_PHOTO,
+    borderRadius: CHAT_AVATAR_PHOTO / 2,
     resizeMode: "cover",
   },
   chatBubble: {
-    flex: 1,
+    flexShrink: 1,
+    maxWidth: "82%",
     backgroundColor: CHAT_BUBBLE_BG,
-    borderRadius: 16,
+    borderRadius: 18,
     paddingVertical: 12,
     paddingHorizontal: 14,
-    borderBottomLeftRadius: 4,
+    borderTopLeftRadius: 6,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#0F172A",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   chatText: {
     fontSize: 14,
     fontWeight: "400",
-    lineHeight: 20,
-    color: TEXT_PRIMARY,
+    lineHeight: 18,
+    letterSpacing: 0,
+    color: TEXT_TERTIARY,
     ...Platform.select({
       ios: { fontFamily: "SF Pro Text" },
       android: { fontFamily: "sans-serif", includeFontPadding: false },
     }),
-  },
-  footerBar: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    backgroundColor: SCREEN_BG,
   },
   footerActions: { gap: 10 },
   twoBtnRow: {
@@ -443,8 +454,39 @@ const styles = StyleSheet.create({
   },
   halfBtn: { flex: 1, minWidth: 0 },
   sendStaffText: {
-    fontSize: 11,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
+    lineHeight: 18,
+    letterSpacing: 0,
+    textAlign: "center",
     paddingHorizontal: 4,
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
+  },
+  infoWellDetailBoldRequest: {
+    fontSize: 14,
+    fontWeight: "500",
+    lineHeight: 18,
+    letterSpacing: 0,
+    color: "#1E293B",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
+  },
+
+  outlineGreenTextRequest: {
+    color: COLORS.PRIMARY,
+    fontSize: 16,
+    fontWeight: "500",
+    lineHeight: 20,
+    letterSpacing: 0,
+    textAlign: "center",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
   },
 });

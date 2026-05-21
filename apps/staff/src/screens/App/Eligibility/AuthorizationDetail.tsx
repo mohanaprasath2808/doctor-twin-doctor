@@ -6,9 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import OverlayImage from "../../../assets/image/imageBgShadow.png";
-import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import AppButton from "../../../components/Common/AppButton";
-import IconComponent from "../../../components/neomorphism/IconComponent";
 import InnerShadowIcon from "../../../components/neomorphism/InnerShadowIcon";
 import InnerShadowPill from "../../../components/neomorphism/InnerShadowPill";
 import NeumorphicCard from "../../../components/neomorphism/NeumorphicCard";
@@ -18,15 +16,14 @@ import navigationStrings from "../../../constants/navigationStrings";
 import { getInitials } from "../../../constants/constant";
 import { COLORS } from "../../../constants/theme";
 import type { AppStackParamList } from "../../../router/App/AppStack";
+import EligibilityScreenHeader from "./components/EligibilityScreenHeader";
 import {
   CASE_CARD_INNER,
-  HEADER_ICON_CIRCLE,
-  HEADER_ICON_GLYPH,
-  SCREEN_BG,
+  ELIGIBILITY_CARD_RADIUS,
   TEXT_PRIMARY,
-  TEXT_SECONDARY,
   SUBMIT_FILL_FALLBACK,
   SUBMIT_GRADIENT,
+  TEXT_TERTIARY,
 } from "./eligibilityPriorAuthConstants";
 import { eligibilityPriorAuthStyles as shared } from "./eligibilityPriorAuthStyles";
 
@@ -35,7 +32,7 @@ const ACTION_H = 44;
 
 function InfoWell({ children }: { children: React.ReactNode }) {
   return (
-    <View style={shared.infoWellShell}>
+    <View style={[shared.infoWellShell, styles.infoWellForegroundAuth]}>
       <View style={shared.infoWellForeground}>{children}</View>
     </View>
   );
@@ -45,10 +42,17 @@ export default function AuthorizationDetail() {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const insets = useSafeAreaInsets();
   const bottomPad = Math.max(insets.bottom, 16) + 12;
-  const headerTopPad = Math.max(0, 49 - insets.top);
 
-  const openRequestDocuments = useCallback(() => {
-    navigation.navigate(navigationStrings.REQUEST_DOCUMENTS);
+  const openAuthorizationTracking = useCallback(() => {
+    navigation.navigate(navigationStrings.AUTHORIZATION_TRACKING);
+  }, [navigation]);
+
+  const openMissingDocuments = useCallback(() => {
+    navigation.navigate(navigationStrings.MISSING_DOCUMENTS);
+  }, [navigation]);
+
+  const openDenialAnalysis = useCallback(() => {
+    navigation.navigate(navigationStrings.DENIAL_ANALYSIS);
   }, [navigation]);
 
   const onBack = useCallback(() => {
@@ -57,31 +61,22 @@ export default function AuthorizationDetail() {
 
   return (
     <SafeAreaView style={shared.safe} edges={["top", "left", "right"]}>
-      <View style={styles.layout}>
+      <View style={shared.layout}>
         <ScrollView
-          style={styles.scrollFlex}
-          contentContainerStyle={[shared.content, styles.scrollPad, styles.scrollContent]}
+          style={shared.scrollFlex}
+          contentContainerStyle={[shared.content, shared.scrollContent]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={[shared.headerBar, { paddingTop: headerTopPad }]}>
-            <IconComponent
-              icon={<BackArrowIcon width={HEADER_ICON_GLYPH} height={HEADER_ICON_GLYPH} />}
-              width={HEADER_ICON_CIRCLE}
-              height={HEADER_ICON_CIRCLE}
-              radius={HEADER_ICON_CIRCLE / 2}
-              onPress={onBack}
-            />
-            <Text style={shared.headerTitle}>Authorization Detail</Text>
-            <View style={styles.headerSpacer} />
-          </View>
+          <EligibilityScreenHeader title="Authorization Detail" onBack={onBack} />
 
+          <View style={shared.screenBody}>
           <View style={styles.section}>
             <NeumorphicCard
-              borderRadius={24}
+              borderRadius={ELIGIBILITY_CARD_RADIUS}
               backgroundColor={CASE_CARD_INNER}
               suppressInsetShadows
-              outerStyle={shared.caseCardOuterLift}
+              outerStyle={[shared.caseCardOuterLift, shared.caseCardMargin]}
               innerStyle={[styles.cardInner, shared.caseCardInnerOverflow]}
               activeOpacity={1}
             >
@@ -92,16 +87,16 @@ export default function AuthorizationDetail() {
                     icon={<Text style={styles.initials}>{getInitials(PATIENT_NAME)}</Text>}
                   />
                   <View style={styles.patientTextBlock}>
-                    <Text style={[shared.caseStatusTitle, styles.patientNameBold]} numberOfLines={1}>
+                    <Text style={[shared.caseStatusTitle]} numberOfLines={1}>
                       {PATIENT_NAME}
                     </Text>
                     <Text style={shared.casePatientLine}>Female • Age 45</Text>
-                    <Text style={styles.expLine}>Exp: 23 April 2024</Text>
+                    <Text style={shared.expLine}>Exp: 23 April 2024</Text>
                   </View>
                 </View>
                 <View style={styles.coverageBlock}>
                   <View style={styles.coverageLabelRow}>
-                    <Text style={shared.infoWellLabelInline} numberOfLines={1}>
+                    <Text style={shared.infoWellCoverageDetailBold} numberOfLines={1}>
                       Coverage:
                     </Text>
                     <InnerShadowPill label="Partial" tone="warn" subtleOuterGlow />
@@ -113,21 +108,21 @@ export default function AuthorizationDetail() {
 
           <View style={styles.section}>
             <NeumorphicCard
-              borderRadius={24}
+              borderRadius={ELIGIBILITY_CARD_RADIUS}
               backgroundColor={CASE_CARD_INNER}
               suppressInsetShadows
               outerStyle={shared.caseCardOuterLift}
-              innerStyle={[styles.statusCardInner, shared.caseCardInnerOverflow]}
+              innerStyle={[shared.statusCardInner, shared.caseCardInnerOverflow]}
               activeOpacity={1}
             >
-              <View style={styles.statusHeaderRow}>
+              <View style={shared.statusHeaderRow}>
                 <ProfileAvatar
                   overlaySource={OverlayImage}
                   imageSource={DoctorTempImage}
-                  containerStyle={styles.statusAvatarContainer}
-                  wrapperStyle={styles.statusAvatarWrap}
-                  overlayStyle={styles.statusAvatarOverlay}
-                  imageStyle={styles.statusAvatarPhoto}
+                  containerStyle={shared.statusAvatarContainer}
+                  wrapperStyle={shared.statusAvatarWrap}
+                  overlayStyle={shared.statusAvatarOverlay}
+                  imageStyle={shared.statusAvatarPhoto}
                 />
                 <Text style={styles.statusHeadline} numberOfLines={3}>
                   Authorization Pending Due to missing clinical notes
@@ -136,7 +131,7 @@ export default function AuthorizationDetail() {
 
               <View style={shared.divider} />
 
-              <View style={shared.twoCol}>
+              <View style={styles.twoCol}>
                 <InfoWell>
                   <View style={shared.infoWellLabelRow}>
                     <Text style={shared.infoWellLabelInline} numberOfLines={1}>
@@ -162,9 +157,10 @@ export default function AuthorizationDetail() {
               </View>
             </NeumorphicCard>
           </View>
+          </View>
         </ScrollView>
 
-        <View style={[styles.footerBar, { paddingBottom: bottomPad }]}>
+        <View style={[shared.footerBar, { paddingBottom: bottomPad }]}>
           <View style={styles.footerActions}>
             <View style={styles.twoBtnRow}>
               <View style={styles.halfBtn}>
@@ -179,7 +175,7 @@ export default function AuthorizationDetail() {
                   ctaGlow
                   backgroundColor={SUBMIT_FILL_FALLBACK}
                   textStyle={styles.submitAuthText}
-                  onPress={() => {}}
+                  onPress={openAuthorizationTracking}
                 />
               </View>
               <View style={styles.halfBtn}>
@@ -192,9 +188,9 @@ export default function AuthorizationDetail() {
                   borderColor={COLORS.PRIMARY}
                   bgColor={COLORS.WHITE}
                   text="Request"
-                  textStyle={shared.outlineGreenText}
+                  textStyle={styles.outlineGreenTextAuth}
                   shadowStyle={shared.outlineBtnNoShadow}
-                  onPress={openRequestDocuments}
+                  onPress={openMissingDocuments}
                 />
               </View>
             </View>
@@ -207,9 +203,9 @@ export default function AuthorizationDetail() {
               borderColor={COLORS.PRIMARY}
               bgColor={COLORS.WHITE}
               text="Add Note"
-              textStyle={shared.outlineGreenText}
+              textStyle={styles.outlineGreenTextAuth}
               shadowStyle={shared.outlineBtnNoShadow}
-              onPress={() => {}}
+              onPress={openDenialAnalysis}
             />
           </View>
         </View>
@@ -219,23 +215,6 @@ export default function AuthorizationDetail() {
 }
 
 const styles = StyleSheet.create({
-  layout: {
-    flex: 1,
-  },
-  scrollFlex: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 16,
-  },
-  scrollPad: {
-    paddingHorizontal: 16,
-  },
-  headerSpacer: {
-    width: HEADER_ICON_CIRCLE,
-    height: HEADER_ICON_CIRCLE,
-  },
   section: {
     marginTop: 12,
   },
@@ -266,9 +245,6 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
-  patientNameBold: {
-    fontWeight: "700",
-  },
   coverageBlock: {
     flexShrink: 0,
     alignItems: "flex-end",
@@ -279,64 +255,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "nowrap",
-    gap: 8,
-  },
-  expLine: {
-    marginTop: 4,
-    fontSize: 13,
-    fontWeight: "400",
-    color: TEXT_SECONDARY,
-    ...Platform.select({
-      ios: { fontFamily: "SF Pro Text" },
-      android: { fontFamily: "sans-serif", includeFontPadding: false },
-    }),
-  },
-  statusCardInner: {
-    paddingTop: 16,
-    paddingBottom: 20,
-    paddingHorizontal: 16,
-  },
-  statusHeaderRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-  },
-  /** Scaled-down `Home.tsx` `ProfileAvatar` — overlay ring + doctor photo. */
-  statusAvatarContainer: {
-    alignItems: "flex-start",
-    paddingTop: 0,
-  },
-  statusAvatarWrap: {
-    width: 56,
-    height: 56,
-  },
-  statusAvatarOverlay: {
-    borderRadius: 28,
-  },
-  statusAvatarPhoto: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    resizeMode: "cover",
+    gap: 5,
   },
   statusHeadline: {
     flex: 1,
     fontSize: 16,
-    fontWeight: "600",
-    lineHeight: 22,
-    color: TEXT_PRIMARY,
+    lineHeight: 20,
+    letterSpacing: 0,
+    color: TEXT_TERTIARY,
     ...Platform.select({
       ios: { fontFamily: "SF Pro Text" },
-      android: { fontFamily: "sans-serif", includeFontPadding: false },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
     }),
   },
-  footerBar: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    backgroundColor: SCREEN_BG,
-  },
   footerActions: {
-    gap: 10,
+    gap: 15,
   },
   twoBtnRow: {
     flexDirection: "row",
@@ -348,7 +281,36 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   submitAuthText: {
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "500",
+    lineHeight: 18,
+    letterSpacing: 0,
+    textAlign: "center",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
+  },
+  outlineGreenTextAuth: {
+    color: COLORS.PRIMARY,
+    fontSize: 16,
+    fontWeight: "500",
+    lineHeight: 20,
+    letterSpacing: 0,
+    textAlign: "center",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
+  },
+  infoWellForegroundAuth: {
+    marginTop: 5,
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  twoCol: {
+    flexDirection: "row",
+    gap: 2,
+    alignItems: "stretch",
   },
 });

@@ -9,7 +9,9 @@ import ReusableButton from "../../../../components/neomorphism/ReusableButton";
 import { COLORS } from "../../../../constants/theme";
 import {
   CASE_CARD_INNER,
+  ELIGIBILITY_CARD_RADIUS,
   ESCALATE_CORAL,
+  ESCALATE_FILL,
   SUBMIT_FILL_FALLBACK,
   SUBMIT_GRADIENT,
 } from "../eligibilityPriorAuthConstants";
@@ -30,14 +32,16 @@ export default function EligibilityAuthCaseCard({
   row,
   onSubmit,
   onRequest,
+  onEscalate,
 }: {
   row: AuthCaseRow;
   onSubmit?: () => void;
   onRequest?: () => void;
+  onEscalate?: () => void;
 }) {
   return (
     <NeumorphicCard
-      borderRadius={24}
+      borderRadius={ELIGIBILITY_CARD_RADIUS}
       backgroundColor={CASE_CARD_INNER}
       suppressInsetShadows
       outerStyle={styles.caseCardOuterLift}
@@ -110,7 +114,7 @@ export default function EligibilityAuthCaseCard({
             borderColor={COLORS.PRIMARY}
             bgColor={COLORS.WHITE}
             text="Request"
-            textStyle={styles.outlineGreenText}
+            textStyle={styles.outlineGreenTextAuth}
             shadowStyle={styles.outlineBtnNoShadow}
             onPress={() => onRequest?.()}
           />
@@ -123,11 +127,11 @@ export default function EligibilityAuthCaseCard({
             borderRadius={22}
             borderWidth={1}
             borderColor={ESCALATE_CORAL}
-            bgColor={COLORS.WHITE}
+            bgColor={ESCALATE_FILL}
             text="Escalate"
             textStyle={styles.outlineCoralText}
             shadowStyle={styles.outlineBtnNoShadow}
-            onPress={() => {}}
+            onPress={() => onEscalate?.()}
           />
         </View>
       </View>

@@ -3,14 +3,20 @@ import { Platform, StyleSheet } from "react-native";
 import { COLORS } from "../../../constants/theme";
 
 import {
-  CASE_AVATAR_BORDER,
   CASE_AVATAR_SIZE,
   ESCALATE_CORAL,
   HEADER_BG,
   HEADER_H,
+  HEADER_ICON_CIRCLE,
+  HEADER_TITLE_FONT_SIZE,
+  HEADER_TITLE_LETTER_SPACING,
+  HEADER_TITLE_LINE_HEIGHT,
   INFO_WELL_FACE,
   INFO_WELL_RADIUS,
   SCREEN_BG,
+  STATUS_AVATAR_INSET,
+  STATUS_AVATAR_PHOTO,
+  STATUS_AVATAR_SIZE,
   SUMMARY_H_PAD,
   TEXT_PRIMARY,
   TEXT_SECONDARY,
@@ -24,8 +30,35 @@ export const eligibilityPriorAuthStyles = StyleSheet.create({
   scroll: { flex: 1, backgroundColor: SCREEN_BG },
   content: {
     paddingBottom: 8,
+    backgroundColor: SCREEN_BG,
+  },
+  layout: {
+    flex: 1,
+    backgroundColor: SCREEN_BG,
+  },
+  scrollFlex: {
+    flex: 1,
+    backgroundColor: SCREEN_BG,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 16,
+    backgroundColor: SCREEN_BG,
+  },
+  footerBar: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    backgroundColor: SCREEN_BG,
+  },
+  chatBottom: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginBottom: 14,
+    backgroundColor: SCREEN_BG,
   },
   headerBar: {
+    position: "relative",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -35,13 +68,30 @@ export const eligibilityPriorAuthStyles = StyleSheet.create({
     minHeight: HEADER_H,
     backgroundColor: HEADER_BG,
   },
+  headerTitleOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: HEADER_ICON_CIRCLE + SUMMARY_H_PAD + 10,
+  },
   headerTitle: {
-    flex: 1,
-    marginHorizontal: 10,
-    fontSize: 17,
+    fontSize: HEADER_TITLE_FONT_SIZE,
+    lineHeight: HEADER_TITLE_LINE_HEIGHT,
     fontWeight: "600",
+    letterSpacing: HEADER_TITLE_LETTER_SPACING,
     color: TEXT_PRIMARY,
     textAlign: "center",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
+  },
+  headerSpacer: {
+    width: HEADER_ICON_CIRCLE,
+    height: HEADER_ICON_CIRCLE,
+  },
+  screenBody: {
+    paddingHorizontal: SUMMARY_H_PAD,
   },
   summaryCarousel: {
     paddingHorizontal: SUMMARY_H_PAD,
@@ -159,20 +209,30 @@ export const eligibilityPriorAuthStyles = StyleSheet.create({
       android: { fontFamily: "sans-serif", includeFontPadding: false },
     }),
   },
-  /** Single drop shadow, biased downward (inset neumorphic layers disabled on this card). */
+  /** Single soft drop shadow — patient / case cards (Figma: 0 4px 10px @ ~5% black). */
   caseCardOuterLift: {
     ...Platform.select({
       ios: {
-        shadowColor: "#0F172A",
-        shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.12,
+        shadowColor: "#000000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
         shadowRadius: 10,
       },
       android: {
-        elevation: 6,
+        elevation: 4,
       },
     }),
   },
+    caseCardMargin: {
+      ...Platform.select({
+        ios: {
+          marginBottom: 8,
+        },
+        android: {
+          marginBottom: 8,
+        },
+      }),
+    },
   caseList: {
     paddingHorizontal: 16,
     paddingTop: 10,
@@ -197,11 +257,8 @@ export const eligibilityPriorAuthStyles = StyleSheet.create({
   caseAvatar: {
     width: CASE_AVATAR_SIZE,
     height: CASE_AVATAR_SIZE,
-    borderRadius: 114,
-    borderWidth: 1,
-    borderColor: CASE_AVATAR_BORDER,
+    borderRadius: CASE_AVATAR_SIZE / 2,
     resizeMode: "cover",
-    opacity: 1,
   },
   caseHeaderCenter: {
     flex: 1,
@@ -209,27 +266,87 @@ export const eligibilityPriorAuthStyles = StyleSheet.create({
     paddingRight: 4,
   },
   caseStatusTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    lineHeight: 20,
+    fontSize: 14,
+    fontWeight: "400",
+    lineHeight: 18,
     letterSpacing: 0,
-    color: TEXT_PRIMARY,
+    color: "#2C2C2C",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
+  },
+  casePatientLine: {
+    marginTop: 5,
+    fontSize: 12,
+    fontWeight: "400",
+    lineHeight: 14,
+    letterSpacing: 0,
+    color: TEXT_SECONDARY,
     ...Platform.select({
       ios: { fontFamily: "SF Pro Text" },
       android: { fontFamily: "sans-serif", includeFontPadding: false },
     }),
   },
-  casePatientLine: {
-    marginTop: 5,
-    fontSize: 13,
+  expLine: {
+    marginTop: 4,
+    fontSize: 12,
     fontWeight: "400",
+    lineHeight: 14,
+    letterSpacing: 0,
     color: TEXT_SECONDARY,
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif", includeFontPadding: false },
+    }),
+  },
+  statusCardInner: {
+    paddingTop: STATUS_AVATAR_INSET,
+    paddingLeft: STATUS_AVATAR_INSET,
+    paddingRight: 16,
+    paddingBottom: 20,
+  },
+  statusHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    width: "100%",
+    minHeight: STATUS_AVATAR_SIZE,
+  },
+  statusAvatarContainer: {
+    width: STATUS_AVATAR_SIZE,
+    height: STATUS_AVATAR_SIZE,
+    opacity: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  statusAvatarWrap: {
+    width: STATUS_AVATAR_SIZE,
+    height: STATUS_AVATAR_SIZE,
+  },
+  statusAvatarOverlay: {
+    borderRadius: STATUS_AVATAR_SIZE / 2,
+  },
+  statusAvatarPhoto: {
+    width: STATUS_AVATAR_PHOTO,
+    height: STATUS_AVATAR_PHOTO,
+    borderRadius: STATUS_AVATAR_PHOTO / 2,
+    resizeMode: "cover",
   },
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: "#EAEAEA",
     marginVertical: 12,
-    marginTop: 12,
+    marginTop: 10,
+  },
+
+  /** Full content width — aligns with text in `caseCardInner` (no extra horizontal inset). */
+  dividerDenial: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: "#EAEAEA",
+    marginTop: 10,
+    marginBottom: 12,
+    alignSelf: "stretch",
   },
   twoCol: {
     flexDirection: "row",
@@ -290,6 +407,17 @@ export const eligibilityPriorAuthStyles = StyleSheet.create({
       android: { fontFamily: "sans-serif", includeFontPadding: false },
     }),
   },
+  infoWellCoverageDetailBold: {
+    fontSize: 14,
+    fontWeight: "500",
+    lineHeight: 18,
+    letterSpacing: 0,
+    color: "#6B6B6B",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
+  },
   actionsRow: {
     flexDirection: "row",
     gap: 8,
@@ -304,10 +432,17 @@ export const eligibilityPriorAuthStyles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
   },
-  outlineGreenText: {
+  outlineGreenTextAuth: {
     color: COLORS.PRIMARY,
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
+    lineHeight: 20,
+    letterSpacing: 0,
+    textAlign: "center",
+    ...Platform.select({
+      ios: { fontFamily: "SF Pro Text" },
+      android: { fontFamily: "sans-serif-medium", includeFontPadding: false },
+    }),
   },
   outlineCoralText: {
     color: ESCALATE_CORAL,
