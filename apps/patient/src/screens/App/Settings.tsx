@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -8,8 +8,6 @@ import NeumorphicQuickActionTile from "../../components/Common/NeumorphicQuickAc
 import IconComponent from "../../neomorphism/IconComponent";
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
-import { AuthContext } from "../../context/AuthContext";
-import ReusableButton from "../../neomorphism/ReusableButton";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../assets/images/tempImage/doctorTempImage.png";
 import BellIcon from "../../assets/icons/bell.svg";
@@ -54,11 +52,6 @@ const SETTINGS_ACTIONS: {
 
 const Settings = () => {
   const navigation = useNavigation<any>();
-  const auth = useContext(AuthContext);
-  if (!auth) {
-    throw new Error("Settings must be used within AuthContextProvider");
-  }
-  const { logout } = auth;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -123,15 +116,6 @@ const Settings = () => {
               innerShadowDiameter={66}
             />
           ))}
-        </View>
-
-        <View style={styles.logoutSection}>
-          <ReusableButton
-            title="Logout"
-            onPress={() => void logout()}
-            width="100%"
-            gradientColors={[COLORS.CRITICAL, "#DC2626"]}
-          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -232,10 +216,6 @@ const styles = StyleSheet.create({
   tile: {
     width: "33.33%",
     alignItems: "center",
-  },
-  logoutSection: {
-    marginTop: 28,
-    paddingHorizontal: 8,
   },
 });
 

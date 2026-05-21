@@ -4,7 +4,7 @@ import { createBottomTabNavigator, type BottomTabBarProps } from "@react-navigat
 import { getFocusedRouteNameFromRoute, type RouteProp } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
-import AppStack from "./AppStack";
+import Home from "../../screens/App/Home";
 import Queue from "../../screens/App/Queue";
 import Patients from "../../screens/App/Home/Patient/Patients";
 import navigationStrings from "../../constants/navigationStrings";
@@ -36,7 +36,7 @@ const HIDE_TABS_ON_ROUTES = [
   navigationStrings.ORDER_ENGINE,
   navigationStrings.ORDER_SUCCESSFULLY_PLACED,
   navigationStrings.RECEPTION_EDIT_INSURANCE,
-  navigationStrings.RECEPTION_EDIT_DEMOGRAPHICS
+  navigationStrings.RECEPTION_EDIT_DEMOGRAPHICS,
 ] as const;
 
 const isTabHiddenForRoute = (route: RouteProp<Record<string, object | undefined>, string>) => {
@@ -44,18 +44,21 @@ const isTabHiddenForRoute = (route: RouteProp<Record<string, object | undefined>
   return nestedRouteName != null && HIDE_TABS_ON_ROUTES.includes(nestedRouteName as any);
 };
 
-type TabName = "HomeTab" | "QueueTab" | "PatientsTab";
+type TabName =
+  | typeof navigationStrings.HOME
+  | typeof navigationStrings.QUEUE
+  | typeof navigationStrings.PATIENTS;
 
 const TAB_SCREENS: Array<{ name: TabName; label: string; component: React.ComponentType<any> }> = [
-  { name: "HomeTab", label: "Home", component: AppStack },
-  { name: "QueueTab", label: "Queue", component: Queue },
-  { name: "PatientsTab", label: "Patients", component: Patients },
+  { name: navigationStrings.HOME, label: "Home", component: Home },
+  { name: navigationStrings.QUEUE, label: "Queue", component: Queue },
+  { name: navigationStrings.PATIENTS, label: "Patients", component: Patients },
 ];
 
 const TAB_ICON: Record<TabName, React.ComponentType<{ width?: number; height?: number }>> = {
-  HomeTab: ListIcon,
-  QueueTab: MicOutlineIcon,
-  PatientsTab: PatientIcon,
+  [navigationStrings.HOME]: ListIcon,
+  [navigationStrings.QUEUE]: MicOutlineIcon,
+  [navigationStrings.PATIENTS]: PatientIcon,
 };
 
 const MIN_BOTTOM_INSET = Platform.select({ ios: 14, android: 20, default: 14 });
@@ -67,7 +70,7 @@ const QUEUE_INNER_RADIUS = QUEUE_INNER / 2;
 function DoctorTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const active = state.routes[state.index]?.name as TabName;
-  const homeRoute = state.routes.find((r) => r.name === "HomeTab");
+  const homeRoute = state.routes.find((r) => r.name === navigationStrings.HOME);
   const hideBar = homeRoute != null && isTabHiddenForRoute(homeRoute as any);
   if (hideBar) return null;
 
@@ -85,7 +88,7 @@ function DoctorTabBar({ state, navigation }: BottomTabBarProps) {
             {TAB_SCREENS.map((tab) => {
               const Icon = TAB_ICON[tab.name];
               const selected = active === tab.name;
-              const isCenter = tab.name === "QueueTab";
+              const isCenter = tab.name === navigationStrings.QUEUE;
               return (
                 <Pressable
                   key={tab.name}
@@ -119,10 +122,10 @@ function DoctorTabBar({ state, navigation }: BottomTabBarProps) {
         </NeumorphicCard>
         <Pressable
           style={styles.queueOverlayPress}
-          onPress={() => navigation.navigate("QueueTab")}
+          onPress={() => navigation.navigate(navigationStrings.QUEUE)}
           accessibilityRole="button"
           accessibilityLabel="Queue"
-          accessibilityState={{ selected: active === "QueueTab" }}
+          accessibilityState={{ selected: active === navigationStrings.QUEUE }}
         >
           <View style={styles.queueActiveOuter}>
             <View pointerEvents="none" style={[styles.queueShadowLayer, styles.queueShadowDark]} />
@@ -171,7 +174,7 @@ function DoctorTabBar({ state, navigation }: BottomTabBarProps) {
 const BottomBarNavigation = () => {
   return (
     <Tab.Navigator
-      initialRouteName="HomeTab"
+      initialRouteName={navigationStrings.HOME}
       tabBar={(props) => <DoctorTabBar {...props} />}
       screenOptions={{
         headerShown: false,
