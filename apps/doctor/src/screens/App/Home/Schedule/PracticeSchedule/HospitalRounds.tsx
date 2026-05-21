@@ -55,6 +55,9 @@ const DATE_RANGE_OPTIONS: { key: DateRangeKey; label: string }[] = [
   { key: "custom", label: "Custom" },
 ];
 
+const formatShortDate = (date: Date) =>
+  date.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+
 const HospitalRounds = () => {
   const navigation = useNavigation<any>();
   const dateRangeSheetRef = useRef<BSModal>(null);
@@ -62,12 +65,15 @@ const HospitalRounds = () => {
   const [fromDate, setFromDate] = useState<Date | null>(null);
   const [toDate, setToDate] = useState<Date | null>(null);
 
-  const todayLabel = useMemo(
-    () =>
-      DATE_RANGE_OPTIONS.find((option) => option.key === selectedRange)
-        ?.label ?? "Today",
-    [selectedRange],
-  );
+  const rangeLabel = useMemo(() => {
+    if (selectedRange === "custom" && fromDate && toDate) {
+      return `${formatShortDate(fromDate)} - ${formatShortDate(toDate)}`;
+    }
+    return (
+      DATE_RANGE_OPTIONS.find((option) => option.key === selectedRange)?.label ??
+      "Today"
+    );
+  }, [selectedRange, fromDate, toDate]);
 
   const renderItem = ({ item }: { item: (typeof ROUNDS_DATA)[number] }) => (
     <NeumorphicCard
@@ -154,7 +160,9 @@ const HospitalRounds = () => {
           onPress={() => dateRangeSheetRef.current?.present()}
         >
           <CalendarIcon width={18} height={18} />
-          <Text style={styles.todayText}>{todayLabel}</Text>
+          <Text style={styles.todayText} numberOfLines={1}>
+            {rangeLabel}
+          </Text>
         </NeumorphicCard>
       </View>
 
@@ -210,8 +218,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 6,
+    paddingHorizontal: 6,
   },
-  todayText: { fontSize: 14, color: COLORS.TEXT_80, fontWeight: "400" },
+  todayText: { fontSize: 12, color: COLORS.TEXT_80, fontWeight: "400", flexShrink: 1 },
   listContent: { paddingHorizontal: 16, paddingTop: 20, paddingBottom: 24 },
   itemOuter: { width: "100%" },
   itemInner: { paddingHorizontal: 12, paddingVertical: 12 },
