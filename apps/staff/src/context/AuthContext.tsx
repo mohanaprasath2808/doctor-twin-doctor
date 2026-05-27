@@ -104,7 +104,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         await secureStorage.setItem("user", JSON.stringify(user ?? {}));
         setUserToken(accessToken);
         setIsLogin(true);
-        setUserData(JSON.parse(user));
+        setUserData(user);
         toast.show("Login successful", {
           type: "success",
         });

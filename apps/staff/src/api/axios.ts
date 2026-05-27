@@ -2,7 +2,8 @@ import axios from "axios";
 import { secureStorage } from "../storage/secureStorage";
 import { ENDPOINTS } from "./endpoints";
 
-const BASE_URL = "https://doctor-twin-ai-production.up.railway.app";
+// const BASE_URL = "https://doctor-twin-ai-production.up.railway.app"; old python backend
+const BASE_URL = "https://doctor-twin-be-production.up.railway.app/api/v1";
 
 export const api = axios.create({
     baseURL: BASE_URL,
