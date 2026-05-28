@@ -1,5 +1,6 @@
 // const BASE_URL = "https://doctor-twin-ai-production.up.railway.app"; old python backend
-const BASE_URL = "https://doctor-twin-be-production.up.railway.app/api/v1";
+// const BASE_URL = "https://doctor-twin-be-production.up.railway.app/api/v1";
+const BASE_URL = "https://4gtw9tgz-3000.inc1.devtunnels.ms/api/v1";
 
 
 //AUTH APIs
@@ -13,3 +14,7 @@ export const VERIFY_USER_PIN_URL = `${BASE_URL}/auth/verify-pin`;
 
 //USER APIs
 export const GET_USER_URL = `${BASE_URL}/auth/me`;
+
+// APPOINTMENT APIs
+export const APPOINTMENT_URL = `${BASE_URL}/appointments`;
+export const FETCH_APPOINTMENTS_URL = `${BASE_URL}/appointments/list`;

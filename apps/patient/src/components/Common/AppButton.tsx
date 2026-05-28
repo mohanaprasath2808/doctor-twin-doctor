@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
   DimensionValue,
   Platform,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextStyle,
+  LayoutChangeEvent,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
@@ -145,6 +146,17 @@ const AppButton: React.FC<AppButtonProps> = ({
         })
       : leftIcon;
 
+  const [measuredWidth, setMeasuredWidth] = useState(0);
+  const numericWidth = useMemo(
+    () => (typeof width === "number" ? width : measuredWidth),
+    [width, measuredWidth],
+  );
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    if (typeof width === "number") return;
+    setMeasuredWidth(event.nativeEvent.layout.width);
+  };
+
   const gradientInset = Math.max(0, borderRadius - resolvedBorderWidth);
 
   const gradients = useGradientBorder ? (
@@ -211,10 +223,10 @@ const AppButton: React.FC<AppButtonProps> = ({
     style,
   ];
 
-  /** Prop defaults + `style` — used for elevated shell so fixed-size chips are not forced to 100%. */
-  const layoutFlat = StyleSheet.flatten([{ width, height }, style]) as ViewStyle;
-  const layoutWidth = layoutFlat.width ?? width;
-  const layoutHeight = layoutFlat.height ?? height;
+  /** Mirrors `ReusableButton`: when width is not numeric, use measured pixels for wrapper sizing. */
+  const layoutFlat = StyleSheet.flatten(style) as ViewStyle;
+  const layoutWidth = typeof width === "number" ? width : numericWidth || layoutFlat?.width || width;
+  const layoutHeight = layoutFlat?.height ?? height;
 
   if (!elevated) {
     return (
@@ -234,9 +246,14 @@ const AppButton: React.FC<AppButtonProps> = ({
     <View
       style={[
         styles.shadowHost,
-        { width: layoutWidth, height: layoutHeight, borderRadius },
+        {
+          ...(layoutWidth != null ? { width: layoutWidth } : {}),
+          ...(layoutHeight != null ? { height: layoutHeight } : {}),
+          borderRadius,
+        },
         shadowStyle,
       ]}
+      onLayout={handleLayout}
     >
       {Platform.OS === "ios" ? <NeumorphicShadowStack borderRadius={borderRadius} /> : null}
       <TouchableOpacity
