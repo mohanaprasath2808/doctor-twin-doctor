@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { BottomSheetModal as BSModal, BottomSheetView } from "@gorhom/bottom-sheet";
 
-import type { StaffRole } from "../../screens/App/Staff/staffTypes";
+import { LOOK_UP_ROLE, type StaffRole } from "../../screens/App/Staff/staffTypes";
 import { COLORS } from "../../constants/theme";
 import SelectedIcon from "../../assets/icon/selectedIcon.svg";
 import BillingIcon from "../../assets/icon/billingIcon.svg";
@@ -21,10 +21,10 @@ export const ROLE_OPTIONS: {
   label: string;
   Icon: React.ComponentType<{ width?: number; height?: number }>;
 }[] = [
-  { role: "office", label: "Office Manager", Icon: ProfileGreenIcon },
-  { role: "ma", label: "Medical Assistant / Nurse", Icon: DelegationIcon },
-  { role: "billing", label: "Billing", Icon: BillingIcon },
-  { role: "front", label: "Front Desk", Icon: MessageIcon },
+  { role: "office_manager", label: LOOK_UP_ROLE.office_manager, Icon: ProfileGreenIcon },
+  { role: "nurse", label: LOOK_UP_ROLE.nurse, Icon: DelegationIcon },
+  { role: "biller", label: LOOK_UP_ROLE.biller, Icon: BillingIcon },
+  { role: "front_desk", label: LOOK_UP_ROLE.front_desk, Icon: MessageIcon },
 ];
 
 type StaffRoleBottomSheetModalProps = {

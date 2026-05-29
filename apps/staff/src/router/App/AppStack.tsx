@@ -57,7 +57,7 @@ import StaffDoctorReply from "../../screens/App/Communication/StaffDoctorReply";
 import StaffDoctorConvertToTask from "../../screens/App/Communication/StaffDoctorConvertToTask";
 import StaffDoctorEscalate from "../../screens/App/Communication/StaffDoctorEscalate";
 import VoiceHandsFree from "../../screens/App/Communication/VoiceHandsFree";
-import type { StaffMember } from "../../screens/App/Staff/staffTypes";
+import type { StaffFormInitial } from "../../screens/App/Staff/staffTypes";
 import type { BillingItem } from "../../screens/utills/billingStatus";
 import BillingDetail from "../../screens/App/BillingDashboard/BillingDetail";
 import BillingAnswer from "../../screens/App/BillingDashboard/BillingAnswer";
@@ -117,7 +117,7 @@ export type DelegationActionCompletedParams = {
 
 export type StaffFormParams = {
   isEdit?: boolean;
-  initial?: StaffMember;
+  initial?: StaffFormInitial;
 };
 
 export type BillingDetailParams = {

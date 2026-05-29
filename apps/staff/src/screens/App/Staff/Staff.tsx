@@ -1,7 +1,17 @@
-import React, { useMemo, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  ListRenderItem,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
@@ -16,157 +26,250 @@ import PlusIcon from "../../../assets/icon/greenPlusIcon.svg";
 import SearchIcon from "../../../assets/icon/searchIcon.svg";
 import navigationStrings from "../../../constants/navigationStrings";
 import type { AppStackParamList } from "../../../router/App/types";
-import type { StaffFilter } from "./staffTypes";
-import { FILTER_WIDTHS, STAFF_LIST } from "./staffMockData";
+import { getRoleDisplayName, type StaffFilter } from "./staffTypes";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AppContext } from "../../../context/AppContext";
+import type { FetchStaffParams } from "../../../context/AppContext";
+import { formatDateOfBirth } from "../../../constants/constant";
+
+const STAFF_PAGE_SIZE = 10;
 
 const Staff = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [search, setSearch] = useState("");
   const [selectedFilter, setSelectedFilter] = useState<StaffFilter>("all");
+  const appContext = useContext(AppContext);
+  if (!appContext) {
+    throw new Error("AppContext not found");
+  }
 
-  const visibleStaff = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    let rows = STAFF_LIST;
-    if (selectedFilter !== "all") {
-      rows = rows.filter((s) => s.role === selectedFilter);
+  const { staffData, loadingStaff, loadingMoreStaff, fetchStaff, refetchStaffList } = appContext;
+  const { staffs = [], total, page, limit } = staffData ?? {};
+
+  const listParams = useCallback(
+    (pageNum: number): FetchStaffParams => ({
+      page: pageNum,
+      limit: STAFF_PAGE_SIZE,
+      search_key: search,
+      ...(selectedFilter !== "all" ? { roles: [selectedFilter] } : {}),
+    }),
+    [search, selectedFilter],
+  );
+
+  const hasMore = useMemo(() => {
+    const list = staffs ?? [];
+    if (list.length === 0) {
+      return false;
     }
-    if (q.length > 0) {
-      rows = rows.filter(
-        (s) =>
-          s.firstName.toLowerCase().includes(q) ||
-          s.lastName.toLowerCase().includes(q) ||
-          s.email.toLowerCase().includes(q) ||
-          s.phone.toLowerCase().includes(q) ||
-          s.dob.toLowerCase().includes(q) ||
-          s.roleLabel.toLowerCase().includes(q),
+    if (typeof total === "number") {
+      return list.length < total;
+    }
+    const pageSize = limit ?? STAFF_PAGE_SIZE;
+    const lastPageCount = incomingPageCount(list, page ?? 1, pageSize);
+    return lastPageCount >= pageSize;
+  }, [staffs, total, page, limit]);
+
+  useEffect(() => {
+    fetchStaff(listParams(1));
+  }, [fetchStaff, listParams]);
+
+  const isFirstFocus = useRef(true);
+  useFocusEffect(
+    useCallback(() => {
+      if (isFirstFocus.current) {
+        isFirstFocus.current = false;
+        return;
+      }
+      refetchStaffList();
+    }, [refetchStaffList]),
+  );
+
+  const endReachedDuringMomentum = useRef(true);
+
+  const loadMore = useCallback(() => {
+    if (loadingStaff || loadingMoreStaff || !hasMore || (staffs?.length ?? 0) === 0) {
+      return;
+    }
+    fetchStaff(listParams((page ?? 1) + 1), { append: true });
+  }, [loadingStaff, loadingMoreStaff, hasMore, staffs?.length, page, fetchStaff, listParams]);
+
+  const handleEndReached = useCallback(() => {
+    if (endReachedDuringMomentum.current) {
+      return;
+    }
+    loadMore();
+  }, [loadMore]);
+
+  const renderStaffItem: ListRenderItem<any> = useCallback(
+    ({ item }) => (
+      <NeumorphicCard
+        outerStyle={styles.staffCardOuter}
+        innerStyle={styles.staffCardInner}
+        borderRadius={12}
+        onPress={() =>
+          navigation.navigate(navigationStrings.STAFF_FORM, {
+            isEdit: true,
+            initial: item,
+          })
+        }
+      >
+        <View style={styles.staffRow}>
+          <Image source={DoctorTempImage} style={styles.avatar} resizeMode="cover" />
+          <View style={styles.staffBody}>
+            <View style={styles.staffTextStack}>
+              <Text style={styles.staffName} numberOfLines={1}>
+                {item.first_name} {item.last_name}
+              </Text>
+              <View style={styles.metaRow}>
+                <Text style={styles.staffMetaLine} numberOfLines={1}>
+                  {item.phone}
+                </Text>
+                <View style={styles.metaDot} />
+                <Text style={styles.staffMetaLine} numberOfLines={1}>
+                  {formatDateOfBirth(item.date_of_birth)}
+                </Text>
+              </View>
+              <Text style={styles.staffEmail} numberOfLines={1}>
+                {item.email}
+              </Text>
+            </View>
+            <View style={styles.roleBadgeSlot} pointerEvents="box-none">
+              <NeumorphicInnerShadowCard
+                fullWidth={false}
+                borderRadius={114}
+                backgroundColor={COLORS.INNER_SURFACE}
+                containerStyle={styles.rolePill}
+                contentStyle={styles.rolePillContent}
+              >
+                <Text style={styles.rolePillText}>{getRoleDisplayName(item.role)}</Text>
+              </NeumorphicInnerShadowCard>
+            </View>
+          </View>
+        </View>
+      </NeumorphicCard>
+    ),
+    [navigation],
+  );
+
+  const listHeader = useMemo(
+    () => (
+      <>
+        <View style={styles.header}>
+          <IconComponent
+            icon={<BackArrowIcon width={16} height={16} />}
+            width={40}
+            height={40}
+            radius={20}
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.headerTitle}>Staff</Text>
+          <View style={styles.headerSpacer} />
+        </View>
+
+        <View style={styles.searchContainer}>
+          <InputField
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search Staff"
+            containerStyle={styles.searchInput}
+            borderRadius={30}
+            height={46}
+            leftIcon={<SearchIcon width={18} height={18} />}
+          />
+        </View>
+
+        <ScrollView
+          horizontal
+          nestedScrollEnabled
+          showsHorizontalScrollIndicator={false}
+          style={styles.filtersScroll}
+          contentContainerStyle={styles.filtersScrollContent}
+        >
+          <FilterChip
+            title="All"
+            chipWidth={52}
+            selected={selectedFilter === "all"}
+            onPress={() => setSelectedFilter("all")}
+          />
+          <FilterChip
+            title="MA/Nurse"
+            chipWidth={118}
+            selected={selectedFilter === "nurse"}
+            onPress={() => setSelectedFilter("nurse")}
+          />
+          <FilterChip
+            title="Billing"
+            chipWidth={78}
+            selected={selectedFilter === "biller"}
+            onPress={() => setSelectedFilter("biller")}
+          />
+          <FilterChip
+            title="Front Desk"
+            chipWidth={104}
+            selected={selectedFilter === "front_desk"}
+            onPress={() => setSelectedFilter("front_desk")}
+          />
+          <FilterChip
+            title="Office Manager"
+            chipWidth={148}
+            selected={selectedFilter === "office_manager"}
+            onPress={() => setSelectedFilter("office_manager")}
+          />
+        </ScrollView>
+      </>
+    ),
+    [navigation, search, selectedFilter],
+  );
+
+  const listEmpty = useMemo(() => {
+    if (loadingStaff) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.PRIMARY} />
+        </View>
       );
     }
-    return rows;
-  }, [search, selectedFilter]);
+    return (
+      <View style={styles.noStaffContainer}>
+        <Text style={styles.noStaffText}>No staff found</Text>
+      </View>
+    );
+  }, [loadingStaff]);
+
+  const listFooter = useMemo(() => {
+    if (!loadingMoreStaff) {
+      return null;
+    }
+    return (
+      <View style={styles.footerLoader}>
+        <ActivityIndicator size="small" color={COLORS.PRIMARY} />
+      </View>
+    );
+  }, [loadingMoreStaff]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
       <View style={styles.screen}>
-        <ScrollView
-          style={styles.scroll}
+        <FlatList
+          data={staffs}
+          keyExtractor={(item, index) =>
+            String(item.user_id ?? index)
+          }
+          renderItem={renderStaffItem}
+          ListHeaderComponent={listHeader}
+          ListEmptyComponent={listEmpty}
+          ListFooterComponent={listFooter}
           contentContainerStyle={styles.scrollContent}
+          style={styles.scroll}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.header}>
-            <IconComponent
-              icon={<BackArrowIcon width={16} height={16} />}
-              width={40}
-              height={40}
-              radius={20}
-              onPress={() => navigation.goBack()}
-            />
-            <Text style={styles.headerTitle}>Staff</Text>
-            <View style={styles.headerSpacer} />
-          </View>
-
-          <View style={styles.searchContainer}>
-            <InputField
-              value={search}
-              onChangeText={setSearch}
-              placeholder="Search Staff"
-              containerStyle={styles.searchInput}
-              borderRadius={30}
-              height={46}
-              leftIcon={<SearchIcon width={18} height={18} />}
-            />
-          </View>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.filtersScroll}
-            contentContainerStyle={styles.filtersScrollContent}
-          >
-            <FilterChip
-              title="All"
-              chipWidth={FILTER_WIDTHS.all}
-              selected={selectedFilter === "all"}
-              onPress={() => setSelectedFilter("all")}
-            />
-            <FilterChip
-              title="MA/Nurse"
-              chipWidth={FILTER_WIDTHS.ma}
-              selected={selectedFilter === "ma"}
-              onPress={() => setSelectedFilter("ma")}
-            />
-            <FilterChip
-              title="Billing"
-              chipWidth={FILTER_WIDTHS.billing}
-              selected={selectedFilter === "billing"}
-              onPress={() => setSelectedFilter("billing")}
-            />
-            <FilterChip
-              title="Front Desk"
-              chipWidth={FILTER_WIDTHS.front}
-              selected={selectedFilter === "front"}
-              onPress={() => setSelectedFilter("front")}
-            />
-            <FilterChip
-              title="Office Manager"
-              chipWidth={FILTER_WIDTHS.office}
-              selected={selectedFilter === "office"}
-              onPress={() => setSelectedFilter("office")}
-            />
-          </ScrollView>
-
-          <View style={styles.list}>
-            {visibleStaff.map((item) => (
-              <NeumorphicCard
-                key={item.id}
-                outerStyle={styles.staffCardOuter}
-                innerStyle={styles.staffCardInner}
-                borderRadius={12}
-                onPress={() =>
-                  navigation.navigate(navigationStrings.STAFF_FORM, {
-                    isEdit: true,
-                    initial: item,
-                  })
-                }
-              >
-                <View style={styles.staffRow}>
-                  <Image source={DoctorTempImage} style={styles.avatar} resizeMode="cover" />
-                  <View style={styles.staffBody}>
-                    <View style={styles.staffTextStack}>
-                      <Text style={styles.staffName} numberOfLines={1}>
-                        {item.firstName} {item.lastName}
-                      </Text>
-                      <View style={styles.metaRow}>
-                        <Text style={styles.staffMetaLine} numberOfLines={1}>
-                          {item.phone}
-                        </Text>
-                        <View style={styles.metaDot} />
-                        <Text style={styles.staffMetaLine} numberOfLines={1}>
-                          {item.dob}
-                        </Text>
-                      </View>
-                      <Text style={styles.staffEmail} numberOfLines={1}>
-                        {item.email}
-                      </Text>
-                    </View>
-                    <View style={styles.roleBadgeSlot} pointerEvents="box-none">
-                      <NeumorphicInnerShadowCard
-                        fullWidth={false}
-                        borderRadius={114}
-                        backgroundColor={COLORS.INNER_SURFACE}
-                        containerStyle={styles.rolePill}
-                        contentStyle={styles.rolePillContent}
-                      >
-                        <Text style={styles.rolePillText}>{item.roleLabel}</Text>
-                      </NeumorphicInnerShadowCard>
-                    </View>
-                  </View>
-                </View>
-              </NeumorphicCard>
-            ))}
-          </View>
-        </ScrollView>
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.4}
+          onMomentumScrollBegin={() => {
+            endReachedDuringMomentum.current = false;
+          }}
+          ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+        />
 
         <View style={styles.footer}>
           <AppButton
@@ -225,11 +328,24 @@ const FilterChip = ({
 
 export default Staff;
 
+/** Items returned on the last loaded page (used when API omits `total`). */
+function incomingPageCount(
+  list: unknown[],
+  currentPage: number,
+  pageSize: number,
+): number {
+  if (currentPage <= 1) {
+    return list.length;
+  }
+  const start = (currentPage - 1) * pageSize;
+  return list.length - start;
+}
+
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.INNER_SURFACE },
   screen: { flex: 1 },
   scroll: { flex: 1 },
-  scrollContent: { paddingHorizontal: 16, paddingBottom: 16 },
+  scrollContent: { paddingHorizontal: 16, paddingBottom: 16, flexGrow: 1 },
   footer: {
     paddingHorizontal: 16,
     paddingTop: 12,
@@ -251,16 +367,16 @@ const styles = StyleSheet.create({
   searchContainer: { marginTop: 10 },
   searchInput: { marginTop: 8 },
   filtersScroll: {
-    paddingTop: 18,
     marginHorizontal: -16,
-    paddingHorizontal: 16,
     flexGrow: 0,
-    paddingBottom: 26,
   },
   filtersScrollContent: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    paddingTop: 18,
+    paddingBottom: 26,
+    paddingHorizontal: 16,
     paddingRight: 16,
   },
   filterPress: { flexShrink: 0 },
@@ -274,7 +390,13 @@ const styles = StyleSheet.create({
   },
   filterText: { color: COLORS.TEXT_80, fontSize: 14, fontWeight: "400" },
   selectedFilterText: { fontSize: 14, fontWeight: "500" },
-  list: { gap: 14 },
+  itemSeparator: { height: 14 },
+  noStaffContainer: {
+    paddingVertical: 32,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noStaffText: { color: COLORS.TEXT_80, fontSize: 14, fontWeight: "400" },
   staffCardOuter: { width: "100%" },
   staffCardInner: {
     borderRadius: 10,
@@ -288,7 +410,6 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     backgroundColor: COLORS.TEXT_10,
   },
-  /** Text column + absolutely positioned role so name/meta/email keep equal `gap` (badge doesn’t stretch the row). */
   staffBody: {
     position: "relative",
     flex: 1,
@@ -327,7 +448,6 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   staffMetaLine: {
-    // flexShrink: 1,
     color: COLORS.TEXT_70,
     fontSize: 12,
     fontWeight: "400",
@@ -351,5 +471,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: COLORS.PRIMARY,
+  },
+  loadingContainer: {
+    paddingVertical: 48,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  footerLoader: {
+    paddingVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
