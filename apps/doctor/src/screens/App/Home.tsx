@@ -92,6 +92,11 @@ const GRID_ITEMS: GridItem[] = [
     label: "Refills",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
+  {
+    id: 11,
+    label: "Imaging Results",
+    icon: () => <RefillsIcon width={18} height={18} />,
+  },
   // {
   //   id: 11,
   //   label: "Patient",
@@ -160,7 +165,7 @@ const Home = () => {
       case 11:
         return {
           ...item,
-          onPress: () => navigation.navigate(navigationStrings.PATIENTS),
+          onPress: () => navigation.navigate(navigationStrings.IMAGING_RESULTS),
         };
       case 12:
         return {

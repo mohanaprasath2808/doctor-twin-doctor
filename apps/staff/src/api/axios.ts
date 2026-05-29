@@ -40,6 +40,8 @@ const refreshAccessToken = async (): Promise<string | null> => {
         },
     );
 
+    console.log(response, "response in refreshAccessToken");
+
     const body = response?.data;
     const payload = body?.data ?? body;
     const newAccessToken = payload?.access_token as string | undefined;

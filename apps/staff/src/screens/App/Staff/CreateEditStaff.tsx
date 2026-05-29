@@ -51,6 +51,7 @@ import {
 } from "../../utills/validations";
 import { AppContext } from "../../../context/AppContext";
 import type { CreateStaffPayload, UpdateStaffPayload } from "../../../context/AppContext";
+import StaffProfileUpload from "./StaffProfileUpload";
 
 type Nav = NativeStackNavigationProp<AppStackParamList, typeof navigationStrings.STAFF_FORM>;
 type R = RouteProp<AppStackParamList, typeof navigationStrings.STAFF_FORM>;
@@ -97,6 +98,13 @@ const CreateEditStaff = () => {
   const [role, setRole] = useState<StaffRole | null>(initialForm.role);
   const [deactivated, setDeactivated] = useState(initialForm.deactivated);
   const [errors, setErrors] = useState<StaffFormFieldErrors>({});
+  const [profileImageUri, setProfileImageUri] = useState<string | null>(
+    () =>
+      initial?.profile_image ??
+      initial?.profile_image_url ??
+      initial?.avatar_url ??
+      null,
+  );
 
   const roleDisplay = useMemo(() => getRoleDisplayName(role), [role]);
 
@@ -245,6 +253,8 @@ const CreateEditStaff = () => {
           keyboardVerticalOffset={Platform.OS === "ios" ? 8 : 0}
           contentContainerStyle={styles.scrollContent}
         >
+
+
           {isEdit ? (
             <NeumorphicCard
               outerStyle={styles.deactivateCardOuter}
@@ -280,6 +290,11 @@ const CreateEditStaff = () => {
               </View>
             </NeumorphicCard>
           ) : null}
+
+          <StaffProfileUpload
+            imageUri={profileImageUri}
+            onImageUriChange={setProfileImageUri}
+          />
 
           <Text style={[styles.label, !isEdit && styles.labelFirst]}>First Name</Text>
           <InputField

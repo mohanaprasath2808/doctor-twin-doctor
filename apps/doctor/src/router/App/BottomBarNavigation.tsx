@@ -4,7 +4,7 @@ import { createBottomTabNavigator, type BottomTabBarProps } from "@react-navigat
 import { getFocusedRouteNameFromRoute, type RouteProp } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
-import Home from "../../screens/App/Home";
+import HomeStack from "./HomeStack";
 import Queue from "../../screens/App/Queue";
 import Patients from "../../screens/App/Home/Patient/Patients";
 import navigationStrings from "../../constants/navigationStrings";
@@ -50,7 +50,7 @@ type TabName =
   | typeof navigationStrings.PATIENTS;
 
 const TAB_SCREENS: Array<{ name: TabName; label: string; component: React.ComponentType<any> }> = [
-  { name: navigationStrings.HOME, label: "Home", component: Home },
+  { name: navigationStrings.HOME, label: "Home", component: HomeStack },
   { name: navigationStrings.QUEUE, label: "Queue", component: Queue },
   { name: navigationStrings.PATIENTS, label: "Patients", component: Patients },
 ];

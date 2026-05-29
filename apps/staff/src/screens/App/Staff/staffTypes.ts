@@ -49,6 +49,9 @@ export type StaffFormInitial = {
   date_of_birth?: string;
   role?: string;
   is_active?: boolean;
+  profile_image?: string;
+  profile_image_url?: string;
+  avatar_url?: string;
 };
 
 export type StaffMember = {

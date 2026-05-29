@@ -15,7 +15,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.solimancare.staff"
+      "bundleIdentifier": "com.solimancare.staff",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow access to your photo library to set a staff profile picture.",
+        "NSCameraUsageDescription": "Allow access to your camera to take a staff profile picture."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -24,9 +28,25 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.solimancare.staff"
+      "package": "com.solimancare.staff",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ]
     },
-    "plugins": ["expo-secure-store", "expo-speech-recognition"],
+    "plugins": [
+      "expo-secure-store",
+      "expo-speech-recognition",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to set a staff profile picture.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take a staff profile picture.",
+          "microphonePermission": false
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "aa2bb4c8-2ff5-4ecd-b5df-1051d96b1a90"
