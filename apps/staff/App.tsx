@@ -3,6 +3,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import AppContextProvider from "./src/context/AppContext";
 import AuthContextProvider from "./src/context/AuthContext";
 import Router from "./src/router/Router";
 import { useFonts } from "expo-font";
@@ -75,7 +76,9 @@ const App = () => {
           <BottomSheetModalProvider>
             <NavigationContainer>
               <AuthContextProvider>
-                <Router />
+                <AppContextProvider>
+                  <Router />
+                </AppContextProvider>
               </AuthContextProvider>
             </NavigationContainer>
           </BottomSheetModalProvider>

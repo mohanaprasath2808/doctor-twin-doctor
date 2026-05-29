@@ -11,7 +11,8 @@ export const FILTER_WIDTHS: Record<StaffFilter, number> = {
 export const STAFF_LIST: StaffMember[] = [
   {
     id: "1",
-    name: "Sarah Williams",
+    firstName: "Sarah",
+    lastName: "Williams",
     phone: "(555) 987-6543",
     dob: "21 Mar 1980",
     email: "sarah@example.com",
@@ -20,7 +21,8 @@ export const STAFF_LIST: StaffMember[] = [
   },
   {
     id: "2",
-    name: "James Porter",
+    firstName: "James",
+    lastName: "Porter",
     phone: "(555) 234-8899",
     dob: "12 Aug 1976",
     email: "james@example.com",
@@ -29,7 +31,8 @@ export const STAFF_LIST: StaffMember[] = [
   },
   {
     id: "3",
-    name: "Elena Ruiz",
+    firstName: "Elena",
+    lastName: "Ruiz",
     phone: "(555) 441-2201",
     dob: "03 Feb 1991",
     email: "elena@example.com",
@@ -38,7 +41,8 @@ export const STAFF_LIST: StaffMember[] = [
   },
   {
     id: "4",
-    name: "Maria Lopez",
+    firstName: "Maria",
+    lastName: "Lopez",
     phone: "(555) 120-7788",
     dob: "19 Nov 1988",
     email: "maria@example.com",
@@ -47,7 +51,8 @@ export const STAFF_LIST: StaffMember[] = [
   },
   {
     id: "5",
-    name: "David Chen",
+    firstName: "David",
+    lastName: "Chen",
     phone: "(555) 330-4410",
     dob: "07 Jan 1982",
     email: "david@example.com",
@@ -56,7 +61,8 @@ export const STAFF_LIST: StaffMember[] = [
   },
   {
     id: "6",
-    name: "John Doe",
+    firstName: "John",
+    lastName: "Doe",
     phone: "(555) 123-4567",
     dob: "01 Jan 1990",
     email: "john@example.com",
@@ -65,7 +71,8 @@ export const STAFF_LIST: StaffMember[] = [
   },
   {
     id: "7",
-    name: "Jane Doe",
+    firstName: "Jane",
+    lastName: "Doe",
     phone: "(555) 789-0123",
     dob: "01 Jan 1990",
     email: "jane@example.com",

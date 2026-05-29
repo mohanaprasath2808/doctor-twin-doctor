@@ -4,7 +4,8 @@ export type StaffFilter = "all" | StaffRole;
 
 export type StaffMember = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   phone: string;
   dob: string;
   email: string;

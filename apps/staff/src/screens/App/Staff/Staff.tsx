@@ -34,7 +34,8 @@ const Staff = () => {
     if (q.length > 0) {
       rows = rows.filter(
         (s) =>
-          s.name.toLowerCase().includes(q) ||
+          s.firstName.toLowerCase().includes(q) ||
+          s.lastName.toLowerCase().includes(q) ||
           s.email.toLowerCase().includes(q) ||
           s.phone.toLowerCase().includes(q) ||
           s.dob.toLowerCase().includes(q) ||
@@ -134,7 +135,7 @@ const Staff = () => {
                   <View style={styles.staffBody}>
                     <View style={styles.staffTextStack}>
                       <Text style={styles.staffName} numberOfLines={1}>
-                        {item.name}
+                        {item.firstName} {item.lastName}
                       </Text>
                       <View style={styles.metaRow}>
                         <Text style={styles.staffMetaLine} numberOfLines={1}>
