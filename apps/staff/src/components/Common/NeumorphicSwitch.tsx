@@ -5,16 +5,40 @@ import { COLORS } from "../../constants/theme";
 import NeumorphicInnerShadowCard from "../neomorphism/NeumorphicInnerShadowCard";
 import StatusDot from "./StatusDot";
 
+export const NEUMORPHIC_SWITCH_DEFAULT_COLORS = {
+  trackBackgroundColor: "#FFFFFF",
+  darkShadowColor: "#C8CBCC",
+  lightShadowColor: "#FFFFFFCC",
+  thumbOnColor: COLORS.PRIMARY,
+  thumbOffColor: COLORS.WHITE,
+  thumbOuterGradientColors: ["#D6E3F3", "#FFFFFF"] as [string, string],
+};
+
+export type NeumorphicSwitchColors = {
+  trackBackgroundColor?: string;
+  darkShadowColor?: string;
+  lightShadowColor?: string;
+  thumbOnColor?: string;
+  thumbOffColor?: string;
+  thumbOuterGradientColors?: [string, string];
+};
+
 type NeumorphicSwitchProps = {
   value: boolean;
   onValueChange: (value: boolean) => void;
   disabled?: boolean;
-};
+} & NeumorphicSwitchColors;
 
 const NeumorphicSwitch: React.FC<NeumorphicSwitchProps> = ({
   value,
   onValueChange,
   disabled = false,
+  trackBackgroundColor = NEUMORPHIC_SWITCH_DEFAULT_COLORS.trackBackgroundColor,
+  darkShadowColor = NEUMORPHIC_SWITCH_DEFAULT_COLORS.darkShadowColor,
+  lightShadowColor = NEUMORPHIC_SWITCH_DEFAULT_COLORS.lightShadowColor,
+  thumbOnColor = NEUMORPHIC_SWITCH_DEFAULT_COLORS.thumbOnColor,
+  thumbOffColor = NEUMORPHIC_SWITCH_DEFAULT_COLORS.thumbOffColor,
+  thumbOuterGradientColors = NEUMORPHIC_SWITCH_DEFAULT_COLORS.thumbOuterGradientColors,
 }) => {
   return (
     <Pressable
@@ -24,23 +48,23 @@ const NeumorphicSwitch: React.FC<NeumorphicSwitchProps> = ({
       <NeumorphicInnerShadowCard
         height={28}
         borderRadius={999}
-        backgroundColor="#FFFFFF"
+        backgroundColor={trackBackgroundColor}
         containerStyle={styles.track}
         contentStyle={styles.trackContent}
         darkShadowDx={4}
         darkShadowDy={4}
         darkShadowBlur={12}
-        darkShadowColor="#C8CBCC"
+        darkShadowColor={darkShadowColor}
         lightShadowDx={-4}
         lightShadowDy={-4}
         lightShadowBlur={9}
-        lightShadowColor="#FFFFFFCC"
+        lightShadowColor={lightShadowColor}
       >
         <View style={[styles.thumbWrap, value ? styles.thumbRight : styles.thumbLeft]}>
           <StatusDot
-            color={value ? COLORS.PRIMARY : COLORS.WHITE}
+            color={value ? thumbOnColor : thumbOffColor}
             size={24}
-            outerGradientColors={["#D6E3F3", "#FFFFFF"]}
+            outerGradientColors={thumbOuterGradientColors}
           />
         </View>
       </NeumorphicInnerShadowCard>

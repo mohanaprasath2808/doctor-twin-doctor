@@ -7,3 +7,5 @@ export const ENDPOINTS = {
     STAFF: "/staff", // also used for create staff
     FETCH_STAFF: "/staff/list",
 };
+
+export const staffById = (userId: string) => `${ENDPOINTS.STAFF}/${userId}`;

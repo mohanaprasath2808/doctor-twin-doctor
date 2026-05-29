@@ -2,68 +2,74 @@ import React, {
   createContext,
   ReactNode,
   useCallback,
+  useRef,
   useState,
 } from "react";
 import { useToast } from "react-native-toast-notifications";
 
-import { ENDPOINTS } from "../api/endpoints";
+import { ENDPOINTS, staffById } from "../api/endpoints";
 import { api } from "../api/axios";
-import { ROLE_OPTIONS } from "../components/BottomSheets/StaffRoleBottomSheetModal";
-import type { StaffMember, StaffRole } from "../screens/App/Staff/staffTypes";
 
 export type FetchStaffParams = {
-  role?: StaffRole | string;
-  search?: string;
+  roles?: string[];
+  search_key?: string;
   page?: number;
   limit?: number;
 };
 
+export type FetchStaffOptions = {
+  /** When true, append results to existing `staffs` (page > 1). */
+  append?: boolean;
+};
+
+export type StaffListData = {
+  staffs?: Record<string, unknown>[];
+  total?: number;
+  page?: number;
+  limit?: number;
+};
+
+export type CreateStaffPayload = {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  password: string;
+  role: string;
+  date_of_birth: string;
+  is_active?: boolean;
+};
+
+export type UpdateStaffPayload = {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  role: string;
+  date_of_birth: string;
+  is_active: boolean;
+  password?: string;
+};
+
+type ApiResult<T = unknown> = { ok: boolean; data?: T; error?: string };
+
 export interface AppContextType {
-  staffList: StaffMember[];
-  setStaffList: React.Dispatch<React.SetStateAction<StaffMember[]>>;
+  staffData: StaffListData;
+  setStaffData: React.Dispatch<React.SetStateAction<StaffListData>>;
   loadingStaff: boolean;
+  loadingMoreStaff: boolean;
+  submittingStaff: boolean;
   fetchStaff: (
     params?: FetchStaffParams,
-  ) => Promise<{ ok: boolean; data?: StaffMember[]; error?: string }>;
+    options?: FetchStaffOptions,
+  ) => Promise<{ ok: boolean; data?: StaffListData; error?: string }>;
+  refetchStaffList: () => Promise<{ ok: boolean; data?: StaffListData; error?: string }>;
+  createStaff: (payload: CreateStaffPayload) => Promise<ApiResult>;
+  updateStaff: (userId: string, payload: UpdateStaffPayload) => Promise<ApiResult>;
+  deleteStaff: (userId: string) => Promise<ApiResult>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
-
-const mapApiStaffToMember = (raw: Record<string, unknown>): StaffMember => {
-  const role = (raw?.role ?? raw?.staff_role ?? "ma") as StaffRole;
-  const roleLabel =
-    (raw?.role_label as string | undefined) ??
-    (raw?.roleLabel as string | undefined) ??
-    ROLE_OPTIONS.find((o) => o.role === role)?.label ??
-    String(role);
-
-  return {
-    id: String(raw?.id ?? raw?._id ?? ""),
-    firstName: String(raw?.first_name ?? raw?.firstName ?? ""),
-    lastName: String(raw?.last_name ?? raw?.lastName ?? ""),
-    phone: String(raw?.phone ?? raw?.phone_number ?? ""),
-    dob: String(raw?.dob ?? raw?.date_of_birth ?? raw?.dateOfBirth ?? ""),
-    email: String(raw?.email ?? ""),
-    role,
-    roleLabel,
-  };
-};
-
-const extractStaffArray = (payload: unknown): Record<string, unknown>[] => {
-  if (Array.isArray(payload)) {
-    return payload as Record<string, unknown>[];
-  }
-  if (payload && typeof payload === "object") {
-    const record = payload as Record<string, unknown>;
-    for (const key of ["staff", "list", "items", "rows", "data"]) {
-      const value = record[key];
-      if (Array.isArray(value)) {
-        return value as Record<string, unknown>[];
-      }
-    }
-  }
-  return [];
-};
 
 interface AppContextProps {
   children: ReactNode;
@@ -71,28 +77,56 @@ interface AppContextProps {
 
 const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
   const toast = useToast();
-  const [staffList, setStaffList] = useState<StaffMember[]>([]);
+  const [staffData, setStaffData] = useState<StaffListData>({});
   const [loadingStaff, setLoadingStaff] = useState(false);
+  const [loadingMoreStaff, setLoadingMoreStaff] = useState(false);
+  const [submittingStaff, setSubmittingStaff] = useState(false);
+  const lastListParamsRef = useRef<FetchStaffParams>({ page: 1, limit: 20 });
 
   const fetchStaff = useCallback(
-    async (params?: FetchStaffParams) => {
-      const { role, search, page = 1, limit = 50 } = params ?? {};
+    async (params?: FetchStaffParams, options?: FetchStaffOptions) => {
+      const { roles, search_key, page = 1, limit = 20 } = params ?? {};
+      const { append = false } = options ?? {};
+      const isLoadMore = append && page > 1;
+
       const requestBody = {
-        ...(role && role !== "all" ? { role } : {}),
-        ...(search?.trim() ? { search: search.trim() } : {}),
+        ...(roles && roles.length > 0 ? { roles } : {}),
+        ...(search_key?.trim() ? { search_key: search_key.trim() } : {}),
         page,
         limit,
       };
 
+      if (!isLoadMore) {
+        lastListParamsRef.current = { roles, search_key, page, limit };
+      }
+
       try {
-        setLoadingStaff(true);
+        if (isLoadMore) {
+          setLoadingMoreStaff(true);
+        } else {
+          setLoadingStaff(true);
+        }
+
         const response = await api.post(ENDPOINTS.FETCH_STAFF, requestBody);
         const data: any = response?.data;
 
         if (data?.ok === true) {
-          const rows = extractStaffArray(data?.data).map(mapApiStaffToMember);
-          setStaffList(rows);
-          return { ok: true, data: rows };
+          const incoming: StaffListData = data?.data ?? {};
+
+          setStaffData((prev) => {
+            if (!isLoadMore) {
+              return incoming;
+            }
+
+            const prevStaffs = prev.staffs ?? [];
+            const nextStaffs = incoming.staffs ?? [];
+            return {
+              ...incoming,
+              staffs: [...prevStaffs, ...nextStaffs],
+            };
+          });
+
+          return { ok: true, data: incoming };
         }
 
         const message = data?.error || "Failed to load staff";
@@ -105,19 +139,120 @@ const AppContextProvider: React.FC<AppContextProps> = ({ children }) => {
         toast.show(message, { type: "danger" });
         return { ok: false, error: message };
       } finally {
-        setLoadingStaff(false);
+        if (isLoadMore) {
+          setLoadingMoreStaff(false);
+        } else {
+          setLoadingStaff(false);
+        }
       }
     },
     [toast],
   );
 
+  const refetchStaffList = useCallback(async () => {
+    return fetchStaff(lastListParamsRef.current);
+  }, [fetchStaff]);
+
+  const createStaff = useCallback(
+    async (payload: CreateStaffPayload): Promise<ApiResult> => {
+      try {
+        setSubmittingStaff(true);
+        const response = await api.post(ENDPOINTS.STAFF, payload);
+        const data: any = response?.data;
+
+        if (data?.ok === true) {
+          toast.show("Staff created successfully", { type: "success" });
+          await refetchStaffList();
+          return { ok: true, data: data?.data };
+        }
+
+        const message = data?.error || "Failed to create staff";
+        toast.show(message, { type: "danger" });
+        return { ok: false, error: message };
+      } catch (error: any) {
+        const errorData = error?.response?.data || error;
+        console.error(errorData, "error in createStaff");
+        const message = errorData?.error || errorData?.message || "Failed to create staff";
+        toast.show(message, { type: "danger" });
+        return { ok: false, error: message };
+      } finally {
+        setSubmittingStaff(false);
+      }
+    },
+    [toast, refetchStaffList],
+  );
+
+  const updateStaff = useCallback(
+    async (userId: string, payload: UpdateStaffPayload): Promise<ApiResult> => {
+      try {
+        setSubmittingStaff(true);
+        const response = await api.patch(staffById(userId), payload);
+        const data: any = response?.data;
+
+        if (data?.ok === true) {
+          toast.show("Staff updated successfully", { type: "success" });
+          await refetchStaffList();
+          return { ok: true, data: data?.data };
+        }
+
+        const message = data?.error || "Failed to update staff";
+        toast.show(message, { type: "danger" });
+        return { ok: false, error: message };
+      } catch (error: any) {
+        const errorData = error?.response?.data || error;
+        console.error(errorData, "error in updateStaff");
+        const message = errorData?.error || errorData?.message || "Failed to update staff";
+        toast.show(message, { type: "danger" });
+        return { ok: false, error: message };
+      } finally {
+        setSubmittingStaff(false);
+      }
+    },
+    [toast, refetchStaffList],
+  );
+
+  const deleteStaff = useCallback(
+    async (userId: string): Promise<ApiResult> => {
+      try {
+        setSubmittingStaff(true);
+        const response = await api.delete(staffById(userId));
+        const data: any = response?.data;
+
+        if (data?.ok === true) {
+          toast.show("Staff deleted successfully", { type: "success" });
+          await refetchStaffList();
+          return { ok: true, data: data?.data };
+        }
+
+        const message = data?.error || "Failed to delete staff";
+        toast.show(message, { type: "danger" });
+        return { ok: false, error: message };
+      } catch (error: any) {
+        const errorData = error?.response?.data || error;
+        console.error(errorData, "error in deleteStaff");
+        const message = errorData?.error || "Failed to delete staff";
+        toast.show(message, { type: "danger" });
+        return { ok: false, error: message };
+      } finally {
+        setSubmittingStaff(false);
+      }
+    },
+    [toast, refetchStaffList],
+  );
+
   return (
     <AppContext.Provider
       value={{
-        staffList,
-        setStaffList,
+        staffData,
+        setStaffData,
         loadingStaff,
+        loadingMoreStaff,
+        submittingStaff,
         fetchStaff,
+        refetchStaffList,
+        createStaff,
+        updateStaff,
+        deleteStaff,
       }}
     >
       {children}
