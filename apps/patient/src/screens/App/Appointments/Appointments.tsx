@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   ListRenderItem,
@@ -23,6 +24,7 @@ import ReusableButton from "../../../neomorphism/ReusableButton";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import AppointmentDummy from "../../../assets/images/tempImage/appointmentDummy.png";
 import WhitePlusIcon from "../../../assets/icons/whitePlusIcon.svg";
+import { AppContext } from "../../../context/AppContext";
 type TabKey = "upcoming" | "past";
 
 type UpcomingAppointment = {
@@ -36,44 +38,6 @@ type PastAppointment = UpcomingAppointment & {
   status: "cancelled" | "completed";
 };
 
-const UPCOMING: UpcomingAppointment[] = [
-  {
-    id: "u1",
-    datetime: "Mon, Apr 30 – 3:00 PM",
-    doctor: "Follow-up with Dr. Shahinaz Soliman",
-    clinic: "Soliman Care Clinic · Torrance, CA",
-  },
-  {
-    id: "u2",
-    datetime: "Mon, Apr 30 – 3:00 PM",
-    doctor: "Follow-up with Dr. Shahinaz Soliman",
-    clinic: "Soliman Care Clinic · Torrance, CA",
-  },
-  {
-    id: "3",
-    datetime: "Thu, Apr 04 – 2:00 PM",
-    doctor: "Consult with Dr. Shahinaz Soliman",
-    clinic: "Soliman Care Clinic \u00b7 Torrance, CA",
-  },
-];
-
-const PAST: PastAppointment[] = [
-  {
-    id: "p1",
-    datetime: "Mon, Apr 30 — 3:00 PM",
-    doctor: "Follow-up with Dr. Shahinaz Soliman",
-    clinic: "Soliman Care Clinic · Torrance, CA",
-    status: "cancelled",
-  },
-  {
-    id: "p2",
-    datetime: "Mon, Apr 30 — 3:00 PM",
-    doctor: "Follow-up with Dr. Shahinaz Soliman",
-    clinic: "Soliman Care Clinic · Torrance, CA",
-    status: "completed",
-  },
-];
-
 const TABS_GAP = 10;
 const HORIZONTAL = 16;
 
@@ -83,8 +47,48 @@ const REUSABLE_GRADIENT: [string, string] = ["#22D3EE", "#0F766E"];
 const HEIGHT_CARD_ROW_BTN = 40;
 const HEIGHT_SCHEDULE_FOOTER = 48;
 
+type AppointmentApiItem = {
+  appointment_id?: string;
+  status?: string;
+  provider_name?: string;
+  category?: string;
+  insurance_name?: string;
+  appointment_date?: string;
+  time_slot?: string;
+};
+
+type TabState = {
+  appointments: AppointmentApiItem[];
+  page: number;
+  total: number;
+  hasMore: boolean;
+  initialLoading: boolean;
+  loadingMore: boolean;
+};
+
+const DEFAULT_TAB_STATE: TabState = {
+  appointments: [],
+  page: 1,
+  total: 0,
+  hasMore: true,
+  initialLoading: false,
+  loadingMore: false,
+};
+
 const Appointments = () => {
   const navigation = useNavigation<any>();
+  const appContext = useContext(AppContext);
+  if (!appContext) {
+    throw new Error("Appointments must be used within AppContextProvider");
+  }
+  const { fetchAppointments } = appContext;
+
+  const [limit] = useState<number>(10);
+  const [tabStates, setTabStates] = useState<Record<TabKey, TabState>>({
+    upcoming: DEFAULT_TAB_STATE,
+    past: DEFAULT_TAB_STATE,
+  });
+
   const { width: windowWidth } = useWindowDimensions();
   const [tab, setTab] = useState<TabKey>("upcoming");
 
@@ -93,17 +97,119 @@ const Appointments = () => {
     [windowWidth],
   );
 
-  const listData = tab === "upcoming" ? UPCOMING : PAST;
+  const fetchPage = useCallback(
+    async (nextPage: number, mode: "initial" | "more") => {
+      setTabStates((prev) => ({
+        ...prev,
+        [tab]: {
+          ...prev[tab],
+          initialLoading: mode === "initial" ? true : prev[tab].initialLoading,
+          loadingMore: mode === "more" ? true : prev[tab].loadingMore,
+        },
+      }));
+      const status = tab === "upcoming" ? "Pending" : "Completed";
+      const response = await fetchAppointments(status, tab, nextPage, limit);
+
+      if (response.ok) {
+        const payload: any = response.data ?? {};
+        const nextAppointments: AppointmentApiItem[] = Array.isArray(payload?.appointments)
+          ? payload.appointments
+          : Array.isArray(payload)
+            ? payload
+            : [];
+        const nextTotal =
+          typeof payload?.total === "number" ? payload.total : typeof payload?.count === "number" ? payload.count : 0;
+        const nextLimit = typeof payload?.limit === "number" ? payload.limit : limit;
+
+        setTabStates((prev) => {
+          const prevTab = prev[tab];
+          const merged = mode === "initial" ? nextAppointments : [...prevTab.appointments, ...nextAppointments];
+          const loadedCount = merged.length;
+          const moreByTotal = nextTotal > 0 ? loadedCount < nextTotal : nextAppointments.length === nextLimit;
+          return {
+            ...prev,
+            [tab]: {
+              ...prevTab,
+              appointments: merged,
+              total: nextTotal,
+              page: nextPage,
+              hasMore: Boolean(moreByTotal),
+            },
+          };
+        });
+      } else if (mode === "initial") {
+        setTabStates((prev) => ({
+          ...prev,
+          [tab]: { ...prev[tab], appointments: [], total: 0, page: 1, hasMore: false },
+        }));
+      }
+
+      setTabStates((prev) => ({
+        ...prev,
+        [tab]: {
+          ...prev[tab],
+          initialLoading: mode === "initial" ? false : prev[tab].initialLoading,
+          loadingMore: mode === "more" ? false : prev[tab].loadingMore,
+        },
+      }));
+    },
+    [fetchAppointments, limit, tab],
+  );
+
+  useEffect(() => {
+    if (tabStates[tab].appointments.length === 0) {
+      fetchPage(1, "initial");
+    }
+  }, [fetchPage, tab]);
+
+  const onEndReached = useCallback(() => {
+    const s = tabStates[tab];
+    if (s.initialLoading || s.loadingMore || !s.hasMore) return;
+    fetchPage(s.page + 1, "more");
+  }, [fetchPage, tab, tabStates]);
+
+  const listData = useMemo(() => {
+    const mapped = tabStates[tab].appointments.map((a) => {
+      const date = a?.appointment_date || "---";
+      const slot = a?.time_slot || "---";
+      const datetime = `${date} · ${slot}`;
+      const doctor = a?.provider_name ? `Follow-up with ${a.provider_name}` : "---";
+      const clinicParts = [a?.category, a?.insurance_name].filter(Boolean);
+      const clinic = clinicParts.length ? clinicParts.join(" · ") : "---";
+      const stableFallbackId = `${date}-${slot}-${a?.provider_name || "---"}-${a?.status || "---"}`;
+
+      if (tab === "past") {
+        const raw = String(a?.status || "").toLowerCase();
+        const status: PastAppointment["status"] = raw === "cancelled" ? "cancelled" : "completed";
+        return {
+          id: a?.appointment_id || stableFallbackId,
+          datetime,
+          doctor,
+          clinic,
+          status,
+        } satisfies PastAppointment;
+      }
+
+      return {
+        id: a?.appointment_id || stableFallbackId,
+        datetime,
+        doctor,
+        clinic,
+      } satisfies UpcomingAppointment;
+    });
+
+    return mapped;
+  }, [tab, tabStates]);
 
   const renderUpcoming: ListRenderItem<UpcomingAppointment> = ({ item }) => (
     <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={10}>
       <View style={styles.cardTopRow}>
         <Image source={AppointmentDummy} style={styles.avatar} />
         <View style={styles.infoTextWrap}>
-          <Text style={styles.datetimeText}>{item.datetime}</Text>
-          <Text style={styles.doctorText}>{item.doctor}</Text>
-          <Text style={styles.clinicText}>{item.clinic}</Text>
-        </View>
+            <Text style={styles.datetimeText}>{item.datetime}</Text>
+            <Text style={styles.doctorText}>{item.doctor}</Text>
+            <Text style={styles.clinicText}>{item.clinic}</Text>
+          </View>
       </View>
       <AppButton
         text="View Details"
@@ -220,7 +326,26 @@ const Appointments = () => {
         }
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={<Text style={styles.emptyText}>No appointments found.</Text>}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.4}
+        ListEmptyComponent={
+          tabStates[tab].initialLoading ? (
+            <View style={styles.loadingWrap}>
+              <ActivityIndicator size="small" color={COLORS.PRIMARY} />
+              <Text style={styles.loadingText}>Loading appointments...</Text>
+            </View>
+          ) : (
+            <Text style={styles.emptyText}>No appointments found.</Text>
+          )
+        }
+        ListFooterComponent={
+          !tabStates[tab].initialLoading && tabStates[tab].loadingMore ? (
+            <View style={styles.loadingMoreWrap}>
+              <ActivityIndicator size="small" color={COLORS.PRIMARY} />
+              <Text style={styles.loadingMoreText}>Loading more...</Text>
+            </View>
+          ) : null
+        }
       />
 
       <View style={styles.footer}>
@@ -426,6 +551,31 @@ const styles = StyleSheet.create({
     marginTop: 24,
     textAlign: "center",
     fontSize: 14,
+    color: COLORS.TEXT_PRIMARY_70,
+    fontWeight: "500",
+  },
+  loadingWrap: {
+    marginTop: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  loadingText: {
+    textAlign: "center",
+    fontSize: 14,
+    color: COLORS.TEXT_PRIMARY_70,
+    fontWeight: "500",
+  },
+  loadingMoreWrap: {
+    paddingTop: 8,
+    paddingBottom: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  loadingMoreText: {
+    textAlign: "center",
+    fontSize: 12,
     color: COLORS.TEXT_PRIMARY_70,
     fontWeight: "500",
   },

@@ -31,6 +31,7 @@ const navigationStrings = {
   SUBSCRIPTION_COMPLETED: "SubscriptionCompleted",
   SCHEDULE_STEP_1: "ScheduleStep1",
   SCHEDULE_STEP_2: "ScheduleStep2",
+  SCHEDULE_STEP_3: "ScheduleStep3",
   NOTIFICATIONS: "Notifications",
   MESSAGES: "Messages",
   LABS: "Labs",

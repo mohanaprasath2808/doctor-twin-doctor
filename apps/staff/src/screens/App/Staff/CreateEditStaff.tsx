@@ -48,7 +48,8 @@ const CreateEditStaff = () => {
 
   const roleSheetRef = useRef<BottomSheetModal>(null);
 
-  const [name, setName] = useState(initial?.name ?? "");
+  const [firstName, setFirstName] = useState(initial?.firstName ?? "");
+  const [lastName, setLastName] = useState(initial?.lastName ?? "");
   const [phone, setPhone] = useState(initial?.phone ?? "");
   const [email, setEmail] = useState(initial?.email ?? "");
   const [password, setPassword] = useState(isEdit ? "********" : "");
@@ -117,11 +118,22 @@ const CreateEditStaff = () => {
             </NeumorphicCard>
           ) : null}
 
-          <Text style={[styles.label, !isEdit && styles.labelFirst]}>Name</Text>
+          <Text style={[styles.label, !isEdit && styles.labelFirst]}>First Name</Text>
           <InputField
-            placeholder="Enter name"
-            value={name}
-            onChangeText={setName}
+            placeholder="Enter first name"
+            value={firstName}
+            onChangeText={setFirstName}
+            leftIcon={<ProfileIcon width={18} height={18} />}
+            containerStyle={styles.inputTight}
+            height={46}
+            borderRadius={64}
+          />
+
+          <Text style={styles.label}>Last Name</Text>
+          <InputField
+            placeholder="Enter last name"
+            value={lastName}
+            onChangeText={setLastName}
             leftIcon={<ProfileIcon width={18} height={18} />}
             containerStyle={styles.inputTight}
             height={46}
