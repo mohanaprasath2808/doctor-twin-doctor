@@ -339,12 +339,14 @@ const styles = StyleSheet.create({
   },
   filterText: { color: COLORS.TEXT_70, fontSize: 14, fontWeight: "500" },
   selectedFilterText: { fontSize: 14, fontWeight: "500" },
-  section: {},
+  section: {
+    marginTop: 20,
+  },
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 14,
   },
   sectionTitle: { color: COLORS.TEXT_DARK, fontSize: 16, fontWeight: "600" },
   viewAll: { color: COLORS.PRIMARY, fontSize: 12, fontWeight: "500" },

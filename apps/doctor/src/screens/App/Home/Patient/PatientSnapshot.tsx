@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  FlatList,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../../constants/theme";
@@ -16,7 +8,7 @@ import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import DeltaBadge from "../../../../components/Common/DeltaBadge";
-import LabTrendCard from "../../../../components/Common/LabTrendCard";
+import LabsTrendChart from "../Labs/LabsTrendChart";
 import Timeline from "../../../../components/Common/Timeline";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
@@ -29,6 +21,8 @@ import WarningIcon from "../../../../assets/icon/warningIcon.svg";
 import BrainIcon from "../../../../assets/icon/brainIcon.svg";
 import XrayImage from "../../../../assets/image/tempImage/xrayImage.png";
 import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
+import HeartIcon from "../../../../assets/icon/heartIcon.svg";
+import ReportIcon from "../../../../assets/icon/reportIcon.svg";
 
 const TOP_ACTIONS = [
   { label: "Call", icon: <ZoomCallIcon /> },
@@ -55,45 +49,30 @@ const MEDS = [
   { name: "Lipitor 20 mg", dose: "QD" },
   { name: "Metformin 500mg", dose: "Daily" },
 ];
-const LAB_METRICS = [
-  {
-    label: "A1C",
-    value: "9.2%",
-    lineColor: "#F7BDC8",
-    fillColor: "#FCE3E8",
-    points: [4, 5, 4.7, 5.2, 6.4, 6.1, 7.3, 7.1, 8.5, 8.2, 9.2],
-  },
-  {
-    label: "eGFR",
-    value: "52",
-    lineColor: "#7DBAD8",
-    fillColor: "#D9EEF8",
-    points: [43, 44, 45, 47, 46, 49, 48, 50, 49, 51, 52],
-  },
-  {
-    label: "K+",
-    value: "5.8",
-    lineColor: "#EEDFAE",
-    fillColor: "#FAF2D8",
-    points: [4.7, 4.8, 4.9, 4.8, 5.0, 5.2, 5.1, 5.4, 5.5, 5.7, 5.8],
-  },
-  {
-    label: "TSH",
-    value: "0.3",
-    lineColor: "#9ED9D8",
-    fillColor: "#DBF3F2",
-    points: [1.4, 1.1, 1.0, 0.9, 0.8, 0.85, 0.7, 0.6, 0.55, 0.4, 0.3],
-  },
-];
+const LAB_CHART = {
+  title: "HbA1c",
+  value: "9.2%",
+  points: [4, 5, 4.7, 5.2, 6.4, 6.1, 7.3, 7.1, 8.5, 8.2, 9.2],
+};
 const INSURANCE_COLUMNS = [
   { label: "Eligibility", value: "Verified", badge: true },
   { label: "Balance", value: "$120" },
   { label: "Last statement date", value: "12 June 2025" },
 ];
 const CARE_GAPS = [
-  { id: "1", title: "Mammogram due", action: "Order" },
-  { id: "2", title: "Colonoscopy Due", action: "Order" },
-  { id: "3", title: "Vaccination Due", action: "Schedule" },
+  { id: "1", title: "Mammogram due", action: "Order", icon: <HeartIcon width={18} height={18} /> },
+  {
+    id: "2",
+    title: "Colonoscopy Due",
+    action: "Order",
+    icon: <ReportIcon width={18} height={18} />,
+  },
+  {
+    id: "3",
+    title: "Vaccination Due",
+    action: "Schedule",
+    icon: <CapsuleIcon width={18} height={18} />,
+  },
 ];
 const TIMELINE_ITEMS = [
   { id: "1", title: "Refill approved", time: "05:40 PM", isCompleted: true },
@@ -160,10 +139,7 @@ const PatientSnapshot = () => {
           <Text style={styles.headerTitle}>Patient Snapshot</Text>
         </View>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.topCardInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.topCardInner}>
           <View style={styles.patientRow}>
             <Image source={DoctorTempImage} style={styles.avatar} />
             <View style={styles.patientDetails}>
@@ -178,10 +154,7 @@ const PatientSnapshot = () => {
             </View>
           </View>
           <View style={styles.topActionListWrap}>
-            <HorizontalActionButtons
-              actions={TOP_ACTIONS}
-              buttonStyle={styles.smallActionBtn}
-            />
+            <HorizontalActionButtons actions={TOP_ACTIONS} buttonStyle={styles.smallActionBtn} />
           </View>
         </NeumorphicCard>
 
@@ -190,28 +163,18 @@ const PatientSnapshot = () => {
           innerStyle={[styles.warnInner, { backgroundColor: "#FFF9E9" }]}
         >
           <View style={styles.warnRow}>
-            <InnerShadowIcon
-              icon={<WarningIcon width={18} height={18} />}
-              size={36}
-            />
+            <InnerShadowIcon icon={<WarningIcon width={18} height={18} />} size={36} />
             <Text style={styles.warnText}>
               Abnormal Lab:
-              <Text style={styles.warnTextBold}>
-                {" "}
-                A1c 9.2% — Review
-              </Text>
+              <Text style={styles.warnTextBold}> A1c 9.2% — Review</Text>
             </Text>
           </View>
         </NeumorphicCard>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.sectionInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner}>
           <Text style={styles.sectionTitle}>Clinical Summary</Text>
           <Text style={styles.summaryText}>
-            DM2, HTN, CKD2. Last visit 3 months ago. A1c trending up. On
-            metformin...
+            DM2, HTN, CKD2. Last visit 3 months ago. A1c trending up. On metformin...
           </Text>
           <View style={styles.separator} />
           <View style={styles.topActionListWrap}>
@@ -222,10 +185,7 @@ const PatientSnapshot = () => {
           </View>
         </NeumorphicCard>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.sectionInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner}>
           <Text style={styles.sectionTitle}>Open Talk</Text>
           <FlatList
             data={OPEN_TALK_METRICS}
@@ -236,12 +196,7 @@ const PatientSnapshot = () => {
             contentContainerStyle={styles.talkList}
             columnWrapperStyle={styles.talkListRow}
             renderItem={({ item, index }) => (
-              <View
-                style={[
-                  styles.metricItemWrap,
-                  index >= 4 && styles.metricItemWrapWide,
-                ]}
-              >
+              <View style={[styles.metricItemWrap, index >= 4 && styles.metricItemWrapWide]}>
                 <NeumorphicCard
                   outerStyle={styles.metricOuter}
                   innerStyle={styles.metricInner}
@@ -255,10 +210,7 @@ const PatientSnapshot = () => {
           />
         </NeumorphicCard>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.sectionInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner}>
           <Text style={styles.sectionTitle}>Medications & Safety</Text>
           <View style={styles.medTabs}>
             <MedFilterChip
@@ -277,18 +229,13 @@ const PatientSnapshot = () => {
           {MEDS.map((med, index) => (
             <View key={med.name}>
               <View style={styles.medRow}>
-                <InnerShadowIcon
-                  icon={<CapsuleIcon width={18} height={18} />}
-                  size={40}
-                />
+                <InnerShadowIcon icon={<CapsuleIcon width={18} height={18} />} size={40} />
                 <View>
                   <Text style={styles.medName}>{med.name}</Text>
                   <Text style={styles.medDose}>{med.dose}</Text>
                 </View>
               </View>
-              {index < MEDS.length - 1 ? (
-                <View style={styles.medSeparator} />
-              ) : null}
+              {index < MEDS.length - 1 ? <View style={styles.medSeparator} /> : null}
             </View>
           ))}
           <View style={styles.actionRow}>
@@ -322,20 +269,15 @@ const PatientSnapshot = () => {
         <NeumorphicCard
           outerStyle={styles.cardOuter}
           innerStyle={styles.sectionInner}
+          clipInner={false}
         >
           <Text style={styles.sectionTitle}>Labs Panel</Text>
-          <View style={styles.labsGrid}>
-            {LAB_METRICS.map((item) => (
-              <LabTrendCard
-                key={item.label}
-                label={item.label}
-                value={item.value}
-                lineColor={item.lineColor}
-                fillColor={item.fillColor}
-                points={item.points}
-                outerStyle={styles.labCardOuter}
-              />
-            ))}
+          <View style={styles.labsChartWrap}>
+            <LabsTrendChart
+              title={LAB_CHART.title}
+              value={LAB_CHART.value}
+              points={LAB_CHART.points}
+            />
           </View>
           <View style={styles.labsActionRow}>
             <AppButton
@@ -355,7 +297,7 @@ const PatientSnapshot = () => {
               textStyle={[styles.smallBtnText, styles.primaryBtnText]}
             />
           </View>
-          <View style={{ marginTop: 3, marginBottom: 8 }}>
+          <View style={styles.labsDangerWrap}>
             <AppButton
               text="Escalate critical"
               borderWidth={1}
@@ -367,10 +309,7 @@ const PatientSnapshot = () => {
           </View>
         </NeumorphicCard>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.sectionInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner}>
           <Text style={styles.sectionTitle}>Imaging Panel</Text>
           <View style={styles.imagingRow}>
             <Image source={XrayImage} style={styles.imagingThumb} />
@@ -407,25 +346,26 @@ const PatientSnapshot = () => {
           </View>
         </NeumorphicCard>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.sectionInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner}>
           <Text style={styles.sectionTitle}>Insurance + Balance Panel</Text>
           <View style={styles.insuranceRow}>
             {INSURANCE_COLUMNS.map((col) => (
               <View key={col.label} style={styles.insuranceCol}>
-                <Text style={styles.insuranceLabel}>{col.label}</Text>
+                <Text style={styles.insuranceLabel} numberOfLines={1}>
+                  {col.label}
+                </Text>
                 {col.badge ? (
-                  <DeltaBadge
-                    value={col.value}
-                    height={26}
-                    bgColor="#DDF7EA"
-                    darkShadowColor="#A9E9D5"
-                    lightShadowColor="#FFFFFF99"
-                    textColor="#17B26A"
-                    textStyle={styles.insuranceBadgeText}
-                  />
+                  <View style={{ marginTop: 4 }}>
+                    <DeltaBadge
+                      value={col.value}
+                      height={26}
+                      bgColor="#DDF7EA"
+                      darkShadowColor="#A9E9D5"
+                      lightShadowColor="#FFFFFF99"
+                      textColor="#17B26A"
+                      textStyle={styles.insuranceBadgeText}
+                    />
+                  </View>
                 ) : (
                   <Text style={styles.insuranceValue}>{col.value}</Text>
                 )}
@@ -434,14 +374,12 @@ const PatientSnapshot = () => {
           </View>
         </NeumorphicCard>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.sectionInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner}>
           <Text style={styles.sectionTitle}>Care Gaps Panel</Text>
           {CARE_GAPS.map((gap, index) => (
             <View key={gap.id}>
               <View style={styles.careGapRow}>
+                <InnerShadowIcon icon={gap.icon} size={40} />
                 <Text style={styles.careGapTitle}>{gap.title}</Text>
                 <AppButton
                   text={gap.action}
@@ -453,17 +391,12 @@ const PatientSnapshot = () => {
                   textStyle={[styles.smallBtnText, styles.primaryBtnText]}
                 />
               </View>
-              {index < CARE_GAPS.length - 1 ? (
-                <View style={styles.medSeparator} />
-              ) : null}
+              {index < CARE_GAPS.length - 1 ? <View style={styles.medSeparator} /> : null}
             </View>
           ))}
         </NeumorphicCard>
 
-        <NeumorphicCard
-          outerStyle={styles.cardOuter}
-          innerStyle={styles.sectionInner}
-        >
+        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.sectionInner}>
           <Text style={styles.sectionTitle}>Timeline / Audit Trail</Text>
           <View style={styles.timelineWrap}>
             <Timeline data={TIMELINE_ITEMS} rowSpacing={28} />
@@ -487,10 +420,7 @@ const MedFilterChip = ({
   selected: boolean;
   onPress: () => void;
 }) => (
-  <Pressable
-    onPress={onPress}
-    style={[styles.medFilterPress, { width: chipWidth }]}
-  >
+  <Pressable onPress={onPress} style={[styles.medFilterPress, { width: chipWidth }]}>
     {selected ? (
       <DeltaBadge
         icon={null}
@@ -518,7 +448,7 @@ const MedFilterChip = ({
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.SURFACE },
   scroll: { flex: 1 },
-  content: { paddingHorizontal: 16, paddingBottom: 20, gap: 12 },
+  content: { paddingHorizontal: 16, paddingBottom: 32, gap: 12 },
   header: {
     marginTop: 6,
     minHeight: 40,
@@ -559,10 +489,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.TEXT_50,
   },
   topActionList: {
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 10,
     paddingVertical: 2,
     paddingLeft: 12,
-    paddingRight: 0,
+    paddingRight: 12,
+    gap: 8,
   },
   smallBtnText: { fontSize: 14, fontWeight: "500" },
   smallActionBtn: { height: 40, borderRadius: 20, paddingHorizontal: 14 },
@@ -570,7 +503,7 @@ const styles = StyleSheet.create({
   medActionBtn: { height: 40, borderRadius: 20, flex: 1 },
   primaryBtnText: { color: COLORS.PRIMARY, fontSize: 14, fontWeight: "500" },
   alertBtnText: { color: COLORS.ALERT },
-  inlineActionBtn: { marginRight: 8 },
+  inlineActionBtn: { flexShrink: 0 },
   warnInner: { borderRadius: 10, padding: 10 },
   warnRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   warnIcon: { color: COLORS.ALERT, fontSize: 12, fontWeight: "700" },
@@ -658,18 +591,14 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 12,
   },
-  labsGrid: {
-    marginTop: 12,
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8,
-  },
-  labCardOuter: {
-    width: "48.5%",
+  labsChartWrap: {
+    marginTop: 4,
+    paddingHorizontal: 12,
+    marginBottom: 8,
+    overflow: "hidden",
   },
   labsActionRow: {
-    marginTop: 20,
+    marginTop: 12,
     paddingHorizontal: 10,
     flexDirection: "row",
     gap: 8,
@@ -679,12 +608,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     flex: 1,
   },
+  labsDangerWrap: {
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 14,
+  },
   labsDangerBtn: {
-    marginTop: 14,
-    marginHorizontal: 10,
     height: 40,
     borderRadius: 20,
-    marginBottom: 12,
   },
   imagingRow: {
     marginTop: 10,
@@ -727,7 +658,7 @@ const styles = StyleSheet.create({
   careGapRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    gap: 8,
     paddingHorizontal: 12,
     paddingVertical: 12,
   },

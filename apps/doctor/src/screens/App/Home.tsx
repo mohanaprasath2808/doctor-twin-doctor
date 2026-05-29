@@ -23,6 +23,8 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import PatientIcon from "../../assets/icon/patientIcon.svg";
+import LabReportIcon from "../../assets/icon/labReportIcon.svg";
+import ReportIcon from "../../assets/icon/reportIcon.svg";
 import MicOutlineIcon from "../../assets/icon/micOutlineIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
@@ -97,15 +99,20 @@ const GRID_ITEMS: GridItem[] = [
     label: "Imaging Results",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
+  {
+    id: 12,
+    label: "Labs",
+    icon: () => <LabReportIcon width={18} height={18} />,
+  },
+  {
+    id: 15,
+    label: "Pre-Visit\nSummary",
+    icon: () => <ReportIcon width={18} height={18} />,
+  },
   // {
   //   id: 11,
   //   label: "Patient",
   //   icon: () => <PatientIcon width={18} height={18} />,
-  // },
-  // {
-  //   id: 12,
-  //   label: "Labs",
-  //   icon: () => <BrainIcon width={18} height={18} />,
   // },
   // {
   //   id: 13,
@@ -171,6 +178,11 @@ const Home = () => {
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
+        };
+      case 15:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.PRE_VISIT_SUMMARY),
         };
       case 13:
         return {

@@ -17,8 +17,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.solimancare.staff",
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Allow access to your photo library to set a staff profile picture.",
-        "NSCameraUsageDescription": "Allow access to your camera to take a staff profile picture."
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) access to your camera to take a staff profile picture.",
+        "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to use the microphone.",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library to upload and attach images."
       }
     },
     "android": {
@@ -32,7 +34,8 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_MEDIA_IMAGES",
-        "android.permission.READ_EXTERNAL_STORAGE"
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "plugins": [
@@ -45,11 +48,12 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take a staff profile picture.",
           "microphonePermission": false
         }
-      ]
+      ],
+      "expo-speech-recognition"
     ],
     "extra": {
       "eas": {
-        "projectId": "aa2bb4c8-2ff5-4ecd-b5df-1051d96b1a90"
+        "projectId": "5b53e873-544a-4e0b-aa76-e308fdb3ccb6"
       }
     }
   }
