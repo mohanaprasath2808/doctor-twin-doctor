@@ -43,8 +43,8 @@ const AddPrescription = () => {
             <InputField
               value={medication}
               onChangeText={setMedication}
-              placeholder="Atorvastatin"
-              borderRadius={12}
+              placeholder="Add medication..."
+              borderRadius={64}
               containerStyle={styles.inputTight}
             />
 
@@ -52,8 +52,8 @@ const AddPrescription = () => {
             <InputField
               value={dose}
               onChangeText={setDose}
-              placeholder="20 mg"
-              borderRadius={12}
+              placeholder="Add dose..."
+              borderRadius={64}
               containerStyle={styles.inputTight}
             />
           </ScrollView>
@@ -65,6 +65,7 @@ const AddPrescription = () => {
               borderRadius={26}
               containerStyle={styles.cta}
               onPress={() => navigation.goBack()}
+              textStyle={styles.footerBtnLabel}
             />
           </View>
         </View>
@@ -99,13 +100,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   headerSpacer: { width: 40, height: 40 },
   fieldLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: COLORS.TEXT_70,
-    marginTop: 16,
+    fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_60,
+    marginTop: 20,
   },
   inputTight: {
     marginTop: 8,
@@ -118,4 +121,10 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.TEXT_10,
   },
   cta: {},
+  footerBtnLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.WHITE,
+  },
 });

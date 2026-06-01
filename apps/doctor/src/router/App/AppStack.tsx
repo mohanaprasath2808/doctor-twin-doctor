@@ -80,6 +80,7 @@ import AddDiagnosis from "../../screens/App/Home/PreVisitSummary/AddDiagnosis";
 import EncounterSummary from "../../screens/App/Home/PreVisitSummary/EncounterSummary";
 import EncounterCompleted from "../../screens/App/Home/PreVisitSummary/EncounterCompleted";
 import OrderEngine from "../../screens/App/Home/OrderEngine/OrderEngine";
+import OrderUpdated from "../../screens/App/Home/OrderEngine/OrderUpdated";
 import OrderSuccessfullyPlaced from "../../screens/App/Home/OrderEngine/OrderSuccessfullyPlaced";
 const Stack = createNativeStackNavigator();
 
@@ -606,6 +607,13 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.ORDER_ENGINE}
         component={OrderEngine}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.ORDER_UPDATED}
+        component={OrderUpdated}
         options={{
           headerShown: false,
         }}

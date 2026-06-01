@@ -23,6 +23,13 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import PatientIcon from "../../assets/icon/patientIcon.svg";
+<<<<<<< Updated upstream
+=======
+import LabReportIcon from "../../assets/icon/labReportIcon.svg";
+import ReportIcon from "../../assets/icon/reportIcon.svg";
+import LotusIcon from "../../assets/icon/lotusIcon.svg";
+import OrderBlueIcon from "../../assets/icon/orderBlueIcon.svg";
+>>>>>>> Stashed changes
 import MicOutlineIcon from "../../assets/icon/micOutlineIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
@@ -92,6 +99,34 @@ const GRID_ITEMS: GridItem[] = [
     label: "Refills",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
+<<<<<<< Updated upstream
+=======
+  {
+    id: 11,
+    label: "Imaging Results",
+    icon: () => <RefillsIcon width={18} height={18} />,
+  },
+  {
+    id: 12,
+    label: "Labs",
+    icon: () => <LabReportIcon width={18} height={18} />,
+  },
+  {
+    id: 15,
+    label: "Pre-Visit\nSummary",
+    icon: () => <ReportIcon width={18} height={18} />,
+  },
+  {
+    id: 16,
+    label: "Preventive\nCare",
+    icon: () => <LotusIcon width={18} height={18} />,
+  },
+  {
+    id: 17,
+    label: "Order\nEngine",
+    icon: () => <OrderBlueIcon width={18} height={18} />,
+  },
+>>>>>>> Stashed changes
   // {
   //   id: 11,
   //   label: "Patient",
@@ -142,6 +177,11 @@ const Home = () => {
           badge: messagesData.length > 0 ? String(messagesData.length) : undefined,
           badgeType: messagesData.length > 0 ? ("dot" as const) : undefined,
         };
+      case 9:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.REVENUE_DASHBOARD),
+        };
       case 10:
         return {
           ...item,
@@ -167,6 +207,24 @@ const Home = () => {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
         };
+<<<<<<< Updated upstream
+=======
+      case 15:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.PRE_VISIT_SUMMARY),
+        };
+      case 16:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.PREVENTIVE_CARE),
+        };
+      case 17:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.ORDER_ENGINE),
+        };
+>>>>>>> Stashed changes
       case 13:
         return {
           ...item,

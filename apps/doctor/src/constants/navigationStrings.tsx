@@ -102,7 +102,14 @@ const navigationStrings = {
   ENCOUNTER_SUMMARY: "EncounterSummary",
   ENCOUNTER_COMPLETED: "EncounterCompleted",
   ORDER_ENGINE: "OrderEngine",
+  ORDER_UPDATED: "OrderUpdated",
   ORDER_SUCCESSFULLY_PLACED: "OrderSuccessfullyPlaced",
+  REVENUE_DASHBOARD: "RevenueDashboard",
+  IMAGING_RESULTS: "ImagingResults",
+  URGENT_VISIT_SCHEDULING: "UrgentVisitScheduling",
+  REQUESTED_ASSIGNED: "RequestedAssigned",
+  SEND_TO_ER: "SendToER",
+  ER_INSTRUCTIONS_SENT: "ERInstructionsSent",
 };
 
 export default navigationStrings;

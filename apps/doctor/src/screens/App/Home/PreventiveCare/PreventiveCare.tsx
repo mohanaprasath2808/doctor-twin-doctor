@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -25,6 +26,7 @@ import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import InnerShadowView from "../../../../neomorphism/InnerShadowView";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
+import { useToast } from "react-native-toast-notifications";
 
 const TERRY_PREFIX = "For Terry in room 3, ";
 
@@ -96,6 +98,7 @@ function InsuranceBadge({ label }: { label: string }) {
 
 const PreventiveCare = () => {
   const navigation = useNavigation<any>();
+  const toast = useToast();
   const insets = useSafeAreaInsets();
   const bottomPad = 16 + insets.bottom;
   const [hmoReferrals, setHmoReferrals] = useState(false);
@@ -110,9 +113,11 @@ const PreventiveCare = () => {
         <View style={styles.rowMain}>
           <View style={styles.rowTextCol}>
             <Text style={styles.rowName}>{item.name}</Text>
-            <Text style={styles.rowSub}>
-              {item.procedure} • {item.timeLabel}
-            </Text>
+            <View style={styles.rowSubRow}>
+              <Text style={styles.rowSub}>{item.procedure}</Text>
+              <View style={styles.rowSubDot} />
+              <Text style={styles.rowSub}>{item.timeLabel}</Text>
+            </View>
           </View>
           <InsuranceBadge label={item.insurance} />
         </View>
@@ -120,6 +125,17 @@ const PreventiveCare = () => {
     ),
     [],
   );
+
+  //handle confirm
+  const handleConfirm = () => {
+    toast.hideAll();
+    if (!hmoReferrals) {
+      toast.show("Please check the HMO referrals checkbox.", { type: "warning" });
+      return;
+    }
+    // navigation.navigate(navigationStrings.ORDER_ENGINE);
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom", "left", "right"]}>
@@ -153,11 +169,11 @@ const PreventiveCare = () => {
         <View style={styles.messageRow}>
           <DoctorAvatar source={DoctorTempImage} imageSize={38} containerSize={44} />
           <InsightMessageCard
-            title="I've identified some preventive care needs for today, Dr. Soliman."
-            subTitle="Shall I prepare the forms and requests to follow up?"
+            title="I've identified some preventive care needs for today, Dr. Soliman. Shall I prepare the forms and requests to follow up?"
             bgColor="#E1F5FE"
             style={styles.messageCard}
             titleSubTitleGap={6}
+            titleStyle={styles.messageTitle}
           />
         </View>
 
@@ -186,10 +202,14 @@ const PreventiveCare = () => {
           <Text style={styles.instructionMuted}>{FOOTER_QUESTION_REST}</Text>
         </Text>
 
-        <Pressable style={styles.checkRow} onPress={() => setHmoReferrals((v) => !v)}>
+        <TouchableOpacity
+          style={styles.checkRow}
+          onPress={() => setHmoReferrals((v) => !v)}
+          activeOpacity={0.8}
+        >
           <NeumorphicCheckboxMark selected={hmoReferrals} />
           <Text style={styles.checkLabel}>{HMO_CHECK_LABEL}</Text>
-        </Pressable>
+        </TouchableOpacity>
 
         <View style={styles.actionRow}>
           <View style={styles.actionCell}>
@@ -201,7 +221,7 @@ const PreventiveCare = () => {
               borderWidth={1}
               borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
-              textStyle={[styles.outlineLabel, styles.outlineColor]}
+              textStyle={styles.outlineLabel}
               onPress={() => navigation.goBack()}
             />
           </View>
@@ -210,7 +230,8 @@ const PreventiveCare = () => {
               title="Confirm"
               height={52}
               borderRadius={26}
-              onPress={() => navigation.navigate(navigationStrings.ORDER_ENGINE)}
+              textStyle={styles.confirmBtnText}
+              onPress={handleConfirm}
             />
           </View>
         </View>
@@ -240,6 +261,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   headerSpacer: {
     width: 40,
@@ -247,7 +269,6 @@ const styles = StyleSheet.create({
   },
   heroAvatar: {
     alignSelf: "center",
-    marginTop: 4,
   },
   heroWrapper: {
     width: 200,
@@ -285,12 +306,16 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   instructionBold: {
-    fontWeight: "700",
-    color: "#333333",
+    fontSize: 14,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.TEXT_DARK,
   },
   instructionMuted: {
+    fontSize: 14,
     fontWeight: "400",
-    color: "#757575",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.TEXT_70,
   },
   list: {
     overflow: "visible",
@@ -314,15 +339,28 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   rowName: {
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: 14,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
   },
   rowSub: {
-    marginTop: 4,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "400",
-    color: COLORS.TEXT_70,
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_80,
+  },
+  rowSubRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 4,
+  },
+  rowSubDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.TEXT_40,
   },
   badgeShell: {
     minWidth: 56,
@@ -339,7 +377,8 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
   },
   footerQuestion: {
@@ -355,10 +394,11 @@ const styles = StyleSheet.create({
   },
   checkLabel: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "400",
-    color: COLORS.TEXT_70,
-    lineHeight: 20,
+    color: COLORS.TEXT_80,
+    fontFamily: "SF-Pro-Text-Regular",
+    lineHeight: 14,
   },
   actionRow: {
     flexDirection: "row",
@@ -371,10 +411,21 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   outlineLabel: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.PRIMARY,
   },
-  outlineColor: {
-    color: COLORS.PRIMARY_DARK,
+  confirmBtnText: {
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.WHITE,
+  },
+  messageTitle: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: COLORS.TEXT_80,
+    fontFamily: "SF-Pro-Text-Regular",
   },
 });

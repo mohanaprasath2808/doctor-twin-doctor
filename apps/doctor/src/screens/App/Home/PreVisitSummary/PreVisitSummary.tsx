@@ -19,26 +19,27 @@ import AppButton from "../../../../components/Common/AppButton";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import BulbIcon from "../../../../assets/icon/bulbIcon.svg";
-import TimerIcon from "../../../../assets/icon/timerIcon.svg";
-import MailIcon from "../../../../assets/icon/mailIcon.svg";
-import WarningIcon from "../../../../assets/icon/warningIcon.svg";
+import BulbIcon from "../../../../assets/icon/infoIcon.svg";
+import TimerIcon from "../../../../assets/icon/calendarBlackIcon.svg";
+import MailIcon from "../../../../assets/icon/messageIcon.svg";
+import WarningIcon from "../../../../assets/icon/infoBlueIcon.svg";
 import RedWarningIcon from "../../../../assets/icon/redWarningIcon.svg";
+import PharmacyRedIcon from "../../../../assets/icon/tabletRedIcon.svg";
 import LabReportIcon from "../../../../assets/icon/labReportIcon.svg";
-import NurseIcon from "../../../../assets/icon/nurseIcon.svg";
-import CalendarIcon from "../../../../assets/icon/calendarIcon.svg";
+import TestTubeIcon from "../../../../assets/icon/testTubeIcon.svg";
+import ResultIcon from "../../../../assets/icon/resultIcon.svg";
 import RefillsIcon from "../../../../assets/icon/refillsIcon.svg";
-import PharmacyIcon from "../../../../assets/icon/pharmacyIcon.svg";
-import PrimaryDocIcon from "../../../../assets/icon/primaryDocIcon.svg";
-import ScribeIcon from "../../../../assets/icon/scribeIcon.svg";
-import BluePlusIcn from "../../../../assets/icon/bluePlusIcn.svg";
+import PharmacyIcon from "../../../../assets/icon/tabletBlueIcon.svg";
+import PrimaryDocIcon from "../../../../assets/icon/ecgPadIcon.svg";
+import LoopIcon from "../../../../assets/icon/loopBlueIcon.svg";
+import BluePlusIcn from "../../../../assets/icon/orderBlueIcon.svg";
 import ScheduleIcon from "../../../../assets/icon/scheduleIcon.svg";
-import DelegationHubIcon from "../../../../assets/icon/delegationHubIcon.svg";
+import DelegationHubIcon from "../../../../assets/icon/taskListIcon.svg";
 import ListIcon from "../../../../assets/icon/listIcon.svg";
 import navigationStrings from "../../../../constants/navigationStrings";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
-
+import DotIcon from "../../../../assets/icon/dotIcon.svg";
 const INTRO = "Here's a quick summary before your visit. I've highlighted what needs attention.";
 
 type ActionGlyph = React.ComponentType<{ width?: number; height?: number }>;
@@ -53,8 +54,8 @@ const ACTION_ITEMS: {
   { id: "message", label: "Message Staff", minWidth: 176, Icon: MailIcon },
   { id: "schedule", label: "Schedule Follow-Up", minWidth: 212, Icon: ScheduleIcon },
   { id: "refer", label: "Refer", minWidth: 96, Icon: DelegationHubIcon },
-  { id: "refill", label: "Refill", minWidth: 108, Icon: RefillsIcon },
-  { id: "task", label: "Add to Task List", minWidth: 180, Icon: ListIcon },
+  { id: "refill", label: "Refill", minWidth: 108, Icon: DelegationHubIcon },
+  { id: "task", label: "Add to Task List", minWidth: 180, Icon: DelegationHubIcon },
 ];
 
 const SUGGESTED_PLAN_ITEMS = [
@@ -84,7 +85,7 @@ function SectionTitle({ children }: { children: string }) {
   return <Text style={styles.titleInCard}>{children}</Text>;
 }
 
-type LabeledRow = { key: string; icon: React.ReactNode; text: string };
+type LabeledRow = { key: string; icon: React.ReactNode; text: string; subText?: string };
 
 function LabeledRowsCard({
   title,
@@ -99,15 +100,17 @@ function LabeledRowsCard({
     ({ item }) => (
       <View style={styles.labeledRow}>
         <View style={styles.iconShadowSlot}>
-          {iconTint === "danger" ? (
-            <View style={styles.iconDangerWrap}>
-              <InnerShadowIcon size={40} radius={20} icon={item.icon} />
-            </View>
-          ) : (
-            <InnerShadowIcon size={40} radius={20} icon={item.icon} />
-          )}
+          <InnerShadowIcon
+            size={40}
+            radius={20}
+            icon={item.icon}
+            backgroundColor={iconTint === "danger" ? COLORS.ALERT_LIGHT : undefined}
+          />
         </View>
-        <Text style={styles.rowText}>{item.text}</Text>
+        <View style={styles.rowTextCol}>
+          <Text style={styles.rowText}>{item.text}</Text>
+          {!!item.subText && <Text style={styles.rowSubText}>{item.subText}</Text>}
+        </View>
       </View>
     ),
     [iconTint],
@@ -144,23 +147,23 @@ type TimelineItem = {
 const SINCE_LAST_VISIT_ITEMS: TimelineItem[] = [
   {
     id: "slv1",
-    icon: <LabReportIcon width={18} height={18} />,
-    title: "Labs reviewed",
-    sub: "Lipid panel • CMP",
+    icon: <PrimaryDocIcon width={18} height={18} />,
+    title: "New Cholesterol Panel",
+    sub: "LDL cholesterocreased",
     date: "Feb 24",
   },
   {
     id: "slv2",
-    icon: <NurseIcon width={18} height={18} />,
-    title: "Nurse triage note",
-    sub: "BP 158/96 at visit",
+    icon: <TestTubeIcon width={18} height={18} />,
+    title: "Stress Test",
+    sub: "Mildly abnormal; follow-up not scheduled",
     date: "Mar 2",
   },
   {
     id: "slv3",
     icon: <MailIcon width={18} height={18} />,
     title: "Patient message",
-    sub: "Ongoing chest tightness x3 days",
+    sub: "Reports some exertional chest pain",
     date: "Apr 5",
   },
 ];
@@ -182,13 +185,13 @@ const MEDS_ITEMS: MedItem[] = [
   },
   {
     id: "m2",
-    icon: <RefillsIcon width={18} height={18} />,
+    icon: <PharmacyIcon width={18} height={18} />,
     name: "Atorvastatin",
     dose: "20 mg daily (refill due)",
   },
   {
     id: "m3",
-    icon: <RedWarningIcon width={18} height={18} />,
+    icon: <PharmacyRedIcon width={18} height={18} />,
     name: "Metformin",
     dose: "1000 mg BID • monitor renal function",
     danger: true,
@@ -206,14 +209,14 @@ type ResultItem = {
 const RESULTS_ITEMS: ResultItem[] = [
   {
     id: "r1",
-    icon: <CalendarIcon width={18} height={18} />,
+    icon: <ResultIcon width={18} height={18} />,
     title: "Lipid panel",
     sub: "LDL 157, HDL 42",
     date: "Jan 22",
   },
   {
     id: "r2",
-    icon: <LabReportIcon width={18} height={18} />,
+    icon: <ResultIcon width={18} height={18} />,
     title: "A1c",
     sub: "8.2%",
     date: "Jan 22",
@@ -230,7 +233,7 @@ const PreVisitSummary = () => {
       <AppButton
         text={item.label}
         leftIcon={<Glyph />}
-        iconSize={16}
+        iconSize={18}
         width={item.minWidth}
         height={44}
         borderRadius={22}
@@ -262,13 +265,12 @@ const PreVisitSummary = () => {
     return (
       <View style={styles.medRow}>
         <View style={styles.iconShadowSlot}>
-          {item.danger ? (
-            <View style={styles.iconDangerWrap}>
-              <InnerShadowIcon size={40} radius={20} icon={item.icon} />
-            </View>
-          ) : (
-            <InnerShadowIcon size={40} radius={20} icon={item.icon} />
-          )}
+          <InnerShadowIcon
+            size={40}
+            radius={20}
+            icon={item.icon}
+            backgroundColor={item.danger ? COLORS.ALERT_LIGHT : undefined}
+          />
         </View>
         <View style={styles.medTextCol}>
           <Text style={styles.medName}>{item.name}</Text>
@@ -294,7 +296,12 @@ const PreVisitSummary = () => {
   }, []);
 
   const renderPlanLine: ListRenderItem<{ id: string; text: string }> = useCallback(
-    ({ item }) => <Text style={styles.planBullet}>• {item.text}</Text>,
+    ({ item }) => (
+      <View style={[styles.planBulletRow]}>
+        <DotIcon width={18} height={18} />
+        <Text style={styles.planBullet}>{item.text}</Text>
+      </View>
+    ),
     [],
   );
 
@@ -348,7 +355,9 @@ const PreVisitSummary = () => {
                 <Text style={styles.patientMeta}>Annual Physical • Age 45 • Female</Text>
                 <View style={styles.timeRow}>
                   <TimerIcon width={14} height={14} />
-                  <Text style={styles.timeText}>Scheduled at 10:30 AM</Text>
+                  <Text style={styles.timeText}>
+                    Scheduled at <Text style={styles.timeTextBold}>10:30 AM</Text>
+                  </Text>
                 </View>
               </View>
             </View>
@@ -454,7 +463,7 @@ const PreVisitSummary = () => {
               innerStyle={styles.cardInner}
               borderRadius={12}
             >
-              <SectionTitle>Meds &amp; Safety</SectionTitle>
+              <SectionTitle>Meds & Safety</SectionTitle>
               <FlatList
                 data={MEDS_ITEMS}
                 keyExtractor={(i) => i.id}
@@ -495,18 +504,21 @@ const PreVisitSummary = () => {
             rows={[
               {
                 key: "a",
-                icon: <ScribeIcon width={18} height={18} />,
+                icon: <LoopIcon width={18} height={18} />,
                 text: "Cardiology referral — not yet scheduled",
+                subText: "Needs scheduling",
               },
               {
                 key: "b",
-                icon: <CalendarIcon width={18} height={18} />,
+                icon: <LoopIcon width={18} height={18} />,
                 text: "Repeat lipid panel — due 6 months ago",
+                subText: "Overdue",
               },
               {
                 key: "c",
-                icon: <LabReportIcon width={18} height={18} />,
+                icon: <LoopIcon width={18} height={18} />,
                 text: "Foot exam — incomplete",
+                subText: "Complete at next visit",
               },
             ]}
           />
@@ -517,13 +529,14 @@ const PreVisitSummary = () => {
               innerStyle={styles.cardInner}
               borderRadius={12}
             >
-              <SectionTitle>Suggested Plan</SectionTitle>
+              <Text style={[styles.titleInCard, styles.planSectionTitle]}>Suggested Plan</Text>
               <FlatList
                 data={SUGGESTED_PLAN_ITEMS}
                 keyExtractor={(i) => i.id}
                 scrollEnabled={false}
                 nestedScrollEnabled
                 removeClippedSubviews={false}
+                contentContainerStyle={styles.planListContent}
                 renderItem={renderPlanLine}
               />
             </NeumorphicCard>
@@ -553,6 +566,7 @@ const PreVisitSummary = () => {
             height={52}
             borderRadius={26}
             containerStyle={styles.startBtn}
+            textStyle={styles.startBtnText}
           />
           <Text style={styles.footerTagline}>
             {"I'm ready when you are. Let's begin the visit."}
@@ -587,6 +601,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   headerSpacer: { width: 40, height: 40 },
   heroAvatar: {
@@ -604,11 +619,12 @@ const styles = StyleSheet.create({
     height: 120,
   },
   intro: {
-    marginTop: 16,
     marginBottom: 20,
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     lineHeight: 20,
-    color: COLORS.TEXT_80,
+    color: COLORS.TEXT_DARK,
     textAlign: "center",
     paddingHorizontal: 8,
   },
@@ -616,17 +632,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   titleInCard: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
-    marginBottom: 12,
   },
   cardOuter: {
     width: "100%",
   },
   cardInner: {
     paddingHorizontal: 12,
-    paddingVertical: 12,
+
+    paddingTop: 12,
   },
   sep: {
     height: 1,
@@ -642,6 +659,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+  },
+  rowTextCol: {
+    flex: 1,
   },
   iconShadowSlot: {
     overflow: "visible",
@@ -660,16 +680,20 @@ const styles = StyleSheet.create({
       default: { paddingTop: 14, paddingBottom: 12 },
     }),
   },
-  iconDangerWrap: {
-    borderRadius: 20,
-    backgroundColor: COLORS.ALERT_LIGHT,
-    overflow: "visible",
-  },
   rowText: {
-    flex: 1,
     fontSize: 14,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
-    lineHeight: 20,
+    lineHeight: 18,
+  },
+  rowSubText: {
+    marginTop: 2,
+    fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_60,
+    lineHeight: 16,
   },
   patientHead: {
     flexDirection: "row",
@@ -677,45 +701,63 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   patientAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
   patientHeadText: {
     flex: 1,
+    gap: 4,
   },
   patientName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: COLORS.TEXT_DARK,
+    lineHeight: 18,
+    fontFamily: "SF-Pro-Text-Medium",
   },
   patientMeta: {
-    marginTop: 4,
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_70,
+    lineHeight: 18,
   },
   timeRow: {
-    marginTop: 6,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
   },
   timeText: {
-    fontSize: 12,
-    color: COLORS.TEXT_80,
+    fontSize: 11,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.TEXT_60,
+    lineHeight: 14,
+  },
+  timeTextBold: {
+    fontSize: 11,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Bold",
+    color: COLORS.TEXT_70,
+    lineHeight: 14,
   },
   reasonCol: {
     flex: 1,
   },
   reasonLabel: {
+    marginTop: 4,
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
   },
   reasonBody: {
-    marginTop: 4,
-    fontSize: 13,
-    color: COLORS.TEXT_80,
+    marginTop: 2,
+    fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_60,
     lineHeight: 18,
   },
   timelineRow: {
@@ -728,18 +770,26 @@ const styles = StyleSheet.create({
   },
   timelineTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
+    lineHeight: 18,
   },
   timelineSub: {
     marginTop: 2,
     fontSize: 12,
-    color: COLORS.TEXT_80,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_60,
+    lineHeight: 18,
   },
   timelineDate: {
     fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
     color: COLORS.TEXT_60,
     marginLeft: 4,
+    lineHeight: 18,
   },
   medRow: {
     flexDirection: "row",
@@ -759,11 +809,19 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: COLORS.TEXT_80,
   },
+  planSectionTitle: {
+    marginBottom: 12,
+  },
+  planListContent: {
+    paddingBottom: 4,
+  },
   planBullet: {
-    fontSize: 13,
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "400",
     lineHeight: 20,
-    color: COLORS.TEXT_DARK,
-    marginBottom: 8,
+    color: COLORS.TEXT_70,
+    fontFamily: "SF-Pro-Text-Regular",
   },
   actionsSection: {
     marginTop: 24,
@@ -792,15 +850,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: COLORS.PRIMARY_DARK,
+    fontFamily: "SF-Pro-Text-Medium",
   },
   startBtn: {
     marginTop: 0,
   },
   footerTagline: {
     marginTop: 10,
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
     color: COLORS.TEXT_70,
     textAlign: "center",
     lineHeight: 18,
+  },
+  planBulletRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 10,
+    marginBottom: 10,
+  },
+  startBtnText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: COLORS.WHITE,
+    fontFamily: "SF-Pro-Text-Medium",
   },
 });

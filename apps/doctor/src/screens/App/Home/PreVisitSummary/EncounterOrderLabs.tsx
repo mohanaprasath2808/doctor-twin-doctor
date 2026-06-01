@@ -23,7 +23,7 @@ const EncounterOrderLabs = () => {
   const bottomPad = 16 + insets.bottom;
   const [selected, setSelected] = useState<Record<LabKey, boolean>>({
     lipid: false,
-    a1c: true,
+    a1c: false,
     bmp: false,
   });
 
@@ -51,7 +51,11 @@ const EncounterOrderLabs = () => {
             <View style={styles.headerSpacer} />
           </View>
 
-          <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={12}>
+          <NeumorphicCard
+            outerStyle={styles.cardOuter}
+            innerStyle={styles.cardInner}
+            borderRadius={12}
+          >
             {LAB_ROWS.map((row, index) => (
               <React.Fragment key={row.key}>
                 {index > 0 ? <View style={styles.divider} /> : null}
@@ -73,6 +77,7 @@ const EncounterOrderLabs = () => {
             borderRadius={26}
             containerStyle={styles.cta}
             onPress={() => navigation.goBack()}
+            textStyle={styles.footerBtnLabel}
           />
         </View>
       </View>
@@ -104,12 +109,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Text-Semibold",
     color: COLORS.TEXT_DARK,
   },
   headerSpacer: { width: 40, height: 40 },
   cardOuter: {
     width: "100%",
-    marginTop: 8,
+    marginTop: 20,
   },
   cardInner: {
     paddingHorizontal: 12,
@@ -122,12 +128,13 @@ const styles = StyleSheet.create({
   optionLeft: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 15,
   },
   optionText: {
     color: COLORS.TEXT_DARK,
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
   },
   divider: {
     height: 1,
@@ -142,4 +149,10 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.TEXT_10,
   },
   cta: {},
+  footerBtnLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.WHITE,
+  },
 });

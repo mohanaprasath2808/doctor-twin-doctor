@@ -1,11 +1,21 @@
-import React, { Fragment, ReactNode } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useCallback } from "react";
+import {
+  FlatList,
+  Image,
+  ImageSourcePropType,
+  ListRenderItem,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
 import LabReportIcon from "../../../../assets/icon/labReportIcon.svg";
-import PrimaryDocIcon from "../../../../assets/icon/primaryDocIcon.svg";
+import NurseIcon from "../../../../assets/icon/nurseIcon.svg";
+import ReportIcon from "../../../../assets/icon/reportIcon.svg";
 import RightArrow from "../../../../assets/icon/rightArrow.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
@@ -22,117 +32,170 @@ import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 
 const INSIGHT_TITLE =
-  "Dr. Soliman, based on John Miller's visit, I recommend the following lab and imaging orders.";
-const INSIGHT_SUB = "Would you like to proceed?";
+  "Dr. Soliman, based on John Miller's visit, I recommend the following lab and imaging orders. Would you like to proceed?";
 
-type OrderLine = {
+type LabLine = {
   id: string;
-  icon: ReactNode;
   title: string;
   sub: string;
-  rightLabel?: string;
-  showChevron?: boolean;
+  rightLabel: string;
 };
 
-const LAB_LINES: OrderLine[] = [
+type ImagingLine = {
+  id: string;
+  imageSource: ImageSourcePropType;
+  title: string;
+  sub: string;
+};
+
+type MedLine = {
+  id: string;
+  name: string;
+  dose?: string;
+  subSegments: string[];
+};
+
+type ReferralLine = {
+  id: string;
+  title: string;
+  titleSuffix: string;
+  sub: string;
+};
+
+const LAB_LINES: LabLine[] = [
   {
     id: "cbc",
-    icon: <LabReportIcon width={18} height={18} />,
     title: "CBC",
     sub: "Priority Today",
     rightLabel: "Today",
   },
   {
     id: "cmp",
-    icon: <LabReportIcon width={18} height={18} />,
     title: "Comprehensive Metabolic Panel",
     sub: "Routine",
     rightLabel: "Today",
   },
 ];
 
-const IMAGING_LINES: OrderLine[] = [
+const IMAGING_LINES: ImagingLine[] = [
   {
     id: "us",
-    icon: (
-      <Image source={XrayThumb} style={{ width: 22, height: 22, borderRadius: 4 }} resizeMode="cover" />
-    ),
+    imageSource: XrayThumb,
     title: "Abdominal Ultrasound",
     sub: "Scheduled by Today",
-    showChevron: true,
   },
 ];
 
-const MED_LINES: OrderLine[] = [
+const MED_LINES: MedLine[] = [
   {
     id: "lipitor",
-    icon: <CapsuleIcon width={18} height={18} />,
-    title: "Lipitor 20 mg",
-    sub: "Dosage: Take 1 nightly • 2 refills",
-    showChevron: true,
+    name: "Lipitor",
+    dose: "20 mg",
+    subSegments: ["Dosage: Take 1 night", "2 refills"],
   },
-];
-
-const REFERRAL_LINES: OrderLine[] = [
   {
     id: "neph",
-    icon: <PrimaryDocIcon width={18} height={18} />,
-    title: "Nephrology Referral",
-    sub: "Referred Clinic • Nearby • 6 months ago",
-    showChevron: true,
+    name: "Nephrology Referral",
+    subSegments: ["Referred Clinic:", "Nearby", "6 months ago"],
   },
 ];
 
-function OrderRow({
-  icon,
-  title,
-  sub,
-  rightLabel,
-  showChevron,
-}: {
-  icon: ReactNode;
-  title: string;
-  sub: string;
-  rightLabel?: string;
-  showChevron?: boolean;
-}) {
-  return (
-    <View style={styles.orderRow}>
-      <InnerShadowIcon size={40} radius={20} icon={icon} />
-      <View style={styles.orderMid}>
-        <Text style={styles.orderTitle}>{title}</Text>
-        <Text style={styles.orderSub}>{sub}</Text>
-      </View>
-      {rightLabel ? <Text style={styles.orderRight}>{rightLabel}</Text> : null}
-      {showChevron ? <RightArrow width={14} height={14} style={styles.chevron} /> : null}
-    </View>
-  );
-}
+const REFERRAL_LINES: ReferralLine[] = [
+  {
+    id: "cardio",
+    title: "Me Ponn",
+    titleSuffix: "Today",
+    sub: "Putaine",
+  },
+];
 
-function OrderCategoryCard({ title, lines }: { title: string; lines: OrderLine[] }) {
-  return (
-    <NeumorphicCard outerStyle={styles.categoryOuter} innerStyle={styles.categoryInner} borderRadius={12}>
-      <Text style={styles.categoryTitle}>{title}</Text>
-      {lines.map((line, index) => (
-        <Fragment key={line.id}>
-          <OrderRow
-            icon={line.icon}
-            title={line.title}
-            sub={line.sub}
-            rightLabel={line.rightLabel}
-            showChevron={line.showChevron}
-          />
-          {index < lines.length - 1 ? <View style={styles.rowSep} /> : null}
-        </Fragment>
-      ))}
-    </NeumorphicCard>
-  );
+function RowSeparator() {
+  return <View style={styles.rowSep} />;
 }
 
 const OrderEngine = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const bottomPad = 16 + insets.bottom;
+
+  const renderLabLine: ListRenderItem<LabLine> = useCallback(
+    ({ item }) => (
+      <View style={styles.orderRow}>
+        <InnerShadowIcon size={40} radius={20} icon={<LabReportIcon width={18} height={18} />} />
+        <View style={styles.orderMid}>
+          <Text style={styles.orderTitle}>{item.title}</Text>
+          <Text style={[styles.orderSub, styles.orderSubPlain]}>{item.sub}</Text>
+        </View>
+        <Text style={styles.orderRight}>{item.rightLabel}</Text>
+      </View>
+    ),
+    [],
+  );
+
+  const renderImagingLine: ListRenderItem<ImagingLine> = useCallback(
+    ({ item }) => (
+      <View style={styles.orderRow}>
+        <Image source={item.imageSource} style={styles.orderThumb} resizeMode="cover" />
+        <View style={styles.orderMid}>
+          <Text style={styles.orderTitle}>{item.title}</Text>
+          <Text style={[styles.orderSub, styles.orderSubPlain]}>{item.sub}</Text>
+        </View>
+        <RightArrow width={14} height={14} style={styles.chevron} />
+      </View>
+    ),
+    [],
+  );
+
+  const renderMedLine: ListRenderItem<MedLine> = useCallback(
+    ({ item }) => (
+      <View style={styles.orderRow}>
+        <InnerShadowIcon
+          size={40}
+          radius={20}
+          icon={
+            item.id === "lipitor" ? (
+              <CapsuleIcon width={18} height={18} />
+            ) : (
+              <NurseIcon width={18} height={18} />
+            )
+          }
+        />
+        <View style={styles.orderMid}>
+          <View style={styles.titleRow}>
+            <Text style={styles.orderTitle}>{item.name}</Text>
+            {item.dose ? <Text style={styles.medDose}>{item.dose}</Text> : null}
+          </View>
+          <View style={styles.orderSubRow}>
+            {item.subSegments.map((segment, index) => (
+              <View key={`${segment}-${index}`} style={styles.orderSubPart}>
+                {index > 0 ? <View style={styles.metaDot} /> : null}
+                <Text style={styles.orderSub}>{segment}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+        <RightArrow width={14} height={14} style={styles.chevron} />
+      </View>
+    ),
+    [],
+  );
+
+  const renderReferralLine: ListRenderItem<ReferralLine> = useCallback(
+    ({ item }) => (
+      <View style={styles.orderRow}>
+        <InnerShadowIcon size={40} radius={20} icon={<ReportIcon width={18} height={18} />} />
+        <View style={styles.orderMid}>
+          <View style={styles.titleRow}>
+            <Text style={styles.orderTitle}>{item.title}</Text>
+            <Text style={styles.titleSuffix}>{item.titleSuffix}</Text>
+          </View>
+          <Text style={[styles.orderSub, styles.orderSubPlain]}>{item.sub}</Text>
+        </View>
+        <RightArrow width={14} height={14} style={styles.chevron} />
+      </View>
+    ),
+    [],
+  );
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom", "left", "right"]}>
@@ -154,17 +217,26 @@ const OrderEngine = () => {
           <View style={styles.headerSpacer} />
         </View>
 
-        <NeumorphicCard outerStyle={styles.patientCardOuter} innerStyle={styles.patientCardInner} borderRadius={12}>
+        <NeumorphicCard
+          outerStyle={styles.patientCardOuter}
+          innerStyle={styles.patientCardInner}
+          borderRadius={12}
+        >
           <View style={styles.patientRow}>
             <DoctorAvatar source={DoctorTempImage} imageSize={38} containerSize={44} />
             <View style={styles.patientTextCol}>
-              <Text style={styles.drName}>Dr. Soliman</Text>
-              <Text style={styles.patientMeta}>John Miller • Age 45 • Female</Text>
-              <Text style={styles.visitMeta}>
-                Level 1 follow-up visit <Text style={styles.visitMetaDot}> · </Text>2 months ago
-              </Text>
+              <Text style={styles.drName}>Dr.Soliman</Text>
+              <View style={styles.patientMetaRow}>
+                <Text style={styles.patientMeta}>John Miller</Text>
+                <View style={styles.metaDot} />
+                <Text style={styles.patientMeta2}>Age 45</Text>
+                <View style={styles.metaDot} />
+                <Text style={styles.patientMeta2}>Female</Text>
+              </View>
             </View>
           </View>
+          <Text style={styles.visitMeta}>Level 1 follow-up visit</Text>
+          <Text style={styles.visitMeta2}>2 months ago</Text>
         </NeumorphicCard>
 
         <ProfileAvatar
@@ -176,25 +248,82 @@ const OrderEngine = () => {
           imageStyle={styles.heroImage}
         />
 
-        <Text style={styles.heroCaption}>Dr. Twin coordinating order management</Text>
+        <Text style={styles.heroCaption}>Dr.Twin coordinating order management</Text>
 
         <View style={styles.messageRow}>
           <DoctorAvatar source={DoctorTempImage} imageSize={38} containerSize={44} />
           <InsightMessageCard
             title={INSIGHT_TITLE}
-            subTitle={INSIGHT_SUB}
             bgColor="#E1F5FE"
             style={styles.messageCard}
             titleStyle={styles.insightTitle}
-            subTitleStyle={styles.insightSub}
             titleSubTitleGap={6}
           />
         </View>
 
-        <OrderCategoryCard title="Lab Orders" lines={LAB_LINES} />
-        <OrderCategoryCard title="Imaging Orders" lines={IMAGING_LINES} />
-        <OrderCategoryCard title="Medication Orders" lines={MED_LINES} />
-        <OrderCategoryCard title="Referral Orders" lines={REFERRAL_LINES} />
+        <NeumorphicCard
+          outerStyle={styles.categoryOuter}
+          innerStyle={styles.categoryInner}
+          borderRadius={12}
+        >
+          <Text style={styles.categoryTitle}>Lab Orders</Text>
+          <FlatList
+            data={LAB_LINES}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            removeClippedSubviews={false}
+            renderItem={renderLabLine}
+            ItemSeparatorComponent={RowSeparator}
+          />
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.categoryOuter}
+          innerStyle={styles.categoryInner}
+          borderRadius={12}
+        >
+          <Text style={styles.categoryTitle}>Imaging Orders</Text>
+          <FlatList
+            data={IMAGING_LINES}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            removeClippedSubviews={false}
+            renderItem={renderImagingLine}
+            ItemSeparatorComponent={RowSeparator}
+          />
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.categoryOuter}
+          innerStyle={styles.categoryInner}
+          borderRadius={12}
+        >
+          <Text style={styles.categoryTitle}>Medication Orders</Text>
+          <FlatList
+            data={MED_LINES}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            removeClippedSubviews={false}
+            renderItem={renderMedLine}
+            ItemSeparatorComponent={RowSeparator}
+          />
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.categoryOuter}
+          innerStyle={styles.categoryInner}
+          borderRadius={12}
+        >
+          <Text style={styles.categoryTitle}>Referral Orders</Text>
+          <FlatList
+            data={REFERRAL_LINES}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            removeClippedSubviews={false}
+            renderItem={renderReferralLine}
+            ItemSeparatorComponent={RowSeparator}
+          />
+        </NeumorphicCard>
 
         <View style={styles.actionRow}>
           <View style={styles.actionCell}>
@@ -206,8 +335,8 @@ const OrderEngine = () => {
               borderWidth={1}
               borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
-              textStyle={[styles.outlineLabel, styles.outlineColor]}
-              onPress={() => navigation.goBack()}
+              textStyle={[styles.outlineLabel]}
+              onPress={() => navigation.navigate(navigationStrings.ORDER_UPDATED)}
             />
           </View>
           <View style={styles.actionCell}>
@@ -215,6 +344,7 @@ const OrderEngine = () => {
               title="Place Orders"
               height={52}
               borderRadius={26}
+              textStyle={[styles.outlineLabel2]}
               onPress={() => navigation.navigate(navigationStrings.ORDER_SUCCESSFULLY_PLACED)}
             />
           </View>
@@ -245,11 +375,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   headerSpacer: { width: 40, height: 40 },
   patientCardOuter: {
     width: "100%",
-    marginTop: 16,
+    marginTop: 24,
   },
   patientCardInner: {
     paddingHorizontal: 12,
@@ -266,23 +397,47 @@ const styles = StyleSheet.create({
   },
   drName: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
   },
   patientMeta: {
-    marginTop: 4,
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
+  },
+  patientMeta2: {
+    fontSize: 14,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_70,
+  },
+  patientMetaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 4,
+  },
+  metaDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.TEXT_50,
   },
   visitMeta: {
     marginTop: 8,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
     color: COLORS.TEXT_70,
   },
-  visitMetaDot: {
-    color: COLORS.TEXT_40,
+  visitMeta2: {
+    marginTop: 3,
+    fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_60,
   },
   heroAvatar: {
     alignSelf: "center",
@@ -300,11 +455,12 @@ const styles = StyleSheet.create({
     height: 120,
   },
   heroCaption: {
-    marginTop: 16,
+    marginBottom: 16,
     textAlign: "center",
-    fontSize: 15,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: COLORS.PRIMARY,
+    fontFamily: "SF-Pro-Text-Medium",
   },
   messageRow: {
     marginTop: 16,
@@ -318,15 +474,10 @@ const styles = StyleSheet.create({
   },
   insightTitle: {
     fontSize: 14,
-    fontWeight: "500",
-    color: COLORS.PRIMARY,
-    lineHeight: 20,
-  },
-  insightSub: {
-    fontSize: 14,
     fontWeight: "400",
-    color: COLORS.TEXT_70,
-    lineHeight: 20,
+    color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Regular",
+    lineHeight: 18,
   },
   categoryOuter: {
     width: "100%",
@@ -337,10 +488,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   categoryTitle: {
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
-    marginBottom: 10,
+    marginBottom: 17,
   },
   orderRow: {
     flexDirection: "row",
@@ -348,25 +500,65 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 4,
   },
+  orderThumb: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+  },
   orderMid: {
     flex: 1,
     minWidth: 0,
   },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    flexWrap: "wrap",
+    gap: 6,
+  },
   orderTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Medium",
+  },
+  titleSuffix: {
+    fontSize: 12,
+    fontWeight: "400",
+    color: COLORS.TEXT_60,
+    fontFamily: "SF-Pro-Text-Regular",
+  },
+  medDose: {
+    fontSize: 14,
+    fontWeight: "400",
+    color: COLORS.TEXT_70,
+    fontFamily: "SF-Pro-Text-Regular",
   },
   orderSub: {
-    marginTop: 3,
     fontSize: 12,
     fontWeight: "400",
     color: COLORS.TEXT_70,
+    fontFamily: "SF-Pro-Text-Regular",
+  },
+  orderSubPlain: {
+    marginTop: 3,
+  },
+  orderSubRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 3,
+  },
+  orderSubPart: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
   },
   orderRight: {
     fontSize: 12,
-    fontWeight: "600",
-    color: COLORS.TEXT_70,
+    fontWeight: "400",
+    color: COLORS.TEXT_60,
+    fontFamily: "SF-Pro-Text-Regular",
   },
   chevron: {
     marginLeft: 4,
@@ -388,10 +580,15 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   outlineLabel: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontFamily: "SF-Pro-Text-Medium",
+    fontWeight: "500",
+    color: COLORS.PRIMARY,
   },
-  outlineColor: {
-    color: COLORS.PRIMARY_DARK,
+  outlineLabel2: {
+    fontSize: 16,
+    fontFamily: "SF-Pro-Text-Medium",
+    fontWeight: "500",
+    color: COLORS.WHITE,
   },
 });

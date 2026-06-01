@@ -12,10 +12,11 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import CalendarIcon from "../../../../assets/icon/calendarIcon.svg";
+import DotIcon from "../../../../assets/icon/dotIcon.svg";
+import CalendarIcon from "../../../../assets/icon/calendarBlueIcon.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
-import PharmacyIcon from "../../../../assets/icon/pharmacyIcon.svg";
+import PharmacyIcon from "../../../../assets/icon/tabletBlueIcon.svg";
 import { COLORS } from "../../../../constants/theme";
 import navigationStrings from "../../../../constants/navigationStrings";
 import AppButton from "../../../../components/Common/AppButton";
@@ -74,7 +75,12 @@ function InsetBulletList({ lines }: { lines: string[] }) {
   }, []);
 
   const renderBullet: ListRenderItem<string> = useCallback(
-    ({ item }) => <Text style={styles.bulletLine}>• {item}</Text>,
+    ({ item }) => (
+      <View style={styles.bulletRow}>
+        <DotIcon width={18} height={18} />
+        <Text style={styles.bulletLine}>{item}</Text>
+      </View>
+    ),
     [],
   );
 
@@ -111,18 +117,6 @@ const EncounterSummary = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const bottomPad = 16 + insets.bottom;
-
-  const renderBulletSection: ListRenderItem<BulletSection> = useCallback(
-    ({ item }) => (
-      <View style={styles.sectionWrap}>
-        <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={12}>
-          <Text style={styles.cardTitle}>{item.title}</Text>
-          <InsetBulletList lines={item.lines} />
-        </NeumorphicCard>
-      </View>
-    ),
-    [],
-  );
 
   const renderPrescription: ListRenderItem<PrescriptionRow> = useCallback(
     ({ item }) => (
@@ -185,15 +179,25 @@ const EncounterSummary = () => {
 
           <Text style={styles.intro}>{INTRO}</Text>
 
-          <FlatList
-            data={BULLET_SECTIONS}
-            keyExtractor={(s) => s.id}
-            scrollEnabled={false}
-            renderItem={renderBulletSection}
-          />
+          {BULLET_SECTIONS.map((section) => (
+            <View key={section.id} style={styles.sectionWrap}>
+              <NeumorphicCard
+                outerStyle={styles.cardOuter}
+                innerStyle={styles.cardInner}
+                borderRadius={12}
+              >
+                <Text style={styles.cardTitle}>{section.title}</Text>
+                <InsetBulletList lines={section.lines} />
+              </NeumorphicCard>
+            </View>
+          ))}
 
           <View style={styles.sectionWrap}>
-            <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={12}>
+            <NeumorphicCard
+              outerStyle={styles.cardOuter}
+              innerStyle={styles.cardInner}
+              borderRadius={12}
+            >
               <Text style={styles.cardTitle}>Prescriptions</Text>
               <FlatList
                 data={PRESCRIPTIONS}
@@ -206,7 +210,11 @@ const EncounterSummary = () => {
           </View>
 
           <View style={styles.sectionWrap}>
-            <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.cardInner} borderRadius={12}>
+            <NeumorphicCard
+              outerStyle={styles.cardOuter}
+              innerStyle={styles.cardInner}
+              borderRadius={12}
+            >
               <Text style={styles.cardTitle}>Follow-up in 2 weeks</Text>
               <FlatList
                 data={FOLLOW_UP_ROWS}
@@ -231,7 +239,7 @@ const EncounterSummary = () => {
               borderWidth={1}
               borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
-              textStyle={[styles.editLabel, styles.editLabelColor]}
+              textStyle={styles.editLabel}
               onPress={() => navigation.goBack()}
             />
           </View>
@@ -241,6 +249,7 @@ const EncounterSummary = () => {
               height={52}
               borderRadius={26}
               containerStyle={styles.signBtn}
+              textStyle={styles.signBtnText}
               onPress={() => navigation.navigate(navigationStrings.ENCOUNTER_COMPLETED)}
             />
           </View>
@@ -268,17 +277,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   headerSpacer: { width: 40, height: 40 },
   heroAvatar: {
     alignSelf: "center",
-    marginTop: 4,
   },
   heroWrapper: {
     width: 200,
@@ -292,13 +300,13 @@ const styles = StyleSheet.create({
     height: 120,
   },
   intro: {
-    marginTop: 16,
-    marginBottom: 8,
+    marginBottom: 14,
     fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
     paddingHorizontal: 8,
-    fontFamily: "SF-Pro-Display-Medium",
   },
   sectionWrap: {
     marginTop: 16,
@@ -312,10 +320,11 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
   },
   cardTitle: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   insetShell: {
     width: "100%",
@@ -330,7 +339,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
+  bulletRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 3,
+  },
   bulletLine: {
+    flex: 1,
     fontSize: 14,
     fontWeight: "400",
     lineHeight: 20,
@@ -357,14 +372,16 @@ const styles = StyleSheet.create({
   },
   rxName: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
   },
   rxDetail: {
     marginTop: 4,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "400",
-    color: COLORS.TEXT_70,
+    fontFamily: "SF-Pro-Text-Regular",
+    color: COLORS.TEXT_60,
   },
   rxSep: {
     height: 14,
@@ -378,8 +395,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
-    lineHeight: 20,
+    lineHeight: 18,
   },
   followDivider: {
     height: 1,
@@ -401,11 +419,16 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   editLabel: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  editLabelColor: {
-    color: COLORS.PRIMARY_DARK,
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.PRIMARY,
   },
   signBtn: {},
+  signBtnText: {
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.WHITE,
+  },
 });
