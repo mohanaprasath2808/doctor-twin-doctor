@@ -1,104 +1,55 @@
-import React, { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { FlatList, ListRenderItem, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import DownArrow from "../../../../assets/icon/downArrow.svg";
-import LockIcon from "../../../../assets/icon/lockIcon.svg";
+import BlueTickIcon from "../../../../assets/icon/tickBlueIcon.svg";
+import RedWarningIcon from "../../../../assets/icon/redWarningIcon.svg";
 import RightArrow from "../../../../assets/icon/rightArrow.svg";
 import SelectedCheckBox from "../../../../assets/icon/tickGreyIcon.svg";
-import BlueTickIcon from "../../../../assets/icon/tickBlueIcon.svg";
-import GreenTickImage from "../../../../assets/image/greenTick.png";
-import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import { COLORS } from "../../../../constants/theme";
 import navigationStrings from "../../../../constants/navigationStrings";
 import AppButton from "../../../../components/Common/AppButton";
+import DeltaBadge from "../../../../components/Common/DeltaBadge";
 import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
-import NeumorphicSwitch from "../../../../components/Common/NeumorphicSwitch";
-import ProfileAvatar from "../../../../components/Auth/ProfileAvatar";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import InnerShadowContainer from "../../../../neomorphism/InnerShadowContainer";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
 
-const INSIGHT_TITLE = "Orders Successfully Submitted for Dr. Soliman";
-const INSIGHT_SUB = "Here are the details.";
 const REFERENCE_LOG = "Reference log GGH78292 23 Apr 2025 03:11 PM";
 
-type AutoVariant = "check-down" | "check" | "notify-switch" | "follow-chevron";
-
-type AutoRow = {
+type LabLine = {
   id: string;
-  variant: AutoVariant;
-  label: string;
-  sub?: string;
+  title: string;
+  sub: string;
 };
 
-const AUTO_ROWS: AutoRow[] = [
-  { id: "a1", variant: "check-down", label: "Saved to records" },
-  { id: "a2", variant: "check", label: "To: Quest Diagnostics" },
-  { id: "a3", variant: "check", label: "Radmet Imaging Center" },
-  { id: "a4", variant: "notify-switch", label: "Patient Notified" },
-  { id: "a5", variant: "follow-chevron", label: "Follow-Up reminder set", sub: "2 weeks" },
+const LAB_LINES: LabLine[] = [
+  { id: "cbc", title: "CBC", sub: "Priority Today" },
+  { id: "cmp", title: "Comprehensive Metabolic Panel", sub: "Priority" },
 ];
 
-const OrderSuccessfullyPlaced = () => {
+function RowSeparator() {
+  return <View style={styles.rowDivider} />;
+}
+
+const OrderUpdated = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const bottomPad = 16 + insets.bottom;
-  const [patientNotified, setPatientNotified] = useState(true);
-  const [autoActionsExpanded, setAutoActionsExpanded] = useState(false);
 
-  const visibleAutoRows = autoActionsExpanded ? AUTO_ROWS : [AUTO_ROWS[0]];
-
-  const onDone = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: navigationStrings.BOTTOM_NAVIGATION }],
-    });
-  };
-
-  const renderAutoRow = (row: AutoRow) => {
-    const leadIcon =
-      row.variant === "notify-switch" || row.variant === "follow-chevron" ? (
-        <InnerShadowIcon size={40} radius={20} icon={<LockIcon width={16} height={16} />} />
-      ) : (
-        <InnerShadowIcon size={40} radius={20} icon={<BlueTickIcon width={18} height={18} />} />
-      );
-
-    const trail =
-      row.variant === "check-down" ? (
-        <Pressable
-          onPress={() => setAutoActionsExpanded((expanded) => !expanded)}
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={autoActionsExpanded ? "Collapse auto actions" : "Expand auto actions"}
-        >
-          <DownArrow
-            width={14}
-            height={14}
-            style={[styles.trailIcon, autoActionsExpanded && styles.trailIconExpanded]}
-          />
-        </Pressable>
-      ) : row.variant === "notify-switch" ? (
-        <NeumorphicSwitch value={patientNotified} onValueChange={setPatientNotified} />
-      ) : row.variant === "follow-chevron" ? (
-        <RightArrow width={14} height={14} style={styles.trailIcon} />
-      ) : null;
-
-    return (
-      <View style={styles.autoRow}>
-        {leadIcon}
-        <View style={styles.autoRowMid}>
-          <Text style={styles.autoLabel}>{row.label}</Text>
-          {row.sub ? <Text style={styles.autoSub}>{row.sub}</Text> : null}
-        </View>
-        {trail}
+  const renderLabLine: ListRenderItem<LabLine> = ({ item }) => (
+    <View style={styles.orderRow}>
+      <InnerShadowIcon size={40} radius={20} icon={<BlueTickIcon width={18} height={18} />} />
+      <View style={styles.orderMid}>
+        <Text style={styles.orderTitle}>{item.title}</Text>
+        <Text style={[styles.orderSub, styles.orderSubPlain]}>{item.sub}</Text>
       </View>
-    );
-  };
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom", "left", "right"]}>
@@ -116,33 +67,32 @@ const OrderSuccessfullyPlaced = () => {
             radius={20}
             onPress={() => navigation.goBack()}
           />
-          <Text style={styles.headerTitle} numberOfLines={2}>
-            Order Successfully Placed
-          </Text>
+          <Text style={styles.headerTitle}>Order Updated</Text>
           <View style={styles.headerSpacer} />
         </View>
-
-        <ProfileAvatar
-          overlaySource={OverlayImage}
-          imageSource={GreenTickImage}
-          containerStyle={styles.heroAvatar}
-          wrapperStyle={styles.heroWrapper}
-          overlayStyle={styles.heroOverlay}
-          imageStyle={styles.heroImage}
-        />
-
-        <Text style={styles.successTitle}>Orders successfully placed</Text>
-        <Text style={styles.successSub}>Today 2 days ago</Text>
 
         <NeumorphicCard
           outerStyle={styles.patientCardOuter}
           innerStyle={styles.patientCardInner}
           borderRadius={12}
         >
-          <View style={styles.patientRow}>
+          <View style={styles.patientHeaderRow}>
             <DoctorAvatar source={DoctorTempImage} imageSize={38} containerSize={44} />
             <View style={styles.patientTextCol}>
-              <Text style={styles.drName}>Dr.Soliman</Text>
+              <View style={styles.nameBadgeRow}>
+                <Text style={styles.drName}>Dr.Soliman</Text>
+                <DeltaBadge
+                  icon={null}
+                  value="Pending Submission"
+                  width={132}
+                  height={26}
+                  bgColor={COLORS.ESCALATION}
+                  darkShadowColor="#F2D790"
+                  lightShadowColor="#FFFFFF"
+                  textColor={COLORS.ESCALATION_DARK}
+                  textStyle={styles.pendingBadgeText}
+                />
+              </View>
               <View style={styles.patientMetaRow}>
                 <Text style={styles.patientMeta}>John Miller</Text>
                 <View style={styles.metaDot} />
@@ -152,47 +102,88 @@ const OrderSuccessfullyPlaced = () => {
               </View>
             </View>
           </View>
+
           <InnerShadowContainer
             borderRadius={100}
-            color="#E8F8EF"
+            color="#F0F4F8"
             containerStyle={styles.insightContainer}
             contentStyle={styles.insightContent}
           >
             <SelectedCheckBox width={18} height={18} />
             <View style={styles.insightTextCol}>
-              <Text style={styles.insightTitle}>{INSIGHT_TITLE}</Text>
-              <Text style={styles.insightSub}>{INSIGHT_SUB}</Text>
+              <Text style={styles.insightTitle}>Orders updated for Dr.Soliman</Text>
+              <Text style={styles.insightSub}>Review and submit when ready</Text>
             </View>
           </InnerShadowContainer>
         </NeumorphicCard>
 
+        <Text style={styles.sectionHeading}>Orders Adjusted</Text>
+
         <NeumorphicCard
-          outerStyle={styles.autoCardOuter}
-          innerStyle={styles.autoCardInner}
+          outerStyle={styles.categoryOuter}
+          innerStyle={styles.categoryInner}
           borderRadius={12}
         >
-          <Text style={styles.autoSectionTitle}>Auto Actions</Text>
-          {visibleAutoRows.map((row, index) => (
-            <View key={row.id}>
-              {renderAutoRow(row)}
-              {index < visibleAutoRows.length - 1 ? <View style={styles.rowDivider} /> : null}
+          <Text style={styles.categoryTitle}>Removed</Text>
+          <View style={styles.orderRow}>
+            <InnerShadowIcon
+              size={40}
+              radius={20}
+              icon={<RedWarningIcon width={18} height={18} />}
+              backgroundColor={COLORS.ALERT_LIGHT}
+            />
+            <View style={styles.orderMid}>
+              <Text style={styles.orderTitle}>Nephrology Referral</Text>
+              <Text style={[styles.orderSub, styles.orderSubPlain]}>Soliman Clinic</Text>
             </View>
-          ))}
+            <RightArrow width={14} height={14} style={styles.chevron} />
+          </View>
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.categoryOuter}
+          innerStyle={styles.categoryInner}
+          borderRadius={12}
+        >
+          <Text style={styles.categoryTitle}>Lab Orders</Text>
+          <FlatList
+            data={LAB_LINES}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            removeClippedSubviews={false}
+            renderItem={renderLabLine}
+            ItemSeparatorComponent={RowSeparator}
+          />
+        </NeumorphicCard>
+
+        <NeumorphicCard
+          outerStyle={styles.categoryOuter}
+          innerStyle={styles.categoryInner}
+          borderRadius={12}
+        >
+          <Text style={styles.categoryTitle}>Imaging Orders</Text>
+          <View style={styles.orderRow}>
+            <InnerShadowIcon size={40} radius={20} icon={<BlueTickIcon width={18} height={18} />} />
+            <View style={styles.orderMid}>
+              <Text style={styles.orderTitle}>Abnormal Ultrasound</Text>
+              <Text style={[styles.orderSub, styles.orderSubPlain]}>Priority Tomorrow</Text>
+            </View>
+          </View>
         </NeumorphicCard>
 
         <View style={styles.actionRow}>
           <View style={styles.actionCell}>
             <ReusableButton
-              title="Done"
+              title="Submit Orders"
               height={52}
               borderRadius={26}
-              onPress={onDone}
-              textStyle={styles.doneButtonText}
+              onPress={() => navigation.navigate(navigationStrings.ORDER_SUCCESSFULLY_PLACED)}
+              textStyle={styles.submitButtonText}
             />
           </View>
           <View style={styles.actionCell}>
             <AppButton
-              text="View in Chart"
+              text="Continue Editing"
               width="100%"
               height={52}
               borderRadius={26}
@@ -200,7 +191,7 @@ const OrderSuccessfullyPlaced = () => {
               borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
               textStyle={[styles.outlineLabel]}
-              onPress={() => navigation.navigate(navigationStrings.FULL_PATIENT_CHART)}
+              onPress={() => navigation.goBack()}
             />
           </View>
         </View>
@@ -211,7 +202,7 @@ const OrderSuccessfullyPlaced = () => {
   );
 };
 
-export default OrderSuccessfullyPlaced;
+export default OrderUpdated;
 
 const styles = StyleSheet.create({
   safe: {
@@ -227,56 +218,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 8,
   },
   headerTitle: {
-    flex: 1,
     fontSize: 18,
-    fontFamily: "SF-Pro-Text-Semibold",
-    fontWeight: "500",
+    fontWeight: "600",
     color: COLORS.TEXT_DARK,
-    textAlign: "center",
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   headerSpacer: { width: 40, height: 40 },
-  heroAvatar: {
-    alignSelf: "center",
-    marginTop: 12,
-  },
-  heroWrapper: {
-    width: 200,
-    height: 200,
-  },
-  heroOverlay: {
-    borderRadius: 100,
-  },
-  heroImage: {
-    width: 120,
-    height: 120,
-  },
-  successTitle: {
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "500",
-    color: COLORS.TEXT_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
-  },
-  successSub: {
-    marginTop: 6,
-    textAlign: "center",
-    fontSize: 14,
-    fontFamily: "SF-Pro-Text-Regular",
-    fontWeight: "400",
-    color: COLORS.TEXT_70,
-  },
   patientCardOuter: {
     width: "100%",
-    marginTop: 20,
+    marginTop: 24,
   },
   patientCardInner: {
     paddingHorizontal: 12,
     paddingVertical: 14,
   },
-  patientRow: {
+  patientHeaderRow: {
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 12,
@@ -285,22 +243,34 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  nameBadgeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 8,
+  },
   drName: {
+    flex: 1,
     fontSize: 16,
-    fontFamily: "SF-Pro-Text-Semibold",
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
+  },
+  pendingBadgeText: {
+    fontSize: 12,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
   },
   patientMeta: {
     fontSize: 14,
-    fontFamily: "SF-Pro-Text-Medium",
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
   },
   patientMeta2: {
     fontSize: 14,
-    fontFamily: "SF-Pro-Text-Regular",
     fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
     color: COLORS.TEXT_70,
   },
   patientMetaRow: {
@@ -322,75 +292,84 @@ const styles = StyleSheet.create({
   insightContent: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+    gap: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
   insightTextCol: {
     flex: 1,
     minWidth: 0,
-    gap: 1,
+    gap: 4,
   },
   insightTitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "500",
+    color: COLORS.TEXT_DARK,
     fontFamily: "SF-Pro-Text-Medium",
-    color: COLORS.GREEN,
     lineHeight: 18,
   },
   insightSub: {
     fontSize: 12,
-    fontFamily: "SF-Pro-Text-Regular",
     fontWeight: "400",
     color: COLORS.TEXT_80,
+    fontFamily: "SF-Pro-Text-Regular",
   },
-  autoCardOuter: {
+  sectionHeading: {
+    marginTop: 20,
+    marginBottom: 4,
+    fontSize: 18,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.TEXT_DARK,
+  },
+  categoryOuter: {
     width: "100%",
-    marginTop: 16,
+    marginTop: 12,
   },
-  autoCardInner: {
+  categoryInner: {
     paddingHorizontal: 12,
     paddingVertical: 12,
   },
-  autoSectionTitle: {
+  categoryTitle: {
     fontSize: 16,
-    fontFamily: "SF-Pro-Text-Medium",
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
-    marginBottom: 8,
+    marginBottom: 12,
   },
-  autoRow: {
+  orderRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    paddingVertical: 8,
+    paddingVertical: 4,
   },
-  autoRowMid: {
+  orderMid: {
     flex: 1,
     minWidth: 0,
   },
-  autoLabel: {
+  orderTitle: {
     fontSize: 14,
-    fontFamily: "SF-Pro-Text-Medium",
     fontWeight: "500",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Pro-Text-Medium",
   },
-  autoSub: {
-    marginTop: 3,
+  orderSub: {
     fontSize: 12,
     fontWeight: "400",
     color: COLORS.TEXT_70,
+    fontFamily: "SF-Pro-Text-Regular",
   },
-  trailIcon: {
+  orderSubPlain: {
+    marginTop: 3,
+  },
+  chevron: {
     opacity: 0.55,
-  },
-  trailIconExpanded: {
-    transform: [{ rotate: "180deg" }],
+    marginLeft: 4,
   },
   rowDivider: {
     height: 1,
     backgroundColor: COLORS.TEXT_10,
-    marginVertical: 4,
+    marginVertical: 8,
   },
   actionRow: {
     flexDirection: "row",
@@ -416,7 +395,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: COLORS.TEXT_70,
   },
-  doneButtonText: {
+  submitButtonText: {
     fontSize: 16,
     fontFamily: "SF-Pro-Text-Medium",
     fontWeight: "500",

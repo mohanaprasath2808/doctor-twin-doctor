@@ -13,7 +13,7 @@ import { COLORS } from "../../constants/theme";
 
 type InsightMessageCardProps = {
   title: string;
-  subTitle: string;
+  subTitle?: string;
   bgColor?: string;
   style?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
@@ -49,9 +49,11 @@ const InsightMessageCard: React.FC<InsightMessageCardProps> = ({
         />
         <View style={[styles.inner, { backgroundColor: bgColor }]}>
           <Text style={[styles.heading, titleStyle]}>{title}</Text>
-          <Text style={[styles.sub, { marginTop: titleSubTitleGap }, subTitleStyle]}>
-            {subTitle}
-          </Text>
+          {subTitle ? (
+            <Text style={[styles.sub, { marginTop: titleSubTitleGap }, subTitleStyle]}>
+              {subTitle}
+            </Text>
+          ) : null}
         </View>
       </View>
     </View>

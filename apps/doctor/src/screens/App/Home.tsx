@@ -23,8 +23,12 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import PatientIcon from "../../assets/icon/patientIcon.svg";
+
 import LabReportIcon from "../../assets/icon/labReportIcon.svg";
 import ReportIcon from "../../assets/icon/reportIcon.svg";
+import LotusIcon from "../../assets/icon/lotusIcon.svg";
+import OrderBlueIcon from "../../assets/icon/orderBlueIcon.svg";
+
 import MicOutlineIcon from "../../assets/icon/micOutlineIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
@@ -94,6 +98,7 @@ const GRID_ITEMS: GridItem[] = [
     label: "Refills",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
+
   {
     id: 11,
     label: "Labs",
@@ -104,6 +109,7 @@ const GRID_ITEMS: GridItem[] = [
     label: "Pre-Visit\nSummary",
     icon: () => <ReportIcon width={18} height={18} />,
   },
+
   {
     id: 13,
     label: "Imaging Results",
@@ -119,6 +125,17 @@ const GRID_ITEMS: GridItem[] = [
     label: "Prior auth",
     icon: () => <LabReportIcon width={18} height={18} />,
   },
+  {
+    id: 16,
+    label: "Preventive\nCare",
+    icon: () => <LotusIcon width={18} height={18} />,
+  },
+  {
+    id: 17,
+    label: "Order\nEngine",
+    icon: () => <OrderBlueIcon width={18} height={18} />,
+  },
+
   // {
   //   id: 11,
   //   label: "Patient",
@@ -159,6 +176,12 @@ const Home = () => {
           badge: messagesData.length > 0 ? String(messagesData.length) : undefined,
           badgeType: messagesData.length > 0 ? ("dot" as const) : undefined,
         };
+      case 9:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.REVENUE_DASHBOARD),
+        };
+      case 10:
       case 4:
         return {
           ...item,
@@ -185,30 +208,47 @@ const Home = () => {
           onPress: () => navigation.navigate(navigationStrings.REFILL_ESCALATION),
         };
       case 11:
-      return {
-        ...item,
-        onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
+        };
+      // case 12:
+      //   return {
+      //     ...item,
+      //     onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
+      //   };
 
-      };
       case 12:
         return {
           ...item,
+          // onPress: () => navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
           onPress: () => navigation.navigate(navigationStrings.PRE_VISIT_SUMMARY),
         };
-    case 13:
-      return {
-        ...item,
-        onPress: () => navigation.navigate(navigationStrings.IMAGING_RESULTS),
-      };
+      case 13:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.IMAGING_RESULTS),
+        };
       case 14:
-          return {
-            ...item,
-            onPress: () => navigation.navigate(navigationStrings.PATIENT_CONCERN_FLAGGED),
-          };  
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.PATIENT_CONCERN_FLAGGED),
+        };
       case 15:
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.PRIOR_AUTHORIZATION),
+        };
+
+      case 16:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.PREVENTIVE_CARE),
+        };
+      case 17:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.ORDER_ENGINE),
         };
       // case 13:
       //   return {
@@ -218,7 +258,7 @@ const Home = () => {
       // case 13:
       //   return {
       //     ...item,
-        // onPress: () => navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
+      // onPress: () => navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
       //   };
       default:
         return item;
@@ -241,7 +281,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -277,7 +317,9 @@ const Home = () => {
     <View style={styles.listFooter}>
       <AppButton
         text="Logout"
-        onPress={() => { useAuthStore.getState().logout(); }}
+        onPress={() => {
+          useAuthStore.getState().logout();
+        }}
         width="100%"
         height={50}
         borderRadius={25}

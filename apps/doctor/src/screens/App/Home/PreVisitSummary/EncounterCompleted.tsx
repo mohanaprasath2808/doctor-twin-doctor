@@ -3,7 +3,7 @@ import { FlatList, ListRenderItem, ScrollView, StyleSheet, Text, View } from "re
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import SelectedCheckBox from "../../../../assets/icon/selectedCheckBoxIcon.svg";
+import BlueTickIcon from "../../../../assets/icon/tickBlueIcon.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/greenTick.png";
 import { COLORS } from "../../../../constants/theme";
@@ -31,7 +31,7 @@ const EncounterCompleted = () => {
   const renderStatusRow: ListRenderItem<StatusRow> = useCallback(
     ({ item }) => (
       <View style={styles.statusRow}>
-        <InnerShadowIcon size={40} radius={20} icon={<SelectedCheckBox width={18} height={18} />} />
+        <InnerShadowIcon size={40} radius={20} icon={<BlueTickIcon width={18} height={18} />} />
         <Text style={styles.statusText}>{item.label}</Text>
       </View>
     ),
@@ -46,7 +46,7 @@ const EncounterCompleted = () => {
   };
 
   const onNextPatient = () => {
-    navigation.navigate(navigationStrings.PREVENTIVE_CARE);
+    // navigation.navigate(navigationStrings.PREVENTIVE_CARE);
   };
 
   return (
@@ -101,7 +101,7 @@ const EncounterCompleted = () => {
               borderWidth={1}
               borderColor={COLORS.PRIMARY}
               bgColor={COLORS.SURFACE}
-              textStyle={[styles.footerOutlineLabel, styles.footerOutlineColor]}
+              textStyle={styles.footerOutlineLabel}
               onPress={onBackToDashboard}
             />
           </View>
@@ -111,6 +111,7 @@ const EncounterCompleted = () => {
               height={52}
               borderRadius={26}
               containerStyle={styles.nextBtn}
+              textStyle={styles.nextBtnText}
               onPress={onNextPatient}
             />
           </View>
@@ -156,12 +157,12 @@ const styles = StyleSheet.create({
     height: 120,
   },
   title: {
-    marginTop: 20,
+    marginTop: 7,
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: "500",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
-    fontFamily: "SF-Pro-Display-Semibold",
+    fontFamily: "SF-Pro-Display-Medium",
   },
   cardOuter: {
     width: "100%",
@@ -179,8 +180,9 @@ const styles = StyleSheet.create({
   },
   statusText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
   },
   actionRow: {
@@ -194,11 +196,16 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   footerOutlineLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  footerOutlineColor: {
-    color: COLORS.PRIMARY_DARK,
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.PRIMARY,
   },
   nextBtn: {},
+  nextBtnText: {
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.WHITE,
+  },
 });

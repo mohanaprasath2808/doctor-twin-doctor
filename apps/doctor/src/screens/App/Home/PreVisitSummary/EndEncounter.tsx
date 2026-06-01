@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
+    fontFamily: "SF-Pro-Text-Semibold",
   },
   timerPill: {
     flexShrink: 0,
@@ -297,17 +298,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   timerText: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "500",
     color: COLORS.TEXT_DARK,
+    fontFamily: "SF-Mono-Medium",
     textAlign: "center",
-    fontVariant: ["tabular-nums"],
-    ...Platform.select({
-      android: {
-        includeFontPadding: false,
-        textAlignVertical: "center",
-      },
-    }),
   },
   heroAvatar: {
     alignSelf: "center",
@@ -325,13 +320,13 @@ const styles = StyleSheet.create({
     height: 120,
   },
   hint: {
-    marginTop: 16,
     marginBottom: 20,
     fontSize: 16,
+    fontWeight: "500",
     color: COLORS.TEXT_DARK,
     textAlign: "center",
     paddingHorizontal: 8,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Text-Medium",
   },
   cardOuter: {
     width: "100%",
@@ -342,10 +337,11 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
   },
   cardSectionTitle: {
-    fontSize: 14,
-    fontWeight: "600",
+    fontSize: 16,
+    fontWeight: "500",
     color: COLORS.TEXT_DARK,
     marginBottom: 12,
+    fontFamily: "SF-Pro-Text-Medium",
   },
   complaintRow: {
     flexDirection: "row",
@@ -362,6 +358,8 @@ const styles = StyleSheet.create({
   complaintText: {
     flex: 1,
     fontSize: 14,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
     color: COLORS.TEXT_DARK,
     lineHeight: 20,
   },
@@ -384,6 +382,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     fontSize: 14,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Text-Regular",
     lineHeight: 18,
     color: COLORS.TEXT_DARK,
     ...Platform.select({
@@ -404,8 +403,9 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   midBtnLabel: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
   },
   midBtnLabelOutlined: {
     color: COLORS.PRIMARY_DARK,
@@ -425,11 +425,15 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   footerBtnLabel: {
-    fontSize: 15,
+    fontSize: 16,
+    fontWeight: "500",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.PRIMARY_DARK,
   },
   footerEndLabel: {
-    fontSize: 15,
-    color: COLORS.ALERT,
+    fontSize: 16,
     fontWeight: "600",
+    fontFamily: "SF-Pro-Text-Medium",
+    color: COLORS.ALERT,
   },
 });
