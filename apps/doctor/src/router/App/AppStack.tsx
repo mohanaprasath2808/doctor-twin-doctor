@@ -20,7 +20,12 @@ import Forms from "../../screens/App/Home/TodayVisits/ReceptionIntake/Forms";
 import EmergencyIntake from "../../screens/App/Home/TodayVisits/ReceptionIntake/EmergencyIntake";
 import ReceptionIntakeCompleted from "../../screens/App/Home/TodayVisits/ReceptionIntake/ReceptionIntakeCompleted";
 import RecentResults from "../../screens/App/Home/TodayVisits/RecentResults";
-import PriorAuthorization from "../../screens/App/Home/TodayVisits/PriorAuthorization";
+import PriorAuthorization from "../../screens/App/Home/PriorAuth/PriorAuthorization";
+import EditPriorAuthorization from "../../screens/App/Home/PriorAuth/EditPriorAuthorization";
+import AppealCreated from "../../screens/App/Home/PriorAuth/AppealCreated";
+import PriorAuthorizationSubmitted from "../../screens/App/Home/PriorAuth/PriorAuthorizationSubmitted";
+import PAStatusMonitor from "../../screens/App/Home/PriorAuth/PAStatusMonitor";
+import PriorAuthorizationDenied from "../../screens/App/Home/PriorAuth/PriorAuthorizationDenied";
 import OrderHub from "../../screens/App/Home/TodayVisits/OrderHub";
 import RecentConsults from "../../screens/App/Home/TodayVisits/RecentConsults";
 import Messages from "../../screens/App/Home/TodayVisits/Messages";
@@ -198,6 +203,31 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.PRIOR_AUTHORIZATION}
         component={PriorAuthorization}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.EDIT_PRIOR_AUTHORIZATION}
+        component={EditPriorAuthorization}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PRIOR_AUTH_APPEAL_CREATED}
+        component={AppealCreated}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PRIOR_AUTHORIZATION_SUBMITTED}
+        component={PriorAuthorizationSubmitted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PA_STATUS_MONITOR}
+        component={PAStatusMonitor}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={navigationStrings.PRIOR_AUTHORIZATION_DENIED}
+        component={PriorAuthorizationDenied}
         options={{ headerShown: false }}
       />
       <Stack.Screen

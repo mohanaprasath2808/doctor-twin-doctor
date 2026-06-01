@@ -101,20 +101,30 @@ const GRID_ITEMS: GridItem[] = [
 
   {
     id: 11,
-    label: "Imaging Results",
-    icon: () => <RefillsIcon width={18} height={18} />,
-  },
-  {
-    id: 12,
     label: "Labs",
     icon: () => <LabReportIcon width={18} height={18} />,
   },
   {
-    id: 15,
+    id: 12,
     label: "Pre-Visit\nSummary",
     icon: () => <ReportIcon width={18} height={18} />,
   },
 
+  {
+    id: 13,
+    label: "Imaging Results",
+    icon: () => <RefillsIcon width={18} height={18} />,
+  },
+  {
+    id: 14,
+    label: "Patient concerns",
+    icon: () => <LabReportIcon width={18} height={18} />,
+  },
+  {
+    id: 15,
+    label: "Prior auth",
+    icon: () => <LabReportIcon width={18} height={18} />,
+  },
   {
     id: 16,
     label: "Preventive\nCare",
@@ -160,11 +170,6 @@ const Home = () => {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.PRACTICE_INTELLIGENCE),
         };
-      case 4:
-        return {
-          ...item,
-          onPress: () => navigation.navigate(navigationStrings.TODAY_VISITS),
-        };
       case 2:
         return {
           ...item,
@@ -177,35 +182,62 @@ const Home = () => {
           onPress: () => navigation.navigate(navigationStrings.REVENUE_DASHBOARD),
         };
       case 10:
+      case 4:
         return {
           ...item,
-          onPress: () => navigation.navigate(navigationStrings.REFILL_ESCALATION),
+          onPress: () => navigation.navigate(navigationStrings.TODAY_VISITS),
         };
       case 5:
         return {
           ...item,
-          onPress: () => navigation.navigate(navigationStrings.STAFF_CONSOLE),
+          onPress: () => navigation.navigate(navigationStrings.DELEGATION_CREATE_TASK),
+        };
+      case 6:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.START_VISIT),
         };
       case 7:
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.SCHEDULE),
         };
-      case 11:
+      case 10:
         return {
           ...item,
-          onPress: () => navigation.navigate(navigationStrings.IMAGING_RESULTS),
+          onPress: () => navigation.navigate(navigationStrings.REFILL_ESCALATION),
         };
-      case 12:
+      case 11:
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
         };
+      // case 12:
+      //   return {
+      //     ...item,
+      //     onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
+      //   };
 
+      case 12:
+        return {
+          ...item,
+          // onPress: () => navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
+          onPress: () => navigation.navigate(navigationStrings.PRE_VISIT_SUMMARY),
+        };
+      case 13:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.IMAGING_RESULTS),
+        };
+      case 14:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.PATIENT_CONCERN_FLAGGED),
+        };
       case 15:
         return {
           ...item,
-          onPress: () => navigation.navigate(navigationStrings.PRE_VISIT_SUMMARY),
+          onPress: () => navigation.navigate(navigationStrings.PRIOR_AUTHORIZATION),
         };
 
       case 16:
@@ -218,17 +250,16 @@ const Home = () => {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.ORDER_ENGINE),
         };
-
-      case 13:
-        return {
-          ...item,
-          onPress: () => navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
-        };
-      case 14:
-        return {
-          ...item,
-          onPress: () => navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
-        };
+      // case 13:
+      //   return {
+      //     ...item,
+      //     onPress: () => navigation.navigate(navigationStrings.ELIGIBILITY_PAYER_RULES),
+      //   };
+      // case 13:
+      //   return {
+      //     ...item,
+      // onPress: () => navigation.navigate(navigationStrings.PATIENT_VERIFICATION),
+      //   };
       default:
         return item;
     }

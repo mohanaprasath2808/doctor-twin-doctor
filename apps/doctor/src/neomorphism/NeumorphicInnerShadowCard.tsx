@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  DimensionValue,
   LayoutChangeEvent,
   StyleProp,
   StyleSheet,
@@ -12,6 +13,7 @@ import { COLORS } from "../constants/theme";
 
 type NeumorphicInnerShadowCardProps = {
   children?: React.ReactNode;
+  width?: DimensionValue;
   height?: number;
   innerShadowHeight?: number;
   borderRadius?: number;
@@ -34,6 +36,7 @@ const DEFAULT_RADIUS = 10;
 
 const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
   children,
+  width,
   height = DEFAULT_HEIGHT,
   innerShadowHeight,
   borderRadius = DEFAULT_RADIUS,
@@ -50,11 +53,11 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
   containerStyle,
   contentStyle,
 }) => {
-  const [width, setWidth] = useState(0);
+  const [measuredWidth, setMeasuredWidth] = useState(0);
   const [contentHeight, setContentHeight] = useState(0);
 
   const onLayout = (event: LayoutChangeEvent) => {
-    setWidth(event.nativeEvent.layout.width);
+    setMeasuredWidth(event.nativeEvent.layout.width);
   };
 
   const onContentLayout = (event: LayoutChangeEvent) => {
@@ -66,7 +69,14 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
   const innerRadius = Math.max(0, borderRadius - 1);
 
   return (
-    <View style={[styles.container, containerStyle]} onLayout={onLayout}>
+    <View
+      style={[
+        width == null ? styles.shrinkWrap : null,
+        width != null ? { width } : null,
+        containerStyle,
+      ]}
+      onLayout={onLayout}
+    >
       <View style={[styles.border, { borderRadius }]}>
         <LinearGradient
           colors={["rgba(214, 227, 243, 0.5)", "rgba(255, 255, 255, 0.5)"]}
@@ -93,7 +103,7 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
             },
           ]}
         >
-          {showInnerShadow && width > 0 && (
+          {showInnerShadow && measuredWidth > 0 && resolvedInnerHeight > 0 ? (
             <View
               pointerEvents="none"
               style={[
@@ -105,9 +115,13 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
               ]}
             >
               <InnerShadowView
-                width={width}
+                width={measuredWidth}
                 height={resolvedInnerHeight}
-                borderRadius={innerRadius}
+                borderRadius={Math.min(
+                  innerRadius,
+                  measuredWidth / 2,
+                  resolvedInnerHeight / 2,
+                )}
                 color={backgroundColor}
                 darkShadowDx={darkShadowDx}
                 darkShadowDy={darkShadowDy}
@@ -119,7 +133,7 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
                 lightShadowColor={lightShadowColor}
               />
             </View>
-          )}
+          ) : null}
           <View
             onLayout={onContentLayout}
             style={[styles.content, { minHeight: height }, contentStyle]}
@@ -135,8 +149,8 @@ const NeumorphicInnerShadowCard: React.FC<NeumorphicInnerShadowCardProps> = ({
 export default NeumorphicInnerShadowCard;
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
+  shrinkWrap: {
+    alignSelf: "flex-start",
   },
   border: {
     padding: 1,
