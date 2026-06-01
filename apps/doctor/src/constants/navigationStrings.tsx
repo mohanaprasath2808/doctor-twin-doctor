@@ -108,6 +108,18 @@ const navigationStrings = {
   REQUESTED_ASSIGNED: "RequestedAssigned",
   SEND_TO_ER: "SendToER",
   ER_INSTRUCTIONS_SENT: "ERInstructionsSent",
+  PATIENT_CONCERN_FLAGGED: "PatientConcernFlagged",
+  PATIENT_CONCERN_MESSAGE_PATIENT: "PatientConcernMessagePatient",
+  EDIT_PRIOR_AUTHORIZATION: "EditPriorAuthorization",
+  PRIOR_AUTH_APPEAL_CREATED: "PriorAuthAppealCreated",
+  PRIOR_AUTHORIZATION_SUBMITTED: "PriorAuthorizationSubmitted",
+  PA_STATUS_MONITOR: "PAStatusMonitor",
+  PRIOR_AUTHORIZATION_DENIED: "PriorAuthorizationDenied",
+  START_VISIT: "StartVisit",
+  AI_SCRIBE: "AIScribe",
+  GENERATE_NOTES: "GenerateNotes",
+  GENERATE_SUMMARY: "GenerateSummary",
+  REVIEW_AND_EDIT: "ReviewAndEdit",
 };
 
 export default navigationStrings;
