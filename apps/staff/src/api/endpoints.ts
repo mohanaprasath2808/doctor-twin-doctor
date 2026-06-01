@@ -4,5 +4,8 @@ export const ENDPOINTS = {
     RESEND_OTP: "/auth/resend-otp", // also used for forgot password
     VERIFY_OTP: "/auth/verify-otp",
     RESET_PASSWORD: "/auth/reset-password",
-    CREATE_STAFF: "/auth/create-user", // also used for create staff
+    STAFF: "/staff", // also used for create staff
+    FETCH_STAFF: "/staff/list",
 };
+
+export const staffById = (userId: string) => `${ENDPOINTS.STAFF}/${userId}`;

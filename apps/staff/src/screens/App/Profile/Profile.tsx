@@ -1,8 +1,8 @@
-import React, { useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { FlatList, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import BackArrowIcon from "../../../assets/icon/backArrow.svg";
 import DoctorTempImage from "../../../assets/image/tempImage/doctorTempImage.png";
@@ -81,10 +81,14 @@ const LINK_ITEMS: LinkItem[] = [
 ];
 
 const H_PADDING = 16;
+/** Space above bottom tab bar so footer CTAs receive touches reliably. */
+const TAB_BAR_CLEARANCE = 110;
+const END_SHIFT_BUTTON_HEIGHT = 52;
 
 const Profile = () => {
   const authContext = useContext(AuthContext);
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
+  const insets = useSafeAreaInsets();
   if (!authContext) {
     throw new Error("Profile must be used within AuthContextProvider");
   }
@@ -92,14 +96,26 @@ const Profile = () => {
   const { setIsLogin } = authContext;
   const stars = useMemo(() => Array.from({ length: 5 }), []);
 
+  const openEndShiftSummary = useCallback(() => {
+    const parent = navigation.getParent();
+    if (parent) {
+      parent.navigate(navigationStrings.END_SHIFT_SUMMARY as never);
+      return;
+    }
+    navigation.navigate(navigationStrings.END_SHIFT_SUMMARY);
+  }, [navigation]);
+
+  const footerBottomPad = Math.max(insets.bottom, 12) + TAB_BAR_CLEARANCE;
+
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "bottom", "left", "right"]}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
       <View style={styles.container}>
         <ScrollView
           style={styles.scroll}
-          contentContainerStyle={[styles.scrollContent]}
+          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
         >
           <View style={styles.header}>
             <IconComponent
@@ -241,50 +257,49 @@ const Profile = () => {
           </NeumorphicCard>
 
           <Text style={[styles.sectionTitle, { marginTop: 20, marginHorizontal: H_PADDING }]}>Recognition</Text>
-          <FlatList
-            data={RECOGNITION_ITEMS}
-            keyExtractor={(item) => item.id}
-            scrollEnabled={false}
-            ItemSeparatorComponent={() => <View style={styles.recognitionSeparator} />}
-            contentContainerStyle={{ marginTop: 20, marginHorizontal: H_PADDING }}
-            renderItem={({ item }) => (
-              <NeumorphicCard borderRadius={10} innerStyle={styles.recognitionCardInner}>
-                <View style={styles.recognitionHeader}>
-                  <InnerShadowIcon
-                    size={40}
-                    icon={<Text style={styles.initialsText}>{item.initials}</Text>}
-                  />
-                  <View style={styles.recognitionHeaderText}>
-                    <Text style={styles.recognitionName}>{item.name}</Text>
-                    <Text style={styles.recognitionRole}>{item.role}</Text>
+          <View style={styles.recognitionList}>
+            {RECOGNITION_ITEMS.map((item, index) => (
+              <View key={item.id} style={index > 0 ? styles.recognitionSeparator : undefined}>
+                <NeumorphicCard borderRadius={10} innerStyle={styles.recognitionCardInner}>
+                  <View style={styles.recognitionHeader}>
+                    <InnerShadowIcon
+                      size={40}
+                      icon={<Text style={styles.initialsText}>{item.initials}</Text>}
+                    />
+                    <View style={styles.recognitionHeaderText}>
+                      <Text style={styles.recognitionName}>{item.name}</Text>
+                      <Text style={styles.recognitionRole}>{item.role}</Text>
+                    </View>
                   </View>
-                </View>
-                <NeumorphicInnerShadowCard
-                  borderRadius={10}
-                  backgroundColor={COLORS.INNER_SURFACE}
-                  containerStyle={styles.recognitionMessageCard}
-                  contentStyle={styles.recognitionMessageCardContent}
-                >
-                  <Text style={styles.recognitionMessage}>{item.message}</Text>
-                </NeumorphicInnerShadowCard>
-              </NeumorphicCard>
-            )}
-          />
-
-          <View style={styles.endShiftButtonContainer}>
+                  <NeumorphicInnerShadowCard
+                    borderRadius={10}
+                    backgroundColor={COLORS.INNER_SURFACE}
+                    containerStyle={styles.recognitionMessageCard}
+                    contentStyle={styles.recognitionMessageCardContent}
+                  >
+                    <Text style={styles.recognitionMessage}>{item.message}</Text>
+                  </NeumorphicInnerShadowCard>
+                </NeumorphicCard>
+              </View>
+            ))}
+          </View>
+          <View style={[styles.endShiftFooter]}>
             <AppButton
               text="End Shift"
               borderWidth={1}
               borderColor={COLORS.ALERT}
-              bgColor={"#FDECEC"}
+              bgColor={COLORS.TOAST_ERROR_BG}
               borderRadius={60}
-              height={52}
+              height={END_SHIFT_BUTTON_HEIGHT}
               textStyle={styles.endShiftText}
               style={styles.endShiftButton}
-              onPress={() => navigation.navigate(navigationStrings.END_SHIFT_SUMMARY)}
+              hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
+              onPress={openEndShiftSummary}
             />
           </View>
         </ScrollView>
+
+
       </View>
     </SafeAreaView>
   );
@@ -305,7 +320,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 16,
+    paddingBottom: 8,
   },
   header: {
     marginTop: Platform.OS === "ios" ? 8 : 6,
@@ -494,15 +509,20 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: COLORS.TEXT_80,
   },
-  recognitionSeparator: {
-    height: 12,
-  },
-  endShiftButtonContainer: {
-    marginHorizontal: H_PADDING,
+  recognitionList: {
     marginTop: 20,
-
+    marginHorizontal: H_PADDING,
+  },
+  recognitionSeparator: {
+    marginTop: 12,
+  },
+  endShiftFooter: {
+    paddingHorizontal: H_PADDING,
+    paddingTop: 15,
+    paddingBottom: 25,
   },
   endShiftButton: {
+    width: "100%",
   },
   endShiftText: {
     color: COLORS.ALERT,

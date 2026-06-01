@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import {
   FlatList,
   ListRenderItem,
@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import type { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useToast } from "react-native-toast-notifications";
 
 import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import AppButton from "../../../components/Common/AppButton";
@@ -25,6 +26,7 @@ import SelectSearchSheet from "../../../components/BottomSheets/SelectSearchShee
 import type { SelectSearchSheetItem } from "../../../components/BottomSheets/SelectSearchSheet";
 import { COLORS } from "../../../constants/theme";
 import navigationStrings from "../../../constants/navigationStrings";
+import { AppContext } from "../../../context/AppContext";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import TickIcon from "../../../assets/icons/tick.svg";
 import DropDownIcon from "../../../assets/icons/dropDown.svg";
@@ -53,6 +55,13 @@ const INSURANCE_ITEMS: SelectSearchSheetItem[] = [
 
 const ScheduleStep1 = () => {
   const navigation = useNavigation<any>();
+  const toast = useToast();
+  const appContext = useContext(AppContext);
+  if (!appContext) {
+    throw new Error("ScheduleStep1 must be used within AppContextProvider");
+  }
+  const { createAppointment } = appContext;
+
   const providerSheetRef = useRef<BottomSheetModal>(null);
   const insuranceSheetRef = useRef<BottomSheetModal>(null);
 
@@ -71,6 +80,57 @@ const ScheduleStep1 = () => {
     INSURANCE_ITEMS.find((i) => i.id === selectedInsuranceId)?.label ?? "Aetna PPO";
   const selectedReason = VISIT_REASONS[selectedReasonIndex] ?? "";
   const isOtherSelected = selectedReason.toLowerCase() === "other";
+  const [submitting, setSubmitting] = useState(false);
+
+  const onNext = useCallback(async () => {
+    const reason = isOtherSelected ? otherReason.trim() : selectedReason.trim();
+    const insuranceName = String(insuranceLabel ?? "").trim();
+    const providerName = String(providerLabel ?? "").trim();
+
+    if (!reason) {
+      toast.show("Please select a reason.", { type: "danger" });
+      return;
+    }
+    if (!insuranceName) {
+      toast.show("Please select insurance.", { type: "danger" });
+      return;
+    }
+    if (!providerName) {
+      toast.show("Please select provider.", { type: "danger" });
+      return;
+    }
+
+    setSubmitting(true);
+    const res = await createAppointment({
+      step: 1,
+      reason,
+      insurance_name: insuranceName,
+      provider_name: providerName,
+    });
+    setSubmitting(false);
+
+    if (!res.ok) {
+      toast.show(res.error || "Something went wrong.", { type: "danger" });
+      return;
+    }
+
+    const appointmentId = res.data?.appointment_id;
+    if (!appointmentId) {
+      toast.show("Appointment ID missing in response.", { type: "danger" });
+      return;
+    }
+
+    navigation.navigate(navigationStrings.SCHEDULE_STEP_2, { appointmentId });
+  }, [
+    createAppointment,
+    insuranceLabel,
+    isOtherSelected,
+    navigation,
+    otherReason,
+    providerLabel,
+    selectedReason,
+    toast,
+  ]);
 
   const renderReasonItem: ListRenderItem<string> = ({ item, index }) => {
     const isSelected = selectedReasonIndex === index;
@@ -139,11 +199,14 @@ const ScheduleStep1 = () => {
         keyboardShouldPersistTaps="handled"
       >
         <StepProgressRow
-          totalSteps={2}
+          totalSteps={3}
           currentStep={1}
           onStepPress={(step) => {
             if (step === 2) {
               navigation.navigate(navigationStrings.SCHEDULE_STEP_2);
+            }
+            if (step === 3) {
+              navigation.navigate(navigationStrings.SCHEDULE_STEP_3);
             }
           }}
           containerStyle={styles.progressRow}
@@ -251,9 +314,10 @@ const ScheduleStep1 = () => {
 
       <View style={styles.footer}>
         <ReusableButton
-          title="Next"
+          title={submitting ? "Loading..." : "Next"}
           height={48}
-          onPress={() => navigation.navigate(navigationStrings.SCHEDULE_STEP_2)}
+          disabled={submitting}
+          onPress={onNext}
         />
       </View>
 

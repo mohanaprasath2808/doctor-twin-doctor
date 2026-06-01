@@ -38,7 +38,7 @@ const AppButton: React.FC<AppButtonProps> = ({
   borderWidth = 0,
   borderColor = "transparent",
   bgColor = "transparent",
-  width = "100%",
+  width,
   height = 48,
   borderRadius = 26,
   text,
@@ -54,7 +54,7 @@ const AppButton: React.FC<AppButtonProps> = ({
   fullWidth = true,
   ...touchableProps
 }) => {
-  const resolvedWidth = fullWidth ? (width ?? "100%") : width;
+  const resolvedWidth = fullWidth ? (width ?? "100%") : width ?? undefined;
   const resolvedBorderWidth = useGradientBorder ? Math.max(1, borderWidth || 1) : borderWidth;
   const resolvedBorderColor = useGradientBorder ? "transparent" : borderColor;
   const renderedIcon =

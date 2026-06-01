@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleProp, StyleSheet, Text, TextStyle, View } from "react-native";
+import {
+  type DimensionValue,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Canvas, RoundedRect, Shadow } from "@shopify/react-native-skia";
 
@@ -21,13 +28,20 @@ interface DeltaBadgeProps {
   lightShadowColor?: string;
   textColor: string;
   textStyle?: StyleProp<TextStyle>;
-  width?: number;
+  /** e.g. `120` or `"50%"`. Omit to size from content (no `width` style applied). */
+  width?: DimensionValue;
   height?: number;
   radius?: number;
   /** Outer border gradient (under the vertical highlight). */
   borderGradientColors?: [string, string];
   /** Vertical fade overlay; defaults to white → transparent. */
   highlightGradientColors?: [string, string];
+  darkShadowDx?: number;
+  darkShadowDy?: number;
+  darkShadowBlur?: number;
+  lightShadowDx?: number;
+  lightShadowDy?: number;
+  lightShadowBlur?: number;
 }
 
 const HEIGHT = 20;
@@ -47,18 +61,29 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
   radius,
   borderGradientColors = DEFAULT_BORDER_GRADIENT_COLORS,
   highlightGradientColors = DEFAULT_HIGHLIGHT_GRADIENT_COLORS,
+  darkShadowDx = 4,
+  darkShadowDy = 2,
+  darkShadowBlur = 8,
+  lightShadowDx = -4,
+  lightShadowDy = -2,
+  lightShadowBlur = 5,
 }) => {
   const [measuredWidth, setMeasuredWidth] = useState(0);
-  const renderedWidth = width ?? measuredWidth;
-  const innerWidth = Math.max(0, renderedWidth - BORDER * 2);
+  const layoutWidth = typeof width === "number" ? width : measuredWidth;
+  const innerWidth = Math.max(0, layoutWidth - BORDER * 2);
   const innerHeight = height - BORDER * 2;
   const badgeRadius = radius ?? height / 2;
   const innerRadius = Math.max(0, badgeRadius - BORDER);
+  const hasExplicitWidth = width != null;
 
   return (
     <View
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
-      style={[styles.border, { height, borderRadius: badgeRadius }, width != null ? { width } : null]}
+      style={[
+        styles.border,
+        { height, borderRadius: badgeRadius },
+        hasExplicitWidth ? { width } : styles.shrinkToContent,
+      ]}
     >
       <LinearGradient
         colors={borderGradientColors}
@@ -77,7 +102,7 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
       <View
         style={[
           styles.surface,
-          width != null ? styles.surfaceFullWidth : null,
+          hasExplicitWidth ? styles.surfaceFullWidth : null,
           {
             backgroundColor: bgColor,
             borderRadius: innerRadius,
@@ -85,23 +110,33 @@ const DeltaBadge: React.FC<DeltaBadgeProps> = ({
           },
         ]}
       >
-        {innerWidth > 0 ? (
-          <View pointerEvents="none" style={styles.innerShadow} collapsable={false}>
-            <Canvas style={{ width: innerWidth, height: innerHeight }}>
-              <RoundedRect
-                x={0}
-                y={0}
-                width={innerWidth}
-                height={innerHeight}
-                r={innerRadius}
-                color={bgColor}
-              >
-                <Shadow dx={4} dy={2} blur={8} color={darkShadowColor} inner />
-                <Shadow dx={-4} dy={-2} blur={5} color={lightShadowColor} inner />
-              </RoundedRect>
-            </Canvas>
-          </View>
-        ) : null}
+        <View pointerEvents="none" style={styles.innerShadow} collapsable={false}>
+          <Canvas style={{ width: innerWidth, height: innerHeight }}>
+            <RoundedRect
+              x={0}
+              y={0}
+              width={innerWidth}
+              height={innerHeight}
+              r={innerRadius}
+              color={bgColor}
+            >
+              <Shadow
+                dx={darkShadowDx}
+                dy={darkShadowDy}
+                blur={darkShadowBlur}
+                color={darkShadowColor}
+                inner
+              />
+              <Shadow
+                dx={lightShadowDx}
+                dy={lightShadowDy}
+                blur={lightShadowBlur}
+                color={lightShadowColor}
+                inner
+              />
+            </RoundedRect>
+          </Canvas>
+        </View>
         <View style={styles.content}>
           {icon ? icon : null}
           <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.text, { color: textColor }, textStyle]}>
@@ -117,6 +152,9 @@ const styles = StyleSheet.create({
   border: {
     padding: BORDER,
     overflow: "hidden",
+  },
+  shrinkToContent: {
+    alignSelf: "flex-start",
   },
   surface: {
     height: "100%",

@@ -7,6 +7,7 @@ import AppointmentConfirm from "../../screens/App/Appointments/AppointmentConfir
 import AppointmentScheduled from "../../screens/App/Appointments/AppointmentScheduled";
 import ScheduleStep1 from "../../screens/App/Appointments/ScheduleStep1";
 import ScheduleStep2 from "../../screens/App/Appointments/ScheduleStep2";
+import ScheduleStep3 from "../../screens/App/Appointments/ScheduleStep3";
 import Labs from "../../screens/App/Labs/Labs";
 import Imaging from "../../screens/App/Imaging/Imaging";
 import LabRequest from "../../screens/App/Labs/LabRequest";
@@ -107,6 +108,7 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.TREATMENT_RESULT} component={TreatmentResult} />
       <Stack.Screen name={navigationStrings.SCHEDULE_STEP_1} component={ScheduleStep1} />
       <Stack.Screen name={navigationStrings.SCHEDULE_STEP_2} component={ScheduleStep2} />
+      <Stack.Screen name={navigationStrings.SCHEDULE_STEP_3} component={ScheduleStep3} />
       <Stack.Screen name={navigationStrings.LABS} component={Labs} />
       <Stack.Screen name={navigationStrings.IMAGING} component={Imaging} />
       <Stack.Screen name={navigationStrings.IMAGING_REQUEST} component={ImagingRequest} />

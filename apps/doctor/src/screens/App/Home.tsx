@@ -23,13 +23,12 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import PatientIcon from "../../assets/icon/patientIcon.svg";
-<<<<<<< Updated upstream
-=======
+
 import LabReportIcon from "../../assets/icon/labReportIcon.svg";
 import ReportIcon from "../../assets/icon/reportIcon.svg";
 import LotusIcon from "../../assets/icon/lotusIcon.svg";
 import OrderBlueIcon from "../../assets/icon/orderBlueIcon.svg";
->>>>>>> Stashed changes
+
 import MicOutlineIcon from "../../assets/icon/micOutlineIcon.svg";
 import navigationStrings from "../../constants/navigationStrings";
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
@@ -99,8 +98,7 @@ const GRID_ITEMS: GridItem[] = [
     label: "Refills",
     icon: () => <RefillsIcon width={18} height={18} />,
   },
-<<<<<<< Updated upstream
-=======
+
   {
     id: 11,
     label: "Imaging Results",
@@ -116,6 +114,7 @@ const GRID_ITEMS: GridItem[] = [
     label: "Pre-Visit\nSummary",
     icon: () => <ReportIcon width={18} height={18} />,
   },
+
   {
     id: 16,
     label: "Preventive\nCare",
@@ -126,16 +125,11 @@ const GRID_ITEMS: GridItem[] = [
     label: "Order\nEngine",
     icon: () => <OrderBlueIcon width={18} height={18} />,
   },
->>>>>>> Stashed changes
+
   // {
   //   id: 11,
   //   label: "Patient",
   //   icon: () => <PatientIcon width={18} height={18} />,
-  // },
-  // {
-  //   id: 12,
-  //   label: "Labs",
-  //   icon: () => <BrainIcon width={18} height={18} />,
   // },
   // {
   //   id: 13,
@@ -200,20 +194,20 @@ const Home = () => {
       case 11:
         return {
           ...item,
-          onPress: () => navigation.navigate(navigationStrings.PATIENTS),
+          onPress: () => navigation.navigate(navigationStrings.IMAGING_RESULTS),
         };
       case 12:
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.LABS_DASHBOARD),
         };
-<<<<<<< Updated upstream
-=======
+
       case 15:
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.PRE_VISIT_SUMMARY),
         };
+
       case 16:
         return {
           ...item,
@@ -224,7 +218,7 @@ const Home = () => {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.ORDER_ENGINE),
         };
->>>>>>> Stashed changes
+
       case 13:
         return {
           ...item,
@@ -256,7 +250,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -292,7 +286,9 @@ const Home = () => {
     <View style={styles.listFooter}>
       <AppButton
         text="Logout"
-        onPress={() => { useAuthStore.getState().logout(); }}
+        onPress={() => {
+          useAuthStore.getState().logout();
+        }}
         width="100%"
         height={50}
         borderRadius={25}

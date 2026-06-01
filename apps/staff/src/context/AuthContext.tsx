@@ -18,6 +18,8 @@ export interface AuthContextType {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
   isLoading: boolean;
   userToken: string | null;
+  userData: any;
+  setUserData: React.Dispatch<React.SetStateAction<any>>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   resendOtp: (email: string, otpType: string) => Promise<{ ok: boolean, expires_at: number | null }>;
@@ -37,23 +39,30 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userToken, setUserToken] = useState<string | null>(null);
   const toast = useToast();
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
         const accessToken = await secureStorage.getItem("accessToken");
+        const user = await secureStorage.getItem("user");
+        console.log(user, "user in AuthContextProvider");
         if (cancelled) return;
         if (accessToken) {
           setUserToken(accessToken);
           setIsLogin(true);
+          setUserData(JSON.parse(user ?? "{}"));
         } else {
           setUserToken(null);
+          setUserData(null);
+          setUserData(null);
           setIsLogin(false);
         }
       } catch {
         if (!cancelled) {
           setUserToken(null);
+          setUserData(null);
           setIsLogin(false);
         }
       } finally {
@@ -84,6 +93,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
 
       const data = response?.data;
 
+
       if (data?.ok === true) {
         const accessToken = data?.data?.access_token;
         const refreshToken = data?.data?.refresh_token;
@@ -94,6 +104,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         await secureStorage.setItem("user", JSON.stringify(user ?? {}));
         setUserToken(accessToken);
         setIsLogin(true);
+        setUserData(user);
         toast.show("Login successful", {
           type: "success",
         });
@@ -104,7 +115,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       console.log(response?.data, "response");
 
     } catch (error: any) {
-      const errorData = error?.response?.data;
+      const errorData = error?.response?.data || error;
       console.error(errorData, "error in login");
       toast.show(errorData?.error || "Login failed", { type: "danger" });
     } finally {
@@ -194,6 +205,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     );
 
     setUserToken(null);
+    setUserData(null);
     setIsLogin(false);
   };
 
@@ -234,6 +246,8 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         setIsLogin,
         isLoading,
         userToken,
+        userData,
+        setUserData,
         login,
         logout,
         resendOtp,

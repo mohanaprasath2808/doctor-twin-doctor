@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   FlatList,
   Platform,
@@ -35,6 +35,7 @@ import SettingsIcon from "../../assets/icons/settings.svg";
 import PadMedIcon from "../../assets/icons/padMedIcon.svg";
 import WalletIcon from "../../assets/icons/walletIcon.svg";
 import { useToast } from "react-native-toast-notifications";
+import { AuthContext } from "../../context/AuthContext";
 
 const QUICK_ACTIONS = [
   { id: "message", label: "Message", icon: <MessageIcon width={32} height={32} /> },
@@ -56,6 +57,11 @@ const QUICK_ACTIONS = [
 
 const Home = () => {
   const navigation = useNavigation<any>();
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    throw new Error("Home must be used within AuthContextProvider");
+  }
+  const { userData } = authContext;
   const toast = useToast();
   const { width: screenWidth } = useWindowDimensions();
   const numColumns = 4;
@@ -158,7 +164,7 @@ const Home = () => {
           imageStyle={styles.avatarImage}
         />
 
-        <Text style={styles.heading}>Welcome back, Sarah!</Text>
+        <Text style={styles.heading}>Welcome back, {(userData?.first_name && userData?.last_name) ? `${userData?.first_name} ${userData?.last_name}` : userData?.name}!</Text>
         <Text style={styles.subHeading}>Here&apos;s how I can assist you</Text>
 
         <NeumorphicCard

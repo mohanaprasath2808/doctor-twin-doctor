@@ -1,7 +1,7 @@
-import React from "react";
-import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ActivityIndicator, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
 import AppButton from "../../../components/Common/AppButton";
@@ -15,9 +15,31 @@ import navigationStrings from "../../../constants/navigationStrings";
 
 const AppointmentScheduled = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
+  const title = route?.params?.title || "Appointment Scheduled!";
+  const message =
+    route?.params?.message || "You're all set, Sarah.\nSee you on Monday, April 30 at 3:00 PM.";
+  const [blocking, setBlocking] = useState(false);
+
+  const withPopup = useCallback((fn: () => void) => {
+    setBlocking(true);
+    // allow the modal to render before navigating
+    requestAnimationFrame(() => {
+      fn();
+      setTimeout(() => setBlocking(false), 350);
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+      <Modal visible={blocking} transparent animationType="fade">
+        <View style={styles.blockingOverlay}>
+          <View style={styles.blockingCard}>
+            <ActivityIndicator size="small" color={COLORS.PRIMARY} />
+            <Text style={styles.blockingText}>Opening appointments...</Text>
+          </View>
+        </View>
+      </Modal>
       <ScrollView>
         <View style={styles.header}>
           <IconComponent
@@ -41,10 +63,8 @@ const AppointmentScheduled = () => {
             imageStyle={styles.avatarImage}
           />
 
-          <Text style={styles.title}>Appointment Scheduled!</Text>
-          <Text style={styles.subtitle}>
-            You're all set, Sarah.{"\n"}See you on Monday, April 30 at 3:00 PM.
-          </Text>
+          <Text style={styles.title}>{String(title)}</Text>
+          <Text style={styles.subtitle}>{String(message)}</Text>
 
           <View style={styles.actionRow}>
             <AppButton
@@ -55,18 +75,16 @@ const AppointmentScheduled = () => {
               textStyle={styles.addToCalendarText}
               height={48}
               borderRadius={28}
-              width="100%"
               style={styles.actionBtn}
-              onPress={() => navigation.navigate(navigationStrings.APPOINTMENTS)}
+              onPress={() => withPopup(() => navigation.navigate(navigationStrings.APPOINTMENTS))}
             />
             <ReusableButton
               title="Done"
               gradientColors={["#22D3EE", "#0F766E"]}
               height={48}
               borderRadius={28}
-              width="100%"
               containerStyle={styles.actionBtn}
-              onPress={() => navigation.pop(4)}
+              onPress={() => withPopup(() => navigation.pop(4))}
             />
           </View>
 
@@ -131,6 +149,30 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontSize: 16,
     fontWeight: "500",
+  },
+  blockingOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.25)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+  },
+  blockingCard: {
+    width: "100%",
+    maxWidth: 320,
+    backgroundColor: COLORS.SURFACE,
+    borderRadius: 14,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  blockingText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: COLORS.TEXT_PRIMARY_70,
+    textAlign: "center",
   },
   imageContainer: {
     alignItems: "center",

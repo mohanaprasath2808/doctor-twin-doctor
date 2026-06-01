@@ -34,6 +34,15 @@ import EscalateMessage from "../../screens/App/Labs/EscalateMessage";
 import LabsNotifyPatient from "../../screens/App/Labs/NotifyPatient";
 import ScheduleVisit from "../../screens/App/Labs/ScheduleVisit";
 import ActionCompleted from "../../screens/App/Labs/ActionCompleted";
+import AuthorizationDetail from "../../screens/App/Eligibility/AuthorizationDetail";
+import AuthorizationTracking from "../../screens/App/Eligibility/AuthorizationTracking";
+import AppealSubmission from "../../screens/App/Eligibility/AppealSubmission";
+import DenialAnalysis from "../../screens/App/Eligibility/DenialAnalysis";
+import DenialResolution from "../../screens/App/Eligibility/DenialResolution";
+import EligibilityPriorAuth from "../../screens/App/Eligibility/EligibilityPriorAuth";
+import MissingDocuments from "../../screens/App/Eligibility/MissingDocuments";
+import RequestDocuments from "../../screens/App/Eligibility/RequestDocuments";
+import { SCREEN_BG as ELIGIBILITY_SCREEN_BG } from "../../screens/App/Eligibility/eligibilityPriorAuthConstants";
 import EndShiftSummary from "../../screens/App/Profile/EndShiftSummary";
 import GeneralSettings from "../../screens/App/Profile/GeneralSettings";
 import HelpTraining from "../../screens/App/Profile/HelpTraining";
@@ -48,7 +57,7 @@ import StaffDoctorReply from "../../screens/App/Communication/StaffDoctorReply";
 import StaffDoctorConvertToTask from "../../screens/App/Communication/StaffDoctorConvertToTask";
 import StaffDoctorEscalate from "../../screens/App/Communication/StaffDoctorEscalate";
 import VoiceHandsFree from "../../screens/App/Communication/VoiceHandsFree";
-import type { StaffMember } from "../../screens/App/Staff/staffTypes";
+import type { StaffFormInitial } from "../../screens/App/Staff/staffTypes";
 import type { BillingItem } from "../../screens/utills/billingStatus";
 import BillingDetail from "../../screens/App/BillingDashboard/BillingDetail";
 import BillingAnswer from "../../screens/App/BillingDashboard/BillingAnswer";
@@ -66,6 +75,11 @@ import DocumentsRequestInfo from "../../screens/App/DocumentsDashboard/Documents
 import DocumentsAssign from "../../screens/App/DocumentsDashboard/DocumentsAssign";
 import type { DocumentsDetailParams } from "../../screens/App/DocumentsDashboard/types/documentDashboardTypes";
 import type { DocumentsCategoryListParams } from "../../screens/App/DocumentsDashboard/types/documentsCategoryTypes";
+
+const eligibilityScreenOptions = {
+  headerShown: false,
+  contentStyle: { backgroundColor: ELIGIBILITY_SCREEN_BG },
+} as const;
 
 export type PatientTaskAvatarKey = "ganesh" | "default";
 
@@ -103,7 +117,7 @@ export type DelegationActionCompletedParams = {
 
 export type StaffFormParams = {
   isEdit?: boolean;
-  initial?: StaffMember;
+  initial?: StaffFormInitial;
 };
 
 export type BillingDetailParams = {
@@ -150,6 +164,14 @@ export type AppStackParamList = {
   LabsNotifyPatient: undefined;
   LabsScheduleVisit: undefined;
   LabsActionCompleted: LabsActionCompletedParams | undefined;
+  EligibilityPriorAuth: undefined;
+  AuthorizationDetail: undefined;
+  RequestDocuments: undefined;
+  DenialResolution: undefined;
+  AuthorizationTracking: undefined;
+  MissingDocuments: undefined;
+  DenialAnalysis: undefined;
+  AppealSubmission: undefined;
   Staff: undefined;
   StaffForm: StaffFormParams | undefined;
   EndShiftSummary: undefined;
@@ -170,6 +192,15 @@ export type AppStackParamList = {
   DocumentsUpload: DocumentsDetailParams;
   DocumentsRequestInfo: DocumentsDetailParams;
   DocumentsAssign: DocumentsDetailParams;
+  Communication: undefined;
+  StaffDoctorChannel: undefined;
+  StaffDoctorMessageDetail: undefined;
+  StaffDoctorReply: undefined;
+  StaffDoctorConvertToTask: undefined;
+  StaffDoctorEscalate: undefined;
+  CallPatient: undefined;
+  CallPatientAutoNote: undefined;
+  VoiceHandsFree: undefined;
 };
 
 export type BillingActionCompletedParams = {
@@ -182,15 +213,6 @@ export type BillingActionCompletedParams = {
   popCount?: number;
   /** When set, primary button navigates here instead of popping (e.g. documents dashboard). */
   completionNavigateTo?: keyof AppStackParamList;
-  Communication: undefined;
-  StaffDoctorChannel: undefined;
-  StaffDoctorMessageDetail: undefined;
-  StaffDoctorReply: undefined;
-  StaffDoctorConvertToTask: undefined;
-  StaffDoctorEscalate: undefined;
-  CallPatient: undefined;
-  CallPatientAutoNote: undefined;
-  VoiceHandsFree: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -364,6 +386,46 @@ const AppStack = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={navigationStrings.ELIGIBILITY_PRIOR_AUTH}
+        component={EligibilityPriorAuth}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.AUTHORIZATION_DETAIL}
+        component={AuthorizationDetail}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.REQUEST_DOCUMENTS}
+        component={RequestDocuments}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.DENIAL_RESOLUTION}
+        component={DenialResolution}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.AUTHORIZATION_TRACKING}
+        component={AuthorizationTracking}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.MISSING_DOCUMENTS}
+        component={MissingDocuments}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.DENIAL_ANALYSIS}
+        component={DenialAnalysis}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
+        name={navigationStrings.APPEAL_SUBMISSION}
+        component={AppealSubmission}
+        options={eligibilityScreenOptions}
+      />
+      <Stack.Screen
         name={navigationStrings.STAFF}
         component={Staff}
         options={{ headerShown: false }}
@@ -461,6 +523,9 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.DOCUMENTS_ASSIGN}
         component={DocumentsAssign}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={navigationStrings.COMMUNICATION}
         component={Communication}
         options={{ headerShown: false }}

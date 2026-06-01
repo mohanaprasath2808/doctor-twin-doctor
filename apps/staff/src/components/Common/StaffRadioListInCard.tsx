@@ -71,6 +71,7 @@ const StaffRadioListInCard = ({
                 lightShadowColor={item.badge.lightShadowColor ?? "#F2CACA"}
                 textColor={item.badge.textColor ?? "#FF6B6B"}
                 textStyle={styles.badgeText}
+                width={"50%"}
               />
             ) : item.subtitle ? (
               <Text style={styles.staffSub} numberOfLines={2}>

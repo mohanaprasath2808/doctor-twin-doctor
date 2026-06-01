@@ -2,7 +2,8 @@ import axios from "axios";
 import { secureStorage } from "../storage/secureStorage";
 import { ENDPOINTS } from "./endpoints";
 
-const BASE_URL = "https://doctor-twin-ai-production.up.railway.app";
+// const BASE_URL = "https://doctor-twin-ai-production.up.railway.app"; old python backend
+const BASE_URL = "https://doctor-twin-be-production.up.railway.app/api/v1";
 
 export const api = axios.create({
     baseURL: BASE_URL,
@@ -12,6 +13,60 @@ export const api = axios.create({
         "Content-Type": "application/json",
     },
 });
+
+/** One in-flight refresh so parallel 401s don't stampede /auth/refresh. */
+let refreshPromise: Promise<string | null> | null = null;
+
+const clearSession = async () => {
+    await secureStorage.removeItem("accessToken");
+    await secureStorage.removeItem("refreshToken");
+    await secureStorage.removeItem("user");
+};
+
+const refreshAccessToken = async (): Promise<string | null> => {
+    const refreshToken = await secureStorage.getItem("refreshToken");
+    if (!refreshToken) {
+        return null;
+    }
+
+    const response = await axios.post(
+        `${BASE_URL}${ENDPOINTS.REFRESH_TOKEN}`,
+        { refresh_token: refreshToken },
+        {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        },
+    );
+
+    console.log(response, "response in refreshAccessToken");
+
+    const body = response?.data;
+    const payload = body?.data ?? body;
+    const newAccessToken = payload?.access_token as string | undefined;
+    const newRefreshToken = payload?.refresh_token as string | undefined;
+
+    if (body?.ok === false || !newAccessToken) {
+        return null;
+    }
+
+    await secureStorage.setItem("accessToken", newAccessToken);
+    if (newRefreshToken) {
+        await secureStorage.setItem("refreshToken", newRefreshToken);
+    }
+
+    return newAccessToken;
+};
+
+const getNewAccessToken = (): Promise<string | null> => {
+    if (!refreshPromise) {
+        refreshPromise = refreshAccessToken().finally(() => {
+            refreshPromise = null;
+        });
+    }
+    return refreshPromise;
+};
 
 // Automatically get the access token if it exists
 api.interceptors.request.use(
@@ -34,50 +89,39 @@ api.interceptors.response.use(
     response => response,
 
     async (error: any) => {
-        const originalRequest: any = error.config;
-        if (
-            (error?.status === 401 || error.response?.status === 401) &&
-            !originalRequest._retry
-        ) {
-            originalRequest._retry = true;
-            try {
-                const refreshToken = await secureStorage.getItem("refreshToken");
+        const originalRequest = error?.config;
+        const status = error?.response?.status;
 
-                // TODO: uncomment this after testing
-                // if (!refreshToken) {
-                //     await secureStorage.removeItem("accessToken");
-                //     await secureStorage.removeItem("refreshToken");
-                //     return Promise.reject(error);
-                // }
-
-                const response = await axios.post(
-                    `${BASE_URL}${ENDPOINTS.REFRESH_TOKEN}`,
-                    {
-                        refreshToken,
-                    }
-                );
-
-                console.log("response", response);
-                const newAccessToken = response.data.accessToken;
-                const newRefreshToken = response.data.refreshToken;
-
-                await secureStorage.setItem("accessToken", newAccessToken);
-                await secureStorage.setItem("refreshToken", newRefreshToken);
-
-                originalRequest.headers = originalRequest.headers || {};
-                originalRequest.headers.Authorization =
-                    `Bearer ${newAccessToken}`;
-
-                return api(originalRequest);
-
-            } catch (refreshError) {
-                await secureStorage.removeItem("accessToken");
-                await secureStorage.removeItem("refreshToken");
-                console.error("error", error?.response?.data);
-                return Promise.reject(error);
-            }
+        if (status !== 401 || !originalRequest || originalRequest._retry) {
+            return Promise.reject(error);
         }
 
-        return Promise.reject(error);
-    }
+        const requestUrl = String(originalRequest.url ?? "");
+        if (requestUrl.includes(ENDPOINTS.REFRESH_TOKEN)) {
+            await clearSession();
+            return Promise.reject(error);
+        }
+
+        originalRequest._retry = true;
+
+        try {
+            const newAccessToken = await getNewAccessToken();
+            if (!newAccessToken) {
+                await clearSession();
+                return Promise.reject(error);
+            }
+
+            originalRequest.headers = originalRequest.headers || {};
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+            return api(originalRequest);
+        } catch (refreshError: any) {
+            console.error(
+                "refresh token failed",
+                refreshError?.response?.data ?? refreshError,
+            );
+            await clearSession();
+            return Promise.reject(refreshError);
+        }
+    },
 );

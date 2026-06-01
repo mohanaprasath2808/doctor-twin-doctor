@@ -13,10 +13,7 @@ const HomeStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name={navigationStrings.HOME} component={Home} />
-      <Stack.Screen
-        name={navigationStrings.IMAGING_RESULTS}
-        component={ImagingResults}
-      />
+      <Stack.Screen name={navigationStrings.IMAGING_RESULTS} component={ImagingResults} />
       <Stack.Screen
         name={navigationStrings.URGENT_VISIT_SCHEDULING}
         component={ImagingAssignmentStatus}
@@ -27,18 +24,9 @@ const HomeStack = () => {
         component={ImagingAssignmentStatus}
         initialParams={{ mode: "requestedAssigned" }}
       />
-      <Stack.Screen
-        name={navigationStrings.SEND_TO_ER}
-        component={SendToER}
-      />
-      <Stack.Screen
-        name={navigationStrings.ER_INSTRUCTIONS_SENT}
-        component={ERInstructionsSent}
-      />
-      <Stack.Screen
-        name={navigationStrings.REVENUE_DASHBOARD}
-        component={RevenueDashboard}
-      />
+      <Stack.Screen name={navigationStrings.SEND_TO_ER} component={SendToER} />
+      <Stack.Screen name={navigationStrings.ER_INSTRUCTIONS_SENT} component={ERInstructionsSent} />
+      <Stack.Screen name={navigationStrings.REVENUE_DASHBOARD} component={RevenueDashboard} />
     </Stack.Navigator>
   );
 };
