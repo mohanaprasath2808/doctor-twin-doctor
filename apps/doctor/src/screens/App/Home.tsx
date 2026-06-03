@@ -23,7 +23,6 @@ import RefillsIcon from "../../assets/icon/refillsIcon.svg";
 import ScheduleIcon from "../../assets/icon/scheduleIcon.svg";
 import TodayVisitIcon from "../../assets/icon/todayVisitIcon.svg";
 import PatientIcon from "../../assets/icon/patientIcon.svg";
-
 import LabReportIcon from "../../assets/icon/labReportIcon.svg";
 import ReportIcon from "../../assets/icon/reportIcon.svg";
 import LotusIcon from "../../assets/icon/lotusIcon.svg";
@@ -163,6 +162,7 @@ const Home = () => {
   const navigation = useNavigation<any>();
   const notificationsData = useAppStore((s) => s.notificationsData);
   const messagesData = useAppStore((s) => s.messagesData);
+  console.log(useAuthStore.getState().userData, "userData in Home");
   const gridItems = GRID_ITEMS.map((item) => {
     switch (item.id) {
       case 1:
