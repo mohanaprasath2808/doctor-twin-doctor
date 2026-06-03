@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   staffRole: {
     marginTop: 2,
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "400",
     color: COLORS.TEXT_70,
     fontFamily: "SF-Pro-Display-Regular",
@@ -248,16 +248,16 @@ const styles = StyleSheet.create({
   },
   actionCell: { flex: 1, minWidth: 0 },
   outlineBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
   doneBtn: { width: "100%" },
   doneBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
   },
 });

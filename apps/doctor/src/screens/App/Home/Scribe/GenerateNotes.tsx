@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import ListIcon from "../../../../assets/icon/listIcon.svg";
+import CopyIcon from "../../../../assets/icon/copyIcon.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import PatientTempImage from "../../../../assets/image/tempImage/fakeID.png";
@@ -83,8 +83,12 @@ function SoapCard({ section }: { section: SoapSection }) {
         <NeumorphicCard
           outerStyle={styles.copyOuter}
           innerStyle={styles.copyInner}
-          borderRadius={8}
+          borderRadius={62
+
+          }
         >
+
+          <CopyIcon width={14} height={14} />
           <Text style={styles.copyText}>Copy</Text>
         </NeumorphicCard>
       </Pressable>
@@ -131,9 +135,11 @@ const GenerateNotes = () => {
             <NeumorphicCard
               outerStyle={styles.copyAllOuter}
               innerStyle={styles.copyAllInner}
-              borderRadius={10}
+              borderRadius={62
+
+              }
             >
-              <ListIcon width={14} height={14} />
+              <CopyIcon width={14} height={14} />
               <Text style={styles.copyAllText}>Copy all</Text>
             </NeumorphicCard>
           </Pressable>
@@ -212,7 +218,7 @@ const GenerateNotes = () => {
           borderRadius={24}
           containerStyle={styles.printBtn}
           textStyle={styles.printBtnText}
-          onPress={() => {}}
+          onPress={() => { }}
         />
       </ScrollView>
     </SafeAreaView>
@@ -380,6 +386,9 @@ const styles = StyleSheet.create({
   },
   copyOuter: { alignSelf: "flex-start" },
   copyInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
     paddingHorizontal: 12,
     paddingVertical: 6,
   },
@@ -401,16 +410,16 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   outlineBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
   printBtn: { marginTop: 14 },
   printBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
   },
 });
