@@ -9,10 +9,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import BpIcon from "../../../../assets/icon/bpIcon.svg";
-import HeartIcon from "../../../../assets/icon/heartIcon.svg";
+import BMI from "../../../../assets/icon/bmiIcon.svg";
+import HeartWithInHandsIcon from "../../../../assets/icon/heartWithInHands.svg";
 import CapsuleIcon from "../../../../assets/icon/capsuleIcon.svg";
-import UtilizationIcon from "../../../../assets/icon/utilizationIcon.svg";
+import WeightScaleIcon from "../../../../assets/icon/weightScale.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import { COLORS } from "../../../../constants/theme";
 import { getInitials } from "../../../../constants/contant";
@@ -125,12 +125,12 @@ const PriorAuthorization = () => {
 
           <View style={styles.metricsRow}>
             <View style={styles.metricCell}>
-              <InnerShadowIcon icon={<BpIcon width={18} height={18} />} size={40} />
+              <InnerShadowIcon icon={<BMI width={18} height={18} />} size={40} />
               <Text style={styles.metricValue}>42 BMI</Text>
             </View>
             <View style={styles.metricCell}>
               <InnerShadowIcon
-                icon={<UtilizationIcon width={18} height={18} />}
+                icon={<WeightScaleIcon width={18} height={18} />}
                 size={40}
               />
               <Text style={styles.metricValue}>265 lbs Current Weight</Text>
@@ -140,7 +140,7 @@ const PriorAuthorization = () => {
           <View style={styles.divider} />
 
           <ClinicalRow
-            icon={<HeartIcon width={18} height={18} />}
+            icon={<HeartWithInHandsIcon width={18} height={18} />}
             value="Failed lifestyle change x 6 months"
           />
 
@@ -375,16 +375,16 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   outlineBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
   signBtnWrap: { flex: 1, minWidth: 0 },
   signBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
   },
 });

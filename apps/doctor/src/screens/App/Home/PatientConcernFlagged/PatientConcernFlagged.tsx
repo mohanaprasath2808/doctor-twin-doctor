@@ -53,7 +53,7 @@ const PatientConcernFlagged = () => {
             width={40}
             height={40}
             radius={20}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
 
@@ -115,6 +115,7 @@ const PatientConcernFlagged = () => {
             lightShadowDy={-4}
             lightShadowBlur={9}
             lightShadowColor={COLORS.LIGHT_SHADOW}
+            width={"100%"}
           >
             {FLAGGED_CONCERNS.map((item, index) => (
               <View
@@ -317,25 +318,25 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   outlineBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
   alertBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.ALERT,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
   messageBtnWrap: {
     width: "48%",
   },
   messageBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
   },
 });

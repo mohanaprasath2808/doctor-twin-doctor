@@ -107,7 +107,7 @@ const ReviewAndEdit = () => {
               multiline={isEditingObjective ? true : false}
               containerStyle={styles.objectiveInput}
               minHeight={isEditingObjective ? 120 : 46}
-              borderRadius={isEditingObjective ? 10 :114}
+              borderRadius={isEditingObjective ? 10 : 114}
             />
             {!isEditingObjective ? (
               <IconComponent
@@ -143,7 +143,7 @@ const ReviewAndEdit = () => {
                 bgColor={COLORS.SURFACE}
                 text="Insert into EMR"
                 textStyle={styles.outlineBtnText}
-                onPress={() => {}}
+                onPress={() => { }}
               />
               <AppButton
                 activeOpacity={0.8}
@@ -153,7 +153,7 @@ const ReviewAndEdit = () => {
                 bgColor={COLORS.SURFACE}
                 text="Save Draft"
                 textStyle={styles.outlineBtnText}
-                onPress={() => {}}
+                onPress={() => { }}
               />
             </View>
 
@@ -165,7 +165,7 @@ const ReviewAndEdit = () => {
               bgColor={COLORS.SURFACE}
               text="Save"
               textStyle={styles.outlineBtnText}
-              onPress={() => {}}
+              onPress={() => { }}
             />
           </>
         )}
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_DARK,
     fontFamily: "SF-Pro-Display-Semibold",
   },
-  urgencyOuter: { },
+  urgencyOuter: {},
   urgencyInner: {
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -310,10 +310,10 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   outlineBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
 });

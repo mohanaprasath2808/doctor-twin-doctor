@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import LabReportIcon from "../../../../assets/icon/labReportIcon.svg";
+import EcgPadIcon from "../../../../assets/icon/ecgPadIcon.svg";
 import OverlayImage from "../../../../assets/image/imageBgShadow.png";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import XrayImage from "../../../../assets/image/tempImage/xrayImage.png";
@@ -83,7 +83,7 @@ const ImagingResults = () => {
         <Image source={XrayImage} style={styles.thumbnail} resizeMode="cover" />
       </View>
       <View style={styles.findingRow}>
-        <LabReportIcon width={16} height={16} />
+        <EcgPadIcon width={16} height={16} />
         <Text style={styles.findingText}>{item.finding}</Text>
       </View>
     </NeumorphicCard>
@@ -308,10 +308,10 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   outlineBtnText: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
   delegateBtn: {
@@ -319,9 +319,9 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   delegateBtnText: {
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
   },
   erBtn: {
     marginTop: 14,
@@ -332,6 +332,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: COLORS.ALERT,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
   },
 });

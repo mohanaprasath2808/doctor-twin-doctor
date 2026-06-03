@@ -73,6 +73,7 @@ const ConcernMessagePatient = () => {
             lightShadowDy={-4}
             lightShadowBlur={9}
             lightShadowColor={COLORS.LIGHT_SHADOW}
+            width={"100%"}
           >
             <TextInput
               value={message}
@@ -93,7 +94,7 @@ const ConcernMessagePatient = () => {
             bgColor={COLORS.SURFACE}
             textStyle={styles.attachText}
             style={styles.attachButton}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </NeumorphicCard>
 

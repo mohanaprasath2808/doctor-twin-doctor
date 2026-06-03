@@ -105,7 +105,7 @@ const GenerateSummary = () => {
             bgColor={COLORS.SURFACE}
             text="Print"
             textStyle={styles.outlineBtnText}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           <AppButton
             activeOpacity={0.8}
@@ -115,7 +115,7 @@ const GenerateSummary = () => {
             bgColor={COLORS.SURFACE}
             text="Email Patient"
             textStyle={styles.outlineBtnText}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
       </ScrollView>
@@ -228,10 +228,10 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   outlineBtnText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Medium",
     textAlign: "center",
   },
 });
