@@ -41,8 +41,6 @@ const HomeStack = () => {
       <Stack.Screen name={navigationStrings.SEND_TO_ER} component={SendToER} />
       <Stack.Screen name={navigationStrings.ER_INSTRUCTIONS_SENT} component={ERInstructionsSent} />
       <Stack.Screen name={navigationStrings.REVENUE_DASHBOARD} component={RevenueDashboard} />
-      <Stack.Screen name={navigationStrings.SEND_TO_ER} component={SendToER} />
-      <Stack.Screen name={navigationStrings.ER_INSTRUCTIONS_SENT} component={ERInstructionsSent} />
       <Stack.Screen
         name={navigationStrings.PATIENT_CONCERN_FLAGGED}
         component={PatientConcernFlagged}
