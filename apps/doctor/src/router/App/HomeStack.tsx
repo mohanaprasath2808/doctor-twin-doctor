@@ -6,6 +6,9 @@ import ImagingAssignmentStatus from "../../screens/App/Home/ImagingResults/Imagi
 import SendToER from "../../screens/App/Home/ImagingResults/SendToER";
 import ERInstructionsSent from "../../screens/App/Home/ImagingResults/ERInstructionsSent";
 import RevenueDashboard from "../../screens/App/Home/Revenue/RevenueDashboard";
+import AccountReceivable from "../../screens/App/Home/Revenue/AccountReceivable";
+import ClaimsNeedFixing from "../../screens/App/Home/Revenue/ClaimsNeedFixing";
+import ClaimDetail from "../../screens/App/Home/Revenue/ClaimDetail";
 import PatientConcernFlagged from "../../screens/App/Home/PatientConcernFlagged/PatientConcernFlagged";
 import ConcernMessagePatient from "../../screens/App/Home/PatientConcernFlagged/ConcernMessagePatient";
 import PriorAuthorization from "../../screens/App/Home/PriorAuth/PriorAuthorization";
@@ -41,6 +44,9 @@ const HomeStack = () => {
       <Stack.Screen name={navigationStrings.SEND_TO_ER} component={SendToER} />
       <Stack.Screen name={navigationStrings.ER_INSTRUCTIONS_SENT} component={ERInstructionsSent} />
       <Stack.Screen name={navigationStrings.REVENUE_DASHBOARD} component={RevenueDashboard} />
+      <Stack.Screen name={navigationStrings.ACCOUNT_RECEIVABLE} component={AccountReceivable} />
+      <Stack.Screen name={navigationStrings.CLAIMS_NEED_FIXING} component={ClaimsNeedFixing} />
+      <Stack.Screen name={navigationStrings.CLAIM_DETAIL} component={ClaimDetail} />
       <Stack.Screen
         name={navigationStrings.PATIENT_CONCERN_FLAGGED}
         component={PatientConcernFlagged}

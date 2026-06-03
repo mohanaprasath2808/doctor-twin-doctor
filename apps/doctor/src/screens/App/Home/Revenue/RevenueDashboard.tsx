@@ -18,6 +18,7 @@ import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
+import navigationStrings from "../../../../constants/navigationStrings";
 import { useAppStore } from "../../../../store/useAppStore";
 
 type RevenueRow = {
@@ -74,12 +75,19 @@ const RevenueDashboard = () => {
         outerStyle={styles.rowOuter}
         innerStyle={styles.rowInner}
         borderRadius={12}
+        onPress={
+          item.id === "ar"
+            ? () => navigation.navigate(navigationStrings.ACCOUNT_RECEIVABLE)
+            : item.id === "incomplete"
+              ? () => navigation.navigate(navigationStrings.CLAIMS_NEED_FIXING)
+              : undefined
+        }
       >
         <Text style={styles.rowLabel}>{item.label}</Text>
         <ActionPill label={item.action} alert={item.alert} />
       </NeumorphicCard>
     ),
-    [],
+    [navigation],
   );
 
   return (
