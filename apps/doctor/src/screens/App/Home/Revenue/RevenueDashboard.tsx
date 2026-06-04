@@ -80,7 +80,15 @@ const RevenueDashboard = () => {
             ? () => navigation.navigate(navigationStrings.ACCOUNT_RECEIVABLE)
             : item.id === "incomplete"
               ? () => navigation.navigate(navigationStrings.CLAIMS_NEED_FIXING)
-              : undefined
+              : item.id === "unsigned"
+                ? () => navigation.navigate(navigationStrings.UNSIGNED_CLAIMS)
+                : item.id === "denied"
+                  ? () => navigation.navigate(navigationStrings.DENIED_CLAIMS)
+                  : item.id === "payments"
+                    ? () => navigation.navigate(navigationStrings.PAYMENTS_MONTH_TO_DATE)
+                    : item.id === "charges"
+                      ? () => navigation.navigate(navigationStrings.CHARGES_MONTH_TO_DATE)
+                      : undefined
         }
       >
         <Text style={styles.rowLabel}>{item.label}</Text>

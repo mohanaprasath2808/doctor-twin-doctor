@@ -9,6 +9,30 @@ import RevenueDashboard from "../../screens/App/Home/Revenue/RevenueDashboard";
 import AccountReceivable from "../../screens/App/Home/Revenue/AccountReceivable";
 import ClaimsNeedFixing from "../../screens/App/Home/Revenue/ClaimsNeedFixing";
 import ClaimDetail from "../../screens/App/Home/Revenue/ClaimDetail";
+import UnsignedClaims from "../../screens/App/Home/Revenue/UnsignedClaims";
+import ClaimSignature from "../../screens/App/Home/Revenue/ClaimSignature";
+import ReturnToCoder from "../../screens/App/Home/Revenue/ReturnToCoder";
+import CoderReviewQueue from "../../screens/App/Home/Revenue/CoderReviewQueue";
+import BatchSignClaims from "../../screens/App/Home/Revenue/BatchSignClaims";
+import ActionSuccess from "../../screens/App/Home/Revenue/components/ActionSuccess";
+import DeniedClaims from "../../screens/App/Home/Revenue/DeniedClaims";
+import DeniedDetails from "../../screens/App/Home/Revenue/DeniedDetails";
+import AIAppealBuilder from "../../screens/App/Home/Revenue/AIAppealBuilder";
+import WriteOff from "../../screens/App/Home/Revenue/WriteOff";
+import CodingCorrection from "../../screens/App/Home/Revenue/CodingCorrection";
+import ResubmitClaim from "../../screens/App/Home/Revenue/ResubmitClaim";
+import ClaimTimeline from "../../screens/App/Home/Revenue/ClaimTimeline";
+import PaymentsMonthToDate from "../../screens/App/Home/Revenue/PaymentsMonthToDate";
+import ClaimCorrection from "../../screens/App/Home/Revenue/ClaimCorrection";
+import PaymentReconciliation from "../../screens/App/Home/Revenue/PaymentReconciliation";
+import AdjustPayment from "../../screens/App/Home/Revenue/AdjustPayment";
+import ChargesMonthToDate from "../../screens/App/Home/Revenue/ChargesMonthToDate";
+import EncounterChargeEditor from "../../screens/App/Home/Revenue/EncounterChargeEditor";
+import SendOptions from "../../screens/App/Home/Revenue/SendOptions";
+import PacketPreview from "../../screens/App/Home/Revenue/PacketPreview";
+import SubmitClaim from "../../screens/App/Home/Revenue/SubmitClaim";
+import UploadDocuments from "../../screens/App/Home/Revenue/UploadDocuments";
+import RevenuePdfPreview from "../../screens/App/Home/Revenue/RevenuePdfPreview";
 import PatientConcernFlagged from "../../screens/App/Home/PatientConcernFlagged/PatientConcernFlagged";
 import ConcernMessagePatient from "../../screens/App/Home/PatientConcernFlagged/ConcernMessagePatient";
 import PriorAuthorization from "../../screens/App/Home/PriorAuth/PriorAuthorization";
@@ -47,6 +71,42 @@ const HomeStack = () => {
       <Stack.Screen name={navigationStrings.ACCOUNT_RECEIVABLE} component={AccountReceivable} />
       <Stack.Screen name={navigationStrings.CLAIMS_NEED_FIXING} component={ClaimsNeedFixing} />
       <Stack.Screen name={navigationStrings.CLAIM_DETAIL} component={ClaimDetail} />
+      <Stack.Screen name={navigationStrings.UNSIGNED_CLAIMS} component={UnsignedClaims} />
+      <Stack.Screen name={navigationStrings.CLAIM_SIGNATURE} component={ClaimSignature} />
+      <Stack.Screen name={navigationStrings.RETURN_TO_CODER} component={ReturnToCoder} />
+      <Stack.Screen name={navigationStrings.CODER_REVIEW_QUEUE} component={CoderReviewQueue} />
+      <Stack.Screen name={navigationStrings.BATCH_SIGN_CLAIMS} component={BatchSignClaims} />
+      <Stack.Screen name={navigationStrings.ACTION_SUCCESS} component={ActionSuccess} />
+      <Stack.Screen name={navigationStrings.DENIED_CLAIMS} component={DeniedClaims} />
+      <Stack.Screen name={navigationStrings.DENIED_DETAILS} component={DeniedDetails} />
+      <Stack.Screen name={navigationStrings.AI_APPEAL_BUILDER} component={AIAppealBuilder} />
+      <Stack.Screen name={navigationStrings.WRITE_OFF} component={WriteOff} />
+      <Stack.Screen name={navigationStrings.CODING_CORRECTION} component={CodingCorrection} />
+      <Stack.Screen name={navigationStrings.RESUBMIT_CLAIM} component={ResubmitClaim} />
+      <Stack.Screen name={navigationStrings.CLAIM_TIMELINE} component={ClaimTimeline} />
+      <Stack.Screen
+        name={navigationStrings.PAYMENTS_MONTH_TO_DATE}
+        component={PaymentsMonthToDate}
+      />
+      <Stack.Screen name={navigationStrings.CLAIM_CORRECTION} component={ClaimCorrection} />
+      <Stack.Screen
+        name={navigationStrings.PAYMENT_RECONCILIATION}
+        component={PaymentReconciliation}
+      />
+      <Stack.Screen name={navigationStrings.ADJUST_PAYMENT} component={AdjustPayment} />
+      <Stack.Screen
+        name={navigationStrings.CHARGES_MONTH_TO_DATE}
+        component={ChargesMonthToDate}
+      />
+      <Stack.Screen
+        name={navigationStrings.ENCOUNTER_CHARGE_EDITOR}
+        component={EncounterChargeEditor}
+      />
+      <Stack.Screen name={navigationStrings.SEND_OPTIONS} component={SendOptions} />
+      <Stack.Screen name={navigationStrings.PACKET_PREVIEW} component={PacketPreview} />
+      <Stack.Screen name={navigationStrings.SUBMIT_CLAIM} component={SubmitClaim} />
+      <Stack.Screen name={navigationStrings.UPLOAD_DOCUMENTS} component={UploadDocuments} />
+      <Stack.Screen name={navigationStrings.REVENUE_PDF_PREVIEW} component={RevenuePdfPreview} />
       <Stack.Screen
         name={navigationStrings.PATIENT_CONCERN_FLAGGED}
         component={PatientConcernFlagged}

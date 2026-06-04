@@ -1,55 +1,73 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
+import SearchIcon from "../../../../assets/icon/searchIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import navigationStrings from "../../../../constants/navigationStrings";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
+import InputField from "../../../../neomorphism/InputField";
 import ClaimListItemCard from "./components/ClaimListItemCard";
 import type { ClaimListItem } from "./claimsTypes";
 
-const CLAIMS_NEED_FIXING: ClaimListItem[] = [
+const DENIED_CLAIMS: ClaimListItem[] = [
   {
-    id: "humana-1",
-    name: "Humana",
-    date: "23/12/2024",
-    statusLabel: "Missing field",
-    badgeVariant: "error",
-    initials: "HU",
-  },
-  {
-    id: "sarah-meditare",
-    name: "Sarah Meditare",
-    date: "23/12/2024",
-    statusLabel: "Dx/CPT mismatch",
+    id: "john-miller",
+    name: "John Miller",
+    secondaryLine: "BCBS · $145",
+    date: "",
+    statusLabel: "CPT mismatch",
     badgeVariant: "error",
     avatarSource: DoctorTempImage,
   },
   {
-    id: "cigna-1",
-    name: "Cigna",
-    date: "23/12/2024",
-    statusLabel: "Diagnosis mismatch",
-    badgeVariant: "error",
-    initials: "CD",
+    id: "sarah-williams",
+    name: "Sarah Williams",
+    secondaryLine: "Aetna · $220",
+    date: "",
+    statusLabel: "Medical necessity",
+    badgeVariant: "warning",
+    avatarSource: DoctorTempImage,
   },
   {
-    id: "humana-2",
-    name: "Humana",
-    date: "23/12/2024",
-    statusLabel: "Docs missing",
-    badgeVariant: "warning",
-    initials: "HU",
+    id: "mike-thompson",
+    name: "Mike Thompson",
+    secondaryLine: "Cigna · $98",
+    date: "",
+    statusLabel: "Duplicate claim",
+    badgeVariant: "error",
+    avatarSource: DoctorTempImage,
+  },
+  {
+    id: "emma-davis",
+    name: "Emma Davis",
+    secondaryLine: "Humana · $310",
+    date: "",
+    statusLabel: "CPT mismatch",
+    badgeVariant: "error",
+    initials: "ED",
   },
 ];
 
-const ClaimsNeedFixing = () => {
+const DeniedClaims = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const bottomPad = 16 + insets.bottom;
+  const [search, setSearch] = useState("");
+
+  const filteredItems = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return DENIED_CLAIMS;
+    return DENIED_CLAIMS.filter(
+      (item) =>
+        item.name.toLowerCase().includes(query) ||
+        item.secondaryLine?.toLowerCase().includes(query) ||
+        item.statusLabel.toLowerCase().includes(query),
+    );
+  }, [search]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
@@ -61,18 +79,29 @@ const ClaimsNeedFixing = () => {
           radius={20}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headerTitle}>Claims need Fixing</Text>
+        <Text style={styles.headerTitle}>Denied Claims</Text>
         <View style={styles.headerSpacer} />
       </View>
 
+      <View style={styles.searchWrap}>
+        <InputField
+          placeholder="Search"
+          value={search}
+          onChangeText={setSearch}
+          leftIcon={<SearchIcon width={18} height={18} />}
+          borderRadius={64}
+          containerStyle={styles.searchInput}
+        />
+      </View>
+
       <FlatList
-        data={CLAIMS_NEED_FIXING}
+        data={filteredItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ClaimListItemCard
             item={item}
             onPress={() =>
-              navigation.navigate(navigationStrings.CLAIM_DETAIL, { claimId: item.id })
+              navigation.navigate(navigationStrings.DENIED_DETAILS, { claimId: item.id })
             }
           />
         )}
@@ -84,7 +113,7 @@ const ClaimsNeedFixing = () => {
   );
 };
 
-export default ClaimsNeedFixing;
+export default DeniedClaims;
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -97,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingTop: 6,
-    paddingBottom: 14,
+    paddingBottom: 10,
   },
   headerTitle: {
     flex: 1,
@@ -112,6 +141,14 @@ const styles = StyleSheet.create({
   headerSpacer: {
     width: 40,
     height: 40,
+  },
+  searchWrap: {
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  searchInput: {
+    width: "100%",
+    marginTop: 0,
   },
   listContent: {
     paddingHorizontal: 16,

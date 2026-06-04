@@ -27,6 +27,18 @@ const BADGE_STYLES: Record<
     light: "#FFFFFF99",
     text: "#2563EB",
   },
+  neutral: {
+    bg: "#F3F0FA",
+    dark: "#DDD6F0",
+    light: "#FFFFFF99",
+    text: "#5B5675",
+  },
+  success: {
+    bg: "#E8F8EF",
+    dark: "#B8E6CF",
+    light: "#FFFFFF99",
+    text: COLORS.GREEN,
+  },
 };
 
 type ClaimStatusBadgeProps = {

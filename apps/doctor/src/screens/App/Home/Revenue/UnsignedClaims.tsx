@@ -11,42 +11,42 @@ import IconComponent from "../../../../neomorphism/IconComponent";
 import ClaimListItemCard from "./components/ClaimListItemCard";
 import type { ClaimListItem } from "./claimsTypes";
 
-const CLAIMS_NEED_FIXING: ClaimListItem[] = [
+const UNSIGNED_CLAIMS: ClaimListItem[] = [
   {
-    id: "humana-1",
-    name: "Humana",
+    id: "sarah-williams-1",
+    name: "Sarah Williams",
     date: "23/12/2024",
-    statusLabel: "Missing field",
-    badgeVariant: "error",
-    initials: "HU",
-  },
-  {
-    id: "sarah-meditare",
-    name: "Sarah Meditare",
-    date: "23/12/2024",
-    statusLabel: "Dx/CPT mismatch",
+    statusLabel: "CPT mismatch",
     badgeVariant: "error",
     avatarSource: DoctorTempImage,
   },
   {
-    id: "cigna-1",
-    name: "Cigna",
+    id: "cotmg-dply",
+    name: "Cotmg Dply",
     date: "23/12/2024",
-    statusLabel: "Diagnosis mismatch",
+    statusLabel: "Missing Diagnosis",
     badgeVariant: "error",
     initials: "CD",
   },
   {
-    id: "humana-2",
-    name: "Humana",
+    id: "sarah-williams-2",
+    name: "Sarah Williams",
+    date: "23/12/2024",
+    statusLabel: "Dx mismatch",
+    badgeVariant: "error",
+    avatarSource: DoctorTempImage,
+  },
+  {
+    id: "sarah-williams-3",
+    name: "Sarah Williams",
     date: "23/12/2024",
     statusLabel: "Docs missing",
     badgeVariant: "warning",
-    initials: "HU",
+    avatarSource: DoctorTempImage,
   },
 ];
 
-const ClaimsNeedFixing = () => {
+const UnsignedClaims = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const bottomPad = 16 + insets.bottom;
@@ -61,18 +61,18 @@ const ClaimsNeedFixing = () => {
           radius={20}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headerTitle}>Claims need Fixing</Text>
+        <Text style={styles.headerTitle}>Unsigned Claims</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <FlatList
-        data={CLAIMS_NEED_FIXING}
+        data={UNSIGNED_CLAIMS}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ClaimListItemCard
             item={item}
             onPress={() =>
-              navigation.navigate(navigationStrings.CLAIM_DETAIL, { claimId: item.id })
+              navigation.navigate(navigationStrings.CLAIM_SIGNATURE, { claimId: item.id })
             }
           />
         )}
@@ -84,7 +84,7 @@ const ClaimsNeedFixing = () => {
   );
 };
 
-export default ClaimsNeedFixing;
+export default UnsignedClaims;
 
 const styles = StyleSheet.create({
   safeArea: {
