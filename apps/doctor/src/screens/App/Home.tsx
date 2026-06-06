@@ -176,6 +176,11 @@ const Home = () => {
           badge: messagesData.length > 0 ? String(messagesData.length) : undefined,
           badgeType: messagesData.length > 0 ? ("dot" as const) : undefined,
         };
+      case 3:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.MY_CALENDER),
+        };
       case 9:
         return {
           ...item,
@@ -281,7 +286,7 @@ const Home = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           {notificationsData.length > 1 && <View style={styles.bellDot} />}
         </View>
@@ -296,7 +301,7 @@ const Home = () => {
         imageStyle={styles.image}
       />
 
-      {/* <TouchableOpacity
+      <TouchableOpacity
         activeOpacity={0.85}
         style={styles.morningBriefCta}
         onPress={() => navigation.navigate(navigationStrings.MORNING_BRIEF)}
@@ -306,10 +311,10 @@ const Home = () => {
           outerStyle={styles.morningBriefOuter}
           innerStyle={styles.morningBriefInner}
         >
-          <InnerShadowIcon icon={<MicOutlineIcon width={16} height={16} />} size={34} radius={17} />
+          {/* <InnerShadowIcon icon={<MicOutlineIcon width={16} height={16} />} size={34} radius={17} /> */}
           <Text style={styles.morningBriefText}>Morning Brief</Text>
         </NeumorphicCard>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 
@@ -342,7 +347,7 @@ const Home = () => {
             <InnerShadowIcon icon={item.icon()} size={40} />
           </View>
           <View style={styles.cardTextWrap}>
-            <Text style={styles.cardLabel} numberOfLines={2}>
+            <Text style={styles.cardLabel} numberOfLines={item.badgeType === "sub" && item.badge ? 1 : 2}>
               {item.label}
             </Text>
             {item.badgeType === "sub" && item.badge && (

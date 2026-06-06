@@ -17,6 +17,8 @@ const NODE = 30;
 const TEAL = COLORS.PRIMARY;
 const INDICATOR_COLUMN_WIDTH = NODE;
 const LABELS_CONTAINER_PADDING_H = 8;
+/** Minimum row height so vertical StepIndicator (flex:1) has a bounded parent */
+const STEP_ROW_HEIGHT = 56;
 
 export const MOCK_PA_PROGRESS_STEPS: ProgressTrackerStep[] = [
   {
@@ -148,15 +150,17 @@ const NeumorphismProgressTracker: React.FC<NeumorphismProgressTrackerProps> = ({
 
   return (
     <View style={styles.root} onLayout={handleRootLayout}>
-      <StepIndicator
-        direction="vertical"
-        customStyles={TRACK_STYLES}
-        currentPosition={currentPosition}
-        stepCount={stepCount}
-        labels={labels}
-        renderStepIndicator={renderStepIndicator}
-        renderLabel={renderLabel}
-      />
+      <View style={[styles.trackerWrap, { minHeight: stepCount * STEP_ROW_HEIGHT }]}>
+        <StepIndicator
+          direction="vertical"
+          customStyles={TRACK_STYLES}
+          currentPosition={currentPosition}
+          stepCount={stepCount}
+          labels={labels}
+          renderStepIndicator={renderStepIndicator}
+          renderLabel={renderLabel}
+        />
+      </View>
     </View>
   );
 };
@@ -169,6 +173,11 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "stretch",
     overflow: "visible",
+  },
+  trackerWrap: {
+    width: "100%",
+    alignSelf: "stretch",
+    flexGrow: 0,
   },
   pendingWrap: {
     justifyContent: "center",

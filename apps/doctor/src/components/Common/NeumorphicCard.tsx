@@ -3,13 +3,25 @@ import { Platform, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } fr
 import LinearGradient from "react-native-linear-gradient";
 import { COLORS } from "../../constants/theme";
 
+type CornerRadii = {
+  borderTopLeftRadius: number;
+  borderTopRightRadius: number;
+  borderBottomLeftRadius: number;
+  borderBottomRightRadius: number;
+};
+
 type NeumorphicCardProps = {
   children: React.ReactNode;
   /** Outer wrapper style (width, margin, etc.) */
   outerStyle?: StyleProp<ViewStyle>;
   /** Inner surface style (padding, flexDirection, etc.) */
   innerStyle?: StyleProp<ViewStyle>;
+  /** Default radius applied to all corners unless overridden individually. */
   borderRadius?: number;
+  borderTopLeftRadius?: number;
+  borderTopRightRadius?: number;
+  borderBottomLeftRadius?: number;
+  borderBottomRightRadius?: number;
   backgroundColor?: string;
   onPress?: () => void;
   activeOpacity?: number;
@@ -20,11 +32,49 @@ type NeumorphicCardProps = {
   clipInner?: boolean;
 };
 
+const DEFAULT_BORDER_RADIUS = 14;
+const INNER_RADIUS_INSET = 1;
+
+function resolveCornerRadii({
+  borderRadius = DEFAULT_BORDER_RADIUS,
+  borderTopLeftRadius,
+  borderTopRightRadius,
+  borderBottomLeftRadius,
+  borderBottomRightRadius,
+}: Pick<
+  NeumorphicCardProps,
+  | "borderRadius"
+  | "borderTopLeftRadius"
+  | "borderTopRightRadius"
+  | "borderBottomLeftRadius"
+  | "borderBottomRightRadius"
+>): Required<CornerRadii> {
+  return {
+    borderTopLeftRadius: borderTopLeftRadius ?? borderRadius,
+    borderTopRightRadius: borderTopRightRadius ?? borderRadius,
+    borderBottomLeftRadius: borderBottomLeftRadius ?? borderRadius,
+    borderBottomRightRadius: borderBottomRightRadius ?? borderRadius,
+  };
+}
+
+function insetCornerRadii(radii: Required<CornerRadii>, inset: number): Required<CornerRadii> {
+  return {
+    borderTopLeftRadius: Math.max(0, radii.borderTopLeftRadius - inset),
+    borderTopRightRadius: Math.max(0, radii.borderTopRightRadius - inset),
+    borderBottomLeftRadius: Math.max(0, radii.borderBottomLeftRadius - inset),
+    borderBottomRightRadius: Math.max(0, radii.borderBottomRightRadius - inset),
+  };
+}
+
 const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
   children,
   outerStyle,
   innerStyle,
-  borderRadius = 14,
+  borderRadius = DEFAULT_BORDER_RADIUS,
+  borderTopLeftRadius,
+  borderTopRightRadius,
+  borderBottomLeftRadius,
+  borderBottomRightRadius,
   backgroundColor = COLORS.SURFACE,
   onPress,
   activeOpacity = 0.85,
@@ -32,24 +82,31 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
 }) => {
   const Surface: React.ElementType = onPress ? TouchableOpacity : View;
   const surfaceProps = onPress ? { activeOpacity, onPress } : undefined;
-  const innerRadius = Math.max(0, borderRadius - 1);
+  const outerRadii = resolveCornerRadii({
+    borderRadius,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    borderBottomLeftRadius,
+    borderBottomRightRadius,
+  });
+  const innerRadii = insetCornerRadii(outerRadii, INNER_RADIUS_INSET);
   const clipStyle = clipInner ? styles.clipHidden : styles.clipVisible;
 
   return (
-    <View style={[styles.outer, { borderRadius }, outerStyle]}>
+    <View style={[styles.outer, outerRadii, outerStyle]}>
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowDark, { borderRadius, backgroundColor }]}
+        style={[styles.shadowLayer, styles.shadowDark, outerRadii, { backgroundColor }]}
       />
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowLight, { borderRadius, backgroundColor }]}
+        style={[styles.shadowLayer, styles.shadowLight, outerRadii, { backgroundColor }]}
       />
       <View
         pointerEvents="none"
-        style={[styles.shadowLayer, styles.shadowSoft, { borderRadius, backgroundColor }]}
+        style={[styles.shadowLayer, styles.shadowSoft, outerRadii, { backgroundColor }]}
       />
-      <View style={[styles.border, clipStyle, { borderRadius }]}>
+      <View style={[styles.border, clipStyle, outerRadii]}>
         <LinearGradient
           colors={["rgba(214, 227, 243, 0.46)", "rgba(255, 255, 255, 0.46)"]}
           locations={[0.082, 0.8268]}
@@ -66,12 +123,7 @@ const NeumorphicCard: React.FC<NeumorphicCardProps> = ({
         />
         <Surface
           {...(surfaceProps as any)}
-          style={[
-            styles.inner,
-            clipStyle,
-            { borderRadius: innerRadius, backgroundColor },
-            innerStyle,
-          ]}
+          style={[styles.inner, clipStyle, innerRadii, { backgroundColor }, innerStyle]}
         >
           {children}
         </Surface>

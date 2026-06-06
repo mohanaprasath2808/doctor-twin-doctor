@@ -18,6 +18,7 @@ import DoctorAvatar from "../../../../components/Common/DoctorAvatar";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import ReusableButton from "../../../../neomorphism/ReusableButton";
+import navigationStrings from "../../../../constants/navigationStrings";
 import { useAppStore } from "../../../../store/useAppStore";
 
 type RevenueRow = {
@@ -74,12 +75,33 @@ const RevenueDashboard = () => {
         outerStyle={styles.rowOuter}
         innerStyle={styles.rowInner}
         borderRadius={12}
+        onPress={
+          item.id === "ar"
+            ? () => navigation.navigate(navigationStrings.ACCOUNT_RECEIVABLE)
+            : item.id === "incomplete"
+              ? () => navigation.navigate(navigationStrings.CLAIMS_NEED_FIXING)
+              : item.id === "unsigned"
+                ? () => navigation.navigate(navigationStrings.UNSIGNED_CLAIMS)
+                : item.id === "denied"
+                  ? () => navigation.navigate(navigationStrings.DENIED_CLAIMS)
+                  : item.id === "payments"
+                    ? () => navigation.navigate(navigationStrings.PAYMENTS_MONTH_TO_DATE)
+                    : item.id === "charges"
+                      ? () => navigation.navigate(navigationStrings.CHARGES_MONTH_TO_DATE)
+                      : item.id === "records"
+                        ? () => navigation.navigate(navigationStrings.CLAIM_WORKLIST)
+                        : item.id === "flags"
+                          ? () => navigation.navigate(navigationStrings.BILLING_ALERTS)
+                          : item.id === "denial-stats"
+                            ? () => navigation.navigate(navigationStrings.DENIAL_REASONS_STATISTICS)
+                            : undefined
+        }
       >
         <Text style={styles.rowLabel}>{item.label}</Text>
         <ActionPill label={item.action} alert={item.alert} />
       </NeumorphicCard>
     ),
-    [],
+    [navigation],
   );
 
   return (
@@ -129,7 +151,7 @@ const RevenueDashboard = () => {
           height={52}
           borderRadius={26}
           containerStyle={styles.messageBtn}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate(navigationStrings.MESSAGE_TO_BILLER)}
         />
       </ScrollView>
     </SafeAreaView>

@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import navigationStrings from "../../constants/navigationStrings";
 import BottomBarNavigation from "./BottomBarNavigation";
 import MorningBrief from "../../screens/App/Home/MorningBrief";
+import UrgentQueue from "../../screens/App/Home/UrgentQueue";
 import PracticeIntelligence from "../../screens/App/Home/PracticeIntelligence";
 import ReportHub from "../../screens/App/Home/PractceIntelligence/ReportHub";
 import Schedule from "../../screens/App/Home/Schedule/Schedule";
@@ -100,6 +101,13 @@ const AppStack = () => {
       <Stack.Screen
         name={navigationStrings.MORNING_BRIEF}
         component={MorningBrief}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={navigationStrings.URGENT_QUEUE}
+        component={UrgentQueue}
         options={{
           headerShown: false,
         }}
