@@ -85,8 +85,8 @@ const DenialReasonsStatistics = () => {
         label: month,
         ...(month === "Jul"
           ? {
-              customDataPoint: () => <JulyTooltip />,
-            }
+            customDataPoint: () => <JulyTooltip />,
+          }
           : {}),
       })),
     [],
@@ -138,7 +138,7 @@ const DenialReasonsStatistics = () => {
               rightIcon={<DownArrowIcon width={12} height={12} />}
               containerStyle={styles.inputNoTopSpace}
               minHeight={46}
-              borderRadius={12}
+              borderRadius={114}
             />
           </View>
         </Pressable>
@@ -163,8 +163,8 @@ const DenialReasonsStatistics = () => {
             <PieChart
               data={pieChartData}
               donut
-              radius={92}
-              innerRadius={58}
+              radius={100}
+              innerRadius={40}
               innerCircleColor={COLORS.SURFACE}
               showText={false}
               focusOnPress={false}
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: COLORS.TEXT_DARK,
-    fontFamily: "SF-Pro-Text-Semibold",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   reasonList: {
     gap: 14,

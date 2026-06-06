@@ -34,6 +34,7 @@ import NeumorphicCard from "../../components/Common/NeumorphicCard";
 import IconComponent from "../../neomorphism/IconComponent";
 import AppButton from "../../components/Common/AppButton";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useToast } from "react-native-toast-notifications";
 // ─── Grid items ──────────────────────────────────────────────────────────────
 type GridItem = {
   id: number;
@@ -160,8 +161,8 @@ const CARD_CORNER_RADIUS = 12;
 
 const Home = () => {
   const navigation = useNavigation<any>();
+  const toast = useToast();
   const notificationsData = useAppStore((s) => s.notificationsData);
-  const messagesData = useAppStore((s) => s.messagesData);
   console.log(useAuthStore.getState().userData, "userData in Home");
   const gridItems = GRID_ITEMS.map((item) => {
     switch (item.id) {
@@ -173,20 +174,13 @@ const Home = () => {
       case 2:
         return {
           ...item,
-          badge: messagesData.length > 0 ? String(messagesData.length) : undefined,
-          badgeType: messagesData.length > 0 ? ("dot" as const) : undefined,
+          onPress: () => { toast.hideAll(); toast.show("Development under progress", { type: "warning" }) },
         };
       case 3:
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.MY_CALENDER),
         };
-      case 9:
-        return {
-          ...item,
-          onPress: () => navigation.navigate(navigationStrings.REVENUE_DASHBOARD),
-        };
-      case 10:
       case 4:
         return {
           ...item,
@@ -206,6 +200,16 @@ const Home = () => {
         return {
           ...item,
           onPress: () => navigation.navigate(navigationStrings.SCHEDULE),
+        };
+      case 8:
+        return {
+          ...item,
+          onPress: () => { toast.hideAll(); toast.show("Development under progress", { type: "warning" }) },
+        };
+      case 9:
+        return {
+          ...item,
+          onPress: () => navigation.navigate(navigationStrings.REVENUE_DASHBOARD),
         };
       case 10:
         return {

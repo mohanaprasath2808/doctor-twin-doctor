@@ -54,7 +54,7 @@ const MorningBrief = () => {
             width={44}
             height={44}
             radius={22}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
       </View>

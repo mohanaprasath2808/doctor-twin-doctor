@@ -4,8 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import BluePlusIcon from "../../../../assets/icon/bluePlusIcn.svg";
-import YellowWarningIcon from "../../../../assets/icon/yellowWarningIcon.svg";
+import BluePlusIcon from "../../../../assets/icon/zoomIn.svg";
+import YellowWarningIcon from "../../../../assets/icon/warningIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import PdfPreviewImage from "../../../../assets/image/tempImage/dummyReport.png";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
@@ -60,10 +60,12 @@ const RevenuePdfPreview = () => {
               <Image source={PdfPreviewImage} style={styles.previewImage} resizeMode="contain" />
             </NeumorphicInnerShadowCard>
             <View style={styles.zoomBtn}>
-              <InnerShadowIcon
-                size={36}
-                radius={18}
+              <IconComponent
                 icon={<BluePlusIcon width={16} height={16} />}
+                width={36}
+                height={36}
+                radius={18}
+                onPress={() => { }}
               />
             </View>
           </View>
@@ -75,7 +77,6 @@ const RevenuePdfPreview = () => {
               size={36}
               radius={18}
               icon={<YellowWarningIcon width={16} height={16} />}
-              backgroundColor="#FFF8DB"
             />
             <Text style={styles.warningText}>Please review before submitting to payer</Text>
           </View>

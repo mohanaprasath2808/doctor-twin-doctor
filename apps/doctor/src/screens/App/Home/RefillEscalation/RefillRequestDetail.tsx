@@ -253,7 +253,6 @@ const styles = StyleSheet.create({
     content: { paddingHorizontal: 16, paddingBottom: 28 },
     cardOuter: {
         marginTop: 16,
-        width: "100%",
     },
     cardInner: {
         borderRadius: 12,
@@ -322,6 +321,7 @@ const styles = StyleSheet.create({
         width: 10,
     },
     alertCard: {
+        width: "100%",
         marginVertical: 2,
     },
     alertCardContent: {

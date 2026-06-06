@@ -4,7 +4,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import LabReportIcon from "../../../../assets/icon/labReportIcon.svg";
+import EcgPadIcon from "../../../../assets/icon/ecgPadIcon.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCheckboxMark from "../../../../components/Common/NeumorphicCheckboxMark";
@@ -117,7 +117,7 @@ const ClaimDetail = () => {
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 24 }]}
+        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 132 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -166,7 +166,7 @@ const ClaimDetail = () => {
                 <InnerShadowIcon
                   size={44}
                   radius={22}
-                  icon={<LabReportIcon width={18} height={18} />}
+                  icon={<EcgPadIcon width={18} height={18} />}
                 />
                 <View style={styles.fixTextCol}>
                   <Text style={styles.fixCode}>{row.code}</Text>
@@ -191,7 +191,9 @@ const ClaimDetail = () => {
             </View>
           ))}
         </NeumorphicCard>
+      </ScrollView>
 
+      <View style={[styles.footer, { paddingBottom: bottomPad }]}>
         <View style={styles.actionsGrid}>
           <View style={styles.actionsRow}>
             <ReusableButton
@@ -199,7 +201,8 @@ const ClaimDetail = () => {
               height={48}
               borderRadius={24}
               containerStyle={styles.actionCell}
-              onPress={() => {}}
+              textStyle={{ fontFamily: "SF-Pro-Display-Semibold" }}
+              onPress={() => { }}
             />
             <AppButton
               text="Resubmit Claim"
@@ -212,7 +215,7 @@ const ClaimDetail = () => {
               bgColor={COLORS.SURFACE}
               textStyle={styles.outlineBtnText}
               style={styles.actionCell}
-              onPress={() => {}}
+              onPress={() => { }}
             />
           </View>
           <View style={styles.actionsRow}>
@@ -227,7 +230,7 @@ const ClaimDetail = () => {
               bgColor={COLORS.SURFACE}
               textStyle={styles.outlineBtnText}
               style={styles.actionCell}
-              onPress={() => {}}
+              onPress={() => { }}
             />
             <AppButton
               text="Send to Coder"
@@ -240,11 +243,11 @@ const ClaimDetail = () => {
               bgColor={COLORS.SURFACE}
               textStyle={styles.outlineBtnText}
               style={styles.actionCell}
-              onPress={() => {}}
+              onPress={() => { }}
             />
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -375,8 +378,12 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_DARK,
     fontFamily: "SF-Pro-Text-Medium",
   },
+  footer: {
+    paddingTop: 12,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.SURFACE,
+  },
   actionsGrid: {
-    marginTop: 8,
     gap: 12,
   },
   actionsRow: {
@@ -386,12 +393,13 @@ const styles = StyleSheet.create({
   actionCell: {
     flex: 1,
     minWidth: 0,
+
   },
   outlineBtnText: {
     fontSize: 13,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
     textAlign: "center",
     lineHeight: 18,
   },

@@ -120,6 +120,7 @@ const ReturnToCoder = () => {
               title="Send to Coder"
               onPress={() => navigation.navigate(navigationStrings.CODER_REVIEW_QUEUE)}
               containerStyle={styles.sendBtn}
+              textStyle={{ fontFamily: "SF-Pro-Display-Semibold" }}
             />
           </View>
         </View>
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   attachButton: {
     height: 48,
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     color: COLORS.ALERT,
     fontSize: 15,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   sendBtn: {
     height: 52,

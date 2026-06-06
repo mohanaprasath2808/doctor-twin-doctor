@@ -4,9 +4,8 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import LabReportIcon from "../../../../assets/icon/labReportIcon.svg";
+import LabReportIcon from "../../../../assets/icon/docWithClock.svg";
 import SelectedIcon from "../../../../assets/icon/selectedIcon.svg";
-import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCheckboxMark from "../../../../components/Common/NeumorphicCheckboxMark";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import navigationStrings from "../../../../constants/navigationStrings";

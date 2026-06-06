@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import TickIcon from "../../../../assets/icon/tickIcon.svg";
+import TickIcon from "../../../../assets/icon/greenTickIcon.svg";
 import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import navigationStrings from "../../../../constants/navigationStrings";
@@ -98,7 +98,7 @@ const ChargesMonthToDate = () => {
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 24 }]}
+        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 132 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -207,42 +207,45 @@ const ChargesMonthToDate = () => {
             ) : null}
           </View>
         </NeumorphicCard>
+      </ScrollView>
 
-        <View style={styles.actionsRow}>
-          <AppButton
-            text="Send To"
-            fullWidth={false}
-            width="48%"
+      <View style={[styles.footer, { paddingBottom: bottomPad }]}>
+        <View style={styles.actions}>
+          <View style={styles.actionsRow}>
+            <AppButton
+              text="Send To"
+              fullWidth={false}
+              width="48%"
+              height={48}
+              borderRadius={24}
+              borderWidth={1}
+              borderColor={COLORS.PRIMARY}
+              bgColor={COLORS.SURFACE}
+              textStyle={styles.outlineBtnText}
+              onPress={() => navigation.navigate(navigationStrings.SEND_OPTIONS)}
+            />
+            <AppButton
+              text="Generate Packet"
+              fullWidth={false}
+              width="48%"
+              height={48}
+              borderRadius={24}
+              borderWidth={1}
+              borderColor={COLORS.PRIMARY}
+              bgColor={COLORS.SURFACE}
+              textStyle={styles.outlineBtnText}
+              onPress={() => navigation.navigate(navigationStrings.PACKET_PREVIEW)}
+            />
+          </View>
+          <ReusableButton
+            title="Fix Root Charge"
             height={48}
             borderRadius={24}
-            borderWidth={1}
-            borderColor={COLORS.PRIMARY}
-            bgColor={COLORS.SURFACE}
-            textStyle={styles.outlineBtnText}
-            onPress={() => navigation.navigate(navigationStrings.SEND_OPTIONS)}
-          />
-          <AppButton
-            text="Generate Packet"
-            fullWidth={false}
-            width="48%"
-            height={48}
-            borderRadius={24}
-            borderWidth={1}
-            borderColor={COLORS.PRIMARY}
-            bgColor={COLORS.SURFACE}
-            textStyle={styles.outlineBtnText}
-            onPress={() => navigation.navigate(navigationStrings.PACKET_PREVIEW)}
+            containerStyle={styles.fixBtn}
+            onPress={() => navigation.navigate(navigationStrings.ENCOUNTER_CHARGE_EDITOR)}
           />
         </View>
-
-        <ReusableButton
-          title="Fix Root Charge"
-          height={48}
-          borderRadius={24}
-          containerStyle={styles.fixBtn}
-          onPress={() => navigation.navigate(navigationStrings.ENCOUNTER_CHARGE_EDITOR)}
-        />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -405,11 +408,18 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_50,
     fontFamily: "SF-Pro-Text-Medium",
   },
+  footer: {
+    paddingTop: 12,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.SURFACE,
+  },
+  actions: {
+    gap: 12,
+  },
   actionsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 12,
-    marginTop: 4,
   },
   outlineBtnText: {
     fontSize: 13,
@@ -420,7 +430,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   fixBtn: {
-    marginTop: 12,
     width: "100%",
   },
 });

@@ -6,10 +6,10 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import DownArrowIcon from "../../../../assets/icon/downArrow.svg";
-import EditIcon from "../../../../assets/icon/editIcon.svg";
-import ProfileIcon from "../../../../assets/icon/profile.svg";
+import EditIcon from "../../../../assets/icon/taskEditIcon.svg";
+import ProfileIcon from "../../../../assets/icon/blueProfile.svg";
 import RightArrow from "../../../../assets/icon/rightArrow.svg";
-import TaskListIcon from "../../../../assets/icon/taskListIcon.svg";
+import TicketIcon from "../../../../assets/icon/ticketIcon.svg";
 import EscalatePriorityBottomSheetModal from "../../../../components/BottomSheets/EscalatePriorityBottomSheetModal";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import { COLORS } from "../../../../constants/theme";
@@ -34,7 +34,7 @@ const ESCALATION_OPTIONS: EscalationOption[] = [
   {
     id: "internal-ticket",
     label: "Open internal ticket",
-    icon: <TaskListIcon width={20} height={20} />,
+    icon: <TicketIcon width={20} height={20} />,
   },
   {
     id: "documentation",
@@ -81,7 +81,7 @@ const EscalateIssue = () => {
               outerStyle={styles.optionOuter}
               innerStyle={styles.optionInner}
               borderRadius={14}
-              onPress={() => {}}
+              onPress={() => { }}
             >
               <View style={styles.optionRow}>
                 <InnerShadowIcon size={44} radius={22} icon={option.icon} />
@@ -101,7 +101,7 @@ const EscalateIssue = () => {
                 rightIcon={<DownArrowIcon width={12} height={12} />}
                 containerStyle={styles.inputNoTopSpace}
                 minHeight={46}
-                borderRadius={12}
+                borderRadius={114}
               />
             </View>
           </Pressable>

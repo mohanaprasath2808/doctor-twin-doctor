@@ -245,6 +245,7 @@ const PaymentsMonthToDate = () => {
           height={48}
           borderRadius={24}
           containerStyle={styles.reconcileBtn}
+          textStyle={{ fontFamily: "SF-Pro-Display-Semibold" }}
           onPress={() => navigation.navigate(navigationStrings.PAYMENT_RECONCILIATION)}
         />
       </ScrollView>
@@ -385,9 +386,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
     textAlign: "center",
-    lineHeight: 18,
   },
   reconcileBtn: {
     marginTop: 12,

@@ -103,7 +103,7 @@ const ClaimSignature = () => {
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 24 }]}
+        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 132 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -181,7 +181,9 @@ const ClaimSignature = () => {
           borderRadius={12}
           containerStyle={styles.signatureInput}
         />
+      </ScrollView>
 
+      <View style={[styles.footer, { paddingBottom: bottomPad }]}>
         <View style={styles.actions}>
           <View style={styles.actionsRow}>
             <AppButton
@@ -216,6 +218,7 @@ const ClaimSignature = () => {
             height={48}
             borderRadius={24}
             containerStyle={styles.returnBtn}
+            textStyle={{ fontFamily: "SF-Pro-Display-Semibold" }}
             onPress={() =>
               navigation.navigate(navigationStrings.RETURN_TO_CODER, {
                 claimId,
@@ -225,7 +228,7 @@ const ClaimSignature = () => {
             }
           />
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -347,7 +350,12 @@ const styles = StyleSheet.create({
   },
   signatureInput: {
     width: "100%",
-    marginBottom: 20,
+    marginBottom: 0,
+  },
+  footer: {
+    paddingTop: 12,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.SURFACE,
   },
   actions: {
     gap: 12,
@@ -364,9 +372,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
     textAlign: "center",
-    lineHeight: 18,
   },
   returnBtn: {
     width: "100%",

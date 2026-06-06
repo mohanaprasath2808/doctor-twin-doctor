@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     color: COLORS.ALERT,
     fontSize: 14,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   applyBtn: {
     height: 52,
@@ -252,6 +252,6 @@ const styles = StyleSheet.create({
   applyBtnText: {
     fontSize: 13,
     fontWeight: "600",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
 });

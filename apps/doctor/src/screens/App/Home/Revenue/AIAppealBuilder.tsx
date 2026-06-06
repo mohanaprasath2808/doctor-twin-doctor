@@ -5,6 +5,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import LabReportIcon from "../../../../assets/icon/ecgPadIcon.svg";
+import DocWithClockIcon from "../../../../assets/icon/docWithClock.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
@@ -158,7 +159,7 @@ const AIAppealBuilder = () => {
                 <InnerShadowIcon
                   size={44}
                   radius={22}
-                  icon={<LabReportIcon width={18} height={18} />}
+                  icon={<DocWithClockIcon width={18} height={18} />}
                 />
                 <Text style={styles.attachName} numberOfLines={1}>
                   {row.name}
@@ -355,9 +356,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
     textAlign: "center",
-    lineHeight: 18,
   },
   submitBtn: {
     width: "100%",

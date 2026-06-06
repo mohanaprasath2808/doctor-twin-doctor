@@ -58,7 +58,7 @@ const ReturnToCoderReasonBottomSheetModal = forwardRef<
                 style={[
                   styles.optionRow,
                   index !== RETURN_TO_CODER_REASON_OPTIONS.length - 1 &&
-                    styles.optionSeparator,
+                  styles.optionSeparator,
                 ]}
                 onPress={() => setDraftValue(item)}
               >
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_DARK,
     fontSize: 14,
     fontWeight: "500",
-    fontFamily: "SF-Pro-Text-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   emptyDot: { width: 1, height: 1 },
   footerRow: {
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY_DARK,
     fontSize: 16,
     fontWeight: "500",
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   doneBtn: { height: 52, borderRadius: 26 },
 });

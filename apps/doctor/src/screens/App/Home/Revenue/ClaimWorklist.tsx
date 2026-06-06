@@ -1,11 +1,10 @@
 import React, { useMemo, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import SearchIcon from "../../../../assets/icon/searchIcon.svg";
-import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import AppButton from "../../../../components/Common/AppButton";
 import FilterChip from "../../../../components/Common/FilterChip";
 import navigationStrings from "../../../../constants/navigationStrings";
@@ -15,6 +14,7 @@ import InputField from "../../../../neomorphism/InputField";
 import ClaimWorklistListItem, {
   type ClaimWorklistItem,
 } from "./components/ClaimWorklistListItem";
+import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 
 type WorklistFilter = "all" | "open" | "denied";
 
@@ -28,8 +28,8 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusBadgeVariant: "error",
     useInnerShadowStatusBadge: true,
     actionLabel: "Ready to Send",
-    avatarSource: DoctorTempImage,
     filterCategory: "denied",
+    avatarSource: DoctorTempImage,
   },
   {
     id: "sarah-williams",
@@ -39,8 +39,8 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusLabel: "Missing Data",
     statusBadgeVariant: "warning",
     useInnerShadowStatusBadge: false,
-    avatarSource: DoctorTempImage,
     filterCategory: "open",
+    avatarSource: DoctorTempImage,
   },
   {
     id: "mike-thompson",
@@ -50,8 +50,8 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusLabel: "Coded Incorrectly",
     statusBadgeVariant: "error",
     useInnerShadowStatusBadge: true,
-    avatarSource: DoctorTempImage,
     filterCategory: "open",
+    avatarSource: DoctorTempImage,
   },
   {
     id: "emma-davis",
@@ -64,6 +64,7 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     actionLabel: "Ready to Send",
     initials: "ED",
     filterCategory: "open",
+    avatarSource: DoctorTempImage,
   },
   {
     id: "lisa-chen",
@@ -74,8 +75,8 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusBadgeVariant: "success",
     useInnerShadowStatusBadge: false,
     actionLabel: "Ready to Send",
-    avatarSource: DoctorTempImage,
     filterCategory: "open",
+    avatarSource: DoctorTempImage,
   },
   {
     id: "david-park",
@@ -85,7 +86,6 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusLabel: "Denied",
     statusBadgeVariant: "error",
     useInnerShadowStatusBadge: true,
-    avatarSource: DoctorTempImage,
     filterCategory: "denied",
   },
   {
@@ -96,8 +96,8 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusLabel: "Missing Data",
     statusBadgeVariant: "warning",
     useInnerShadowStatusBadge: false,
-    avatarSource: DoctorTempImage,
     filterCategory: "open",
+    avatarSource: DoctorTempImage,
   },
   {
     id: "james-wilson",
@@ -119,7 +119,6 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusBadgeVariant: "warning",
     useInnerShadowStatusBadge: false,
     actionLabel: "Ready to Send",
-    avatarSource: DoctorTempImage,
     filterCategory: "open",
   },
   {
@@ -130,8 +129,8 @@ const CLAIM_WORKLIST: ClaimWorklistItem[] = [
     statusLabel: "Coded Incorrectly",
     statusBadgeVariant: "error",
     useInnerShadowStatusBadge: true,
-    avatarSource: DoctorTempImage,
     filterCategory: "open",
+    avatarSource: DoctorTempImage,
   },
 ];
 
@@ -168,57 +167,65 @@ const ClaimWorklist = () => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
-      <View style={styles.header}>
-        <IconComponent
-          icon={<BackIcon width={18} height={18} />}
-          width={40}
-          height={40}
-          radius={20}
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headerTitle}>Claim Worklist</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-
-      <View style={styles.searchWrap}>
-        <InputField
-          placeholder="Search"
-          value={search}
-          onChangeText={setSearch}
-          leftIcon={<SearchIcon width={18} height={18} />}
-          borderRadius={64}
-          containerStyle={styles.searchInput}
-        />
-      </View>
-
-      <View style={styles.filtersRow}>
-        <FilterChip
-          title={`All (${FILTER_COUNTS.all})`}
-          selected={filter === "all"}
-          onPress={() => setFilter("all")}
-        />
-        <FilterChip
-          title={`Open (${FILTER_COUNTS.open})`}
-          selected={filter === "open"}
-          onPress={() => setFilter("open")}
-        />
-        <FilterChip
-          title={`Denied (${FILTER_COUNTS.denied})`}
-          selected={filter === "denied"}
-          onPress={() => setFilter("denied")}
-        />
-      </View>
-
-      <FlatList
-        data={filteredItems}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ClaimWorklistListItem item={item} />}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        contentContainerStyle={[styles.listContent, { paddingBottom: bottomPad + 88 }]}
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 24 }]}
         showsVerticalScrollIndicator={false}
-      />
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <IconComponent
+            icon={<BackIcon width={18} height={18} />}
+            width={40}
+            height={40}
+            radius={20}
+            onPress={() => navigation.goBack()}
+          />
+          <Text style={styles.headerTitle}>Claim Worklist</Text>
+          <View style={styles.headerSpacer} />
+        </View>
 
-      <View style={[styles.footer, { paddingBottom: insets.bottom + 16 }]}>
+        <View style={styles.searchWrap}>
+          <InputField
+            placeholder="Search"
+            value={search}
+            onChangeText={setSearch}
+            leftIcon={<SearchIcon width={18} height={18} />}
+            borderRadius={64}
+            containerStyle={styles.searchInput}
+          />
+        </View>
+
+        <View style={styles.filtersRow}>
+          <FilterChip
+            title={`All (${FILTER_COUNTS.all})`}
+            selected={filter === "all"}
+            onPress={() => setFilter("all")}
+          />
+          <FilterChip
+            title={`Open (${FILTER_COUNTS.open})`}
+            selected={filter === "open"}
+            onPress={() => setFilter("open")}
+          />
+          <FilterChip
+            title={`Denied (${FILTER_COUNTS.denied})`}
+            selected={filter === "denied"}
+            onPress={() => setFilter("denied")}
+          />
+        </View>
+
+        <View style={styles.list}>
+          {filteredItems.map((item, index) => (
+            <View key={item.id}>
+              <ClaimWorklistListItem
+                item={item}
+                onPress={() => navigation.navigate(navigationStrings.ESCALATE_ISSUE)}
+              />
+              {index < filteredItems.length - 1 ? <View style={styles.separator} /> : null}
+            </View>
+          ))}
+        </View>
+
         <AppButton
           text="Escalate"
           borderWidth={1}
@@ -228,7 +235,7 @@ const ClaimWorklist = () => {
           style={styles.escalateBtn}
           onPress={() => navigation.navigate(navigationStrings.ESCALATE_ISSUE)}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -240,12 +247,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.SURFACE,
   },
+  scroll: {
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingTop: 6,
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 6,
     paddingBottom: 10,
   },
   headerTitle: {
@@ -263,7 +276,6 @@ const styles = StyleSheet.create({
     height: 40,
   },
   searchWrap: {
-    paddingHorizontal: 16,
     marginBottom: 12,
   },
   searchInput: {
@@ -273,24 +285,14 @@ const styles = StyleSheet.create({
   filtersRow: {
     flexDirection: "row",
     gap: 8,
-    paddingHorizontal: 16,
     marginBottom: 12,
   },
-  listContent: {
-    paddingHorizontal: 16,
+  list: {
     paddingTop: 4,
+    marginBottom: 20,
   },
   separator: {
     height: 12,
-  },
-  footer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    paddingTop: 12,
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.SURFACE,
   },
   escalateBtn: {
     height: 52,

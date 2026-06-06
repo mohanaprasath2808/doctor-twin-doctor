@@ -4,8 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import TimerIcon from "../../../../assets/icon/timerClock.svg";
-import ProfileIcon from "../../../../assets/icon/profile.svg";
+import TimerIcon from "../../../../assets/icon/clock.svg";
+import ProfileIcon from "../../../../assets/icon/blueProfile.svg";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import navigationStrings from "../../../../constants/navigationStrings";
 import { COLORS } from "../../../../constants/theme";

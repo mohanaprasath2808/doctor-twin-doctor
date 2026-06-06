@@ -4,7 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import LabReportIcon from "../../../../assets/icon/labReportIcon.svg";
+import LabReportIcon from "../../../../assets/icon/ecgPadIcon.svg";
+import DocWithClockIcon from "../../../../assets/icon/docWithClock.svg";
 import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import { COLORS } from "../../../../constants/theme";
@@ -85,7 +86,7 @@ const PacketPreview = () => {
           {SUPPORTING_DOCS.map((doc, index) => (
             <View key={doc.id}>
               <View style={styles.docRow}>
-                <InnerShadowIcon size={40} radius={20} icon={<LabReportIcon width={18} height={18} />} />
+                <InnerShadowIcon size={40} radius={20} icon={<DocWithClockIcon width={18} height={18} />} />
                 <View style={styles.docTextCol}>
                   <Text style={styles.docName}>{doc.name}</Text>
                   <Text style={styles.docSize}>{doc.size}</Text>
@@ -134,6 +135,7 @@ const PacketPreview = () => {
           borderRadius={24}
           containerStyle={styles.exportBtn}
           onPress={() => navigation.navigate(navigationStrings.REVENUE_PDF_PREVIEW)}
+          textStyle={{ fontFamily: "SF-Pro-Display-Semibold" }}
         />
       </ScrollView>
     </SafeAreaView>
@@ -259,7 +261,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
   },
   divider: {
     height: StyleSheet.hairlineWidth,
@@ -276,7 +278,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
     textAlign: "center",
     lineHeight: 18,
   },

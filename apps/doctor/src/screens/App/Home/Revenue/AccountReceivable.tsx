@@ -136,7 +136,7 @@ const AccountReceivable = () => {
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 24 }]}
+        contentContainerStyle={[styles.content, { paddingBottom: bottomPad + 88 }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -175,7 +175,9 @@ const AccountReceivable = () => {
             ))}
           </View>
         </NeumorphicCard>
+      </ScrollView>
 
+      <View style={[styles.footer, { paddingBottom: bottomPad }]}>
         <View style={styles.actionsRow}>
           <AppButton
             text="Send Statement"
@@ -187,7 +189,7 @@ const AccountReceivable = () => {
             borderColor={COLORS.PRIMARY}
             bgColor={COLORS.SURFACE}
             textStyle={styles.outlineBtnText}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           <AppButton
             text="Start Collection Workflow"
@@ -199,10 +201,10 @@ const AccountReceivable = () => {
             borderColor={COLORS.PRIMARY}
             bgColor={COLORS.SURFACE}
             textStyle={styles.outlineBtnText}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -367,8 +369,12 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_60,
     fontFamily: "SF-Pro-Display-Regular",
   },
+  footer: {
+    paddingTop: 12,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.SURFACE,
+  },
   actionsRow: {
-    marginTop: 8,
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 12,
@@ -377,7 +383,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
     textAlign: "center",
     lineHeight: 18,
   },

@@ -4,12 +4,12 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import CutCurrencyIcon from "../../../../assets/icon/cutCurrencyIcon.svg";
+import BillingWithCurrencyIcon from "../../../../assets/icon/billingWithCurrency.svg";
 import MessageIcon from "../../../../assets/icon/messageIcon.svg";
 import PatientIcon from "../../../../assets/icon/patientIcon.svg";
-import ProfileIcon from "../../../../assets/icon/profile.svg";
+import ProfileIcon from "../../../../assets/icon/blueProfile.svg";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
-import NeumorphicCheckboxMark from "../../../../components/Common/NeumorphicCheckboxMark";
+import NeumorphicRadioMark from "../../../../components/Common/NeumorphicRadioMark";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../../neomorphism/InnerShadowIcon";
@@ -30,7 +30,7 @@ const SEND_OPTIONS: SendOption[] = [
   {
     id: "billing",
     label: "Send to Billing Team",
-    icon: <CutCurrencyIcon width={18} height={18} />,
+    icon: <BillingWithCurrencyIcon width={18} height={18} />,
   },
   { id: "provider", label: "Send to Provider", icon: <PatientIcon width={18} height={18} /> },
   {
@@ -80,7 +80,7 @@ const SendOptions = () => {
               onPress={() => setSelected(option.id)}
             >
               <View style={styles.optionRow}>
-                <NeumorphicCheckboxMark selected={selected === option.id} />
+                <NeumorphicRadioMark selected={selected === option.id} />
                 <InnerShadowIcon size={44} radius={22} icon={option.icon} />
                 <Text style={styles.optionLabel}>{option.label}</Text>
               </View>

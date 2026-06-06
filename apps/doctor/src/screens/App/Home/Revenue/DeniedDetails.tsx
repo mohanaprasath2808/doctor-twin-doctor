@@ -4,7 +4,8 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import BackIcon from "../../../../assets/icon/backArrow.svg";
-import LabReportIcon from "../../../../assets/icon/labReportIcon.svg";
+import LabReportIcon from "../../../../assets/icon/ecgPadIcon.svg";
+import DocWithClockIcon from "../../../../assets/icon/docWithClock.svg";
 import DoctorTempImage from "../../../../assets/image/tempImage/doctorTempImage.png";
 import AppButton from "../../../../components/Common/AppButton";
 import NeumorphicCheckboxMark from "../../../../components/Common/NeumorphicCheckboxMark";
@@ -156,7 +157,7 @@ const DeniedDetails = () => {
                 <InnerShadowIcon
                   size={40}
                   radius={20}
-                  icon={<LabReportIcon width={18} height={18} />}
+                  icon={<DocWithClockIcon width={18} height={18} />}
                 />
                 <Text style={styles.docLabel}>{row.label}</Text>
               </Pressable>
@@ -176,6 +177,7 @@ const DeniedDetails = () => {
             onPress={() =>
               navigation.navigate(navigationStrings.AI_APPEAL_BUILDER, { claimId })
             }
+            textStyle={{ fontFamily: "SF-Pro-Display-Semibold" }}
           />
           <AppButton
             text="Resubmit"
@@ -361,8 +363,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: COLORS.PRIMARY_DARK,
-    fontFamily: "SF-Pro-Display-Medium",
+    fontFamily: "SF-Pro-Display-Semibold",
     textAlign: "center",
-    lineHeight: 18,
   },
 });

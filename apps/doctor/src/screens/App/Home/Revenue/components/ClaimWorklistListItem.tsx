@@ -1,7 +1,8 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ImageSourcePropType, StyleSheet, Text, View } from "react-native";
 
 import NeumorphicCard from "../../../../../components/Common/NeumorphicCard";
+import { getInitials } from "../../../../../constants/contant";
 import { COLORS } from "../../../../../constants/theme";
 import InnerShadowIcon from "../../../../../neomorphism/InnerShadowIcon";
 import NeumorphicInnerShadowCard from "../../../../../neomorphism/NeumorphicInnerShadowCard";
@@ -16,7 +17,7 @@ export type ClaimWorklistItem = {
   statusBadgeVariant: ClaimBadgeVariant;
   useInnerShadowStatusBadge: boolean;
   actionLabel?: string;
-  avatarSource?: number;
+  avatarSource?: ImageSourcePropType;
   initials?: string;
   filterCategory: "open" | "denied";
 };
@@ -117,27 +118,30 @@ function ReadyToSendBadge({ label }: { label: string }) {
   );
 }
 
-const ClaimWorklistListItem = ({ item, onPress }: ClaimWorklistListItemProps) => (
-  <NeumorphicCard
-    outerStyle={styles.cardOuter}
-    innerStyle={styles.cardInner}
-    borderRadius={12}
-    onPress={onPress}
-  >
-    <View style={styles.row}>
-      {item.avatarSource ? (
-        <Image source={item.avatarSource} style={styles.avatar} />
-      ) : (
-        <InnerShadowIcon
-          size={44}
-          radius={22}
-          icon={
-            <Text style={styles.initials} numberOfLines={1}>
-              {item.initials ?? ""}
-            </Text>
-          }
-        />
-      )}
+const ClaimWorklistListItem = ({ item, onPress }: ClaimWorklistListItemProps) => {
+  const displayInitials = item.initials ?? getInitials(item.name);
+
+  return (
+    <NeumorphicCard
+      outerStyle={styles.cardOuter}
+      innerStyle={styles.cardInner}
+      borderRadius={12}
+      onPress={onPress}
+    >
+      <View style={styles.row}>
+        {item.avatarSource ? (
+          <Image source={item.avatarSource} style={styles.avatar} resizeMode="cover" />
+        ) : (
+          <InnerShadowIcon
+            size={44}
+            radius={22}
+            icon={
+              <Text style={styles.initials} numberOfLines={1}>
+                {displayInitials}
+              </Text>
+            }
+          />
+        )}
 
       <View style={styles.textCol}>
         <Text style={styles.name} numberOfLines={1}>
@@ -159,9 +163,10 @@ const ClaimWorklistListItem = ({ item, onPress }: ClaimWorklistListItemProps) =>
         />
         {item.actionLabel ? <ReadyToSendBadge label={item.actionLabel} /> : null}
       </View>
-    </View>
-  </NeumorphicCard>
-);
+      </View>
+    </NeumorphicCard>
+  );
+};
 
 export default ClaimWorklistListItem;
 
@@ -182,6 +187,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
+    overflow: "hidden",
   },
   initials: {
     fontSize: 14,

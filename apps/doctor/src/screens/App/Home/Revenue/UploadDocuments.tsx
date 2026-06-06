@@ -6,7 +6,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import BackIcon from "../../../../assets/icon/backArrow.svg";
 import FaceScanIcon from "../../../../assets/icon/faceScanIcon.svg";
 import RightArrow from "../../../../assets/icon/rightArrow.svg";
-import UploadIcon from "../../../../assets/icon/uploadIcon.svg";
+import UploadIcon from "../../../../assets/icon/blueUploadIcon.svg";
 import NeumorphicCard from "../../../../components/Common/NeumorphicCard";
 import { COLORS } from "../../../../constants/theme";
 import IconComponent from "../../../../neomorphism/IconComponent";
@@ -53,7 +53,7 @@ const UploadDocuments = () => {
             outerStyle={styles.optionOuter}
             innerStyle={styles.optionInner}
             borderRadius={14}
-            onPress={() => {}}
+            onPress={() => { }}
           >
             <View style={styles.optionRow}>
               <InnerShadowIcon size={44} radius={22} icon={option.icon} />
