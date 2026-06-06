@@ -22,9 +22,17 @@ export interface AuthContextType {
   setUserData: React.Dispatch<React.SetStateAction<any>>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  resendOtp: (email: string, otpType: string) => Promise<{ ok: boolean, expires_at: number | null }>;
-  verifyOtp: (params: VerifyOtpParams) => Promise<{ verified: boolean, token: string | null }>;
-  resetPassword: (role: string, token: string, email: string, newPassWord: string) => Promise<boolean>;
+  resendOtp: (
+    email: string,
+    otpType: string,
+  ) => Promise<{ ok: boolean; expires_at: number | null }>;
+  verifyOtp: (params: VerifyOtpParams) => Promise<{ verified: boolean; token: string | null }>;
+  resetPassword: (
+    role: string,
+    token: string,
+    email: string,
+    newPassWord: string,
+  ) => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -76,23 +84,16 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     };
   }, []);
 
-  const login = async (
-    email: string,
-    password: string,
-  ) => {
+  const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const response: any = await api.post(
-        ENDPOINTS.LOGIN,
-        {
-          login_role: "staff",
-          email: email,
-          password: password
-        }
-      );
+      const response: any = await api.post(ENDPOINTS.LOGIN, {
+        login_role: "staff",
+        email: email,
+        password: password,
+      });
 
       const data = response?.data;
-
 
       if (data?.ok === true) {
         const accessToken = data?.data?.access_token;
@@ -113,7 +114,6 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       }
 
       console.log(response?.data, "response");
-
     } catch (error: any) {
       const errorData = error?.response?.data || error;
       console.error(errorData, "error in login");
@@ -121,17 +121,15 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-
   };
 
   const resendOtp = async (email: string, otpType: string) => {
-
     try {
       setIsLoading(true);
-      const response: any = await api.post(
-        ENDPOINTS.RESEND_OTP,
-        { email: email, otp_type: otpType }
-      );
+      const response: any = await api.post(ENDPOINTS.RESEND_OTP, {
+        email: email,
+        otp_type: otpType,
+      });
 
       const responseData = response?.data;
       console.log(responseData, "data");
@@ -162,8 +160,11 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     role,
     code,
     email,
-  }: VerifyOtpParams): Promise<{ verified: boolean, token: string | null, expires_at: number | null }> => {
-
+  }: VerifyOtpParams): Promise<{
+    verified: boolean;
+    token: string | null;
+    expires_at: number | null;
+  }> => {
     try {
       setIsLoading(true);
       const response = await api.post(ENDPOINTS.VERIFY_OTP, {
@@ -177,7 +178,9 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       if (data?.ok === true) {
         toast.show("OTP verified", { type: "success" });
         return {
-          verified: data?.data?.verified, token: data?.data?.token, expires_at: data?.data?.expires_in_seconds
+          verified: data?.data?.verified,
+          token: data?.data?.token,
+          expires_at: data?.data?.expires_in_seconds,
         };
       }
       toast.show("Invalid or expired OTP", { type: "danger" });
@@ -193,16 +196,10 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   };
 
   const logout = async () => {
-    await secureStorage.removeItem(
-      "accessToken",
-    );
+    await secureStorage.removeItem("accessToken");
 
-    await secureStorage.removeItem(
-      "refreshToken",
-    );
-    await secureStorage.removeItem(
-      "user",
-    );
+    await secureStorage.removeItem("refreshToken");
+    await secureStorage.removeItem("user");
 
     setUserToken(null);
     setUserData(null);
@@ -226,14 +223,12 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       }
       toast.show("Failed to reset password", { type: "danger" });
       return false;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       const errorData = error?.response?.data;
       console.error(errorData, "error in resetPassword");
       toast.show(errorData?.error || "Failed to reset password", { type: "danger" });
       return false;
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -258,7 +253,6 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-
 };
 
 export default AuthContextProvider;

@@ -1,6 +1,7 @@
 import React from "react";
 import { FlatList, Image, ListRenderItem, Platform, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
 import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
@@ -69,6 +70,7 @@ const MessageAvatar = ({ item }: { item: MessageItem }) => {
 
 const Messages = () => {
   const navigation = useNavigation<any>();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const renderMessage: ListRenderItem<MessageItem> = ({ item }) => (
     <NeumorphicCard
@@ -144,12 +146,12 @@ const Messages = () => {
         keyExtractor={(item) => item.id}
         renderItem={renderMessage}
         ListHeaderComponent={listHeader}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, { paddingBottom: 8 }]}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.cardSeparator} />}
       />
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { paddingBottom: tabBarHeight + 8 }]}>
         <ReusableButton
           title="New Message"
           gradientColors={REUSABLE_GRADIENT}
@@ -324,7 +326,6 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: HORIZONTAL,
     paddingTop: 8,
-    paddingBottom: Platform.OS === "android" ? 16 : 8,
   },
   newMessageCta: {
     alignSelf: "stretch",

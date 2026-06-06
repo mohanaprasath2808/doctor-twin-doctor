@@ -2,7 +2,6 @@ import React from "react";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-
 import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
 import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import StatusDot from "../../../components/Common/StatusDot";

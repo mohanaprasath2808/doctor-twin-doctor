@@ -1,6 +1,7 @@
 import React from "react";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
@@ -26,35 +27,44 @@ const SETTINGS_ACTIONS: {
   label: string;
   icon: React.ReactNode;
 }[] = [
-    { id: "profile", label: "My Profile", icon: <ProfileIcon width={ICON_SIZE} height={ICON_SIZE} /> },
-    { id: "communication", label: "Communication", icon: <MessageIcon width={ICON_SIZE} height={ICON_SIZE} /> },
-    {
-      id: "privacy",
-      label: "Privacy & Security",
-      icon: <PrivacyIcon width={ICON_SIZE} height={ICON_SIZE} />,
-    },
-    {
-      id: "help",
-      label: "Help / Training",
-      icon: <MessageWithQuestion width={ICON_SIZE} height={ICON_SIZE} />,
-    },
-    {
-      id: "support",
-      label: "Support Ticket",
-      icon: <ContactSupportIcon width={ICON_SIZE} height={ICON_SIZE} />,
-    },
-    {
-      id: "emergency",
-      label: "Emergency / Safety",
-      icon: <WarningRedIcon width={ICON_SIZE} height={ICON_SIZE} />,
-    },
-  ];
+  {
+    id: "profile",
+    label: "My Profile",
+    icon: <ProfileIcon width={ICON_SIZE} height={ICON_SIZE} />,
+  },
+  {
+    id: "communication",
+    label: "Communication",
+    icon: <MessageIcon width={ICON_SIZE} height={ICON_SIZE} />,
+  },
+  {
+    id: "privacy",
+    label: "Privacy & Security",
+    icon: <PrivacyIcon width={ICON_SIZE} height={ICON_SIZE} />,
+  },
+  {
+    id: "help",
+    label: "Help / Training",
+    icon: <MessageWithQuestion width={ICON_SIZE} height={ICON_SIZE} />,
+  },
+  {
+    id: "support",
+    label: "Support Ticket",
+    icon: <ContactSupportIcon width={ICON_SIZE} height={ICON_SIZE} />,
+  },
+  {
+    id: "emergency",
+    label: "Emergency / Safety",
+    icon: <WarningRedIcon width={ICON_SIZE} height={ICON_SIZE} />,
+  },
+];
 
 const Settings = () => {
   const navigation = useNavigation<any>();
+  const tabBarHeight = useBottomTabBarHeight();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <View style={styles.headerSide} />
         <Text style={styles.headerTitle}>Settings</Text>
@@ -72,7 +82,10 @@ const Settings = () => {
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={[styles.content, { paddingBottom: tabBarHeight + 16 }]}
+        showsVerticalScrollIndicator={false}
+      >
         <ProfileAvatar
           overlaySource={OverlayImage}
           imageSource={DoctorTempImage}
@@ -83,7 +96,9 @@ const Settings = () => {
         />
 
         <Text style={styles.greeting}>Hi Sarah,</Text>
-        <Text style={styles.subGreeting}>here you can manage your profile, privacy, and get support.</Text>
+        <Text style={styles.subGreeting}>
+          here you can manage your profile, privacy, and get support.
+        </Text>
 
         <View style={styles.grid}>
           {SETTINGS_ACTIONS.map((item) => (
@@ -165,7 +180,6 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 12,
-    paddingBottom: 130,
   },
   avatarContainer: {
     alignItems: "center",

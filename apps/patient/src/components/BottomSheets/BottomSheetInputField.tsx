@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
+
 import InnerShadowView from "../../neomorphism/InnerShadowView";
 import { COLORS } from "../../constants/theme";
 
@@ -122,10 +123,7 @@ const BottomSheetInputField = React.forwardRef(function BottomSheetInputField(
               {showFocusedState && surfaceWidth > 0 && (
                 <View
                   pointerEvents="none"
-                  style={[
-                    styles.shadowWrapper,
-                    { height: fieldHeight, borderRadius: radius },
-                  ]}
+                  style={[styles.shadowWrapper, { height: fieldHeight, borderRadius: radius }]}
                 >
                   <InnerShadowView
                     width={surfaceWidth}
@@ -155,7 +153,11 @@ const BottomSheetInputField = React.forwardRef(function BottomSheetInputField(
                 <BottomSheetTextInput
                   {...rest}
                   ref={forwardedRef as any}
-                  style={[styles.input, hasText ? styles.inputTyped : styles.inputPlaceholder, style]}
+                  style={[
+                    styles.input,
+                    hasText ? styles.inputTyped : styles.inputPlaceholder,
+                    style,
+                  ]}
                   placeholderTextColor={rest.placeholderTextColor ?? COLORS.TEXT_40}
                   allowFontScaling={false}
                   onFocus={(e) => {

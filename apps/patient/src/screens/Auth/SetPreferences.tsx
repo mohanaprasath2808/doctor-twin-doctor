@@ -11,7 +11,6 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal as BSModal } from "@gorhom/bottom-sheet";
-
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import NeumorphicCheckboxMark from "../../components/Auth/NeumorphicCheckboxMark";
 import SelectPharmacySheet, {

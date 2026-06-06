@@ -30,6 +30,7 @@ const OtpVerification = () => {
   //local state
   const [otp, setOtp] = useState("");
   //CONTEXT
+  //
   const authContext = useContext(AuthContext);
   if (!authContext) {
     throw new Error("OtpVerification must be used within AuthContextProvider");

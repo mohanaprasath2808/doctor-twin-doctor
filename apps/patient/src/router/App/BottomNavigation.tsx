@@ -1,6 +1,10 @@
 import React from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
-import { createBottomTabNavigator, type BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabBarHeightCallbackContext,
+  createBottomTabNavigator,
+  type BottomTabBarProps,
+} from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import NeumorphicCard from "../../components/Common/NeumorphicCard";
@@ -86,13 +90,17 @@ const TAB_ICONS: Record<
 
 function PatientTabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
   const active: TabName = state.routes[state.index]?.name as TabName;
   const isActive = (name: TabName) => active === name;
 
   const bottomPad = Math.max(insets.bottom, MIN_BOTTOM_INSET) + EXTRA_TAB_PADDING;
 
   return (
-    <View style={[styles.tabBarOuter, { paddingBottom: bottomPad }]}>
+    <View
+      style={[styles.tabBarHost, styles.tabBarOuter, { paddingBottom: bottomPad }]}
+      onLayout={(event) => onHeightChange?.(event.nativeEvent.layout.height)}
+    >
       <View style={styles.tabBarCardWrap}>
         <NeumorphicCard
           borderRadius={16}
@@ -167,6 +175,10 @@ export default BottomNavigation;
 
 const styles = StyleSheet.create({
   tabBarHost: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
     overflow: "visible",
     backgroundColor: "transparent",
     borderTopWidth: 0,

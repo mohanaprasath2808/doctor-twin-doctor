@@ -13,7 +13,6 @@ import {
 import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
