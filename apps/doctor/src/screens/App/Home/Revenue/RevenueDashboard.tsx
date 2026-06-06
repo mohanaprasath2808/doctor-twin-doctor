@@ -88,7 +88,13 @@ const RevenueDashboard = () => {
                     ? () => navigation.navigate(navigationStrings.PAYMENTS_MONTH_TO_DATE)
                     : item.id === "charges"
                       ? () => navigation.navigate(navigationStrings.CHARGES_MONTH_TO_DATE)
-                      : undefined
+                      : item.id === "records"
+                        ? () => navigation.navigate(navigationStrings.CLAIM_WORKLIST)
+                        : item.id === "flags"
+                          ? () => navigation.navigate(navigationStrings.BILLING_ALERTS)
+                          : item.id === "denial-stats"
+                            ? () => navigation.navigate(navigationStrings.DENIAL_REASONS_STATISTICS)
+                            : undefined
         }
       >
         <Text style={styles.rowLabel}>{item.label}</Text>
@@ -145,7 +151,7 @@ const RevenueDashboard = () => {
           height={52}
           borderRadius={26}
           containerStyle={styles.messageBtn}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate(navigationStrings.MESSAGE_TO_BILLER)}
         />
       </ScrollView>
     </SafeAreaView>

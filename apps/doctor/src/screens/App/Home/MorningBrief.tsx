@@ -72,9 +72,40 @@ const MorningBrief = () => {
     </View>
   );
 
+  const navigateToHomeScreen = (screen: string) => {
+    navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
+      screen: navigationStrings.HOME,
+      params: { screen },
+    });
+  };
+
   const handlePressItem = (item: BriefItem) => {
-    if (item.label === "Patient") {
-      navigation.navigate(navigationStrings.PATIENTS);
+    switch (item.label) {
+      case "Review":
+        navigation.navigate(navigationStrings.DOCTOR_REVIEW);
+        break;
+      case "Schedule":
+        navigation.navigate(navigationStrings.SCHEDULE);
+        break;
+      case "Patient":
+        navigation.navigate(navigationStrings.BOTTOM_NAVIGATION, {
+          screen: navigationStrings.PATIENTS,
+        });
+        break;
+      case "Messages":
+        navigation.navigate(navigationStrings.VISIT_MESSAGES);
+        break;
+      case "Revenue":
+        navigateToHomeScreen(navigationStrings.REVENUE_DASHBOARD);
+        break;
+      case "Scribe":
+        navigateToHomeScreen(navigationStrings.START_VISIT);
+        break;
+      case "Urgent":
+        navigation.navigate(navigationStrings.URGENT_QUEUE);
+        break;
+      default:
+        break;
     }
   };
 

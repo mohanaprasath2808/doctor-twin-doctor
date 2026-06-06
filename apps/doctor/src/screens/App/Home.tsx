@@ -301,7 +301,7 @@ const Home = () => {
         imageStyle={styles.image}
       />
 
-      {/* <TouchableOpacity
+      <TouchableOpacity
         activeOpacity={0.85}
         style={styles.morningBriefCta}
         onPress={() => navigation.navigate(navigationStrings.MORNING_BRIEF)}
@@ -311,10 +311,10 @@ const Home = () => {
           outerStyle={styles.morningBriefOuter}
           innerStyle={styles.morningBriefInner}
         >
-          <InnerShadowIcon icon={<MicOutlineIcon width={16} height={16} />} size={34} radius={17} />
+          {/* <InnerShadowIcon icon={<MicOutlineIcon width={16} height={16} />} size={34} radius={17} /> */}
           <Text style={styles.morningBriefText}>Morning Brief</Text>
         </NeumorphicCard>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 

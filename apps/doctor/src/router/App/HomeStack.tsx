@@ -33,6 +33,11 @@ import PacketPreview from "../../screens/App/Home/Revenue/PacketPreview";
 import SubmitClaim from "../../screens/App/Home/Revenue/SubmitClaim";
 import UploadDocuments from "../../screens/App/Home/Revenue/UploadDocuments";
 import RevenuePdfPreview from "../../screens/App/Home/Revenue/RevenuePdfPreview";
+import ClaimWorklist from "../../screens/App/Home/Revenue/ClaimWorklist";
+import EscalateIssue from "../../screens/App/Home/Revenue/EscalateIssue";
+import BillingAlerts from "../../screens/App/Home/Revenue/BillingAlerts";
+import MessageToBiller from "../../screens/App/Home/Revenue/MessageToBiller";
+import DenialReasonsStatistics from "../../screens/App/Home/Revenue/DenialReasonsStatistics";
 import PatientConcernFlagged from "../../screens/App/Home/PatientConcernFlagged/PatientConcernFlagged";
 import ConcernMessagePatient from "../../screens/App/Home/PatientConcernFlagged/ConcernMessagePatient";
 import PriorAuthorization from "../../screens/App/Home/PriorAuth/PriorAuthorization";
@@ -107,6 +112,14 @@ const HomeStack = () => {
       <Stack.Screen name={navigationStrings.SUBMIT_CLAIM} component={SubmitClaim} />
       <Stack.Screen name={navigationStrings.UPLOAD_DOCUMENTS} component={UploadDocuments} />
       <Stack.Screen name={navigationStrings.REVENUE_PDF_PREVIEW} component={RevenuePdfPreview} />
+      <Stack.Screen name={navigationStrings.CLAIM_WORKLIST} component={ClaimWorklist} />
+      <Stack.Screen name={navigationStrings.ESCALATE_ISSUE} component={EscalateIssue} />
+      <Stack.Screen name={navigationStrings.BILLING_ALERTS} component={BillingAlerts} />
+      <Stack.Screen name={navigationStrings.MESSAGE_TO_BILLER} component={MessageToBiller} />
+      <Stack.Screen
+        name={navigationStrings.DENIAL_REASONS_STATISTICS}
+        component={DenialReasonsStatistics}
+      />
       <Stack.Screen
         name={navigationStrings.PATIENT_CONCERN_FLAGGED}
         component={PatientConcernFlagged}
