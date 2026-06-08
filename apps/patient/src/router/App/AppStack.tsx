@@ -120,7 +120,10 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.VIEW_REPORT} component={ViewReport} />
       <Stack.Screen name={navigationStrings.VIEW_PDF} component={ViewDocument} />
       <Stack.Screen name={navigationStrings.BILLING} component={Billing} />
-      <Stack.Screen name={navigationStrings.INSURANCE_ELIGIBILITY} component={InsuranceEligibility} />
+      <Stack.Screen
+        name={navigationStrings.INSURANCE_ELIGIBILITY}
+        component={InsuranceEligibility}
+      />
       <Stack.Screen name={navigationStrings.ADD_NEW_INSURANCE} component={AddNewInsurance} />
       <Stack.Screen
         name={navigationStrings.INSURANCE_VERIFIED_DETAIL}
@@ -146,8 +149,14 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.REFERRAL_STATUS} component={ReferralStatus} />
       <Stack.Screen name={navigationStrings.REFERRAL_DETAIL} component={ReferralDetail} />
       <Stack.Screen name={navigationStrings.REQUEST_NEW_REFERRAL} component={RequestNewReferral} />
-      <Stack.Screen name={navigationStrings.CONSULT_REPORTS_INBOX} component={ConsultReportsInbox} />
-      <Stack.Screen name={navigationStrings.CONSULT_REPORT_DETAIL} component={ConsultReportDetail} />
+      <Stack.Screen
+        name={navigationStrings.CONSULT_REPORTS_INBOX}
+        component={ConsultReportsInbox}
+      />
+      <Stack.Screen
+        name={navigationStrings.CONSULT_REPORT_DETAIL}
+        component={ConsultReportDetail}
+      />
       <Stack.Screen name={navigationStrings.SHARE_CONSULT_REPORT} component={ShareConsultReport} />
       <Stack.Screen name={navigationStrings.LAB_REQUEST} component={LabRequest} />
       <Stack.Screen name={navigationStrings.LAB_RESULTS} component={LabResults} />
@@ -171,7 +180,10 @@ const AppStack = () => {
         name={navigationStrings.HEALTH_JOURNAL_WEEKLY_SUMMARY}
         component={WeeklySummary}
       />
-      <Stack.Screen name={navigationStrings.HEALTH_JOURNAL_TRENDS} component={HealthJournalTrends} />
+      <Stack.Screen
+        name={navigationStrings.HEALTH_JOURNAL_TRENDS}
+        component={HealthJournalTrends}
+      />
       <Stack.Screen name={navigationStrings.MEDICATIONS} component={Medications} />
       <Stack.Screen name={navigationStrings.MEDICATION_DETAIL} component={MedicationDetail} />
       <Stack.Screen name={navigationStrings.PRIOR_AUTHORIZATION} component={PriorAuthorization} />
@@ -185,7 +197,10 @@ const AppStack = () => {
       <Stack.Screen name={navigationStrings.MEDICATION_UPLOAD_FILE} component={UploadFile} />
       <Stack.Screen name={navigationStrings.REMINDERS} component={Reminders} />
       <Stack.Screen name={navigationStrings.MEDICATION_REMINDER} component={MedicationReminder} />
-      <Stack.Screen name={navigationStrings.ACTIVE_REMINDER_STATUS} component={ActiveReminderStatus} />
+      <Stack.Screen
+        name={navigationStrings.ACTIVE_REMINDER_STATUS}
+        component={ActiveReminderStatus}
+      />
       <Stack.Screen name={navigationStrings.APPOINTMENT_REMINDER} component={AppointmentReminder} />
       <Stack.Screen name={navigationStrings.CUSTOM_REMINDER} component={CustomReminder} />
       <Stack.Screen name={navigationStrings.MESSAGES} component={Messages} />

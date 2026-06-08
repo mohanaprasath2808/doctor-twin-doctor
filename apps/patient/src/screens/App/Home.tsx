@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import AppButton from "../../components/Common/AppButton";
@@ -63,6 +64,7 @@ const Home = () => {
   }
   const { userData } = authContext;
   const toast = useToast();
+  const tabBarHeight = useBottomTabBarHeight();
   const { width: screenWidth } = useWindowDimensions();
   const numColumns = 4;
   const horizontalPadding = 16;
@@ -149,9 +151,9 @@ const Home = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["top"]}>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={{ paddingBottom: tabBarHeight + 16 }}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled
       >
@@ -164,7 +166,13 @@ const Home = () => {
           imageStyle={styles.avatarImage}
         />
 
-        <Text style={styles.heading}>Welcome back, {(userData?.first_name && userData?.last_name) ? `${userData?.first_name} ${userData?.last_name}` : userData?.name}!</Text>
+        <Text style={styles.heading}>
+          Welcome back,{" "}
+          {userData?.first_name && userData?.last_name
+            ? `${userData?.first_name} ${userData?.last_name}`
+            : "User"}
+          !
+        </Text>
         <Text style={styles.subHeading}>Here&apos;s how I can assist you</Text>
 
         <NeumorphicCard
@@ -216,9 +224,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.SURFACE,
-  },
-  content: {
-    paddingBottom: 50,
   },
   avatarContainer: {
     alignItems: "center",

@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
 import ProfileAvatar from "../../../components/Auth/ProfileAvatar";
@@ -21,9 +22,7 @@ import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import NotificationIcon from "../../../assets/icons/notificationIcon.svg";
 import OverlayImage from "../../../assets/images/imageBgShadow.png";
 import DoctorTempImage from "../../../assets/images/tempImage/doctorTempImage.png";
-import MedicationListCard, {
-  type MedicationListCardItem,
-} from "./components/MedicationListCard";
+import MedicationListCard, { type MedicationListCardItem } from "./components/MedicationListCard";
 
 const HORIZONTAL = 16;
 const TABS_GAP = 10;
@@ -80,6 +79,7 @@ const STOPPED_MEDICATIONS: MedicationListCardItem[] = [
 
 const Medications = () => {
   const navigation = useNavigation<any>();
+  const tabBarHeight = useBottomTabBarHeight();
   const { width: windowWidth } = useWindowDimensions();
   const [tab, setTab] = useState<MedicationTab>("active");
 
@@ -160,7 +160,7 @@ const Medications = () => {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+    <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <FlatList
         style={styles.list}
         data={listData}
@@ -168,7 +168,7 @@ const Medications = () => {
         renderItem={renderItem}
         extraData={tab}
         ListHeaderComponent={listHeader}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, { paddingBottom: tabBarHeight + 16 }]}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
         ListEmptyComponent={

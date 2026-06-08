@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
-
-import InnerShadowIcon from "../../neomorphism/InnerShadowIcon";
 import OtpTextInput from "../../components/Auth/OtpTextInput";
 import ReusableButton from "../../neomorphism/ReusableButton";
 import { COLORS } from "../../constants/theme";
@@ -140,16 +138,15 @@ const UserPinScreen = () => {
       setForgotPinLoading(false);
     }
   };
-  const ctaTitle =
-    forgotPinLoading
-      ? "Loading..."
-      : submitting
-        ? mode === "create"
-          ? "Setting PIN…"
-          : "Verifying PIN…"
-        : mode === "create"
-          ? "Set PIN"
-          : "Verify PIN";
+  const ctaTitle = forgotPinLoading
+    ? "Loading..."
+    : submitting
+      ? mode === "create"
+        ? "Setting PIN…"
+        : "Verifying PIN…"
+      : mode === "create"
+        ? "Set PIN"
+        : "Verify PIN";
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView

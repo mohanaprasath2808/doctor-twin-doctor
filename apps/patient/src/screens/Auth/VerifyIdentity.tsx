@@ -2,7 +2,6 @@ import React, { useContext, useMemo, useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import InputField from "../../neomorphism/InputField";
 import ReusableButton from "../../neomorphism/ReusableButton";

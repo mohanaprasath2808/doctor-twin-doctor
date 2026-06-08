@@ -1,5 +1,6 @@
 import React from "react";
 import { Platform, StatusBar, StyleSheet } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthContextProvider from "./src/context/AuthContext";
@@ -55,28 +56,30 @@ const App = () => {
   }
 
   return (
-    <ToastProvider
-      placement="top"
-      offsetTop={Platform.OS === "android" ? 40 : 0}
-      renderType={{
-        success: (toast) => <NeomorphicToast toast={toast} variant="success" />,
-        warning: (toast) => <NeomorphicToast toast={toast} variant="warning" />,
-        danger: (toast) => <NeomorphicToast toast={toast} variant="danger" />,
-      }}
-    >
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <StatusBar backgroundColor={COLORS.PRIMARY} barStyle="dark-content" />
-        <NavigationContainer>
-          <AuthContextProvider>
-            <AppContextProvider>
-              <BottomSheetModalProvider>
-                <Router />
-              </BottomSheetModalProvider>
-            </AppContextProvider>
-          </AuthContextProvider>
-        </NavigationContainer>
-      </GestureHandlerRootView>
-    </ToastProvider>
+    <SafeAreaProvider>
+      <ToastProvider
+        placement="top"
+        offsetTop={Platform.OS === "android" ? 40 : 0}
+        renderType={{
+          success: (toast) => <NeomorphicToast toast={toast} variant="success" />,
+          warning: (toast) => <NeomorphicToast toast={toast} variant="warning" />,
+          danger: (toast) => <NeomorphicToast toast={toast} variant="danger" />,
+        }}
+      >
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar backgroundColor={COLORS.PRIMARY} barStyle="dark-content" />
+          <NavigationContainer>
+            <AuthContextProvider>
+              <AppContextProvider>
+                <BottomSheetModalProvider>
+                  <Router />
+                </BottomSheetModalProvider>
+              </AppContextProvider>
+            </AuthContextProvider>
+          </NavigationContainer>
+        </GestureHandlerRootView>
+      </ToastProvider>
+    </SafeAreaProvider>
   );
 };
 
