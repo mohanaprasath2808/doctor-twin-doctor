@@ -1,5 +1,13 @@
 import React, { useCallback, useState } from "react";
-import { ActivityIndicator, Modal, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -87,10 +95,8 @@ const AppointmentScheduled = () => {
               onPress={() => withPopup(() => navigation.pop(4))}
             />
           </View>
-
         </View>
       </ScrollView>
-
     </SafeAreaView>
   );
 };
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   title: {
     textAlign: "center",
@@ -195,7 +201,6 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     borderRadius: 110,
   },
-
 });
 
 export default AppointmentScheduled;

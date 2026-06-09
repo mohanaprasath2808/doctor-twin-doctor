@@ -120,7 +120,12 @@ const ScheduleStep1 = () => {
       return;
     }
 
-    navigation.navigate(navigationStrings.SCHEDULE_STEP_2, { appointmentId });
+    navigation.navigate(navigationStrings.SCHEDULE_STEP_2, {
+      appointmentId,
+      reason,
+      provider_name: providerName,
+      insurance_name: insuranceName,
+    });
   }, [
     createAppointment,
     insuranceLabel,

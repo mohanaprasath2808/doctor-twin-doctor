@@ -1,5 +1,5 @@
 {
-  "extends": "../../packages/config/tsconfig.expo.json",
+  "extends": "@doctor-twin/config/tsconfig.expo.json",
   "include": [
     "**/*.ts",
     "**/*.tsx"

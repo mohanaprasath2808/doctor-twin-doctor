@@ -51,7 +51,9 @@ const LoginScreen = () => {
         toast.show(`Otp code : ${result?.data?.otp}`, { type: "success" });
       } else if (result?.error || result?.message === "Patient not found.Please sign up first.") {
         toast.show("Patient not fond.Please sign up first.", { type: "danger" });
-        navigation.navigate(navigationStrings.SIGNUP);
+        navigation.navigate(navigationStrings.SIGNUP, {
+          phone: phone,
+        });
       } else {
         toast.show(result?.error || result?.message || "Login failed. Please try again.", {
           type: "danger",
