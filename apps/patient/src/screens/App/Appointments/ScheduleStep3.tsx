@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -12,7 +12,6 @@ import { NeumorphicCalendar } from "../../../neomorphism/NeumorphicCalendar";
 import ReusableButton from "../../../neomorphism/ReusableButton";
 import { COLORS } from "../../../constants/theme";
 import navigationStrings from "../../../constants/navigationStrings";
-import { AppContext } from "../../../context/AppContext";
 import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 
 const SLOT_OPTIONS = [
@@ -25,16 +24,10 @@ const ScheduleStep3 = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const toast = useToast();
-  const appContext = useContext(AppContext);
-  if (!appContext) {
-    throw new Error("ScheduleStep3 must be used within AppContextProvider");
-  }
-  const { createAppointment } = appContext;
 
   const appointmentId: string | undefined = route?.params?.appointmentId;
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [selectedSlot, setSelectedSlot] = useState("10:15 AM");
-  const [submitting, setSubmitting] = useState(false);
 
   const formatYYYYMMDD = (date: Date) => {
     const y = date.getFullYear();
@@ -43,7 +36,7 @@ const ScheduleStep3 = () => {
     return `${y}-${m}-${d}`;
   };
 
-  const onDone = useCallback(async () => {
+  const onDone = useCallback(() => {
     const apptId = String(appointmentId ?? "").trim();
     if (!apptId) {
       toast.show("Appointment ID missing. Please restart scheduling.", { type: "danger" });
@@ -63,26 +56,16 @@ const ScheduleStep3 = () => {
       return;
     }
 
-    setSubmitting(true);
-    const res = await createAppointment({
-      step: 3,
-      appointment_id: apptId,
+    navigation.navigate(navigationStrings.APPOINTMENT_CONFIRM, {
+      appointmentId: apptId,
+      reason: route?.params?.reason,
+      provider_name: route?.params?.provider_name,
+      category: route?.params?.category,
+      appointment_type: route?.params?.appointment_type,
       appointment_date: dateStr,
       time_slot: slotStr,
     });
-    setSubmitting(false);
-
-    if (!res.ok) {
-      toast.show(res.error || "Something went wrong.", { type: "danger" });
-      return;
-    }
-
-    navigation.navigate(navigationStrings.APPOINTMENT_SCHEDULED, {
-      title: res.data?.title,
-      message: res.data?.message,
-      appointmentId: apptId,
-    });
-  }, [appointmentId, createAppointment, navigation, selectedDate, selectedSlot, toast]);
+  }, [appointmentId, navigation, route?.params, selectedDate, selectedSlot, toast]);
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
@@ -178,13 +161,12 @@ const ScheduleStep3 = () => {
 
       <View style={styles.footer}>
         <ReusableButton
-          title={submitting ? "Loading..." : "Done"}
+          title="Done"
           height={48}
           borderRadius={25}
           width="100%"
           gradientColors={["#22D3EE", "#0F766E"]}
           backgroundColor={COLORS.PRIMARY}
-          disabled={submitting}
           onPress={onDone}
           containerStyle={styles.doneBtn}
         />

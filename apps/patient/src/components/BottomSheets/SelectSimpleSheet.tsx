@@ -147,7 +147,7 @@ const SelectSimpleSheet = forwardRef<BSModal, SelectSimpleSheetProps>(
             nestedScrollEnabled
             style={styles.listScroll}
             contentContainerStyle={styles.listContent}
-            showsVerticalScrollIndicator
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </BottomSheetModal>
@@ -256,4 +256,3 @@ const styles = StyleSheet.create({
 });
 
 export default SelectSimpleSheet;
-
