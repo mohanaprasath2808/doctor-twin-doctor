@@ -18,7 +18,7 @@ export type {
 } from "../types/auth";
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isLogin: false,
+  isLogin: true,
   setIsLogin: (value) =>
     set((state) => ({
       isLogin: typeof value === "function" ? value(state.isLogin) : value,

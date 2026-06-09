@@ -10,3 +10,7 @@ export type OtpVerificationRouteParams = {
 export type UserPinRouteParams = {
   mode?: "create" | "verify";
 };
+
+export type SignUpRouteParams = {
+  phone?: string;
+};
