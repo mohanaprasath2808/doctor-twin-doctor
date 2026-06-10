@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useCallback, useContext, useMemo, useState } from "react";
 import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useToast } from "react-native-toast-notifications";
 
 import NeumorphicCard from "../../../components/Common/NeumorphicCard";
 import { COLORS } from "../../../constants/theme";
+import { AppContext } from "../../../context/AppContext";
 import IconComponent from "../../../neomorphism/IconComponent";
 import InnerShadowIcon from "../../../neomorphism/InnerShadowIcon";
 import InputField from "../../../neomorphism/InputField";
@@ -13,10 +15,83 @@ import LeftArrowIcon from "../../../assets/icons/leftArrow.svg";
 import DoctorIcon from "../../../assets/icons/doctorBlueIcon.svg";
 import ScheduleIcon from "../../../assets/icons/schedule.svg";
 import PinIcon from "../../../assets/icons/labLocationPin.svg";
+import ServiceIcon from "../../../assets/icons/checkedListPadIcon.svg";
 import navigationStrings from "../../../constants/navigationStrings";
+
+const formatDisplayDateTime = (dateStr: string, timeSlot: string) => {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  if (!year || !month || !day) {
+    return timeSlot;
+  }
+  const date = new Date(year, month - 1, day);
+  const formattedDate = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  return `${formattedDate} ${timeSlot}`;
+};
 
 const AppointmentConfirm = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
+  const toast = useToast();
+  const appContext = useContext(AppContext);
+  if (!appContext) {
+    throw new Error("AppointmentConfirm must be used within AppContextProvider");
+  }
+  const { createAppointment } = appContext;
+
+  const appointmentId = String(route?.params?.appointmentId ?? "").trim();
+  const reason = String(route?.params?.reason ?? "General Consultation");
+  const providerName = String(route?.params?.provider_name ?? "Dr. Shahinaz Soliman");
+  const category = String(route?.params?.category ?? "Primary Care");
+  const appointmentType = String(route?.params?.appointment_type ?? "");
+  const appointmentDate = String(route?.params?.appointment_date ?? "");
+  const timeSlot = String(route?.params?.time_slot ?? "");
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const dateTimeLabel = useMemo(
+    () => formatDisplayDateTime(appointmentDate, timeSlot),
+    [appointmentDate, timeSlot],
+  );
+
+  const onConfirm = useCallback(async () => {
+    if (!appointmentId) {
+      toast.show("Appointment ID missing. Please restart scheduling.", { type: "danger" });
+      navigation.navigate(navigationStrings.SCHEDULE_STEP_1);
+      return;
+    }
+    if (!appointmentDate) {
+      toast.show("Please select appointment date.", { type: "danger" });
+      return;
+    }
+    if (!timeSlot) {
+      toast.show("Please select time slot.", { type: "danger" });
+      return;
+    }
+
+    setSubmitting(true);
+    const res = await createAppointment({
+      step: 3,
+      appointment_id: appointmentId,
+      appointment_date: appointmentDate,
+      time_slot: timeSlot,
+    });
+    setSubmitting(false);
+
+    if (!res.ok) {
+      toast.show(res.error || "Something went wrong.", { type: "danger" });
+      return;
+    }
+
+    navigation.navigate(navigationStrings.APPOINTMENT_SCHEDULED, {
+      title: res.data?.title,
+      message: res.data?.message,
+      appointmentId,
+    });
+  }, [appointmentDate, appointmentId, createAppointment, navigation, timeSlot, toast]);
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
@@ -40,7 +115,7 @@ const AppointmentConfirm = () => {
         <NeumorphicCard outerStyle={styles.cardOuter} innerStyle={styles.reasonCardInner} borderRadius={10}>
           <Text style={styles.sectionLabel}>Reason</Text>
           <InputField
-            value="General Consultation"
+            value={reason}
             editable={false}
             isFocused
             containerStyle={styles.reasonField}
@@ -58,7 +133,7 @@ const AppointmentConfirm = () => {
               surfaceColor={COLORS.INNER_SURFACE}
             />
             <View style={styles.detailTextWrap}>
-              <Text style={styles.detailMain}>Dr. Shahinaz Soliman</Text>
+              <Text style={styles.detailMain}>{providerName}</Text>
               <Text style={styles.detailSub}>Doctor</Text>
             </View>
           </View>
@@ -73,7 +148,7 @@ const AppointmentConfirm = () => {
               surfaceColor={COLORS.INNER_SURFACE}
             />
             <View style={styles.detailTextWrap}>
-              <Text style={styles.detailMain}>24 Mar 2026 05:00 PM</Text>
+              <Text style={styles.detailMain}>{dateTimeLabel}</Text>
               <Text style={styles.detailSub}>Date & Time</Text>
             </View>
           </View>
@@ -92,17 +167,36 @@ const AppointmentConfirm = () => {
               <Text style={styles.detailSub}>2118 Thornridge Cir. Syracuse, Connecticut 35624</Text>
             </View>
           </View>
+
+          {category || appointmentType ? (
+            <>
+              <View style={styles.separator} />
+              <View style={styles.detailRow}>
+                <InnerShadowIcon
+                  icon={<ServiceIcon width={20} height={20} />}
+                  size={40}
+                  radius={20}
+                  surfaceColor={COLORS.INNER_SURFACE}
+                />
+                <View style={styles.detailTextWrap}>
+                  <Text style={styles.detailMain}>{category}</Text>
+                  {appointmentType ? <Text style={styles.detailSub}>{appointmentType}</Text> : null}
+                </View>
+              </View>
+            </>
+          ) : null}
         </NeumorphicCard>
       </ScrollView>
 
       <View style={styles.footer}>
         <ReusableButton
-          title="Confirm Appointment"
+          title={submitting ? "Confirming..." : "Confirm Appointment"}
           gradientColors={["#22D3EE", "#0F766E"]}
           height={48}
           borderRadius={24}
           width="100%"
-          onPress={() => navigation.navigate(navigationStrings.APPOINTMENT_SCHEDULED)}
+          disabled={submitting}
+          onPress={onConfirm}
         />
       </View>
     </SafeAreaView>

@@ -11,9 +11,8 @@ import {
   View,
 } from "react-native";
 import React, { useContext, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import { COLORS } from "../../constants/theme";
 import navigationStrings from "../../constants/navigationStrings";
 import OverlayImage from "../../assets/images/imageBgShadow.png";
@@ -30,6 +29,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useToast } from "react-native-toast-notifications";
 import { EMAIL_REGEX, formatDateForApi } from "../../constants/constant";
 import { NeumorphicCalendar } from "../../neomorphism/NeumorphicCalendar";
+import type { SignUpRouteParams } from "../../types/authRoute";
 
 /** Replace with your live policy URLs when ready. */
 const TERMS_URL = "https://example.com/terms-of-service";
@@ -38,11 +38,13 @@ const HIPAA_URL = "https://example.com/hipaa";
 
 const SignUpScreen = () => {
   const toast = useToast();
+  const route = useRoute();
+  const routeData = route.params as SignUpRouteParams;
   const navigation = useNavigation<any>();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(routeData?.phone ?? "");
   const [birthDate, setBirthDate] = useState("");
   const [selectedBirthDate, setSelectedBirthDate] = useState<Date | null>(null);
   const [isCalendarVisible, setIsCalendarVisible] = useState(false);

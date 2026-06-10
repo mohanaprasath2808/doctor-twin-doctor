@@ -11,7 +11,6 @@ import {
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal as BSModal } from "@gorhom/bottom-sheet";
-
 import ProfileAvatar from "../../components/Auth/ProfileAvatar";
 import NeumorphicCheckboxMark from "../../components/Auth/NeumorphicCheckboxMark";
 import SelectPharmacySheet, {
@@ -33,6 +32,7 @@ import { AuthContext } from "../../context/AuthContext";
 import IconComponent from "../../neomorphism/IconComponent";
 import { AUTH_LOCAL_STORAGE_KEYS } from "../../utils/authStorage";
 import { setSecureItem } from "../../utils/secureStorge";
+import { useToast } from "react-native-toast-notifications";
 
 const DISPLAY_NAME = "Sarah";
 
@@ -54,6 +54,7 @@ const PHARMACY_ITEMS: SelectListItem[] = [
 type CommKey = "email" | "app" | "sms";
 
 const SetPreferences = () => {
+  const toast = useToast();
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const pharmacySheetRef = useRef<BSModal>(null);
@@ -77,6 +78,18 @@ const SetPreferences = () => {
   };
 
   const handleContinue = async () => {
+    if (communication.email) {
+      toast.show("Enable email to continue", { type: "warning" });
+      return;
+    }
+    if (communication.app) {
+      toast.show("Enable app notification to continue", { type: "warning" });
+      return;
+    }
+    if (communication.sms) {
+      toast.show("Enable sms to continue", { type: "warning" });
+      return;
+    }
     await setSecureItem(AUTH_LOCAL_STORAGE_KEYS.ONBOARDING_COMPLETED, "true");
     setIsLogin(true);
   };

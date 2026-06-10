@@ -95,8 +95,14 @@ const ScheduleStep2 = () => {
       return;
     }
 
-    navigation.navigate(navigationStrings.SCHEDULE_STEP_3, { appointmentId: apptId });
-  }, [appointmentId, appointmentType, category, createAppointment, navigation, toast]);
+    navigation.navigate(navigationStrings.SCHEDULE_STEP_3, {
+      appointmentId: apptId,
+      reason: route?.params?.reason,
+      provider_name: route?.params?.provider_name,
+      category: categoryValue,
+      appointment_type: appointmentTypeLabel,
+    });
+  }, [appointmentId, appointmentType, category, createAppointment, navigation, route?.params, toast]);
 
   return (
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>

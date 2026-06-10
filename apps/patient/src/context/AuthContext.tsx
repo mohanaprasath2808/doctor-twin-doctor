@@ -61,6 +61,7 @@ const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   }, []);
   //handle login
   const handleLogin = async (phone: string) => {
+    toast.hideAll();
     console.log(phone, "phone in handleLogin");
     try {
       const request = await fetch(LOGIN_URL, {
