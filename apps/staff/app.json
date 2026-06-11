@@ -16,6 +16,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.solimancare.staff",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) access to your camera to take a staff profile picture.",
         "NSSpeechRecognitionUsageDescription": "Allow $(PRODUCT_NAME) to use speech recognition.",
@@ -28,6 +29,7 @@
         "foregroundImage": "./src/assets/image/appIcon.png",
         "backgroundColor": "#111747"
       },
+      "googleServicesFile": "./google-services.json",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.solimancare.staff",
@@ -39,6 +41,13 @@
       ]
     },
     "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/image/appIcon.png",
+          "color": "#ffffff"
+        }
+      ],
       "expo-secure-store",
       "expo-speech-recognition",
       [

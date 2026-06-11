@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "129225863121",
+    "project_id": "doctor-twin",
+    "storage_bucket": "doctor-twin.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129225863121:android:5d22e7094096519167baf0",
+        "android_client_info": {
+          "package_name": "com.solimancare.doctor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1amfozpmx1MtX3Hn-qC_a0S22q9vKCW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129225863121:android:470ba15b9629e6a467baf0",
+        "android_client_info": {
+          "package_name": "com.solimancare.patient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1amfozpmx1MtX3Hn-qC_a0S22q9vKCW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129225863121:android:db80c088e53e824867baf0",
+        "android_client_info": {
+          "package_name": "com.solimancare.staff"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1amfozpmx1MtX3Hn-qC_a0S22q9vKCW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

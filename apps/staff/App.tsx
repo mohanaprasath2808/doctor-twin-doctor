@@ -10,6 +10,9 @@ import { useFonts } from "expo-font";
 import { Platform } from "react-native";
 import { ToastProvider } from "react-native-toast-notifications";
 import NeomorphicToast from "./src/components/neomorphism/NeomorphicToast";
+import { useEffect } from "react";
+import "./src/utils/notifications.ts";
+import { registerForPushNotificationsAsync } from "./src/utils/registerPushNotifications";
 
 const App = () => {
   const [fontLoaded] = useFonts({
@@ -49,6 +52,16 @@ const App = () => {
     SFMonoBoldItalic: require("./src/assets/fonts/SFMonoBoldItalic.otf"),
     "SF-Pro-Display-BlackItalic": require("./src/assets/fonts/SF-Pro-Display-BlackItalic.otf"),
   });
+
+  useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then(token => {
+        console.log("Expo Push Token:", token);
+
+        // Save token in backend
+      })
+      .catch(console.error);
+  }, []);
 
   if (!fontLoaded) {
     return null;
