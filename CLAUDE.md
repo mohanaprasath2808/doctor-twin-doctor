@@ -2,6 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Model routing & data profile
+
+**Sensitive data in this repo:** `.env` holds a GitHub token for the private org; no other secrets — screens run on hardcoded demo data, no patient data, no API calls.
+
+### Model routing policy
+
+- Session default is **Sonnet** (set in `.claude/settings.json`). Mechanical work stays here.
+- **security-reviewer** and **architect** run on Fable. Judgment work goes to them — never do security review or design decisions inline on the session default.
+- grunt-worker must escalate (not attempt) anything involving security, ambiguity with expensive downside, irreversible operations, or the sensitive-data classes declared above.
+
+### Mandatory disciplines (all agents, all sessions)
+
+1. Show a diff before writing any file change.
+2. After bulk edits, grep the whole tree for the old pattern and report the count.
+3. State assumptions in one line whenever an instruction was ambiguous.
+
 ## What this is
 
 `doctor-twin-app` — the doctor-facing Expo / React Native client for the Doctor Twin project (`github.com/sphinx-medical-technologies/doctor-twin-app`). Expo SDK 54, React Native 0.81, React 19, TypeScript strict, New Architecture enabled.

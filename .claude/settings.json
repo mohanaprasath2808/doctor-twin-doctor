@@ -1,0 +1,4 @@
+{
+  "model": "sonnet",
+  "$comment": "Session default: Sonnet. Judgment work escalates to Fable via agents (security-reviewer, architect). Do not set model in settings.local.json or it will silently override this."
+}
